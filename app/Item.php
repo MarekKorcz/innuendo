@@ -1,0 +1,44 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Item extends Model
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'description', 'price', 'manufacture_time', 'image', 'category_id'
+    ];
+    
+    /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'price' => 'decimal:2',
+        'manufacture_time' => 'time',
+        'category_id' => 'integer'
+    ];
+    
+    /**
+     * Get the category that owns the item.
+     */
+    public function category()
+    {
+        return $this->belongsTo('App\Category');
+    }
+    
+    /**
+     * Get the order items which belong to item.
+     */
+    public function orderItems()
+    {
+        return $this->hasMany('App\OrderItem');
+    }
+}
