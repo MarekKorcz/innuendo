@@ -83,7 +83,6 @@ class OrderController extends Controller
         if ($this->user !== null) {
             $validated['user_id'] = $this->user->id;
             
-            // ewentualnie stworz nowy Order, wyciągnij wszystko z validated, dodaj i zapisz
             $order = Order::create($validated);
             
             $orderItems = $validated['orderItems'];
@@ -91,10 +90,9 @@ class OrderController extends Controller
             foreach ($orderItems as $item) {
                 $orderItem = new OrderItem();
                 $orderItem->setQuantity($item['quantity']);
-                $orderItem->setItem($item['item']);
-                $orderItem->setOrder($item['order']);
-                
-                $order->orderItems()->save($orderItem);
+                $orderItem->setItemId($item['item_id']);
+                $orderItem->setOrderId($order->id);
+                $orderItem->save();
             }
 
             return response()->json($order, 201);
