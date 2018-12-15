@@ -33,8 +33,7 @@ class VendorUpdate extends FormRequest
             'house_number' => 'nullable|string',
             'city' => 'required|string',
             'postcode' => 'required|string',
-            'country' => 'required|string',
-            'user_id' => 'required'
+            'country' => 'required|string'
         ];
     }
     

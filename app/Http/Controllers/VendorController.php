@@ -29,7 +29,8 @@ class VendorController extends Controller
     {
         $this->middleware('jwt.auth');
         
-        if (auth()->user() !== null) {
+        if (auth()->user() !== null) 
+        {
             $this->user = auth()->user();
         }
     }
@@ -45,9 +46,18 @@ class VendorController extends Controller
     {
         $validated = $request->validated();
         
-        $vendor = Vendor::create($validated);
+        if ($this->user !== null) 
+        {
+            if (!Vendor::where('user_id', $this->user->id)->first()) 
+            {
+                $validated['user_id'] = $this->user->id;
+                $vendor = Vendor::create($validated);
 
-        return response()->json($vendor, 201);
+                return response()->json($vendor, 201);
+            }
+            return response()->json(['error' => 'Resource already exists'], 409);
+        }
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
     /**
@@ -61,14 +71,16 @@ class VendorController extends Controller
     {
         $validated = $request->validated();
         
-        if ($this->user !== null) {
-            $vendor = Vendor::where('user_id', $this->user->id)->first();
+        if ($this->user !== null) 
+        {
+            if ($vendor = Vendor::where('user_id', $this->user->id)->first()) 
+            {
+                $vendor->update($validated);
 
-            $vendor->update($validated);
-
-            return response()->json($vendor, 200);
+                return response()->json($vendor, 200);
+            }
+            return response()->json(['error' => 'Resource not found'], 404);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     
@@ -79,12 +91,14 @@ class VendorController extends Controller
      */
     public function show()
     {
-        if ($this->user !== null) {
-            $vendor = Vendor::where('user_id', $this->user->id)->first();        
-
-            return $vendor;
+        if ($this->user !== null) 
+        {
+            if ($vendor = Vendor::where('user_id', $this->user->id)->first()) 
+            {
+                return $vendor;
+            }
+            return response()->json(['error' => 'Resource not found'], 404);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     

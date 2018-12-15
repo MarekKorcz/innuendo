@@ -22,7 +22,7 @@ class ModelMaking extends Migration
             $table->string('email');
             $table->string('phone_number');
             $table->string('street');
-            $table->string('street_number')->nullable();
+            $table->string('street_number');
             $table->string('house_number')->nullable();
             $table->string('city');
             $table->string('postcode');

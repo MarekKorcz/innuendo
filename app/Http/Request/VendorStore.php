@@ -29,12 +29,11 @@ class VendorStore extends FormRequest
             'email' => 'required|email',
             'phone_number' => 'required|numeric|digits_between:6,15',
             'street' => 'required|string',
-            'street_number' => 'nullable|string',
+            'street_number' => 'required|string',
             'house_number' => 'nullable|string',
             'city' => 'required|string',
             'postcode' => 'required|string',
-            'country' => 'required|string',
-            'user_id' => 'required'
+            'country' => 'required|string'
         ];
     }
     
