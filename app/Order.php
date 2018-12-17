@@ -25,7 +25,7 @@ class Order extends Model
      */
     protected $casts = [
         'status' => 'boolean',
-        'execution_time' => 'time',
+        'execution_time' => 'integer',
         'order' => 'integer',
         'user_id' => 'integer',
         'vendor_id' => 'integer'

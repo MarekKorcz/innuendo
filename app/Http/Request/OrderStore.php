@@ -25,7 +25,7 @@ class OrderStore extends FormRequest
     {
         return [
             'status' => 'required|boolean',
-            'execution_time' => 'required|time',
+            'execution_time' => 'required|integer',
             'order' => 'required|integer',
             'user_id' => 'required',
             'vendor_id' => 'required'

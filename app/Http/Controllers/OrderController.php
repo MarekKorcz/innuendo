@@ -6,6 +6,7 @@ use App\Order;
 use App\OrderItem;
 use App\Http\Request\OrderStore;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 /**
  * Class OrderController
@@ -76,26 +77,41 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(OrderStore $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-        
-        if ($this->user !== null) {
-            $validated['user_id'] = $this->user->id;
+        if ($this->user !== null) 
+        {
+            if ($orderItems = $request['order_item']) 
+            {
+                unset($request['order_item']);
+                $order = $request;
+                
+                $order['user_id'] = $this->user->id;
+                
+                // iterate through items and add their total manufacture time
+                // sign it to order manufacture time
+                // and so on
+                
+                return $order;
             
-            $order = Order::create($validated);
-            
-            $orderItems = $validated['orderItems'];
-            
-            foreach ($orderItems as $item) {
-                $orderItem = new OrderItem();
-                $orderItem->setQuantity($item['quantity']);
-                $orderItem->setItemId($item['item_id']);
-                $orderItem->setOrderId($order->id);
-                $orderItem->save();
+//                $order = Order::create($validated);
+//
+//                $orderItems = $validated['orderItems'];
+//
+//                foreach ($orderItems as $item) {
+//                    $orderItem = new OrderItem();
+//                    $orderItem->setQuantity($item['quantity']);
+//                    $orderItem->setItemId($item['item_id']);
+//                    $orderItem->setOrderId($order->id);
+//                    $orderItem->save();
+//                }
+//
+//                return response()->json($order, 201);
+            } 
+            else 
+            {
+                return response()->json(['error' => 'Missing crucial parameters'], 422);
             }
-
-            return response()->json($order, 201);
         }
         
         return response()->json(['error' => 'Unauthorized'], 401);

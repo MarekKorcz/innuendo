@@ -1,5 +1,23 @@
 <?php
 
+
+
+/**
+ * 
+ * 
+ * 
+ *          Polish (and not only polish) character validation
+ * 
+ * 
+ * 
+ */
+
+
+
+
+
+
+
 Route::group([
     'prefix' => 'auth'
 ], function () {
@@ -26,28 +44,18 @@ Route::group([
 //});
 
 Route::group([
-    'prefix' => 'vendor'
-], function () {
-    Route::post('/store', 'VendorController@store');
-    Route::put('/update', 'VendorController@update');
-    Route::get('/show', 'VendorController@show');
-    Route::get('/orders', 'VendorController@orders');
-    Route::get('{order}', 'VendorController@showOrder');
-    Route::put('{order}', 'VendorController@updateOrder');
-    Route::delete('{order}', 'VendorController@deleteOrder');
-});
-
-Route::group([
     'prefix' => 'backend'
 ], function () {
     Route::group([
-        'prefix' => 'item'
+        'prefix' => 'vendor'
     ], function () {
-        Route::get('/index', 'BackendItemController@index');
-        Route::get('{item}', 'BackendItemController@show');
-        Route::post('/store', 'BackendItemController@store');
-        Route::put('{item}', 'BackendItemController@update');
-        Route::delete('{item}', 'BackendItemController@delete');
+        Route::post('/store', 'BackendVendorController@store');
+        Route::put('/update', 'BackendVendorController@update');
+        Route::get('/show', 'BackendVendorController@show');
+        Route::get('/orders', 'BackendVendorController@orders');
+        Route::get('{order}', 'BackendVendorController@showOrder');
+        Route::put('{order}', 'BackendVendorController@updateOrder');
+        Route::delete('{order}', 'BackendVendorController@deleteOrder');
     });
     Route::group([
         'prefix' => 'category'
@@ -58,22 +66,32 @@ Route::group([
         Route::put('{category}', 'BackendCategoryController@update');
         Route::delete('{category}', 'BackendCategoryController@delete');
     });
+    Route::group([
+        'prefix' => 'item'
+    ], function () {
+        Route::get('/index', 'BackendItemController@index');
+        Route::get('{categorySlug}/{item}', 'BackendItemController@show');
+        Route::post('{categorySlug}', 'BackendItemController@store');
+        Route::put('{item}', 'BackendItemController@update');
+        Route::delete('{item}', 'BackendItemController@delete');
+    });
 });
 
 Route::group([
     'prefix' => 'frontend'
 ], function () {
     Route::group([
+        'prefix' => 'category'
+    ], function () {
+        Route::get('{vendorSlug}', 'FrontendCategoryController@index');
+        Route::get('{vendorSlug}/{categorySlug}', 'FrontendCategoryController@show');
+    });
+    Route::group([
         'prefix' => 'item'
     ], function () {
         Route::get('{vendorName}', 'FrontendItemController@index');
         Route::get('{item}', 'FrontendItemController@show');
-    });
-    Route::group([
-        'prefix' => 'category'
-    ], function () {
-        Route::get('{categoryName}', 'FrontendCategoryController@index');
-        Route::get('{category}', 'FrontendCategoryController@show');
+//        Route::get('{categorySlug}/{item}', 'FrontendItemController@show');
     });
 });
 

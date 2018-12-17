@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Vendor;
 use App\Http\Request\CategoryStore;
 use App\Http\Request\CategoryUpdate;
 use App\Http\Controllers\Controller;
@@ -39,12 +40,12 @@ class BackendCategoryController extends Controller
      */
     public function index()
     {
-        if ($this->vendor !== null) {
+        if ($this->vendor !== null) 
+        {
             $categories = Category::where('vendor_id', $this->vendor->id)->get();
 
             return $categories;
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
@@ -57,7 +58,8 @@ class BackendCategoryController extends Controller
      */
     public function show(Category $category)
     {
-        if ($this->vendor !== null && $category !== null) {
+        if ($this->vendor !== null && $category !== null) 
+        {
             $category = Category::where([
                 'id' => $category->id,
                 'vendor_id' => $this->vendor->id
@@ -65,7 +67,6 @@ class BackendCategoryController extends Controller
 
             return $category;
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     
@@ -80,13 +81,19 @@ class BackendCategoryController extends Controller
     {
         $validated = $request->validated();
         
-        if ($this->vendor !== null) {
-            $validated['vendor_id'] = $this->vendor->id;
-            $category = Category::create($validated);
+        if ($this->vendor !== null) 
+        {
+            $validated['slug'] = str_slug($validated['name']);
+            
+            if (!Category::where('vendor_id', $this->vendor->id)->where('slug', $validated['slug'])->first())
+            {
+                $validated['vendor_id'] = $this->vendor->id;
+                $category = Category::create($validated);
 
-            return response()->json($category, 201);
+                return response()->json($category, 201);
+            }
+            return response()->json(['error' => 'Resource already exists'], 409);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
@@ -102,16 +109,16 @@ class BackendCategoryController extends Controller
     {
         $validated = $request->validated();
         
-        if ($this->vendor !== null && $category !== null) {
+        if ($this->vendor !== null && $category !== null) 
+        {
             $category = Category::where([
                 'id' => $category->id,
                 'vendor_id' => $this->vendor->id
             ])->first();
-
             $category->update($validated);
+            
             return response()->json($category, 200);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
@@ -125,16 +132,16 @@ class BackendCategoryController extends Controller
      */
     public function delete(Category $category)
     {
-        if ($this->vendor !== null && $category !== null) {
+        if ($this->vendor !== null && $category !== null) 
+        {
             $category = Category::where([
                 'id' => $category->id,
                 'vendor_id' => $this->vendor->id
             ])->first();
-
             $category->delete();
+            
             return response()->json(null, 204);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 }

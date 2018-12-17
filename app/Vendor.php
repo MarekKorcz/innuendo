@@ -22,8 +22,17 @@ class Vendor extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'email', 'phone_number', 'street', 'street_number', 
+        'name', 'slug', 'description', 'email', 'phone_number', 'street', 'street_number', 
         'house_number', 'city', 'postcode', 'country', 'user_id'
+    ];
+    
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'user_id' => 'integer'
     ];
     
     /**

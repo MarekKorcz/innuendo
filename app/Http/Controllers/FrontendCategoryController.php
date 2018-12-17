@@ -15,38 +15,51 @@ class FrontendCategoryController extends Controller
     /**
      * SHOW VENDOR CATEGORIES to CUSTOMER
      * 
-     * @param string $categoryName
+     * @param string $vendorSlug
      * 
      * @return Category[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function index($categoryName)
+    public function index($vendorSlug)
     {
-        if ($categoryName !== null) {
-            $vendor = Vendor::where('name', $categoryName)->first();
+        if ($vendorSlug !== null) 
+        {
+            $vendor = Vendor::where('slug', $vendorSlug)->first();
             
-            if ($vendor !== null) {
-                $categories = Category::where('vendor_id', $vendor->id)->get();
-
-                return $categories;
+            if ($vendor !== null) 
+            {
+                return Category::where('vendor_id', $vendor->id)->first();
             }
-        }
-        
-        return response()->json(['error' => 'Unauthorized'], 401);
+        }        
+        return response()->json(['error' => 'Resource not found'], 404);
     }
 
     /**
      * SHOW VENDOR CATEGORY to CUSTOMER
      * 
-     * @param Category $category
+     * @param string $vendorSlug
+     * @param string $categorySlug
      *
      * @return Category
      */
-    public function show(Category $category)
+    public function show($vendorSlug, $categorySlug)
     {
-        if ($category !== null) {
-            return $category;
+        if ($vendorSlug !== null && $categorySlug !== null) 
+        {
+            $vendor = Vendor::where('slug', $vendorSlug)->first();
+            
+            if ($vendor !== null)
+            {
+                $category = Category::where([
+                    'slug' => $categorySlug,
+                    'vendor_id' => $vendor->id
+                ])->first();
+                
+                if ($category !== null)
+                {
+                    return $category;
+                }
+            }
         }
-        
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['error' => 'Resource not found'], 404);
     }
 }

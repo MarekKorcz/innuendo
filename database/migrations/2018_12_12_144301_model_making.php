@@ -18,6 +18,7 @@ class ModelMaking extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->string('name');
+            $table->string('slug');
             $table->text('description');
             $table->string('email');
             $table->string('phone_number');
@@ -45,7 +46,7 @@ class ModelMaking extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->boolean('status');
-            $table->time('execution_time');
+            $table->integer('execution_time');
             $table->integer('order');
             $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
             $table->integer('vendor_id')->unsigned()->index()->foreign()->references("id")->on("vendors");
@@ -65,6 +66,7 @@ class ModelMaking extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->string('name');
+            $table->string('slug');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->integer('vendor_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("vendors");
@@ -75,9 +77,10 @@ class ModelMaking extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->string('name');
+            $table->string('slug');
             $table->text('description');
             $table->decimal('price');
-            $table->time('manufacture_time');
+            $table->integer('manufacture_time');
             $table->string('image')->nullable();
             $table->integer('category_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("categories");
         });

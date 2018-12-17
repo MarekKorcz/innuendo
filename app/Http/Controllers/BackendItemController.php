@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Category;
 use App\Vendor;
 use App\Http\Request\ItemStore;
 use App\Http\Request\ItemUpdate;
@@ -52,21 +53,34 @@ class BackendItemController extends Controller
     /**
      * SHOW vendor ITEM
      * 
+     * @param string $categorySlug
      * @param Item $item
      *
      * @return Item
      */
-    public function show(Item $item)
+    public function show($categorySlug, Item $item)
     {
-        if ($this->vendor !== null && $item !== null) {
-            $item = Item::where([
-                'id' => $item->id,
+        if ($this->vendor !== null && $item !== null) 
+        {
+            $category = Category::where([
+                'slug' => $categorySlug,
                 'vendor_id' => $this->vendor->id
             ])->first();
-
-            return $item;
+            
+            if ($category !== null)
+            {
+                $item = Item::where([
+                    'id' => $item->id,
+                    'category_id' => $category->id
+                ])->first();
+                
+                if ($item !== null)
+                {
+                    return $item;
+                }
+            }
+            return response()->json(['error' => 'Resource not found'], 404);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     
@@ -74,20 +88,36 @@ class BackendItemController extends Controller
      * CREATE new ITEM attached to VENDOR entity
      * 
      * @param ItemStore $request
+     * @param string $categorySlug
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ItemStore $request)
+    public function store(ItemStore $request, $categorySlug)
     {
         $validated = $request->validated();
         
-        if ($this->vendor !== null) {
-            $validated['vendor_id'] = $this->vendor->id;
-            $item = Item::create($validated);
+        if ($this->vendor !== null && $categorySlug !== null) 
+        {
+            $category = Category::where([
+                'slug' => $categorySlug,
+                'vendor_id' => $this->vendor->id
+            ])->first();
+            
+            if ($category !== null)
+            {
+                $validated['slug'] = str_slug($validated['name']);
+                $validated['category_id'] = $category->id;
+                
+                if (!Item::where('slug', $validated['slug'])->where('category_id', $validated['category_id'])->first())
+                {
+                    $item = Item::create($validated);
 
-            return response()->json($item, 201);
-        }
-        
+                    return response()->json($item, 201);
+                }
+                return response()->json(['error' => 'Resource already exists'], 409);
+            }
+            return response()->json(['error' => 'Resource not found'], 404);
+        }        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
@@ -103,16 +133,30 @@ class BackendItemController extends Controller
     {
         $validated = $request->validated();
         
-        if ($this->vendor !== null && $item !== null) {
+        if ($this->vendor !== null && $item !== null) 
+        {
             $item = Item::where([
-                'id' => $item->id,
-                'vendor_id' => $this->vendor->id
+                'id' => $item->id
             ])->first();
-
-            $item->update($validated);
-            return response()->json($item, 200);
+            
+            if ($item !== null)
+            {
+                $category = Category::where([
+                    'id' => $item->category_id,
+                    'vendor_id' => $this->vendor->id
+                ])->first();
+                
+                if ($category !== null)
+                {
+                    $validated['slug'] = str_slug($validated['name']);
+                    $item->update($validated);
+                    
+                    return response()->json($item, 200);
+                }
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+            return response()->json(['error' => 'Resource not found'], 404);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
@@ -126,16 +170,28 @@ class BackendItemController extends Controller
      */
     public function delete(Item $item)
     {
-        if ($this->vendor !== null && $item !== null) {
+        if ($this->vendor !== null && $item !== null) 
+        {
             $item = Item::where([
-                'id' => $item->id,
-                'vendor_id' => $this->vendor->id
+                'id' => $item->id
             ])->first();
-
-            $item->delete();
-            return response()->json(null, 204);
+            
+            if ($item !== null)
+            {
+                $category = Category::where([
+                    'id' => $item->category_id,
+                    'vendor_id' => $this->vendor->id
+                ])->first();
+                
+                if ($category !== null)
+                {
+                    $item->delete();
+                    return response()->json(null, 204);
+                }
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+            return response()->json(['error' => 'Resource not found'], 404);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 }

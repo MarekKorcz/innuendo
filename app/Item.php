@@ -15,7 +15,7 @@ class Item extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'price', 'manufacture_time', 'image', 'category_id'
+        'name', 'slug', 'description', 'price', 'manufacture_time', 'image', 'category_id'
     ];
     
     /**
@@ -25,7 +25,7 @@ class Item extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
-        'manufacture_time' => 'time',
+        'manufacture_time' => 'integer',
         'category_id' => 'integer'
     ];
     

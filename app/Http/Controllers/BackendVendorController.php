@@ -10,10 +10,10 @@ use App\Http\Request\OrderUpdate;
 use App\Http\Controllers\Controller;
 
 /**
- * Class VendorController
+ * Class BackendVendorController
  * @package App\Http\Controllers
  */
-class VendorController extends Controller
+class BackendVendorController extends Controller
 {
     /**
      * Logged user
@@ -23,7 +23,7 @@ class VendorController extends Controller
     private $user;
     
     /**
-     * VendorController constructor.
+     * BackendVendorController constructor.
      */
     public function __construct()
     {
@@ -48,9 +48,12 @@ class VendorController extends Controller
         
         if ($this->user !== null) 
         {
-            if (!Vendor::where('user_id', $this->user->id)->first()) 
+            $validated['slug'] = str_slug($validated['name']);
+            
+            if (!Vendor::where('user_id', $this->user->id)->first() && !Vendor::where('slug', $validated['slug'])->first()) 
             {
                 $validated['user_id'] = $this->user->id;
+                
                 $vendor = Vendor::create($validated);
 
                 return response()->json($vendor, 201);

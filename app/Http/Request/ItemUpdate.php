@@ -27,9 +27,8 @@ class ItemUpdate extends FormRequest
             'name' => 'required|string',
             'description' => 'required|string',
             'price' => 'required|numeric',
-            'manufacture_time' => 'required|time',
-            'image' => 'nullable|string',
-            'category_id' => 'required'
+            'manufacture_time' => 'required|integer',
+            'image' => 'nullable|string'
         ];
     }
     
