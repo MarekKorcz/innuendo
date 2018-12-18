@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Item;
 use App\Vendor;
 use App\Http\Controllers\Controller;
@@ -15,38 +16,82 @@ class FrontendItemController extends Controller
     /**
      * SHOW VENDOR ITEMS to CUSTOMER
      * 
-     * @param string $vendorName
+     * @param string $vendorSlug
+     * @param string $categorySlug
      * 
      * @return Item[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function index($vendorName)
+    public function index($vendorSlug, $categorySlug)
     {
-        if ($vendorName !== null) {
-            $vendor = Vendor::where('name', $vendorName)->first();
+        if ($vendorSlug !== null) 
+        {
+            $vendor = Vendor::where([
+                'slug' => $vendorSlug
+            ])->first();
             
-            if ($vendor !== null) {
-                $items = Item::where('vendor_id', $vendor->id)->get();
+            if ($vendor !== null && $categorySlug !== null) 
+            {
+                $category = Category::where([
+                    'slug' => $categorySlug,
+                    'vendor_id' => $vendor->id
+                ])->first();
+                
+                if ($category !== null)
+                {
+                    $items = Item::where([
+                        'category_id' => $category->id
+                    ])->get();
 
-                return $items;
+                    if ($items !== null)
+                    {
+                        return $items;
+                    }
+                }
             }
+            return response()->json(['error' => 'Resource not found'], 404);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
     /**
      * SHOW VENDOR ITEM to CUSTOMER
      * 
-     * @param Item $item
+     * @param string $vendorSlug
+     * @param string $categorySlug
+     * @param string $itemSlug
      *
      * @return Item
      */
-    public function show(Item $item)
+    public function show($vendorSlug, $categorySlug, $itemSlug)
     {
-        if ($item !== null) {
-            return $item;
+        if ($vendorSlug !== null) 
+        {
+            $vendor = Vendor::where([
+                'slug' => $vendorSlug
+            ])->first();
+            
+            if ($vendor !== null && $categorySlug !== null) 
+            {
+                $category = Category::where([
+                    'slug' => $categorySlug,
+                    'vendor_id' => $vendor->id
+                ])->first();
+                
+                if ($category !== null)
+                {
+                    $item = Item::where([
+                        'slug' => $itemSlug,
+                        'category_id' => $category->id
+                    ])->first();
+
+                    if ($item !== null)
+                    {
+                        return $item;
+                    }
+                }
+            }
+            return response()->json(['error' => 'Resource not found'], 404);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 }

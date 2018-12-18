@@ -29,24 +29,41 @@ class BackendItemController extends Controller
     {
         $this->middleware('vendor.auth');
         
-        if (auth()->user() !== null) {
+        if (auth()->user() !== null) 
+        {
             $this->vendor = Vendor::where('user_id', auth()->user()->id)->first();
         }
     }
-
+    
     /**
-     * SHOW vendor ITEMS
+     * SHOW vendor ITEMS that BELONGS to CATEGORY
+     * 
+     * @param string $categorySlug
      * 
      * @return Item[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function index()
+    public function index($categorySlug)
     {
-        if ($this->vendor !== null) {
-            $items = Item::where('vendor_id', $this->vendor->id)->get();
-
-            return $items;
+        if ($this->vendor !== null && $categorySlug !== null) 
+        {
+            $category = Category::where([
+                'slug' => $categorySlug,
+                'vendor_id' => $this->vendor->id
+            ])->first();
+            
+            if ($category !== null)
+            {
+                $items = Item::where([
+                    'category_id' => $category->id
+                ])->get();
+                
+                if ($items !== null)
+                {
+                    return $items;
+                }
+            }
+            return response()->json(['error' => 'Resource not found'], 404);
         }
-        
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 

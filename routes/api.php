@@ -69,7 +69,7 @@ Route::group([
     Route::group([
         'prefix' => 'item'
     ], function () {
-        Route::get('/index', 'BackendItemController@index');
+        Route::get('{categorySlug}', 'BackendItemController@index');
         Route::get('{categorySlug}/{item}', 'BackendItemController@show');
         Route::post('{categorySlug}', 'BackendItemController@store');
         Route::put('{item}', 'BackendItemController@update');
@@ -89,9 +89,8 @@ Route::group([
     Route::group([
         'prefix' => 'item'
     ], function () {
-        Route::get('{vendorName}', 'FrontendItemController@index');
-        Route::get('{item}', 'FrontendItemController@show');
-//        Route::get('{categorySlug}/{item}', 'FrontendItemController@show');
+        Route::get('{vendorSlug}/{categorySlug}', 'FrontendItemController@index');
+        Route::get('{vendorSlug}/{categorySlug}/{item}', 'FrontendItemController@show');
     });
 });
 
