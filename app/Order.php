@@ -15,7 +15,7 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'status', 'execution_time', 'order', 'user_id', 'vendor_id'
+        'status', 'price', 'execution_time', 'order', 'user_id', 'vendor_id'
     ];
     
     /**
@@ -25,6 +25,7 @@ class Order extends Model
      */
     protected $casts = [
         'status' => 'boolean',
+        'price' => 'decimal:2',
         'execution_time' => 'integer',
         'order' => 'integer',
         'user_id' => 'integer',

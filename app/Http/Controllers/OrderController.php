@@ -32,6 +32,22 @@ class OrderController extends Controller
             $this->user = auth()->user();
         }
     }
+    
+    /**
+     * CREATES an ORDER
+     */
+    public function create(Request $request)
+    {
+        die;
+        
+        if ($this->user !== null) {
+            $orders = Order::where('user_id', $this->user->id)->get();
+
+            return $orders;
+        }
+        
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
 
     /**
      * SHOW user ORDERS

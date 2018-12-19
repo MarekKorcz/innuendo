@@ -20,7 +20,7 @@ class ModelMaking extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description');
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('phone_number');
             $table->string('street');
             $table->string('street_number');
@@ -46,8 +46,9 @@ class ModelMaking extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->boolean('status');
-            $table->integer('execution_time');
-            $table->integer('order');
+            $table->integer('price')->nullable();
+            $table->integer('execution_time')->nullable();
+            $table->integer('order')->nullable();
             $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
             $table->integer('vendor_id')->unsigned()->index()->foreign()->references("id")->on("vendors");
         });

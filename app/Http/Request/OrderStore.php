@@ -25,10 +25,9 @@ class OrderStore extends FormRequest
     {
         return [
             'status' => 'required|boolean',
-            'execution_time' => 'required|integer',
-            'order' => 'required|integer',
-            'user_id' => 'required',
-            'vendor_id' => 'required'
+            'price' => 'nullable|integer',
+            'execution_time' => 'nullable|integer',
+            'order' => 'nullable|integer'
         ];
     }
     
@@ -40,9 +39,7 @@ class OrderStore extends FormRequest
     public function messages() 
     {    
         return [
-            'status.required' => 'Order status is required',
-            'execution_time.required' => 'Order execution_time is required',
-            'order.required' => 'Order order is required'
+            'status.required' => 'Order status is required'
         ];
     }
 }
