@@ -45,7 +45,7 @@ class ModelMaking extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
-            $table->boolean('status');
+            $table->integer('status');
             $table->integer('price')->nullable();
             $table->integer('execution_time')->nullable();
             $table->integer('order')->nullable();
