@@ -4,7 +4,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Vendor::class, function (Faker $faker) use ($factory) {
     return [
-        'name' => $name = $faker->name,
+        'name' => $name = 'Vendor '.rand(0, 1000000),
         'slug' => str_slug($name),
         'description' => $faker->text,
         'email' => $faker->unique()->safeEmail,

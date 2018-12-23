@@ -4,7 +4,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Item::class, function (Faker $faker) use ($factory) {
     return [
-        'name' => $name = $faker->name,
+        'name' => $name = 'Item '.rand(0, 1000000),
         'slug' => str_slug($name),
         'description' => $faker->text,
         'price' => $faker->numberBetween(8, 150),
