@@ -92,13 +92,11 @@ Route::group([
         Route::get('{vendorSlug}/{categorySlug}', 'FrontendItemController@index');
         Route::get('{vendorSlug}/{categorySlug}/{item}', 'FrontendItemController@show');
     });
-});
-
-Route::group([
-    'prefix' => 'order'
-], function () {
-    Route::post('/create', 'OrderController@create');
-    Route::get('/index', 'OrderController@index');
-    Route::get('/show', 'OrderController@show');
-    Route::post('/store', 'OrderController@store');
+    Route::group([
+        'prefix' => 'order'
+    ], function () {
+        Route::post('/add', 'OrderController@add');
+        Route::get('/index', 'OrderController@index');
+        Route::get('/show', 'OrderController@show');
+    });
 });

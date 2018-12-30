@@ -24,7 +24,7 @@ class Order extends Model
      * @var array
      */
     protected $casts = [
-        'status' => 'boolean',
+        'status' => 'integer',
         'price' => 'decimal:2',
         'execution_time' => 'integer',
         'order' => 'integer',
