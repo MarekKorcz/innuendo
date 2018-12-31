@@ -95,7 +95,9 @@ Route::group([
     Route::group([
         'prefix' => 'order'
     ], function () {
-        Route::post('/add', 'OrderController@add');
+        Route::post('/add', 'OrderController@addItems');
+        Route::get('/prepare', 'OrderController@prepareOrder');
+//        Route::post('/create', 'OrderController@createOrder');
         Route::get('/index', 'OrderController@index');
         Route::get('/show', 'OrderController@show');
     });

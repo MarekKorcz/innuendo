@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Item;
+use App\Address;
 use App\Category;
+use App\Item;
 use App\Order;
 use App\OrderItem;
 use App\Http\Controllers\Controller;
@@ -37,7 +38,7 @@ class OrderController extends Controller
     /**
      * HANDLES an ORDER presence and ADDS ITEMS to it
      */
-    public function add(Request $request)
+    public function addItems(Request $request)
     {
         if ($this->user !== null)
         {
@@ -73,6 +74,25 @@ class OrderController extends Controller
         }
         return response()->json(['error' => 'Unauthorized'], 401);
     }
+    
+    /**
+     * PREPARES an ORDER (preparation to implementation process)
+     */
+    public function prepareOrder()
+    {
+        if ($this->user !== null && $order = Order::where('status', 0)->where('user_id', $this->user->id)->first()) {
+            return Address::where('user_id', $this->user->id)->first();
+        }
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+    
+    /**
+     * CREATES an ORDER (sending to implementation process)
+     */
+//    public function createOrder(Request $request)
+//    {
+//        
+//    }
 
     /**
      * SHOW user ORDERS

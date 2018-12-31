@@ -50,6 +50,7 @@ class VendorStore extends FormRequest
             'email.required' => 'Email is required',
             'phone_number.required' => 'Phone number is required',
             'street.required' => 'Street is required',
+            'street_number.required' => 'Street number is required',
             'city.required' => 'City is required',
             'postcode.required' => 'Postcode is required',
             'country.required' => 'Country is required'

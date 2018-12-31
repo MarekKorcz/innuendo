@@ -31,6 +31,18 @@ class ModelMaking extends Migration
             $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->string('phone_number');
+            $table->string('street');
+            $table->string('street_number');
+            $table->string('house_number')->nullable();
+            $table->string('city');
+            $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
         Schema::create('auctions', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();

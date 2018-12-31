@@ -37,6 +37,14 @@ class User extends Authenticatable implements JWTSubject
     }
     
     /**
+     * Get the address record associated with the user.
+     */
+    public function address()
+    {
+        return $this->hasOne('App\Address');
+    }
+    
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
