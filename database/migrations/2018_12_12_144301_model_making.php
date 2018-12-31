@@ -56,7 +56,6 @@ class ModelMaking extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->softDeletes();
             $table->integer('quantity');
             $table->integer('order_id')->unsigned()->index()->foreign()->references("id")->on("orders");
             $table->integer('item_id')->unsigned()->index()->foreign()->references("id")->on("items");

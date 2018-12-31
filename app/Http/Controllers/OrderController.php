@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Item;
+use App\Category;
 use App\Order;
 use App\OrderItem;
 use App\Http\Controllers\Controller;
@@ -39,22 +41,32 @@ class OrderController extends Controller
     {
         if ($this->user !== null)
         {
-            if ($this->validateOrderRequest($request))
+            if ($this->validateOrderRequestProperties($request))
             {
-                if ($this->checkItemsValues($request['order_item']))
+                if ($request['order'] && $request['order_item'] &&
+                    $this->checkOrderValues($request['order']) &&
+                    $this->checkItemsValues($request['order_item']))
                 {
-                    return ['it works'];
-                    // fix statements for two conditions
-                    // 1. request with order and item order
-                    // 2. request with item order, alone
-//                    if ($request['order'])
-//                    {
-//                        if (!$order = Order::where('status', 0)->where('user_id', $this->user->id)->first())
-//                        {
-//                            $order = $this->createOrderEntity($request['order']);
-//                        }
-//                        return $this->addItemsToOrder($order, $request['order_item']);
-//                    }
+                    if (!$order = Order::where('status', 0)->where('user_id', $this->user->id)->first())
+                    {
+                        $order = $this->createOrderEntity($request['order']);
+                    }
+                    if ($this->addItemsToOrder($order, $request['order_item']))
+                    {
+                        return response()->json(['message' => 'Success'], 200);
+                    }
+                }
+                else if (!$request['order'] && $request['order_item'] && 
+                         $this->checkItemsValues($request['order_item']))
+                {
+                    if (!$order = Order::where('status', 0)->where('user_id', $this->user->id)->first())
+                    {
+                        return response()->json(['error' => 'Bad request content'], 400);
+                    }
+                    if ($this->addItemsToOrder($order, $request['order_item']))
+                    {
+                        return response()->json(['message' => 'Success'], 200);
+                    }
                 }
             }
             return response()->json(['error' => 'Bad request content'], 400);
@@ -70,6 +82,7 @@ class OrderController extends Controller
     public function index()
     {
         if ($this->user !== null) {
+            // next step, add where status is different then 0
             $orders = Order::where('user_id', $this->user->id)->get();
 
             return $orders;
@@ -99,7 +112,7 @@ class OrderController extends Controller
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     
-    private function validateOrderRequest(Request $request)
+    private function validateOrderRequestProperties(Request $request)
     {
         $keys = array_keys($request->all());
         
@@ -182,6 +195,25 @@ class OrderController extends Controller
         }
         return true;
     }
+    
+    private function checkOrderValues($orderProperties)
+    {
+        if (!ctype_digit($orderProperties['status']) || !ctype_digit($orderProperties['vendor_id']) ||
+            (is_numeric($orderProperties['status']) && floor($orderProperties['status']) != $orderProperties['status']) || 
+            (is_numeric($orderProperties['vendor_id']) && floor($orderProperties['vendor_id']) != $orderProperties['vendor_id']))
+        {
+            return false;
+        }
+        if (!((int)$orderProperties['status'] == 0))
+        {
+            return false;
+        }
+        if (!((int)$orderProperties['vendor_id'] > 0))
+        {
+            return false;
+        }
+        return true;
+    }
 
     private function createOrderEntity($orderProperties) 
     {
@@ -205,32 +237,96 @@ class OrderController extends Controller
     
     private function addItemsToOrder(Order $order, $orderItemProperties)
     {
-        // add total time counter variable
-        // add price variable
-        
         foreach ($orderItemProperties as $item) 
         {
-            // get each item from db, take preparation time, add to total time variable, same with prices
-            
-            if (!$orderItem = OrderItem::where('order_id', $order->id)->where('item_id', $item['item_id'])->first())
+            if ($this->checkIfItemBelongsToVendor($item['item_id'], $order->vendor_id) && 
+                $itemObject = Item::where('id', $item['item_id'])->first())
             {
-                $orderItem = new OrderItem();
-                $orderItem->quantity = $item['quantity'];
-                $orderItem->item_id = $item['item_id'];
-                $orderItem->order_id = $order->id;
-            }
-            else
-            {
-                $orderItem->quantity = $orderItem->quantity + $item['quantity'];
-            }
-            
-            // if quantity = 0, delete this item order
+                if (!$orderItem = OrderItem::where('order_id', $order->id)->where('item_id', $item['item_id'])->first())
+                {
+                    $orderItem = new OrderItem();
+                    $orderItem->quantity = $item['quantity'];
+                    $orderItem->item_id = $itemObject->id;
+                    $orderItem->order_id = $order->id;
+                }
+                else
+                {
+                    if ($item['quantity'] == 0)
+                    {                        
+                        $orderItem->delete();
+                    }
+                    else
+                    {
+                        $orderItem->quantity = $item['quantity'];
+                    }
+                }
 
-            $orderItem->save();
+                if ($item['quantity'] != 0)
+                {
+                    $orderItem->save();
+                }
+            }
         }
         
-        // add total time and price to order
+        $this->countOrderExecutionTimeAndTotalPrice($order);
+        
+        return true;
+    }
+    
+    private function checkIfItemBelongsToVendor($itemId, $vendorId)
+    {
+        $exist = false;
+        
+        if ($categories = Category::where('vendor_id', $vendorId)->get())
+        {
+            foreach ($categories as $category)
+            {
+                if ($items = Item::where('category_id', $category->id)->get())
+                {
+                    foreach ($items as $item)
+                    {
+                        if ($item->id == $itemId)
+                        {
+                            $exist = true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if ($exist)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    private function countOrderExecutionTimeAndTotalPrice(Order $order)
+    {
+        if ($order != null)
+        {
+            $executionTime = 0;
+            $totalPrice = 0;
+            
+            if ($itemOrders = OrderItem::where('order_id', $order->id)->get())
+            {
+                foreach ($itemOrders as $itemOrder)
+                {
+                    if ($item = Item::where('id', $itemOrder->item_id)->first())
+                    {
+                        $executionTime += ($item->manufacture_time * $itemOrder->quantity);
+                        $totalPrice += ($item->price * $itemOrder->quantity);
+                    }
+                }
+            }
+            
+            $order->execution_time = $executionTime;
+            $order->price = $totalPrice;
 
-        return $orderItemProperties;
+            $order->save();
+            
+            return true;
+        }
+        return false;
     }
 }
