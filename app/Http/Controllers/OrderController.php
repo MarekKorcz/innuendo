@@ -7,6 +7,7 @@ use App\Category;
 use App\Item;
 use App\Order;
 use App\OrderItem;
+use App\Http\Request\AddressStore;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -80,7 +81,8 @@ class OrderController extends Controller
      */
     public function prepareOrder()
     {
-        if ($this->user !== null && $order = Order::where('status', 0)->where('user_id', $this->user->id)->first()) {
+        if ($this->user !== null && $order = Order::where('status', 0)->where('user_id', $this->user->id)->first()) 
+        {
             return Address::where('user_id', $this->user->id)->first();
         }
         return response()->json(['error' => 'Unauthorized'], 401);
@@ -88,11 +90,44 @@ class OrderController extends Controller
     
     /**
      * CREATES an ORDER (sending to implementation process)
+     * 
+     * @param AddressStore $request
+     * 
+     * @return Order $order
      */
-//    public function createOrder(Request $request)
-//    {
-//        
-//    }
+    public function createOrder(AddressStore $request)
+    {
+        $validated = $request->validated();
+        
+        if ($this->user !== null && $order = Order::where('status', 0)->where('user_id', $this->user->id)->first()) 
+        {
+            $address = Address::where('user_id', $this->user->id)->first();
+            if ($address !== null)
+            {
+                $address->phone_number = $validated['phone_number'];
+                $address->street = $validated['street'];
+                $address->street_number = $validated['street_number'];
+                if ($validated['house_number'] !== null)
+                {
+                    $address->house_number = $validated['house_number'];
+                }
+                $address->city = $validated['city'];
+                
+                $address->save();
+            }
+            else
+            {
+                $validated['user_id'] = $this->user->id;
+                $address = Address::create($validated);
+            }
+            
+            $order->status = 1;
+            $order->save();
+            
+            return $order;
+        }
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
 
     /**
      * SHOW user ORDERS
@@ -101,9 +136,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        if ($this->user !== null) {
-            // next step, add where status is different then 0
-            $orders = Order::where('user_id', $this->user->id)->get();
+        if ($this->user !== null) 
+        {
+            $orders = Order::where('user_id', $this->user->id)->where('status', '!=', 0)->get();
 
             return $orders;
         }
@@ -116,14 +151,15 @@ class OrderController extends Controller
      * 
      * @param Order $order
      *
-     * @return Order
+     * @return Order $order
      */
     public function show(Order $order)
     {
-        if ($this->user !== null && $order !== null) {
+        if ($this->user !== null && $order !== null) 
+        {
             $order = Order::where([
                 'id' => $order->id,
-                'vendor_id' => $this->user->id
+                'user_id' => $this->user->id
             ])->first();
 
             return $order;

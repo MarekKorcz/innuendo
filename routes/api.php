@@ -97,8 +97,8 @@ Route::group([
     ], function () {
         Route::post('/add', 'OrderController@addItems');
         Route::get('/prepare', 'OrderController@prepareOrder');
-//        Route::post('/create', 'OrderController@createOrder');
+        Route::post('/create', 'OrderController@createOrder');
         Route::get('/index', 'OrderController@index');
-        Route::get('/show', 'OrderController@show');
+        Route::get('/show/{order}', 'OrderController@show');
     });
 });
