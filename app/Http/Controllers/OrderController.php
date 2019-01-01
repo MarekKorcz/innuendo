@@ -99,32 +99,25 @@ class OrderController extends Controller
     {
         $validated = $request->validated();
         
-        if ($this->user !== null && $order = Order::where('status', 0)->where('user_id', $this->user->id)->first()) 
+        if ($this->user !== null) 
         {
-            $address = Address::where('user_id', $this->user->id)->first();
-            if ($address !== null)
+            if ($order = Order::where('status', 0)->where('user_id', $this->user->id)->first())
             {
-                $address->phone_number = $validated['phone_number'];
-                $address->street = $validated['street'];
-                $address->street_number = $validated['street_number'];
-                if ($validated['house_number'] !== null)
-                {
-                    $address->house_number = $validated['house_number'];
+                $address = Address::where('user_id', $this->user->id)->first();
+                if ($address !== null)
+                {             
+                    $address->delete();
                 }
-                $address->city = $validated['city'];
-                
-                $address->save();
-            }
-            else
-            {
+
                 $validated['user_id'] = $this->user->id;
                 $address = Address::create($validated);
+
+                $order->status = 1;
+                $order->save();
+
+                return $order;
             }
-            
-            $order->status = 1;
-            $order->save();
-            
-            return $order;
+            return response()->json(['error' => 'There is nothing in checkout stage'], 422);
         }
         return response()->json(['error' => 'Unauthorized'], 401);
     }
@@ -176,7 +169,7 @@ class OrderController extends Controller
         {
             if (in_array('order', $keys) && in_array('order_item', $keys)) 
             {
-                if (count($request['order']) == 2 && isset($request['order']['status']) && isset($request['order']['vendor_id']) &&
+                if (count($request['order']) == 1 && isset($request['order']['vendor_id']) &&
                     is_array($request['order_item']) && $this->validateItemOrderProperties($request['order_item']))
                 {
                     return true;
@@ -254,13 +247,8 @@ class OrderController extends Controller
     
     private function checkOrderValues($orderProperties)
     {
-        if (!ctype_digit($orderProperties['status']) || !ctype_digit($orderProperties['vendor_id']) ||
-            (is_numeric($orderProperties['status']) && floor($orderProperties['status']) != $orderProperties['status']) || 
+        if (!ctype_digit($orderProperties['vendor_id']) ||
             (is_numeric($orderProperties['vendor_id']) && floor($orderProperties['vendor_id']) != $orderProperties['vendor_id']))
-        {
-            return false;
-        }
-        if (!((int)$orderProperties['status'] == 0))
         {
             return false;
         }
@@ -273,14 +261,12 @@ class OrderController extends Controller
 
     private function createOrderEntity($orderProperties) 
     {
-        if (is_int((int)$orderProperties['status']) && is_int((int)$orderProperties['vendor_id']) &&
-            $orderProperties['status'] == 0 && $orderProperties['vendor_id'] > 0)
+        if (is_int((int)$orderProperties['vendor_id']) && $orderProperties['vendor_id'] > 0)
         {
-            $status = (int)$orderProperties['status'];
             $vendorId = (int)$orderProperties['vendor_id'];
                     
             $order = new Order();
-            $order->status = $status;
+            $order->status = 0;
             $order->user_id = $this->user->id;
             $order->vendor_id = $vendorId;
             
