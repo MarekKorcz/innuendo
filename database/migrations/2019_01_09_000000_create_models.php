@@ -1,0 +1,114 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateModels extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('places', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('slug');
+            $table->text('description')->nullable();
+            $table->string('phone_number');
+            $table->string('street');
+            $table->string('street_number');
+            $table->string('house_number')->nullable();
+            $table->string('city');
+            $table->timestamps();
+            $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
+        Schema::create('categories', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('slug');
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('place_id')->unsigned()->index()->foreign()->references("id")->on("places");
+        });
+        
+        Schema::create('items', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('slug');
+            $table->text('description');
+            $table->decimal('price');
+            $table->integer('manufacture_time');
+            $table->string('image')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('category_id')->unsigned()->index()->foreign()->references("id")->on("categories");
+        });
+        
+        Schema::create('calendars', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('place_id')->unsigned()->index()->foreign()->references("id")->on("places");
+        });
+        
+        Schema::create('years', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('year');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('calendar_id')->unsigned()->index()->foreign()->references("id")->on("calendars");
+        });
+        
+        Schema::create('months', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('month');
+            $table->integer('month_number');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('year_id')->unsigned()->index()->foreign()->references("id")->on("years");
+        });
+        
+        Schema::create('days', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('day_number');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('month_id')->unsigned()->index()->foreign()->references("id")->on("months");
+        });
+        
+        Schema::create('appointments', function (Blueprint $table) {
+            $table->increments('id');
+            $table->time('start_time');
+            $table->integer('minutes');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('item_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("items");
+            $table->integer('day_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("days");
+            $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('places');
+        Schema::dropIfExists('categories');
+        Schema::dropIfExists('items');
+        Schema::dropIfExists('calendars');
+        Schema::dropIfExists('years');
+        Schema::dropIfExists('months');
+        Schema::dropIfExists('days');
+        Schema::dropIfExists('appointments');
+    }
+}

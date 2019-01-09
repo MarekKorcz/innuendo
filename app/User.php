@@ -25,6 +25,22 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'isAdmin'
     ];
+    
+    /**
+     * Get places record associated with user.
+     */
+    public function places()
+    {
+        return $this->hasMany('App\Place');
+    }
+    
+    /**
+     * Get appointments associated with user.
+     */
+    public function appointments()
+    {
+        return $this->hasMany('App\Appointment');
+    }
 }
