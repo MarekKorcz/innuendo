@@ -10,12 +10,19 @@ class Appointment extends Model
     use SoftDeletes;
     
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'start_time', 'minutes', 'item_id', 'day_id', 'user_id'
+        'start_time', 'minutes', 'employee_id', 'item_id', 'day_id', 'user_id'
     ];
     
     /**
@@ -26,18 +33,15 @@ class Appointment extends Model
     protected $casts = [
         'start_time' => 'time',
         'minutes' => 'integer',
-        'item_id' => 'integer',
+        'employee_id' => 'integer',
         'day_id' => 'integer',
-        'user_id' => 'integer'
+        'user_id' => 'integer',
+        'item_id' => 'integer'
     ];
     
     /**
-     * Get item that owns the appointment.
+     *      ADMIN
      */
-    public function item()
-    {
-        return $this->belongsTo('App\Item');
-    }
     
     /**
      * Get day that owns the appointment.
@@ -48,10 +52,34 @@ class Appointment extends Model
     }
     
     /**
+     *      EMPLOYEE
+     */
+    
+    /**
+     * Get employee that owns the appointment.
+     */
+    public function employee()
+    {
+        return $this->belongsTo('App\User');
+    }
+    
+    /**
+     *      USER
+     */
+    
+    /**
      * Get user that owns appointment.
      */
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+    
+    /**
+     * Get item that owns the appointment.
+     */
+    public function item()
+    {
+        return $this->belongsTo('App\Item');
     }
 }

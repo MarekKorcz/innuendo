@@ -23,7 +23,7 @@ class Place extends Model
      */
     protected $fillable = [
         'name', 'slug', 'description', 'phone_number', 'street', 'street_number', 
-        'house_number', 'city', 'user_id'
+        'house_number', 'city', 'owner_id'
     ];
     
     /**
@@ -32,22 +32,46 @@ class Place extends Model
      * @var array
      */
     protected $casts = [
-        'user_id' => 'integer'
+        'owner_id' => 'integer'
     ];
     
     /**
-     * Get the user that owns the vendor.
+     *      ADMIN
      */
-    public function user()
+    
+    /**
+     * Get the owner that owns the place
+     */
+    public function owner()
     {
         return $this->belongsTo('App\User');
     }
     
     /**
-     * Get the categories which belong to place.
+     * Get the categories which belongs to place
      */
     public function categories()
     {
         return $this->hasMany('App\Category');
+    }
+    
+    /**
+     * Get the calendars which belongs to place
+     */
+    public function calendars()
+    {
+        return $this->hasMany('App\Calendar');
+    }
+    
+    /**
+     *      EMPLOYEE
+     */
+    
+    /**
+     * The employees that belongs to the place.
+     */
+    public function employees()
+    {
+        return $this->belongsToMany('App\User', 'place_employee', 'place_id', 'employee_id');
     }
 }

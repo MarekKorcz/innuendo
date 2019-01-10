@@ -10,12 +10,19 @@ class Calendar extends Model
     use SoftDeletes;
     
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'place_id'
+        'place_id', 'employee_id'
     ];
     
     /**
@@ -24,8 +31,13 @@ class Calendar extends Model
      * @var array
      */
     protected $casts = [
-        'place_id' => 'integer'
+        'place_id' => 'integer',
+        'employee_id' => 'integer'
     ];
+    
+    /**
+     *      ADMIN
+     */
     
     /**
      * Get place that owns calendar.
@@ -41,5 +53,17 @@ class Calendar extends Model
     public function years()
     {
         return $this->hasMany('App\Year');
+    }
+    
+    /**
+     *      EMPLOYEE
+     */
+    
+    /**
+     * Get employee that owns calendar.
+     */
+    public function employee()
+    {
+        return $this->belongsTo('App\User');
     }
 }

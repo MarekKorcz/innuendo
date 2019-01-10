@@ -24,7 +24,15 @@ class CreateModels extends Migration
             $table->string('house_number')->nullable();
             $table->string('city');
             $table->timestamps();
+            $table->softDeletes();
             $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
+        Schema::create('place_employee', function (Blueprint $table) {
+            $table->integer('place_id');
+            $table->integer('employee_id');
+            $table->timestamps();
+            $table->primary(['place_id', 'employee_id']);
         });
         
         Schema::create('categories', function (Blueprint $table) {
@@ -44,7 +52,6 @@ class CreateModels extends Migration
             $table->string('slug');
             $table->text('description');
             $table->decimal('price');
-            $table->integer('manufacture_time');
             $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -56,6 +63,7 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->integer('place_id')->unsigned()->index()->foreign()->references("id")->on("places");
+            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
         Schema::create('years', function (Blueprint $table) {
@@ -89,9 +97,10 @@ class CreateModels extends Migration
             $table->integer('minutes');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('item_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("items");
-            $table->integer('day_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("days");
+            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('day_id')->unsigned()->index()->foreign()->references("id")->on("days");
             $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('item_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("items");
         });
     }
 
