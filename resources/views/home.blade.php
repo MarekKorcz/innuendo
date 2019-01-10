@@ -20,10 +20,18 @@
                     { 
                     ?>
                         <div class="panel-body">
-                            <a href="{{url('admin/routes')}}">Admin</a>
+                            <a href="{{url('admin')}}">Admin</a>
                         </div>
                     <?php
-                    } 
+                    }
+                    else if (auth()->user()->isEmployee == 1)
+                    {
+                    ?>
+                        <div class="panel-body">
+                            <a href="{{url('employee')}}">Employee</a>
+                        </div>
+                    <?php
+                    }
                     else 
                     {
                     ?>

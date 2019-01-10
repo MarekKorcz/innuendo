@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class Admin
+class Employee
 {
     /**
      * Handle an incoming request.
@@ -15,11 +15,10 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->user()->isAdmin == 1)
+        if (auth()->user()->isEmployee == 1)
         {
             return $next($request);
         }
-        
-        return redirect('home')->with('error', 'You have not admin access');
+        return redirect('home')->with('error', 'You have not employee access');
     }
 }

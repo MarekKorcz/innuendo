@@ -112,6 +112,7 @@ class CreateModels extends Migration
     public function down()
     {
         Schema::dropIfExists('places');
+        Schema::dropIfExists('place_employee');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('items');
         Schema::dropIfExists('calendars');

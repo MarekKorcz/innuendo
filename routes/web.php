@@ -20,4 +20,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/admin/routes', 'HomeController@admin')->middleware('admin');
+Route::get('/admin', 'HomeController@admin')->middleware('admin');
+
+Route::get('/employee', 'HomeController@employee')->middleware('employee');
