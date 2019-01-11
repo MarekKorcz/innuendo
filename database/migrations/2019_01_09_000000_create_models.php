@@ -13,7 +13,7 @@ class CreateModels extends Migration
      */
     public function up()
     {
-        Schema::create('places', function (Blueprint $table) {
+        Schema::create('properties', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('slug');
@@ -28,11 +28,11 @@ class CreateModels extends Migration
             $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
-        Schema::create('place_employee', function (Blueprint $table) {
-            $table->integer('place_id');
+        Schema::create('property_employee', function (Blueprint $table) {
+            $table->integer('property_id');
             $table->integer('employee_id');
             $table->timestamps();
-            $table->primary(['place_id', 'employee_id']);
+            $table->primary(['property_id', 'employee_id']);
         });
         
         Schema::create('categories', function (Blueprint $table) {
@@ -43,7 +43,7 @@ class CreateModels extends Migration
             $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('place_id')->unsigned()->index()->foreign()->references("id")->on("places");
+            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
         });
         
         Schema::create('items', function (Blueprint $table) {
@@ -62,7 +62,7 @@ class CreateModels extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('place_id')->unsigned()->index()->foreign()->references("id")->on("places");
+            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
             $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
@@ -72,6 +72,7 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->integer('calendar_id')->unsigned()->index()->foreign()->references("id")->on("calendars");
+            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
         Schema::create('months', function (Blueprint $table) {
@@ -111,8 +112,8 @@ class CreateModels extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('places');
-        Schema::dropIfExists('place_employee');
+        Schema::dropIfExists('properties');
+        Schema::dropIfExists('property_employee');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('items');
         Schema::dropIfExists('calendars');

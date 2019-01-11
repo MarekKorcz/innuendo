@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Place extends Model
+class Property extends Model
 {
     use SoftDeletes;
     
@@ -15,6 +15,13 @@ class Place extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+    
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'properties';
     
     /**
      * The attributes that are mass assignable.
@@ -40,7 +47,7 @@ class Place extends Model
      */
     
     /**
-     * Get the owner that owns the place
+     * Get the owner that owns the property
      */
     public function owner()
     {
@@ -48,7 +55,7 @@ class Place extends Model
     }
     
     /**
-     * Get the categories which belongs to place
+     * Get the categories which belongs to property
      */
     public function categories()
     {
@@ -56,7 +63,7 @@ class Place extends Model
     }
     
     /**
-     * Get the calendars which belongs to place
+     * Get the calendars which belongs to property
      */
     public function calendars()
     {
@@ -68,10 +75,10 @@ class Place extends Model
      */
     
     /**
-     * The employees that belongs to the place.
+     * The employees that belongs to the property.
      */
     public function employees()
     {
-        return $this->belongsToMany('App\User', 'place_employee', 'place_id', 'employee_id');
+        return $this->belongsToMany('App\User', 'property_employee', 'property_id', 'employee_id');
     }
 }

@@ -15,7 +15,7 @@ class Employee
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->user()->isEmployee == 1)
+        if (auth()->user()->isEmployee == 1 || auth()->user()->isAdmin == 1)
         {
             return $next($request);
         }

@@ -29,7 +29,7 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'description', 'image', 'place_id'
+        'name', 'slug', 'description', 'image', 'property_id'
     ];
     
     /**
@@ -38,15 +38,15 @@ class Category extends Model
      * @var array
      */
     protected $casts = [
-        'place_id' => 'integer'
+        'property_id' => 'integer'
     ];
     
     /**
-     * Get the place that owns the category.
+     * Get the property that owns the category.
      */
-    public function place()
+    public function property()
     {
-        return $this->belongsTo('App\Place');
+        return $this->belongsTo('App\Property');
     }
     
     /**

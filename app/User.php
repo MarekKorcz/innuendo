@@ -40,11 +40,11 @@ class User extends Authenticatable
      */
     
     /**
-     * Get places record associated with user.
+     * Get properties record associated with user.
      */
-    public function places()
+    public function properties()
     {
-        return $this->hasMany('App\Place');
+        return $this->hasMany('App\Property');
     }
     
     /**
@@ -84,7 +84,7 @@ class User extends Authenticatable
      */
     public function workplaces()
     {
-        return $this->belongsToMany('App\Place', 'place_employee', 'employee_id', 'place_id');
+        return $this->belongsToMany('App\Property', 'property_employee', 'employee_id', 'property_id');
     }
     
     /**
