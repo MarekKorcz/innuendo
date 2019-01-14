@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Property;
+use App\Calendar;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -94,8 +95,9 @@ class PropertyController extends Controller
     public function show($id)
     {
         $property = Property::find($id);
+        $calendar = Calendar::where('property_id', $property->id)->first();
         
-        return view('property.show')->with('property', $property);
+        return view('property.show')->with('property', $property)->with('calendar', $calendar);
     }
 
     /**

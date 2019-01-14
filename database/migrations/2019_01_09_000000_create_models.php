@@ -63,7 +63,7 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
-            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('employee_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
         Schema::create('years', function (Blueprint $table) {

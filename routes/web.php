@@ -31,3 +31,5 @@ Route::get('/property/{id}', 'PropertyController@show');
 Route::get('/property/{id}/edit', 'PropertyController@edit');
 Route::put('/property/{id}', 'PropertyController@update');
 Route::delete('/property/{id}', 'PropertyController@destroy');
+
+Route::get('/calendar/{id}', 'CalendarController@create');

@@ -39,6 +39,22 @@
             <strong>Owner id:</strong> {{ $property->user_id }}
         </p>
     </div>
+    
+    @if (!$calendar)
+        <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
+            <a class="btn btn-success" href="{{ action('CalendarController@create', $property->id) }}">
+                Create Calendar
+            </a>
+        </div>
+    @endif
+        
+    <div class="jumbotron">
+        @if ($calendar)
+            <p>Show calendar years</p>
+        @else
+            <p class="text-center">There is no calendars yet!</p> 
+        @endif
+    </div>
 
 </div>
 @endsection
