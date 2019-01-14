@@ -23,3 +23,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/admin', 'HomeController@admin')->middleware('admin');
 
 Route::get('/employee', 'HomeController@employee')->middleware('employee');
+
+Route::get('/property/index', 'PropertyController@index');
+Route::get('/property/create', 'PropertyController@create');
+Route::post('/property/store', 'PropertyController@store');
+Route::get('/property/{id}', 'PropertyController@show');
+
+// ????????????? why it's not working???
+//Route::resource('property', 'PropertyController');
