@@ -28,6 +28,6 @@ Route::get('/property/index', 'PropertyController@index');
 Route::get('/property/create', 'PropertyController@create');
 Route::post('/property/store', 'PropertyController@store');
 Route::get('/property/{id}', 'PropertyController@show');
-
-// ????????????? why it's not working???
-//Route::resource('property', 'PropertyController');
+Route::get('/property/{id}/edit', 'PropertyController@edit');
+Route::put('/property/{id}', 'PropertyController@update');
+Route::delete('/property/{id}', 'PropertyController@destroy');

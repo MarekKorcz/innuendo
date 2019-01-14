@@ -3,11 +3,19 @@
 <div class="container">
 
     <nav class="navbar navbar-inverse">
-        <div class="navbar-header"></div>
+        <div class="navbar-header">
+            {!!Form::open(['action' => ['PropertyController@destroy', $property->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                {{ Form::hidden('_method', 'DELETE') }}
+                {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+            {!!Form::close()!!}
+        </div>
         <ul class="nav navbar-nav">
             <li>
-                <a href="{{ URL::to('/property/index') }}" class="btn btn-primary">
+                <a class="btn btn-primary" href="{{ URL::to('/property/index') }}">
                     View All Properties
+                </a>
+                <a class="btn btn-success" href="{{ URL::to('property/' . $property->id . '/edit') }}">
+                    Edit
                 </a>
             </li>
         </ul>

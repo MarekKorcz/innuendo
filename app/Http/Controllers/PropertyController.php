@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Property;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
-use Session;
 
 class PropertyController extends Controller
 {
@@ -108,7 +106,9 @@ class PropertyController extends Controller
      */
     public function edit($id)
     {
-        //
+        $property = Property::find($id);
+        
+        return view('property.edit')->with('property', $property);
     }
 
     /**
@@ -119,7 +119,39 @@ class PropertyController extends Controller
      */
     public function update($id)
     {
-        //
+        // validate
+        $rules = array(
+            'name'          => 'required',
+            'description'   => 'required',
+            'phone_number'  => 'required',
+            'street'        => 'required',
+            'street_number' => 'required',
+            'house_number'  => 'required',
+            'city'          => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return Redirect::to('property/create')
+                ->withErrors($validator)
+                ->withInput(Input::except('password'));
+        } else {
+            // store
+            $property = Property::find($id);
+            $property->name          = Input::get('name');
+            $property->slug          = str_slug(Input::get('name'));
+            $property->description   = Input::get('description');
+            $property->phone_number  = Input::get('phone_number');
+            $property->street        = Input::get('street');
+            $property->street_number = Input::get('street_number');
+            $property->house_number  = Input::get('house_number');
+            $property->city          = Input::get('city');
+            $property->save();
+
+            // redirect
+            return redirect('/property/index')->with('success', 'Property successfully updated!');
+        }
     }
 
     /**
@@ -130,6 +162,9 @@ class PropertyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $property = Property::find($id);
+        $property->delete();
+        
+        return redirect('/property/index')->with('success', 'Property deleted!');
     }
 }
