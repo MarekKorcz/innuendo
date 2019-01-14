@@ -20,7 +20,7 @@
             <strong>Id:</strong> {{ $property->id }}<br>
             <strong>Name:</strong> {{ $property->name }}<br>
             <strong>Slug:</strong> {{ $property->slug }}<br>
-            <strong>Description:</strong> {{ $property->description }}<br>
+            <strong>Description:</strong> {!! $property->description !!}<br>
             <strong>Phone number:</strong> {{ $property->phone_number }}<br>
             <strong>Street:</strong> {{ $property->street_number }}<br>
             <strong>House number:</strong> {{ $property->house_number }}<br>

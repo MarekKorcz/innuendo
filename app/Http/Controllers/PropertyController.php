@@ -83,8 +83,6 @@ class PropertyController extends Controller
             $property->save();
 
             // redirect
-//            Session::flash('message', 'Property successfully created!');
-//            return Redirect::to('/property/index');
             return redirect('/property/index')->with('success', 'Property successfully created!');
         }
     }

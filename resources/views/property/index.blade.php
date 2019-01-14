@@ -37,7 +37,7 @@
                 <td>{{ $value->id }}</td>
                 <td>{{ $value->name }}</td>
                 <td>{{ $value->slug }}</td>
-                <td>{{ $value->description }}</td>
+                <td>{!! $value->description !!}</td>
                 <td>{{ $value->phone_number }}</td>
                 <td>{{ $value->street }}</td>
                 <td>{{ $value->street_number }}</td>

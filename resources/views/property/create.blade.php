@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('description', 'Description') }}
-            {{ Form::textarea('description', Input::old('description'), array('class' => 'form-control')) }}
+            {{ Form::textarea('description', Input::old('description'), array('id' => 'article-ckeditor', 'class' => 'form-control')) }}
         </div>
         <div class="form-group">
             {{ Form::label('phone_number', 'Phone number') }}
