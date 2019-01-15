@@ -38,3 +38,8 @@ Route::get('/year/{id}', 'YearController@create');
 Route::post('/year/store', 'YearController@store');
 Route::get('/year/show/{id}', 'YearController@show');
 Route::delete('/year/{id}', 'YearController@destroy');
+
+Route::get('/month/{id}', 'MonthController@create');
+Route::post('/month/store', 'MonthController@store');
+Route::get('/month/show/{id}', 'MonthController@show');
+Route::delete('/month/{id}', 'MonthController@destroy');

@@ -26,13 +26,21 @@
 
     <h2>Showing year - {{ $year->year }}</h2>
     
-    
-    
-    
-    <!--Place to display months and 'add Month button'-->
-
-    
-    
-    
+    <div class="jumbotron">
+        @if (count($months) > 0)
+            @foreach ($months as $month)
+                <div class = "row justify-content-md-center">
+                    <a class="btn btn-lg btn-primary" style="margin-bottom: 10px;" href="{{ URL::to('month/show/' . $month->id) }}">
+                        {{$month->month}}
+                    </a>
+                </div>
+            @endforeach
+        @endif
+        <div class="text-center" style="padding-top: 50px;">
+            <a class="btn btn-success" href="{{ action('MonthController@create', $year->id) }}">
+                Add Month
+            </a>
+        </div>
+    </div>
 </div>
 @endsection

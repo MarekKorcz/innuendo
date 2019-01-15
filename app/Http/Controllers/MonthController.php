@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Calendar;
 use App\Year;
 use App\Month;
+use App\Day;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
 
-class YearController extends Controller
+class MonthController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -29,9 +29,9 @@ class YearController extends Controller
      */
     public function create($id)
     {
-        $calendar = Calendar::find($id);
+        $year = Year::find($id);
         
-        return view('year.create')->with('calendar', $calendar);
+        return view('month.create')->with('year', $year);
     }
 
     /**
@@ -43,25 +43,27 @@ class YearController extends Controller
     {
         // validate
         $rules = array(
-            'year' => 'required'
+            'month' => 'required',
+            'month_number' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('year/create')
+            return Redirect::to('month/create')
                 ->withInput(Input::except('password'))
                 ->withErrors($validator);
         } else {
             // store            
-            $year = Year::firstOrCreate([
-                'year' => Input::get('year'),
-                'calendar_id' => Input::get('calendar_id')
+            $month = Month::firstOrCreate([
+                'month' => Input::get('month'),
+                'month_number' => Input::get('month_number'),
+                'year_id' => Input::get('year_id')
             ]);
             
             return redirect()
-                    ->action('YearController@show', ['id' => $year->id])
-                    ->with('success', 'Year successfully created!')
+                    ->action('MonthController@show', ['id' => $month->id])
+                    ->with('success', 'Month successfully created!')
             ;
         }
     }
@@ -74,15 +76,15 @@ class YearController extends Controller
      */
     public function show($id)
     {        
-        $year = Year::find($id);
-        $months = Month::where('year_id', $year->id)->get();
+        $month = Month::find($id);
+        $days = Day::where('month_id', $month->id)->get();
         
-        if ($year)
+        if ($month)
         {
-            $calendar = Calendar::find($year->calendar_id);
+            $year = Year::find($month->year_id);
         }
         
-        return view('year.show')->with('year', $year)->with('months', $months)->with('property_id', $calendar->property_id);
+        return view('month.show')->with('month', $month)->with('days', $days)->with('year', $year);
     }
 
     /**
@@ -93,15 +95,14 @@ class YearController extends Controller
      */
     public function destroy($id)
     {
-        $year = Year::find($id);
+        $month = Month::find($id);
+        $year = Year::find($month->year_id);
         
-        $calendar = Calendar::find($year->calendar_id);
-        
-        $year->delete();
+        $month->delete();
         
         return redirect()
-                ->action('PropertyController@show', ['id' => $calendar->property_id])
-                ->with('success', 'Year has been successfully deleted!')
+                ->action('YearController@show', ['id' => $year->id])
+                ->with('success', 'Month has been successfully deleted!')
         ;
     }
 }
