@@ -72,7 +72,6 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->integer('calendar_id')->unsigned()->index()->foreign()->references("id")->on("calendars");
-            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
         Schema::create('months', function (Blueprint $table) {

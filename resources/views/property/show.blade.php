@@ -48,13 +48,24 @@
         </div>
     @endif
         
-    <div class="jumbotron">
-        @if ($calendar)
-            <p>Show calendar years</p>
-        @else
-            <p class="text-center">There is no calendars yet!</p> 
-        @endif
-    </div>
+    @if ($calendar)
+        <div class="jumbotron">
+            @if (count($years) > 0)
+                @foreach ($years as $year)
+                    <div class = "row justify-content-md-center">
+                        <a class="btn btn-lg btn-primary" style="margin-bottom: 10px;" href="{{ URL::to('year/show/' . $year->id) }}">
+                            {{$year->year}}
+                        </a>
+                    </div>
+                @endforeach
+            @endif
+            <div class="text-center" style="padding-top: 50px;">
+                <a class="btn btn-success" href="{{ action('YearController@create', $calendar->id) }}">
+                    Add Year
+                </a>
+            </div>
+        </div>
+    @endif
 
 </div>
 @endsection

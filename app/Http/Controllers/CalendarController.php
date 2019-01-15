@@ -10,7 +10,7 @@ class CalendarController extends Controller
     /**
      * Create calendar.
      *
-     * @param  int  $id
+     * @param  Property $id
      * 
      * @return Response
      */
@@ -18,10 +18,10 @@ class CalendarController extends Controller
     {
         $property = Property::find($id);
         
-        $calendar = new Calendar();
-        $calendar->property_id = $property->id;
-        $calendar->save();
-        
-        return view('property.show')->with('property', $property)->with('calendar', $calendar);
+        $calendar = Calendar::firstOrCreate([
+            'property_id' => $property->id
+        ]);
+            
+        return view('property.show')->with('property', $property)->with('calendar', $calendar)->with('years', []);
     }
 }

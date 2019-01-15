@@ -33,3 +33,8 @@ Route::put('/property/{id}', 'PropertyController@update');
 Route::delete('/property/{id}', 'PropertyController@destroy');
 
 Route::get('/calendar/{id}', 'CalendarController@create');
+
+Route::get('/year/{id}', 'YearController@create');
+Route::post('/year/store', 'YearController@store');
+Route::get('/year/show/{id}', 'YearController@show');
+Route::delete('/year/{id}', 'YearController@destroy');
