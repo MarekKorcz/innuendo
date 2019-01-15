@@ -21,7 +21,7 @@
         </ul>
     </nav>
 
-    <h2 style="padding: 20px;">Showing - {{ $property->name }}</h2>
+    <h2 style="padding: 20px;">{{ $property->name }}</h2>
     
     <hr>
 
@@ -78,7 +78,7 @@
                 <div class="list-group">
                     @foreach ($years as $year)
                         <a class="list-group-item text-center" href="{{ URL::to('year/show/' . $year->id) }}">
-                            {{$year->year}}
+                            <h4>{{$year->year}}</h4>
                         </a>
                     @endforeach
                 </div>

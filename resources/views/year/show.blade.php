@@ -24,7 +24,7 @@
         </ul>
     </nav>
 
-    <h2 style="padding: 20px;">Showing year - {{ $year->year }}</h2>
+    <h2 style="padding: 20px;">{{ $year->year }}</h2>
     
     <hr>
     
@@ -52,13 +52,13 @@
     
     <div class="jumbotron">
         <div class="text-center" style="margin-bottom: 40px;">
-            <h2>Years:</h2>
+            <h2>Months:</h2>
         </div>
         @if (count($months) > 0)
             <div class="list-group">
                 @foreach ($months as $month)
                     <a class="list-group-item text-center" href="{{ URL::to('month/show/' . $month->id) }}">
-                        {{$month->month}}
+                        <h4>{{$month->month}}</h4>
                     </a>
                 @endforeach
             </div>

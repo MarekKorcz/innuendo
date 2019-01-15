@@ -75,7 +75,7 @@ class YearController extends Controller
     public function show($id)
     {        
         $year = Year::find($id);
-        $months = Month::where('year_id', $year->id)->get();
+        $months = Month::where('year_id', $year->id)->orderBy('month_number')->get();
         
         if ($year)
         {
