@@ -21,23 +21,44 @@
         </ul>
     </nav>
 
-    <h2>Showing - {{ $property->name }}</h2>
+    <h2 style="padding: 20px;">Showing - {{ $property->name }}</h2>
+    
+    <hr>
 
     <div class="jumbotron">
-        <p>
-            <strong>Id:</strong> {{ $property->id }}<br>
-            <strong>Name:</strong> {{ $property->name }}<br>
-            <strong>Slug:</strong> {{ $property->slug }}<br>
-            <strong>Description:</strong> {!! $property->description !!}<br>
-            <strong>Phone number:</strong> {{ $property->phone_number }}<br>
-            <strong>Street:</strong> {{ $property->street_number }}<br>
-            <strong>House number:</strong> {{ $property->house_number }}<br>
-            <strong>City:</strong> {{ $property->city }}<br>
-            <strong>Created at:</strong> {{ $property->created_at }}<br>
-            <strong>Updated at:</strong> {{ $property->updated_at }}<br>
-            <strong>Deleted at:</strong> {{ $property->deleted_at }}<br>
-            <strong>Owner id:</strong> {{ $property->user_id }}
-        </p>
+        <div class="text-center" style="margin-bottom: 40px;">
+            <h2>Values:</h2>
+        </div>
+        <table class="table table-striped">
+            <tr>
+                <th>Id:</th>
+                <th>Name:</th>
+                <th>Slug:</th>
+                <th>Description:</th>
+                <th>Phone number:</th>
+                <th>Street:</th>
+                <th>Street number:</th>
+                <th>House number:</th>
+                <th>City:</th>
+                <th>Created at:</th>
+                <th>Updated at:</th>
+                <th>Owner id:</th>
+            </tr>
+            <tr>
+                <td>{{ $property->id }}</td>
+                <td>{{ $property->name }}</td>
+                <td>{{ $property->slug }}</td>
+                <td>{!! $property->description !!}</td>
+                <td>{{ $property->phone_number }}</td>
+                <td>{{ $property->street }}</td>
+                <td>{{ $property->street_number }}</td>
+                <td>{{ $property->house_number }}</td>
+                <td>{{ $property->city }}</td>
+                <td>{{ $property->created_at }}</td>
+                <td>{{ $property->updated_at }}</td>
+                <td>{{ $property->user_id }}</td>
+            </tr>
+        </table>
     </div>
     
     @if (!$calendar)
@@ -50,14 +71,17 @@
         
     @if ($calendar)
         <div class="jumbotron">
+            <div class="text-center" style="margin-bottom: 40px;">
+                <h2>Years:</h2>
+            </div>
             @if (count($years) > 0)
-                @foreach ($years as $year)
-                    <div class = "row justify-content-md-center">
-                        <a class="btn btn-lg btn-primary" style="margin-bottom: 10px;" href="{{ URL::to('year/show/' . $year->id) }}">
+                <div class="list-group">
+                    @foreach ($years as $year)
+                        <a class="list-group-item text-center" href="{{ URL::to('year/show/' . $year->id) }}">
                             {{$year->year}}
                         </a>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             @endif
             <div class="text-center" style="padding-top: 50px;">
                 <a class="btn btn-success" href="{{ action('YearController@create', $calendar->id) }}">

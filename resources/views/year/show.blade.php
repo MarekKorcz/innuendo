@@ -24,17 +24,44 @@
         </ul>
     </nav>
 
-    <h2>Showing year - {{ $year->year }}</h2>
+    <h2 style="padding: 20px;">Showing year - {{ $year->year }}</h2>
+    
+    <hr>
     
     <div class="jumbotron">
+        <div class="text-center" style="margin-bottom: 40px;">
+            <h2>Values:</h2>
+        </div>
+        <table class="table table-striped">
+            <tr>
+                <th>Id:</th>
+                <th>Year:</th>
+                <th>Created at:</th>
+                <th>Updated at:</th>
+                <th>Property id:</th>
+            </tr>
+            <tr>
+                <td>{{ $year->id }}</td>
+                <td>{{ $year->year }}</td>
+                <td>{{ $year->created_at }}</td>
+                <td>{{ $year->updated_at }}</td>
+                <td>{{ $property_id }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="jumbotron">
+        <div class="text-center" style="margin-bottom: 40px;">
+            <h2>Years:</h2>
+        </div>
         @if (count($months) > 0)
-            @foreach ($months as $month)
-                <div class = "row justify-content-md-center">
-                    <a class="btn btn-lg btn-primary" style="margin-bottom: 10px;" href="{{ URL::to('month/show/' . $month->id) }}">
+            <div class="list-group">
+                @foreach ($months as $month)
+                    <a class="list-group-item text-center" href="{{ URL::to('month/show/' . $month->id) }}">
                         {{$month->month}}
                     </a>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         @endif
         <div class="text-center" style="padding-top: 50px;">
             <a class="btn btn-success" href="{{ action('MonthController@create', $year->id) }}">
