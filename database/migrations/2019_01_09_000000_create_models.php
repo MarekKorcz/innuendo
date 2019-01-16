@@ -86,6 +86,7 @@ class CreateModels extends Migration
         Schema::create('days', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('day_number');
+            $table->integer('number_in_week');
             $table->timestamps();
             $table->softDeletes();
             $table->integer('month_id')->unsigned()->index()->foreign()->references("id")->on("months");

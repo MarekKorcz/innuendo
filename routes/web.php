@@ -43,3 +43,6 @@ Route::get('/month/{id}', 'MonthController@create');
 Route::post('/month/store', 'MonthController@store');
 Route::get('/month/show/{id}', 'MonthController@show');
 Route::delete('/month/{id}', 'MonthController@destroy');
+
+Route::get('/day/{id}', 'DayController@create');
+Route::post('/day/store', 'DayController@store');

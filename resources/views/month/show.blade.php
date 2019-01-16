@@ -27,7 +27,9 @@
             <p>Show days</p>
         @endif
         <div class="text-center" style="padding-top: 50px;">
-            <p>Add day button</p>
+            <a class="btn btn-success" href="{{ action('DayController@create', $month->id) }}">
+                Add Days
+            </a>
         </div>
     </div>
 </div>

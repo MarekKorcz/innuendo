@@ -22,7 +22,7 @@ class Day extends Model
      * @var array
      */
     protected $fillable = [
-        'day_number', 'month_id'
+        'day_number', 'number_in_week', 'month_id'
     ];
     
     /**
@@ -32,6 +32,7 @@ class Day extends Model
      */
     protected $casts = [
         'day_number' => 'integer',
+        'number_in_week' => 'integer',
         'month_id' => 'integer'
     ];
     
