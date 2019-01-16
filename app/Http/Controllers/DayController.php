@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Year;
 use App\Month;
 use App\Day;
+use App\TimeInterval;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -98,8 +99,16 @@ class DayController extends Controller
      * @return Response
      */
     public function show($id)
-    {        
-        //
+    {
+        $day = Day::find($id);
+        $timeIntervals = TimeInterval::where('day_id', $day->id)->get();
+        
+        if ($day)
+        {
+            $month = Month::find($day->month_id);
+        }
+        
+        return view('day.show')->with('day', $day)->with('timeIntervals', $timeIntervals)->with('month', $month);
     }
 
     /**

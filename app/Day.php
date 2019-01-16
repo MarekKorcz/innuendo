@@ -49,6 +49,14 @@ class Day extends Model
      */
     public function appointment()
     {
-        return $this->hasOne('App\Appointment');
+        return $this->hasMany('App\Appointment');
+    }
+    
+    /**
+     * Get time intervals that belongs to day.
+     */
+    public function timeIntervals()
+    {
+        return $this->hasMany('App\TimeInterval');
     }
 }

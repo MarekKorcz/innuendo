@@ -34,33 +34,41 @@
                     <th>Saturday</th>
                     <th>Sunday</th>
                 </tr>
-                @for ($i = 0; $i < count($days); $i++)
-                    @if (($i + 1) == 1 || ($i + 1) == 8 || ($i + 1) == 15 || ($i + 1) == 22 || ($i + 1) == 29)
-                        <tr>
+                <div class="list-group">
+                    @for ($i = 0; $i < count($days); $i++)
+                        @if (($i + 1) == 1 || ($i + 1) == 8 || ($i + 1) == 15 || ($i + 1) == 22 || ($i + 1) == 29)
+                            <tr>
+                                <td>
+                                    @if (count($days[$i]) > 0)
+                                        <a class="list-group-item text-center" href="{{ URL::to('day/show/' . $days[$i]->id) }}">
+                                            <h4>{{$days[$i]->day_number}}</h4>
+                                        </a>
+                                    @endif
+                                </td>
+                        @elseif (($i + 1) == 7 || ($i + 1) == 14 || ($i + 1) == 21 || ($i + 1) == 28)
+                                <td>
+                                    @if (count($days[$i]) > 0)
+                                        <a class="list-group-item text-center" href="{{ URL::to('day/show/' . $days[$i]->id) }}">
+                                            <h4>{{$days[$i]->day_number}}</h4>
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @else
                             <td>
                                 @if (count($days[$i]) > 0)
-                                    {{$days[$i]->day_number}}
+                                    <a class="list-group-item text-center" href="{{ URL::to('day/show/' . $days[$i]->id) }}">
+                                        <h4>{{$days[$i]->day_number}}</h4>
+                                    </a>
                                 @endif
                             </td>
-                    @elseif (($i + 1) == 7 || ($i + 1) == 14 || ($i + 1) == 21 || ($i + 1) == 28)
-                            <td>
-                                @if (count($days[$i]) > 0)
-                                    {{$days[$i]->day_number}}
-                                @endif
-                            </td>
-                        </tr>
-                    @else
-                        <td>
-                            @if (count($days[$i]) > 0)
-                                {{$days[$i]->day_number}}
-                            @endif
-                        </td>
-                    @endif
-                    
-                    @if (($i + 1) == count($days))
-                        </tr>
-                    @endif
-                @endfor
+                        @endif
+
+                        @if (($i + 1) == count($days))
+                            </tr>
+                        @endif
+                    @endfor
+                </div>
             </table>
         @endif
         <div class="text-center" style="padding-top: 50px;">

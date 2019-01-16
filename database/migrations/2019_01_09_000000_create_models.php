@@ -93,6 +93,16 @@ class CreateModels extends Migration
             $table->integer('month_id')->unsigned()->index()->foreign()->references("id")->on("months");
         });
         
+        Schema::create('time_intervals', function (Blueprint $table) {
+            $table->increments('id');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->integer('total_time');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('day_id')->unsigned()->index()->foreign()->references("id")->on("days");
+        });
+        
         Schema::create('appointments', function (Blueprint $table) {
             $table->increments('id');
             $table->time('start_time');
