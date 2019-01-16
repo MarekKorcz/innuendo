@@ -22,7 +22,7 @@ class Month extends Model
      * @var array
      */
     protected $fillable = [
-        'month', 'month_number', 'year_id'
+        'month', 'month_number', 'days_in_month', 'year_id'
     ];
     
     /**
@@ -32,6 +32,7 @@ class Month extends Model
      */
     protected $casts = [
         'month_number' => 'integer',
+        'days_in_month' => 'integer',
         'year_id' => 'integer'
     ];
     

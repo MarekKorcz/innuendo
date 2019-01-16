@@ -63,12 +63,9 @@ class DayController extends Controller
             
             $yearMonth = $yearNumber . "-" . $monthNumber;
             
-            $currentMonth = new \DateTime($yearMonth . "-01");
-            $numberInMonth = $currentMonth->format("t");
-            
             for ($i = Input::get('start_day'); $i <= Input::get('end_day'); $i++)
             {
-                if ($i > 0 && $i <= $numberInMonth)
+                if ($i > 0 && $i <= $month->days_in_month)
                 {
                     $dayNumber = strlen($i) == 2 ? $i : "0" . $i;
                     

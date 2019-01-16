@@ -78,6 +78,7 @@ class CreateModels extends Migration
             $table->increments('id');
             $table->string('month');
             $table->integer('month_number');
+            $table->integer('days_in_month');
             $table->timestamps();
             $table->softDeletes();
             $table->integer('year_id')->unsigned()->index()->foreign()->references("id")->on("years");

@@ -54,10 +54,22 @@ class MonthController extends Controller
                 ->withInput(Input::except('password'))
                 ->withErrors($validator);
         } else {
+            
+            $year = Year::find(Input::get('year_id'));
+            
+            $monthNumber = strlen(Input::get('month_number')) == 2 ? Input::get('month_number') : "0" . Input::get('month_number');
+            $yearNumber = $year->year;
+            
+            $yearMonth = $yearNumber . "-" . $monthNumber;
+            
+            $currentMonth = new \DateTime($yearMonth . "-01");
+            $numberInMonth = $currentMonth->format("t");
+            
             // store            
             $month = Month::firstOrCreate([
                 'month' => Input::get('month'),
                 'month_number' => Input::get('month_number'),
+                'days_in_month' => $numberInMonth,
                 'year_id' => Input::get('year_id')
             ]);
             
@@ -77,12 +89,14 @@ class MonthController extends Controller
     public function show($id)
     {        
         $month = Month::find($id);
-        $days = Day::where('month_id', $month->id)->get();
+        $days = Day::where('month_id', $month->id)->orderBy('day_number')->get();
         
         if ($month)
         {
             $year = Year::find($month->year_id);
         }
+        
+        $days = $this->formatDaysToCalendarForm($days, $month->days_in_month);
         
         return view('month.show')->with('month', $month)->with('days', $days)->with('year', $year);
     }
@@ -104,5 +118,38 @@ class MonthController extends Controller
                 ->action('YearController@show', ['id' => $year->id])
                 ->with('success', 'Month has been successfully deleted!')
         ;
+    }
+    
+    private function formatDaysToCalendarForm($days, $daysInMonth) 
+    {
+        $daysArray = [];
+        
+        for ($i = 0; $i < count($days); $i++)
+        {
+            if ($i == 0)
+            {
+                $monthStart = $days[$i]->number_in_week;
+                
+                if ($monthStart != 1)
+                {
+                    for ($j = 1; $j < $monthStart; $j++)
+                    {
+                        $daysArray[] = [];
+                    }
+                }
+                $daysArray[] = $days[$i];
+            }
+            else
+            {
+                $daysArray[] = $days[$i];
+                
+                if ($days[$i]->number_in_week == 6)
+                {
+                    $daysArray[] = [];
+                }
+            }
+        }
+        
+        return $daysArray;
     }
 }

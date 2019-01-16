@@ -20,11 +20,48 @@
         </ul>
     </nav>
 
-    <h2>Showing month - {{ $month->month }}</h2>
+    <h2 style="padding: 20px;">{{ $month->month }}</h2>
     
     <div class="jumbotron">
         @if (count($days) > 0)
-            <p>Show days</p>
+            <table class="table table-striped">
+                <tr>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
+                </tr>
+                @for ($i = 0; $i < count($days); $i++)
+                    @if (($i + 1) == 1 || ($i + 1) == 8 || ($i + 1) == 15 || ($i + 1) == 22 || ($i + 1) == 29)
+                        <tr>
+                            <td>
+                                @if (count($days[$i]) > 0)
+                                    {{$days[$i]->day_number}}
+                                @endif
+                            </td>
+                    @elseif (($i + 1) == 7 || ($i + 1) == 14 || ($i + 1) == 21 || ($i + 1) == 28)
+                            <td>
+                                @if (count($days[$i]) > 0)
+                                    {{$days[$i]->day_number}}
+                                @endif
+                            </td>
+                        </tr>
+                    @else
+                        <td>
+                            @if (count($days[$i]) > 0)
+                                {{$days[$i]->day_number}}
+                            @endif
+                        </td>
+                    @endif
+                    
+                    @if (($i + 1) == count($days))
+                        </tr>
+                    @endif
+                @endfor
+            </table>
         @endif
         <div class="text-center" style="padding-top: 50px;">
             <a class="btn btn-success" href="{{ action('DayController@create', $month->id) }}">
