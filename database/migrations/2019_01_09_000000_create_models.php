@@ -93,7 +93,7 @@ class CreateModels extends Migration
             $table->integer('month_id')->unsigned()->index()->foreign()->references("id")->on("months");
         });
         
-        Schema::create('time_intervals', function (Blueprint $table) {
+        Schema::create('graphics', function (Blueprint $table) {
             $table->increments('id');
             $table->time('start_time');
             $table->time('end_time');
@@ -106,6 +106,7 @@ class CreateModels extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->increments('id');
             $table->time('start_time');
+            $table->time('end_time');
             $table->integer('minutes');
             $table->timestamps();
             $table->softDeletes();
@@ -131,6 +132,7 @@ class CreateModels extends Migration
         Schema::dropIfExists('years');
         Schema::dropIfExists('months');
         Schema::dropIfExists('days');
+        Schema::dropIfExists('graphics');
         Schema::dropIfExists('appointments');
     }
 }

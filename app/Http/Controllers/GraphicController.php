@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Day;
-use App\TimeInterval;
+use App\Graphic;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
 
-class TimeIntervalController extends Controller
+class GraphicController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -30,7 +30,7 @@ class TimeIntervalController extends Controller
     {
         $day = Day::find($id);
         
-        return view('time_interval.create')->with('day', $day);
+        return view('graphic.create')->with('day', $day);
     }
 
     /**
@@ -49,7 +49,7 @@ class TimeIntervalController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('interval/create')
+            return Redirect::to('graphic/create')
                 ->withInput(Input::except('password'))
                 ->withErrors($validator);
         } else {
@@ -58,18 +58,18 @@ class TimeIntervalController extends Controller
             $startDate = \DateTime::createFromFormat('H:i', Input::get('start_time'));
             $endDate = \DateTime::createFromFormat('H:i', Input::get('end_time'));
             
-            $interval = $startDate->diff($endDate);
+            $graphic = $startDate->diff($endDate);
             $minutes = 0;
             
-            if ($interval->h > 0)
+            if ($graphic->h > 0)
             {
-                $minutes = $interval->h * 60;
+                $minutes = $graphic->h * 60;
             }
             
-            $minutes += $interval->i;
+            $minutes += $graphic->i;
             
             // store            
-            $timeInterval = TimeInterval::firstOrCreate([
+            $graphicTime = Graphic::firstOrCreate([
                 'start_time' => Input::get('start_time'),
                 'end_time' => Input::get('end_time'),
                 'total_time' => $minutes,
@@ -78,7 +78,7 @@ class TimeIntervalController extends Controller
             
             return redirect()
                     ->action('DayController@show', ['id' => Input::get('day_id')])
-                    ->with('success', 'Time interval has been successfully added!')
+                    ->with('success', 'Graphic has been successfully added!')
             ;
         }
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Year;
 use App\Month;
 use App\Day;
-use App\TimeInterval;
+use App\Graphic;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -101,14 +101,35 @@ class DayController extends Controller
     public function show($id)
     {
         $day = Day::find($id);
-        $timeIntervals = TimeInterval::where('day_id', $day->id)->get();
+        $graphicTime = Graphic::where('day_id', $day->id)->first();
+        
+        $graphic = [];
+        
+        if ($graphicTime !== null)
+        {
+            $workUnits = ($graphicTime->total_time / 60) * 2;
+            $startTime = date('G:i', strtotime($graphicTime->start_time));
+            
+            $startTimePart = explode(":", $startTime);
+            $startTime = $startTimePart[0] . ":" . $startTimePart[1];
+            
+            for ($i = 0; $i < $workUnits; $i++) 
+            {
+                $graphic[] = [
+                    $startTime,
+                    'place to make an appointment'
+                ];
+                $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));
+                $startTime = date('G:i', $timeIncrementedBy30Minutes);
+            }
+        }
         
         if ($day)
         {
             $month = Month::find($day->month_id);
         }
         
-        return view('day.show')->with('day', $day)->with('timeIntervals', $timeIntervals)->with('month', $month);
+        return view('day.show')->with('day', $day)->with('graphic', $graphic)->with('month', $month);
     }
 
     /**

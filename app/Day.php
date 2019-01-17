@@ -53,10 +53,10 @@ class Day extends Model
     }
     
     /**
-     * Get time intervals that belongs to day.
+     * Get graphic that belongs to day.
      */
-    public function timeIntervals()
+    public function graphic()
     {
-        return $this->hasMany('App\TimeInterval');
+        return $this->hasOne('App\Graphic');
     }
 }

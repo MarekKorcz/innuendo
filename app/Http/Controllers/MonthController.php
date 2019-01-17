@@ -137,7 +137,13 @@ class MonthController extends Controller
                         $daysArray[] = [];
                     }
                 }
+                
                 $daysArray[] = $days[$i];
+                
+                if ($monthStart == 6)
+                {
+                    $daysArray[] = [];
+                }
             }
             else
             {

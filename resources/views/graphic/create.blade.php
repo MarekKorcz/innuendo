@@ -13,9 +13,9 @@
         </ul>
     </nav>
 
-    <h1>Create time interval</h1>
+    <h1>Create Graphic</h1>
 
-    {{ Form::open(['action' => 'TimeIntervalController@store', 'method' => 'POST']) }}
+    {{ Form::open(['action' => 'GraphicController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
             {{ Form::label('start_time', 'Start (what time)') }}

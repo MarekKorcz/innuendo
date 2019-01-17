@@ -18,14 +18,37 @@
     <h2 style="padding: 20px;">Day {{ $day->day_number }}</h2>
     
     <div class="jumbotron">
-        @if (count($timeIntervals) > 0)
-            
+        @if (count($graphic) > 0)
+            <table class="table table-striped">
+                <tr>
+                    <th style="width: 16.66%">Hours</th>
+                    <th class="text-center">Appointments</th>
+                </tr>
+                <div class="list-group">
+                    <tr>
+                        @for ($i = 0; $i < count($graphic); $i++)
+                            <tr>
+                                <td>
+                                    {{$graphic[$i][0]}}
+                                </td>
+                                <td style="height: 120px;">
+                                    <div class="text-center">
+                                        {{$graphic[$i][1]}}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endfor
+                    </tr>
+                </div>
+            </table>
         @endif
-        <div class="text-center" style="padding-top: 50px;">
-            <a class="btn btn-success" href="{{ action('TimeIntervalController@create', $day->id) }}">
-                Add Time Interval
-            </a>
-        </div>
+        @if (count($graphic) == 0)
+            <div class="text-center" style="padding-top: 50px;">
+                <a class="btn btn-success" href="{{ action('GraphicController@create', $day->id) }}">
+                    Add Graphic
+                </a>
+            </div>
+        @endif
     </div>
 </div>
 @endsection

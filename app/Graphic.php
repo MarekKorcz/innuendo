@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TimeInterval extends Model
+class Graphic extends Model
 {
     use SoftDeletes;
     
@@ -38,7 +38,7 @@ class TimeInterval extends Model
     ];
     
     /**
-     * Get day that owns time interval.
+     * Get day that owns graphic.
      */
     public function day()
     {

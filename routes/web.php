@@ -48,5 +48,5 @@ Route::get('/day/{id}', 'DayController@create');
 Route::post('/day/store', 'DayController@store');
 Route::get('/day/show/{id}', 'DayController@show');
 
-Route::get('/interval/{id}', 'TimeIntervalController@create');
-Route::post('/interval/store', 'TimeIntervalController@store');
+Route::get('/graphic/{id}', 'GraphicController@create');
+Route::post('/graphic/store', 'GraphicController@store');

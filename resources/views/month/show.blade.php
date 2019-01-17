@@ -45,7 +45,7 @@
                                         </a>
                                     @endif
                                 </td>
-                        @elseif (($i + 1) == 7 || ($i + 1) == 14 || ($i + 1) == 21 || ($i + 1) == 28)
+                        @elseif (($i + 1) == 7 || ($i + 1) == 14 || ($i + 1) == 21 || ($i + 1) == 28 || ($i + 1) == 35)
                                 <td>
                                     @if (count($days[$i]) > 0)
                                         <a class="list-group-item text-center" href="{{ URL::to('day/show/' . $days[$i]->id) }}">

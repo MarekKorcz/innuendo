@@ -22,7 +22,7 @@ class Appointment extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'minutes', 'employee_id', 'item_id', 'day_id', 'user_id'
+        'start_time', 'start_time', 'minutes', 'employee_id', 'item_id', 'day_id', 'user_id'
     ];
     
     /**
@@ -32,6 +32,7 @@ class Appointment extends Model
      */
     protected $casts = [
         'start_time' => 'time',
+        'end_time' => 'time',
         'minutes' => 'integer',
         'employee_id' => 'integer',
         'day_id' => 'integer',
