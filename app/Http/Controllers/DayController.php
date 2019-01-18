@@ -117,7 +117,7 @@ class DayController extends Controller
             {
                 $graphic[] = [
                     $startTime,
-                    'place to make an appointment'
+                    'place to show asigned employee'
                 ];
                 $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));
                 $startTime = date('G:i', $timeIncrementedBy30Minutes);
