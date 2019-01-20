@@ -18,13 +18,13 @@ Route::get('/', function ()
 
 Auth::routes();
 
-Route::get('/calendar', 'UserController@calendar')->name('calendar');
-
 Route::get('/home', 'HomeController@index')->name('home');
-
 Route::get('/admin', 'HomeController@admin')->middleware('admin');
-
 Route::get('/employee', 'HomeController@employee')->middleware('employee');
+
+Route::get('/employees', 'UserController@employeesList')->name('employees');
+Route::get('/employee/{slack}', 'UserController@employee')->name('employee');
+Route::get('/property/{property_id}/calendar/{calendar_id}', 'UserController@calendar')->name('calendar');
 
 Route::get('/property/index', 'PropertyController@index');
 Route::get('/property/create', 'PropertyController@create');

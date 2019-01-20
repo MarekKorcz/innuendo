@@ -32,7 +32,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'isAdmin', 'isEmployee'
+        'slack', 'password', 'remember_token', 'isAdmin', 'isEmployee'
     ];
     
     /**

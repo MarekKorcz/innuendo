@@ -67,7 +67,7 @@
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
-                    <a href="{{ url('/calendar') }}">Calendar</a>
+                    <a href="{{ url('/employees') }}">Employees</a>
                     @auth
                         <a href="{{ url('/home') }}">Home</a>
                     @else

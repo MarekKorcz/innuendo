@@ -1,19 +1,5 @@
-#table-nav-bar {
-    background-color: lightskyblue;
-    border-radius: 25px;
-    margin-bottom: 10px;
-}
-
 .head-tile {
     float: left; 
-    padding: 10px;
-}
-
-tr > th {
-    width: 14.2%;
-}
-
-#calendar {
     padding: 10px;
 }
 
@@ -24,4 +10,23 @@ tr > th {
     height: 3em;
     overflow: visible;
     vertical-align: -.125em;
+}
+
+#calendar {
+    padding: 10px;
+    font-family: Sans-serif;
+}
+
+#table-nav-bar {
+    background-color: lightskyblue;
+    border-radius: 25px;
+    margin-bottom: 10px;
+}
+
+tr > th {
+    width: 14.2%;
+}
+
+.marked {
+    border: 2px springgreen solid;
 }
