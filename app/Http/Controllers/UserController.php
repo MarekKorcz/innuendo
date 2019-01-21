@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Calendar;
+use App\Graphic;
 use App\Property;
 use App\User;
 use App\Year;
@@ -68,12 +69,18 @@ class UserController extends Controller
         
         $days = $this->formatDaysToUserCalendarForm($days, $month->days_in_month);
         
+        $currentDay = Day::where('month_id', $month->id)->where('day_number', $currentDate->format("d"))->first();
+        $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
+        
+        $graphic = $this->formatGraphicAndAppointments($graphicTime);
+        
         return view('employee.calendar')->with([
             'calendar_id' => $calendar->id,
             'year' => $year,
             'month' => $month,
             'days' => $days,
-            'current_day' => $currentDate->format("d")
+            'current_day' => $currentDay->day_number,
+            'graphic' => $graphic
         ]);
     }
     
@@ -100,5 +107,31 @@ class UserController extends Controller
         }
         
         return $daysArray;
+    }
+    
+    private function formatGraphicAndAppointments($graphicTime) 
+    {
+        $graphic = [];
+        
+        if ($graphicTime !== null)
+        {
+            $workUnits = ($graphicTime->total_time / 60) * 2;
+            $startTime = date('G:i', strtotime($graphicTime->start_time));
+            
+            $startTimePart = explode(":", $startTime);
+            $startTime = $startTimePart[0] . ":" . $startTimePart[1];
+            
+            for ($i = 0; $i < $workUnits; $i++) 
+            {
+                $graphic[] = [
+                    $startTime,
+                    'place to show asigned employee'
+                ];
+                $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));
+                $startTime = date('G:i', $timeIncrementedBy30Minutes);
+            }
+        }
+        
+        return $graphic;
     }
 }

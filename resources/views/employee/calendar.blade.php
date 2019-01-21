@@ -83,7 +83,35 @@
             <div class="row">
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
                 <div id="appointments" class="text-center col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                    Appointments
+                    @if (count($graphic) > 0)
+                        <table class="table table-striped" style="margin-top: 20px;">
+                            <tr>
+                                <th>Hours</th>
+                                <th class="text-center">Appointments</th>
+                            </tr>
+                            <div class="list-group">
+                                <tr>
+                                    @for ($i = 0; $i < count($graphic); $i++)
+                                        <tr>
+                                            <td>
+                                                {{$graphic[$i][0]}}
+                                            </td>
+                                            <td style="height: 120px;">
+                                                <div class="text-center">
+                                                    {{$graphic[$i][1]}}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endfor
+                                </tr>
+                            </div>
+                        </table>
+                    @endif
+                    @if (count($graphic) == 0)
+                        <div class="text-center" style="padding-top: 50px;">
+                            <p>There's no Graphic available this day</p>
+                        </div>
+                    @endif
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
             </div>
