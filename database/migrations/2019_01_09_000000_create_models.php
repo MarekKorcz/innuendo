@@ -110,10 +110,10 @@ class CreateModels extends Migration
             $table->integer('minutes');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('graphic_id')->unsigned()->index()->foreign()->references("id")->on("graphics");
             $table->integer('day_id')->unsigned()->index()->foreign()->references("id")->on("days");
-            $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
-            $table->integer('item_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("items");
+            $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('item_id')->unsigned()->index()->foreign()->references("id")->on("items");
         });
     }
 

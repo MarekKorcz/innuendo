@@ -83,7 +83,7 @@
             <div class="row">
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
                 <div id="appointments" class="text-center col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                    @if (count($graphic) > 0)
+<!--                    @if (count($graphic) > 0)
                         <table class="table table-striped" style="margin-top: 20px;">
                             <tr>
                                 <th>Hours</th>
@@ -111,7 +111,23 @@
                         <div class="text-center" style="padding-top: 50px;">
                             <p>There's no Graphic available this day</p>
                         </div>
-                    @endif
+                    @endif-->
+
+                    <div class="appointment">
+                        <div class="box">Box 1</div>
+                        <div class="box-1">Box 2</div>
+                    </div>
+                    <div class="appointment">
+                        <div class="box">Box 1</div>
+                        <div class="box">Box 2</div>
+                        <div class="box-2">Box 3</div>
+                    </div>
+                    <div class="appointment">
+                        <div class="box">Box 1</div>
+                        <div class="box">Box 2</div>
+                        <div class="box">Box 3</div>
+                        <div class="box-3">Box 4</div>
+                    </div>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
             </div>

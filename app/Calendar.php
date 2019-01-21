@@ -22,7 +22,7 @@ class Calendar extends Model
      * @var array
      */
     protected $fillable = [
-        'property_id', 'employee_id'
+        'property_id'
     ];
     
     /**
@@ -31,8 +31,7 @@ class Calendar extends Model
      * @var array
      */
     protected $casts = [
-        'property_id' => 'integer',
-        'employee_id' => 'integer'
+        'property_id' => 'integer'
     ];
     
     /**
@@ -53,17 +52,5 @@ class Calendar extends Model
     public function years()
     {
         return $this->hasMany('App\Year');
-    }
-    
-    /**
-     *      EMPLOYEE
-     */
-    
-    /**
-     * Get employee that owns calendar.
-     */
-    public function employee()
-    {
-        return $this->belongsTo('App\User');
     }
 }

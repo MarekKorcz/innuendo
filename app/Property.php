@@ -63,11 +63,11 @@ class Property extends Model
     }
     
     /**
-     * Get the calendars which belongs to property
+     * Get the calendar which belong to property
      */
-    public function calendars()
+    public function calendar()
     {
-        return $this->hasMany('App\Calendar');
+        return $this->hasOne('App\Calendar');
     }
     
     /**

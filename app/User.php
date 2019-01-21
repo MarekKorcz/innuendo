@@ -88,18 +88,10 @@ class User extends Authenticatable
     }
     
     /**
-     * Get calendar assigned to employee.
+     * Get graphics assigned to employee.
      */
-    public function calendars()
+    public function graphics()
     {
-        return $this->hasMany('App\Calendar');
-    }
-    
-    /**
-     * Get units of work assigned to employee.
-     */
-    public function unitsOfWork()
-    {
-        return $this->hasMany('App\Appointment');
+        return $this->hasMany('App\Graphic');
     }
 }
