@@ -28,5 +28,16 @@ tr > th {
 }
 
 .marked {
-    border: 2px springgreen solid;
+    display:inline;
+    border: 6px solid lightskyblue;
+    border-radius: 20px;
+    background-color: lightskyblue;
+    color: white;
+    font-weight: bold;
+}
+
+#appointments {
+    min-height: 600px; 
+    border: 2px solid lightskyblue;
+    border-radius: 25px;
 }
