@@ -23,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'boss_id'
+        'name', 'slug', 'email', 'password', 'boss_id'
     ];
 
     /**
@@ -32,7 +32,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'slack', 'password', 'remember_token', 'isAdmin', 'isEmployee'
+        'password', 'remember_token', 'isAdmin', 'isEmployee'
     ];
     
     /**
@@ -88,10 +88,10 @@ class User extends Authenticatable
     }
     
     /**
-     * Get graphics assigned to employee.
+     * Get calendars assigned to employee.
      */
-    public function graphics()
+    public function calendars()
     {
-        return $this->hasMany('App\Graphic');
+        return $this->hasMany('App\Calendar');
     }
 }

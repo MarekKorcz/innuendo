@@ -53,4 +53,12 @@ class Calendar extends Model
     {
         return $this->hasMany('App\Year');
     }
+    
+    /**
+     * Get an employee that owns calendar.
+     */
+    public function employee()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

@@ -101,6 +101,7 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->integer('day_id')->unsigned()->index()->foreign()->references("id")->on("days");
+            $table->integer('employee_id');
         });
         
         Schema::create('appointments', function (Blueprint $table) {

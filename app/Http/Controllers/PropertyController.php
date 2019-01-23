@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Property;
 use App\Calendar;
 use App\Year;
+use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -96,16 +97,25 @@ class PropertyController extends Controller
     public function show($id)
     {
         $property = Property::find($id);
-        $calendar = Calendar::where('property_id', $property->id)->first();
+        $calendars = Calendar::where('property_id', $property->id)->get();
         
         $years = [];
+        $users = [];
         
-        if ($calendar)
+        foreach ($calendars as $calendar)
         {
-            $years = Year::where('calendar_id', $calendar->id)->orderBy('year', 'desc')->get();
+            if ($calendar)
+            {
+                $years[$calendar->id] = Year::where('calendar_id', $calendar->id)->orderBy('year', 'desc')->get();
+                
+                if ($calendar->employee_id != null)
+                {
+                    $users[$calendar->id] = User::find($calendar->employee_id);
+                }
+            }
         }
         
-        return view('property.show')->with('property', $property)->with('calendar', $calendar)->with('years', $years);
+        return view('property.show')->with('property', $property)->with('calendars', $calendars)->with('years', $years)->with('users', $users);
     }
 
     /**
