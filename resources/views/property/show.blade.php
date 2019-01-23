@@ -60,36 +60,38 @@
             </tr>
         </table>
     </div>
-    
-    @if (!$calendar)
-        <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
-            <a class="btn btn-success" href="{{ action('CalendarController@create', $property->id) }}">
-                Create Calendar
-            </a>
-        </div>
-    @endif
         
-    @if ($calendar)
-        <div class="jumbotron">
-            <div class="text-center" style="margin-bottom: 40px;">
-                <h2>Years:</h2>
-            </div>
-            @if (count($years) > 0)
-                <div class="list-group">
-                    @foreach ($years as $year)
-                        <a class="list-group-item text-center" href="{{ URL::to('year/show/' . $year->id) }}">
-                            <h4>{{$year->year}}</h4>
-                        </a>
-                    @endforeach
+    @if ($calendars)
+        @foreach ($calendars as $calendar)
+            <div class="jumbotron">
+                <div class="text-center" style="margin-bottom: 40px;">
+                    add button to asign employee
+                    <h2 style="margin-bottom: 15px;">Calendar asigned to: (need to fix this) {{$calendar->employee_id}}</h2>
+                    <h3>Years:</h3>
                 </div>
-            @endif
-            <div class="text-center" style="padding-top: 50px;">
-                <a class="btn btn-success" href="{{ action('YearController@create', $calendar->id) }}">
-                    Add Year
-                </a>
+                @if (count($years[$calendar->id]) > 0)
+                    <div class="list-group">
+                        @foreach ($years[$calendar->id] as $year)
+                            <a class="list-group-item text-center" href="{{ URL::to('year/show/' . $year->id) }}">
+                                <h4>{{$year->year}}</h4>
+                            </a>
+                        @endforeach
+                    </div>
+                @endif
+                <div class="text-center" style="padding-top: 30px;">
+                    <a class="btn btn-success" href="{{ action('YearController@create', $calendar->id) }}">
+                        Add Year
+                    </a>
+                </div>
             </div>
-        </div>
+        @endforeach
     @endif
 
+    <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
+        <a class="btn btn-success" href="{{ action('CalendarController@create', $property->id) }}">
+            Create Calendar
+        </a>
+    </div>
+    
 </div>
 @endsection
