@@ -60,6 +60,7 @@ class CreateModels extends Migration
         
         Schema::create('calendars', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('isActive')->default(false);
             $table->timestamps();
             $table->softDeletes();
             $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");

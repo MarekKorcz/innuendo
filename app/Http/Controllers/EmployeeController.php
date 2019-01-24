@@ -43,8 +43,7 @@ class EmployeeController extends Controller
     {
         // validate
         $rules = array(
-            'employee'  => 'required',
-            'slug'      => 'required'
+            'employee'  => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -54,10 +53,8 @@ class EmployeeController extends Controller
                 ->withErrors($validator)
                 ->withInput(Input::except('password'));
         } else {
-            // overwrite employee with slug data
+            // load employee
             $employee = User::find(Input::get('employee'));
-            $employee->slug = Input::get('slug');
-            $employee->save();
             
             // assign it to calendar
             $calendar = Calendar::find(Input::get('calendar_id'));

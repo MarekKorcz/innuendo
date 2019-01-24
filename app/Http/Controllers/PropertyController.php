@@ -100,7 +100,7 @@ class PropertyController extends Controller
         $calendars = Calendar::where('property_id', $property->id)->get();
         
         $years = [];
-        $users = [];
+        $employees = [];
         
         foreach ($calendars as $calendar)
         {
@@ -110,12 +110,12 @@ class PropertyController extends Controller
                 
                 if ($calendar->employee_id != null)
                 {
-                    $users[$calendar->id] = User::find($calendar->employee_id);
+                    $employees[$calendar->id] = User::find($calendar->employee_id);
                 }
             }
         }
         
-        return view('property.show')->with('property', $property)->with('calendars', $calendars)->with('years', $years)->with('users', $users);
+        return view('property.show')->with('property', $property)->with('calendars', $calendars)->with('years', $years)->with('employees', $employees);
     }
 
     /**

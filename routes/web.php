@@ -22,11 +22,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/admin', 'HomeController@admin')->middleware('admin');
 Route::get('/employee', 'HomeController@employee')->middleware('employee');
 
-Route::get('/employee/{id}', 'EmployeeController@assign')->name('assign');
-Route::post('/employee/store', 'EmployeeController@store');
+Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');
+Route::post('/employee/assign/store', 'EmployeeController@store');
 
 Route::get('/employees', 'UserController@employeesList')->name('employees');
-Route::get('/employee/{slack}', 'UserController@employee')->name('employee');
+Route::get('/employee/{slug}', 'UserController@employee')->name('employee');
 Route::get('/employee/calendar/{calendar_id}', 'UserController@calendar')->name('calendar');
 
 Route::get('/property/index', 'PropertyController@index');
@@ -38,6 +38,7 @@ Route::put('/property/{id}', 'PropertyController@update');
 Route::delete('/property/{id}', 'PropertyController@destroy');
 
 Route::get('/calendar/{id}', 'CalendarController@create');
+Route::delete('/calendar/{id}', 'CalendarController@destroy');
 
 Route::get('/year/{id}', 'YearController@create');
 Route::post('/year/store', 'YearController@store');

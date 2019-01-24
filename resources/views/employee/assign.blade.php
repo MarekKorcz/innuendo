@@ -21,10 +21,6 @@
             {{ Form::label('employee', 'Employee') }}
             {{ Form::select('employee', $employees, null, array('class' => 'form-control')) }}
         </div>
-        <div class="form-group">
-            {{ Form::label('slug', 'Slug') }}
-            {{ Form::text('slug', Input::old('slug'), array('class' => 'form-control')) }}
-        </div>
         @if ($calendar)
             {{ Form::hidden('calendar_id', $calendar->id) }}
         @else

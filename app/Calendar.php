@@ -22,7 +22,7 @@ class Calendar extends Model
      * @var array
      */
     protected $fillable = [
-        'property_id'
+        'isActive', 'property_id', 'employee_id'
     ];
     
     /**
@@ -31,7 +31,9 @@ class Calendar extends Model
      * @var array
      */
     protected $casts = [
-        'property_id' => 'integer'
+        'isActive' => 'boolean',
+        'property_id' => 'integer',
+        'employee_id' => 'integer'
     ];
     
     /**

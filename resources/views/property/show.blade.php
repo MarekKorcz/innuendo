@@ -63,11 +63,28 @@
         
     @if ($calendars)
         @foreach ($calendars as $calendar)
-            @if ($calendar->employee_id != null)
-                <div class="jumbotron">
+            <div class="jumbotron">
+                <div>
+                    {!!Form::open(['action' => ['CalendarController@destroy', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                        {{ Form::hidden('_method', 'DELETE') }}
+                        {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                    {!!Form::close()!!}
+                </div>
+                <div>
+                    @if ($calendar->isActive)
+                        SET AS INACTIVE BUTTON
+                    @else
+                        SET AS ACTIVE BUTTON
+                    @endif
+                </div>
+                @if ($calendar->employee_id != null)
                     <div class="text-center" style="margin-bottom: 40px;">
-                        add hyperlink to employee page!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        <h2 style="margin-bottom: 15px;">Calendar assigned to {{$users[$calendar->id]->name}}</h2>
+                        <h2 style="margin-bottom: 15px;">
+                            Calendar assigned to 
+                            <a href="{{ URL::to('employee/' . $employees[$calendar->id]->slug) }}">
+                                {{$employees[$calendar->id]->name}}
+                            </a>
+                        </h2>
                         <h3>Years:</h3>
                     </div>
                     @if (count($years[$calendar->id]) > 0)
@@ -84,17 +101,15 @@
                             Add Year
                         </a>
                     </div>
-                </div>
-            @else
-                <div class="jumbotron">
+                @else
                     <h1 class="text-center">New calendar</h1>
                     <div class="text-center" style="padding-top: 30px;">
                         <a class="btn btn-primary" href="{{ action('EmployeeController@assign', $calendar->id) }}">
                             Assign calendar to Employee
                         </a>
                     </div>
-                </div>
-            @endif
+                @endif
+            </div>
         @endforeach
     @endif
 

@@ -8,7 +8,7 @@
 
     <div class="container">
         @foreach ($employees as $employee)
-            <a href="{{ URL::to('employee/' . $employee->slack) }}">
+            <a href="{{ URL::to('employee/' . $employee->slug) }}">
                 <div class="d-inline-block bg-warning" style="width: 250px; height: 350px; margin-left: 30px;">
                     <h3 class="text-center">{{$employee->name}}</h3>
                     <div class="text-center">
