@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Calendar;
 use App\Property;
-use App\Year;
-use App\User;
+use Illuminate\Http\Request;
 
 class CalendarController extends Controller
 {
@@ -35,23 +34,19 @@ class CalendarController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $calendar_id
-     * @param  int  $property_id
      * @return Response
      */
-    public function destroy($calendar_id, $property_id)
+    public function destroy(Request $request, $calendar_id)
     {
+        $property_id = $request->property_id;
+        
         $calendar = Calendar::find($calendar_id);
         $calendar->delete();
         
-        return redirect('/property/index')->with('success', 'Calendar deleted!');
-        
-//        return redirect()->action(
-//            'PropertyController@show', [
-//                'id' => $property_id
-//            ]
-//        )->with('success', 'Calendar deleted!');
-        
-        // put it to view
-//        {!!Form::open(['action' => ['CalendarController@destroy', [$calendar->id, $property->id]], 'method' => 'POST', 'class' => 'pull-right'])!!}
+        return redirect()->action(
+            'PropertyController@show', [
+                'id' => $property_id
+            ]
+        )->with('success', 'Calendar deleted!');
     }
 }

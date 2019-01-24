@@ -66,6 +66,7 @@
             <div class="jumbotron">
                 <div>
                     {!!Form::open(['action' => ['CalendarController@destroy', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                        {{ Form::hidden('property_id', $property->id) }}
                         {{ Form::hidden('_method', 'DELETE') }}
                         {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
                     {!!Form::close()!!}
