@@ -64,18 +64,26 @@
     @if ($calendars)
         @foreach ($calendars as $calendar)
             <div class="jumbotron">
-                <div>
+                <div style="padding: 5px;">
                     {!!Form::open(['action' => ['CalendarController@destroy', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                         {{ Form::hidden('property_id', $property->id) }}
                         {{ Form::hidden('_method', 'DELETE') }}
                         {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
                     {!!Form::close()!!}
                 </div>
-                <div>
+                <div style="padding: 5px;">
                     @if ($calendar->isActive)
-                        SET AS INACTIVE BUTTON
+                        {!!Form::open(['action' => ['CalendarController@deactivate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                            {{ Form::hidden('property_id', $property->id) }}
+                            {{ Form::hidden('_method', 'POST') }}
+                            {{ Form::submit('Deactivate calendar', ['class' => 'btn btn-primary']) }}
+                        {!!Form::close()!!}
                     @else
-                        SET AS ACTIVE BUTTON
+                        {!!Form::open(['action' => ['CalendarController@activate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                            {{ Form::hidden('property_id', $property->id) }}
+                            {{ Form::hidden('_method', 'POST') }}
+                            {{ Form::submit('Activate calendar', ['class' => 'btn btn-success']) }}
+                        {!!Form::close()!!}
                     @endif
                 </div>
                 @if ($calendar->employee_id != null)

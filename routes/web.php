@@ -38,6 +38,8 @@ Route::put('/property/{id}', 'PropertyController@update');
 Route::delete('/property/{id}', 'PropertyController@destroy');
 
 Route::get('/calendar/{id}', 'CalendarController@create');
+Route::post('/calendar/activate/{id}', 'CalendarController@activate');
+Route::post('/calendar/deactivate/{id}', 'CalendarController@deactivate');
 Route::delete('/calendar/{id}', 'CalendarController@destroy');
 
 Route::get('/year/{id}', 'YearController@create');
