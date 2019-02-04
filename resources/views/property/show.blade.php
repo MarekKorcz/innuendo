@@ -31,7 +31,6 @@
         </div>
         <table class="table table-striped">
             <tr>
-                <th>Id:</th>
                 <th>Name:</th>
                 <th>Slug:</th>
                 <th>Description:</th>
@@ -42,10 +41,8 @@
                 <th>City:</th>
                 <th>Created at:</th>
                 <th>Updated at:</th>
-                <th>Owner id:</th>
             </tr>
             <tr>
-                <td>{{ $property->id }}</td>
                 <td>{{ $property->name }}</td>
                 <td>{{ $property->slug }}</td>
                 <td>{!! $property->description !!}</td>
@@ -56,7 +53,6 @@
                 <td>{{ $property->city }}</td>
                 <td>{{ $property->created_at }}</td>
                 <td>{{ $property->updated_at }}</td>
-                <td>{{ $property->user_id }}</td>
             </tr>
         </table>
     </div>
@@ -64,13 +60,6 @@
     @if ($calendars)
         @foreach ($calendars as $calendar)
             <div class="jumbotron">
-                <div style="padding: 5px;">
-                    {!!Form::open(['action' => ['CalendarController@destroy', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                        {{ Form::hidden('property_id', $property->id) }}
-                        {{ Form::hidden('_method', 'DELETE') }}
-                        {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
-                    {!!Form::close()!!}
-                </div>
                 <div style="padding: 5px;">
                     @if ($calendar->isActive)
                         {!!Form::open(['action' => ['CalendarController@deactivate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
@@ -85,6 +74,13 @@
                             {{ Form::submit('Activate calendar', ['class' => 'btn btn-success']) }}
                         {!!Form::close()!!}
                     @endif
+                </div>
+                <div style="padding: 5px;">
+                    {!!Form::open(['action' => ['CalendarController@destroy', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                        {{ Form::hidden('property_id', $property->id) }}
+                        {{ Form::hidden('_method', 'DELETE') }}
+                        {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                    {!!Form::close()!!}
                 </div>
                 @if ($calendar->employee_id != null)
                     <div class="text-center" style="margin-bottom: 40px;">

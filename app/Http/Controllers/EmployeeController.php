@@ -62,7 +62,11 @@ class EmployeeController extends Controller
             $calendar->save();
 
             // redirect
-            return redirect('/property/index')->with('success', 'Employee successfully assigned!');
+            return redirect()->action(
+                'PropertyController@show', [
+                    'id' => $calendar->property_id
+                ]
+            )->with('success', 'Employee successfully assigned!');
         }
     }
 }

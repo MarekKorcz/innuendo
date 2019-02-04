@@ -27,7 +27,7 @@ Route::post('/employee/assign/store', 'EmployeeController@store');
 
 Route::get('/employees', 'UserController@employeesList')->name('employees');
 Route::get('/employee/{slug}', 'UserController@employee')->name('employee');
-Route::get('/employee/calendar/{calendar_id}', 'UserController@calendar')->name('calendar');
+Route::get('/employee/calendar/{calendar_id}/{year}/{month_number}', 'UserController@calendar')->name('calendar');
 
 Route::get('/property/index', 'PropertyController@index');
 Route::get('/property/create', 'PropertyController@create');
