@@ -13,7 +13,7 @@
         <div style="float: left; width: 50%; height: 300px;">
             @if ($calendars && count($calendars) == count($properties))
                 @for ($i = 0; $i < count($calendars); $i++)
-                    <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0') }}">
+                    <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
                         Calendar in {{ $properties[$i]->name }}
                     </a>
                 @endfor

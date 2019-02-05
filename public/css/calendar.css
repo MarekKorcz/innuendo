@@ -27,6 +27,14 @@ tr > th {
     width: 14.2%;
 }
 
+a:link {
+    text-decoration: none;
+}
+
+a:hover {
+    color: palevioletred;
+}
+
 .marked {
     display:inline;
     border: 6px solid lightskyblue;

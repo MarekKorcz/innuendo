@@ -61,104 +61,129 @@ class UserController extends Controller
      * @param integer $calendar_id
      * @param integer $year
      * @param integer $month_number
+     * @param integer $day_number
      * 
      * @return type
      * @throws Exception
      */
-    public function calendar($calendar_id, $year = 0, $month_number = 0)
+    public function calendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
     {
         $calendar = Calendar::where('id', $calendar_id)->where('isActive', 1)->first();
-        $currentDate = new \DateTime();
         
         if ($calendar != null)
         {
+            $currentDate = new \DateTime();
+            
             if ($year == 0)
             {
                 $year = Year::where('calendar_id', $calendar->id)->where('year', $currentDate->format("Y"))->first();
             }
-            else if (is_int($year) && $year > 0)
+            else if (is_numeric($year) && (int)$year > 0)
             {
-                $year = Year::where('calendar_id', $calendar->id)->where('year', $year)->first();
-            }
-            else 
-            {
-                throw new Exception('Incorrect year number');
-            }
-
-            if ($month_number == 0)
-            {
-                $month = Month::where('year_id', $year->id)->where('month_number', $currentDate->format("n"))->first();
-            }
-            else if (is_int($month_number) && $month_number > 0 || $month_number <= 12)
-            {
-                $month = Month::where('year_id', $year->id)->where('month_number', $month_number)->first();
-            }
-            else 
-            {
-                throw new Exception('Incorrect month number');
+                $year = Year::where('calendar_id', $calendar->id)->where('year', (int)$year)->first();
             }
             
-            if ($month == null)
+            if ($year !== null)
             {
-                $month = $this->switchFromMonthNumberToMonthName($currentDate->format("n"));
-            }
-        }        
-        
-        if (is_object($year) && is_object($month))
-        {
-            $days = Day::where('month_id', $month->id)->get();
-            $days = $this->formatDaysToUserCalendarForm($days, $month->days_in_month);
+                if ($month_number == 0)
+                {
+                    $month = Month::where('year_id', $year->id)->where('month_number', $currentDate->format("n"))->first();
+                }
+                else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12)
+                {
+                    $month = Month::where('year_id', $year->id)->where('month_number', (int)$month_number)->first();
+                }
 
-            $currentDay = Day::where('month_id', $month->id)->where('day_number', $currentDate->format("d"))->first();
-            
-            if ($currentDay !== null)
-            {
-                $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
-                $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay);
-                
-                $currentDay = $currentDay->day_number;
+                if ($month !== null)
+                {
+                    $days = Day::where('month_id', $month->id)->get();
+                    
+                    if ($days !== null)
+                    {
+                        $days = $this->formatDaysToUserCalendarForm($days, $month->days_in_month);
+
+                        if ((int)$day_number === 0)
+                        {
+                            $currentDay = Day::where('month_id', $month->id)->where('day_number', $currentDate->format("d"))->first();
+                        }
+                        else
+                        {
+                            $currentDay = Day::where('month_id', $month->id)->where('day_number', $day_number)->first();
+                        }
+
+                        if ($currentDay !== null)
+                        {
+                            $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
+                            $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay);
+
+                            $currentDay = $currentDay->day_number;
+                        }
+                        else
+                        {
+                            $currentDay = 0;
+                            $graphic = [];
+                        }
+
+                        $availablePreviousMonth = false;
+
+                        if ($this->checkIfPreviewMonthIsAvailable($calendar, $year, $month))
+                        {
+                            $availablePreviousMonth = true;
+                        }
+                        
+                        $availableNextMonth = false;
+
+                        if ($this->checkIfNextMonthIsAvailable($calendar, $year, $month))
+                        {
+                            $availableNextMonth = true;
+                        }
+                        
+                        $employee = User::where('isEmployee', 1)->where('id', $calendar->employee_id)->first();
+
+                        return view('employee.calendar')->with([
+                            'calendar_id' => $calendar->id,
+                            'employee_slug' => $employee->slug,
+                            'availablePreviousMonth' => $availablePreviousMonth,
+                            'availableNextMonth' => $availableNextMonth,
+                            'year' => $year,
+                            'month' => $month,
+                            'days' => $days,
+                            'current_day' => $currentDay,
+                            'graphic' => $graphic
+                        ]);
+                    }
+                    else
+                    {
+                        $message = 'There is no graphic open for this month';
+                    }
+                }
+                else
+                {
+                    $message = 'There is no graphic open for this month';
+                }
             }
             else
             {
-                $currentDay = 0;
-                $graphic = [];
-            }            
-        }
+                $message = 'There is no graphic open for this year';
+            }
+            
+            return redirect()->action(
+                'UserController@calendar', [
+                    'calendar_id' => $calendar->id,
+                    'year' => 0, 
+                    'month_number' => 0, 
+                    'day_number' => 0
+                ]
+            )->with('error', $message);
+        }   
         else
         {
-            $days = [];
-            $currentDay = 0;
-            $graphic = [];
+            $message = 'Incorrect calendar id!';
         }
-            
-        return view('employee.calendar')->with([
-            'calendar_id' => $calendar->id,
-            'year' => $year,
-            'month' => $month,
-            'days' => $days,
-            'current_day' => $currentDay,
-            'graphic' => $graphic
-        ]);
-    }
-    
-    private function switchFromMonthNumberToMonthName($monthNumber)
-    {
-        $months = [
-            '1' => 'Styczeń',
-            '2' => 'Luty',
-            '3' => 'Marzec',
-            '4' => 'Kwiecień',
-            '5' => 'Maj',
-            '6' => 'Czerwiec',
-            '7' => 'Lipiec',
-            '8' => 'Sierpień',
-            '9' => 'Wrzesień',
-            '10' => 'Październik',
-            '11' => 'Listopad',
-            '12' => 'Grudzień'
-        ];
         
-        return $months[$monthNumber];
+        return redirect()->action(
+            'UserController@employeesList', []
+        )->with('error', $message);
     }
     
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
@@ -239,5 +264,71 @@ class UserController extends Controller
         }
         
         return $graphic;
+    }
+    
+    private function checkIfPreviewMonthIsAvailable($calendar, $year, $month)
+    {
+        if ($month->month_number == 1)
+        {
+            $year = Year::where('calendar_id', $calendar->id)->where('year', ($year->year - 1))->first();
+            
+            if ($year === null)
+            {
+                return false;
+            }
+            else
+            {
+                $month = Month::where('year_id', $year->id)->where('month_number', 12)->first();
+                
+                if ($month === null) 
+                {
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            $month = Month::where('year_id', $year->id)->where('month_number', ($month->month_number - 1))->first();
+                
+            if ($month === null) 
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private function checkIfNextMonthIsAvailable($calendar, $year, $month)
+    {
+        if ($month->month_number == 12)
+        {
+            $year = Year::where('calendar_id', $calendar->id)->where('year', ($year->year + 1))->first();
+            
+            if ($year === null)
+            {
+                return false;
+            }
+            else
+            {
+                $month = Month::where('year_id', $year->id)->where('month_number', 1)->first();
+                
+                if ($month === null) 
+                {
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            $month = Month::where('year_id', $year->id)->where('month_number', ($month->month_number + 1))->first();
+                
+            if ($month === null) 
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }
