@@ -84,3 +84,17 @@ a:hover {
     grid-row: 1/4;
     background-color: lightseagreen;
 }
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: .3rem;
+    outline: 0;
+    margin: calc(12.5vw + 10px);
+}

@@ -3,6 +3,9 @@
 @section('content')
 {!! Html::style('css/calendar.css') !!}
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+{!! Html::script('js/calendar.js') !!}
+
 <div class="container">
     
     <a class="btn btn-primary" href="{{ URL::to('/employee/' . $employee_slug) }}">
@@ -115,7 +118,11 @@
                             @if ($graphic[$i]['appointment'] == 0)
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time']}}</div>
-                                    <div class="box-1" style="background-color: lightgreen;">Wolne</div>
+                                    <a href="#makeAnAppointment" data-toggle="modal" data-id="{{$graphic[$i]['time']}}" title="Kliknij by rozpocząć rezerwacje" class="appointment-term box-1" style="background-color: lightgreen;">
+                                        <p style="margin-top: 15px;">
+                                            Wolne
+                                        </p>
+                                    </a>
                                 </div>
                             @elseif ($graphic[$i]['appointment'] == 1)
                                 <div class="appointment">
@@ -142,6 +149,36 @@
                     @endif
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal hide" id="makeAnAppointment">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rezerwacja wizyty</h3>
+                <button class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">                
+                
+                {{ Form::open(['action' => 'AppointmentController@create', 'method' => 'POST']) }}
+
+                    <div class="form-group">
+                        <label name="appointmentTerm" for="appointmentTerm"></label>
+                        <input type="hidden" name="appointmentTerm" id="appointmentTerm" value=""/>
+                        @if($graphic_id !== null)
+                            <input type="hidden" name="graphicId" value="{{$graphic_id}}"/>
+                        @endif
+                        <input type="hidden" name="calendarId" value="{{$calendar_id}}"/>
+                        <input type="hidden" name="year" value="{{$year->year}}"/>
+                        <input type="hidden" name="month" value="{{$month->month_number}}"/>
+                        <input type="hidden" name="day" value="{{$current_day}}"/>
+                    </div>
+                 
+                    {{ Form::submit('Przejdz do rezerwacji', array('class' => 'btn btn-primary')) }}
+
+                {{ Form::close() }}
+                 
             </div>
         </div>
     </div>

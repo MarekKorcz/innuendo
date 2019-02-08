@@ -12,17 +12,7 @@ use App\Day;
 use App\Appointment;
 
 class UserController extends Controller
-{
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-//        $this->middleware('auth');
-    }
-    
+{    
     /**
      * Shows employees.
      *
@@ -114,6 +104,7 @@ class UserController extends Controller
                         if ($currentDay !== null)
                         {
                             $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
+                            
                             $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay);
 
                             $currentDay = $currentDay->day_number;
@@ -122,6 +113,7 @@ class UserController extends Controller
                         {
                             $currentDay = 0;
                             $graphic = [];
+                            $graphicTime = [];
                         }
 
                         $availablePreviousMonth = false;
@@ -149,7 +141,8 @@ class UserController extends Controller
                             'month' => $month,
                             'days' => $days,
                             'current_day' => $currentDay,
-                            'graphic' => $graphic
+                            'graphic' => $graphic,
+                            'graphic_id' => $graphicTime ? $graphicTime->id : null
                         ]);
                     }
                     else
@@ -217,8 +210,8 @@ class UserController extends Controller
         
         if ($graphicTime !== null)
         {
-            $workUnits = ($graphicTime->total_time / 60) * 2;
-            $startTime = date('G:i', strtotime($graphicTime->start_time));
+            $workUnits = ($graphicTime->total_time / 30);
+            $startTime = date('G:i', strtotime($graphicTime->start_time));            
             
             for ($i = 0; $i < $workUnits; $i++) 
             {
@@ -232,9 +225,10 @@ class UserController extends Controller
                     {
                         $time = array($startTime);
 
-                        for ($i = 1; $i < $limit; $i++)
+                        for ($j = 1; $j < $limit; $j++)
                         {
                             $time[] = date('G:i', strtotime("+30 minutes", strtotime($time[count($time) - 1])));
+                            $workUnits -= 1;
                         }
                     }
                     else
@@ -260,7 +254,7 @@ class UserController extends Controller
                     $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));
                     $startTime = date('G:i', $timeIncrementedBy30Minutes);
                 }
-            }
+            }            
         }
         
         return $graphic;

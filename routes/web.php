@@ -58,3 +58,5 @@ Route::get('/day/show/{id}', 'DayController@show');
 
 Route::get('/graphic/{id}', 'GraphicController@create');
 Route::post('/graphic/store', 'GraphicController@store');
+
+Route::post('/appointment}', 'AppointmentController@create');
