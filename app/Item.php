@@ -22,7 +22,7 @@ class Item extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'description', 'price', 'image', 'category_id'
+        'name', 'minutes', 'slug', 'description', 'price', 'image', 'category_id'
     ];
     
     /**

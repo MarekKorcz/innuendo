@@ -50,6 +50,7 @@ class CreateModels extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('slug');
+            $table->integer('minutes');
             $table->text('description');
             $table->decimal('price');
             $table->string('image')->nullable();

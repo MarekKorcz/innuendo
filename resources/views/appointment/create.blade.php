@@ -3,52 +3,72 @@
 <div class="container">
 
     <nav class="navbar navbar-inverse">
-        <div class="navbar-header"></div>
         <ul class="nav navbar-nav">
             <li>
-                <a href="{{ URL::to('/property/index') }}" class="btn btn-primary">
-                    View All Properties
+                
+                <a href="{{ URL::to('/employee/calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn btn-primary">
+                    Powrót do kalendarza
                 </a>
             </li>
         </ul>
     </nav>
+    
+    <h1 style="padding-top: 30px;">Zarezerwuj wizytę</h1>
 
-    <h1>Create a Property</h1>
-
-    {{ Form::open(['action' => 'PropertyController@store', 'method' => 'POST']) }}
+    {{ Form::open(['action' => 'AppointmentController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
-            {{ Form::label('name', 'Name') }}
-            {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
+            <p>
+                Godzina wizyty: <strong style="font-size: 20px;">{{$appointmentTerm}}</strong>
+            </p>
+            @if ($appointmentTerm)
+                {{ Form::hidden('appointmentTerm', $appointmentTerm) }}
+            @else
+                {{ Form::hidden('appointmentTerm', Input::old('appointmentTerm')) }}
+            @endif
         </div>
+    
         <div class="form-group">
-            {{ Form::label('description', 'Description') }}
-            {{ Form::textarea('description', Input::old('description'), array('id' => 'article-ckeditor', 'class' => 'form-control')) }}
+            {{ Form::label('item', 'Rodzaj masażu:') }}
+            <select name="item" class="form-control">
+                @foreach ($items as $item)
+                    <option value="{{$item->id}}">{{$item->name}} - {{$item->minutes}} minut - {{$item->price}} zł</option>
+                @endforeach
+            </select>
         </div>
-        <div class="form-group">
-            {{ Form::label('phone_number', 'Phone number') }}
-            {{ Form::number('phone_number', Input::old('phone_number'), array('class' => 'form-control')) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('street', 'Street') }}
-            {{ Form::text('street', Input::old('street'), array('class' => 'form-control')) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('street_number', 'Street number') }}
-            {{ Form::number('street_number', Input::old('street_number'), array('class' => 'form-control')) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('house_number', 'House number') }}
-            {{ Form::number('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('city', 'City') }}
-            {{ Form::text('city', Input::old('city'), array('class' => 'form-control')) }}
-        </div>
-
-        {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+    
+        @if ($calendarId)
+            {{ Form::hidden('calendarId', $calendarId) }}
+        @else
+            {{ Form::hidden('calendarId', Input::old('calendarId')) }}
+        @endif
+        
+        @if ($graphicId)
+            {{ Form::hidden('graphicId', $graphicId) }}
+        @else
+            {{ Form::hidden('graphicId', Input::old('graphicId')) }}
+        @endif
+        
+        @if ($year)
+            {{ Form::hidden('year', $year) }}
+        @else
+            {{ Form::hidden('year', Input::old('year')) }}
+        @endif
+        
+        @if ($month)
+            {{ Form::hidden('month', $month) }}
+        @else
+            {{ Form::hidden('month', Input::old('month')) }}
+        @endif
+        
+        @if ($day)
+            {{ Form::hidden('day', $day) }}
+        @else
+            {{ Form::hidden('day', Input::old('day')) }}
+        @endif
+        
+        {{ Form::submit('Zarezerwuj', array('class' => 'btn btn-primary')) }}
 
     {{ Form::close() }}
-
 </div>
 @endsection

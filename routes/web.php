@@ -14,7 +14,7 @@
 Route::get('/', function () 
 {
     return view('welcome');
-});
+})->name('welcome');
 
 Auth::routes();
 
@@ -59,4 +59,6 @@ Route::get('/day/show/{id}', 'DayController@show');
 Route::get('/graphic/{id}', 'GraphicController@create');
 Route::post('/graphic/store', 'GraphicController@store');
 
-Route::post('/appointment}', 'AppointmentController@create');
+Route::post('/appointment/beforeShowCreatePage', 'AppointmentController@beforeShowCreatePage');
+Route::get('/appointment/create', 'AppointmentController@create');
+Route::post('/appointment/store', 'AppointmentController@store');

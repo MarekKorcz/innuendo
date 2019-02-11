@@ -161,7 +161,7 @@
             </div>
             <div class="modal-body">                
                 
-                {{ Form::open(['action' => 'AppointmentController@create', 'method' => 'POST']) }}
+                {{ Form::open(['action' => 'AppointmentController@beforeShowCreatePage', 'method' => 'POST']) }}
 
                     <div class="form-group">
                         <label name="appointmentTerm" for="appointmentTerm"></label>

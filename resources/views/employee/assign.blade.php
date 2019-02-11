@@ -26,7 +26,7 @@
         @else
             {{ Form::hidden('calendar_id', Input::old('calendar_id')) }}
         @endif
-        {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+        {{ Form::submit('Assign', array('class' => 'btn btn-primary')) }}
 
     {{ Form::close() }}
 
