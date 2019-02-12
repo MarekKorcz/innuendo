@@ -257,8 +257,6 @@ class AppointmentController extends Controller
                      * 
                      * displaying own appointments in calendar (in blade, so user could see it)
                      * 
-                     * find a bug with redirection after successfully adding appointment
-                     * 
                      * 
                      * 
                      */

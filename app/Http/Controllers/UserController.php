@@ -10,9 +10,20 @@ use App\Year;
 use App\Month;
 use App\Day;
 use App\Appointment;
+use App\Item;
 
 class UserController extends Controller
 {    
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['employeesList', 'employee', 'calendar']);
+    }
+    
     /**
      * Shows employees.
      *
@@ -179,6 +190,38 @@ class UserController extends Controller
         )->with('error', $message);
     }
     
+    /**
+     * Shows an appointment assigned to current user.
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function appointmentShow($id)
+    {
+        if ($id !== null)
+        {
+            $appointment = Appointment::where('id', $id)->where('user_id', auth()->user()->id)->first();
+            
+            if ($appointment !== null)
+            {
+                $item = Item::where('id', $appointment->item_id)->first();
+                $day = Day::where('id', $appointment->day_id)->first();
+                $month = Month::where('id', $day->month_id)->first();
+                $year = Year::where('id', $month->year_id)->first();
+                
+                return view('user.appointment-show')->with([
+                    'appointment' => $appointment,
+                    'item' => $item,
+                    'day' => $day->day_number,
+                    'month' => $month->month,
+                    'year' => $year->year
+                ]);
+            }
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
     {
         $daysArray = [];
@@ -217,6 +260,13 @@ class UserController extends Controller
             {
                 $appointment = Appointment::where('day_id', $currentDay->id)->where('start_time', $startTime)->first();
                 
+                $appointmentId = 0;
+                
+                if ($appointment !== null && auth()->user() !== null)
+                {
+                    $appointmentId = $appointment->user_id == auth()->user()->id ? $appointment->id  : 0;
+                }
+                
                 if ($appointment !== null)
                 {
                     $limit = $appointment->minutes / 30;
@@ -238,7 +288,8 @@ class UserController extends Controller
                     
                     $graphic[] = [
                         'time' => $time,
-                        'appointment' => $limit
+                        'appointment' => $limit,
+                        'appointmentId' => $appointmentId
                     ];
                     
                     $timeIncrementedByAppointmentMinutes = strtotime($appointment->end_time, strtotime($startTime));
@@ -248,7 +299,8 @@ class UserController extends Controller
                 {
                     $graphic[] = [
                         'time' => $startTime,
-                        'appointment' => 0
+                        'appointment' => 0,
+                        'appointmentId' => $appointmentId
                     ];
                     
                     $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));

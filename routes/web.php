@@ -62,3 +62,5 @@ Route::post('/graphic/store', 'GraphicController@store');
 Route::post('/appointment/beforeShowCreatePage', 'AppointmentController@beforeShowCreatePage');
 Route::get('/appointment/create', 'AppointmentController@create');
 Route::post('/appointment/store', 'AppointmentController@store');
+
+Route::get('/appointment/show/{id}', 'UserController@appointmentShow');
