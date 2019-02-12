@@ -209,14 +209,59 @@ class UserController extends Controller
                 $month = Month::where('id', $day->month_id)->first();
                 $year = Year::where('id', $month->year_id)->first();
                 
-                return view('user.appointment-show')->with([
+                $calendar = Calendar::where('id', $year->calendar_id)->first();
+                
+                $employee = User::where('id', $calendar->employee_id)->first();
+                $property = Property::where('id', $calendar->property_id)->first();
+                
+                return view('user.appointment_show')->with([
                     'appointment' => $appointment,
                     'item' => $item,
                     'day' => $day->day_number,
                     'month' => $month->month,
-                    'year' => $year->year
+                    'year' => $year->year,
+                    'employee' => $employee,
+                    'property' => $property
                 ]);
             }
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Shows a list of appointments assigned to current user.
+     * 
+     * @return type
+     */
+    public function appointmentIndex()
+    {
+        $appointments = Appointment::where('user_id', auth()->user()->id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+        
+        if ($appointments !== null)
+        {
+            foreach ($appointments as $appointment)
+            {
+                $day = Day::where('id', $appointment->day_id)->first();
+                $month = Month::where('id', $day->month_id)->first();
+                $year = Year::where('id', $month->year_id)->first();
+                $calendar = Calendar::where('id', $year->calendar_id)->first();
+                $employee = User::where('id', $calendar->employee_id)->first();
+                $property = Property::where('id', $calendar->property_id)->first();
+                
+                $date = $day->day_number. '/' . $month->month . '/' . $year->year;
+                $appointment['date'] = $date;
+                
+                $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
+                $appointment['address'] = $address;
+                
+                $employee = $employee->name;
+                $appointment['employee'] = $employee;
+            }
+            
+            return view('user.appointment_index')->with([
+                'appointments' => $appointments
+            ]);
         }
         
         return redirect()->route('welcome');

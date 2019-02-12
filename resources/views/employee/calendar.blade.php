@@ -150,7 +150,7 @@
                                     @elseif ($graphic[$i]['appointmentId'] > 0)
                                         <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" class="appointment-term box-2">
                                             <p style="margin-top: 45px;">
-                                                Wizyta użytkownika
+                                                Szczegóły wizyty
                                             </p>
                                         </a>
                                     @endif
@@ -167,7 +167,7 @@
                                     @elseif ($graphic[$i]['appointmentId'] > 0)
                                         <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" class="appointment-term box-3">
                                             <p style="margin-top: 72px;">
-                                                Wizyta użytkownika
+                                                Szczegóły wizyty
                                             </p>
                                         </a>
                                     @endif

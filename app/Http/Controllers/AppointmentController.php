@@ -255,7 +255,7 @@ class AppointmentController extends Controller
                      * 
                      * email sanding
                      * 
-                     * displaying own appointments in calendar (in blade, so user could see it)
+                     * add status property to appointment so employees could check if someone came or not
                      * 
                      * 
                      * 

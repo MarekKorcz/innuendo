@@ -64,3 +64,4 @@ Route::get('/appointment/create', 'AppointmentController@create');
 Route::post('/appointment/store', 'AppointmentController@store');
 
 Route::get('/appointment/show/{id}', 'UserController@appointmentShow');
+Route::get('/appointment/index', 'UserController@appointmentIndex');
