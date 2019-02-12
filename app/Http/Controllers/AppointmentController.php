@@ -263,10 +263,12 @@ class AppointmentController extends Controller
                      * 
                      */
                     
+                    $status = 'success';
                     $message = 'Wizyta została zarezerwowana. Informacja potwierdzająca została wysłana na maila!';
                     
                 } else {
                     
+                    $status = 'error';
                     $message = 'Nie można zarezerwować wizyty! Być może jest już zajęta!';
                 }
                 
@@ -274,10 +276,10 @@ class AppointmentController extends Controller
                     'UserController@calendar', [
                         'calendarId' => $calendarId,
                         'year' => is_object($year) ? $year->year : $year,
-                        'month_number' => $month,
-                        'day_number' => $day
+                        'month_number' => is_object($month) ? $month->month_number : $month,
+                        'day_number' => is_object($day) ? $day->day_number : $day
                     ]
-                )->with('error', $message);;
+                )->with($status, $message);;
             }
         }
         

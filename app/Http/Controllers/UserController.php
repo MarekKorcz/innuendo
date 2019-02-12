@@ -60,7 +60,7 @@ class UserController extends Controller
     {
         $calendar = Calendar::where('id', $calendar_id)->where('isActive', 1)->first();
         
-        if ($calendar != null)
+        if ($calendar !== null)
         {
             $currentDate = new \DateTime();
             
@@ -70,7 +70,7 @@ class UserController extends Controller
             }
             else if (is_numeric($year) && (int)$year > 0)
             {
-                $year = Year::where('calendar_id', $calendar->id)->where('year', (int)$year)->first();
+                $year = Year::where('calendar_id', $calendar->id)->where('year', $year)->first();
             }
             
             if ($year !== null)
@@ -81,7 +81,7 @@ class UserController extends Controller
                 }
                 else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12)
                 {
-                    $month = Month::where('year_id', $year->id)->where('month_number', (int)$month_number)->first();
+                    $month = Month::where('year_id', $year->id)->where('month_number', $month_number)->first();
                 }
 
                 if ($month !== null)
