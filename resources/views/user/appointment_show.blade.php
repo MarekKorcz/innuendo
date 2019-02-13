@@ -4,13 +4,16 @@
 
     <nav class="navbar navbar-inverse">
         <div class="navbar-header">
-            <a class="btn btn-success" href="{{ URL::previous() }}">
-                Wróć
+            <a href="{{ URL::to('/employee/calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn btn-success">
+                Powrót do kalendarza
             </a>
         </div>
         <ul class="nav navbar-nav">
             <li>
-                PLACE FOR DELETE APPOINTMENT BUTTON
+                {!!Form::open(['action' => ['UserController@appointmentDestroy', $appointment->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                    {{ Form::hidden('_method', 'DELETE') }}
+                    {{ Form::submit('Odwołaj wizytę', ['class' => 'btn btn-danger']) }}
+                {!!Form::close()!!}
                 <a class="btn btn-primary" href="{{ URL::to('/appointment/index') }}">
                     Wszystkie wizyty
                 </a>

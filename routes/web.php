@@ -65,3 +65,4 @@ Route::post('/appointment/store', 'AppointmentController@store');
 
 Route::get('/appointment/show/{id}', 'UserController@appointmentShow');
 Route::get('/appointment/index', 'UserController@appointmentIndex');
+Route::delete('/appointment/{id}', 'UserController@appointmentDestroy');

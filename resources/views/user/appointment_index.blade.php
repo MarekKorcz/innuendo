@@ -22,6 +22,7 @@
                 <td>Czas</td>
                 <td>Wykonawca</td>
                 <td>Status</td>
+                <td>Akcja</td>
             </tr>
         </thead>
         <tbody>
@@ -33,7 +34,22 @@
                     <td>{{$appointment->item->name}}</td>
                     <td>{{$appointment->minutes}}</td>
                     <td>{{$appointment->employee}}</td>
-                    <td>Oczekujący</td>
+                    <td>
+                        @if ($appointment->status == 0)
+                            Oczekujący
+                        @elseif ($appointment->status == 1)
+                            Wykonany
+                        @elseif ($appointment->status == 2)
+                            Odwołany
+                        @elseif ($appointment->status == 3)
+                            Opuszczony
+                        @endif
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" href="{{ URL::to('/appointment/show/' . $appointment->id) }}">
+                            Pokaż
+                        </a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

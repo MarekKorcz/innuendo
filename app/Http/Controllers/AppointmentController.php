@@ -255,29 +255,27 @@ class AppointmentController extends Controller
                      * 
                      * email sanding
                      * 
-                     * add status property to appointment so employees could check if someone came or not
                      * 
                      * 
                      * 
                      */
                     
-                    $status = 'success';
-                    $message = 'Wizyta została zarezerwowana. Informacja potwierdzająca została wysłana na maila!';
+                    return redirect()->action(
+                        'UserController@appointmentShow', [
+                            'id' => $appointment->id
+                        ]
+                    )->with('success', 'Wizyta została zarezerwowana. Informacja potwierdzająca została wysłana na maila!');
                     
-                } else {
-                    
-                    $status = 'error';
-                    $message = 'Nie można zarezerwować wizyty! Być może jest już zajęta!';
                 }
                 
                 return redirect()->action(
                     'UserController@calendar', [
                         'calendarId' => $calendarId,
-                        'year' => is_object($year) ? $year->year : $year,
-                        'month_number' => is_object($month) ? $month->month_number : $month,
-                        'day_number' => is_object($day) ? $day->day_number : $day
+                        'year' => $year,
+                        'month_number' => $month,
+                        'day_number' => $day
                     ]
-                )->with($status, $message);;
+                )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
             }
         }
         

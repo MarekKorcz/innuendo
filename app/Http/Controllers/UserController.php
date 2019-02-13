@@ -220,6 +220,7 @@ class UserController extends Controller
                     'day' => $day->day_number,
                     'month' => $month->month,
                     'year' => $year->year,
+                    'calendarId' => $calendar->id,
                     'employee' => $employee,
                     'property' => $property
                 ]);
@@ -267,6 +268,33 @@ class UserController extends Controller
         return redirect()->route('welcome');
     }
     
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function appointmentDestroy($id)
+    {        
+        $appointment = Appointment::where('id', $id)->first();
+        $appointment->delete();
+        
+        /**
+        * 
+        * 
+        * 
+        * email sanding
+        * 
+        * 
+        * 
+        * 
+        */
+        
+        return redirect()->action(
+            'UserController@appointmentIndex'
+        )->with('success', 'Wizyta została odwołana!');
+    }
+
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
     {
         $daysArray = [];

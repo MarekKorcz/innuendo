@@ -61,7 +61,7 @@ class CreateModels extends Migration
         
         Schema::create('calendars', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('isActive')->default(false);
+            $table->boolean('isActive')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
@@ -111,6 +111,7 @@ class CreateModels extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->integer('minutes');
+            $table->integer('status')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->integer('graphic_id')->unsigned()->index()->foreign()->references("id")->on("graphics");
