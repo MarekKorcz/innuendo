@@ -35,15 +35,7 @@
                     <td>{{$appointment->minutes}}</td>
                     <td>{{$appointment->employee}}</td>
                     <td>
-                        @if ($appointment->status == 0)
-                            Oczekujący
-                        @elseif ($appointment->status == 1)
-                            Wykonany
-                        @elseif ($appointment->status == 2)
-                            Odwołany
-                        @elseif ($appointment->status == 3)
-                            Opuszczony
-                        @endif
+                        {{config('appointment-status.' . $appointment->status)}}
                     </td>
                     <td>
                         <a class="btn btn-primary" href="{{ URL::to('/appointment/show/' . $appointment->id) }}">

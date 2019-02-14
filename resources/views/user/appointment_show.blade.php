@@ -38,18 +38,7 @@
             </a>
         </p>
         <p>
-            Status: 
-            <strong>
-                @if ($appointment->status == 0)
-                    Oczekujący
-                @elseif ($appointment->status == 1)
-                    Wykonany
-                @elseif ($appointment->status == 2)
-                    Odwołany
-                @elseif ($appointment->status == 3)
-                    Opuszczony
-                @endif
-            </strong>
+            Status wizyty: <strong>{{config('appointment-status.' . $appointment->status)}}</strong>
         </p>
     </div>    
 </div>
