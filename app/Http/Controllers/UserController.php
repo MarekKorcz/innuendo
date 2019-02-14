@@ -116,7 +116,9 @@ class UserController extends Controller
                         {
                             $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
                             
-                            $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay);
+                            $chosenDay = $currentDay;
+                            $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
+                            $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
 
                             $currentDay = $currentDay->day_number;
                         }
@@ -158,17 +160,17 @@ class UserController extends Controller
                     }
                     else
                     {
-                        $message = 'There is no graphic open for this month';
+                        $message = 'Brak otwartego grafiku na ten dzień';
                     }
                 }
                 else
                 {
-                    $message = 'There is no graphic open for this month';
+                    $message = 'Brak otwartego grafiku na ten miesiąc';
                 }
             }
             else
             {
-                $message = 'There is no graphic open for this year';
+                $message = 'Brak otwartego grafiku na ten rok';
             }
             
             return redirect()->action(
@@ -182,7 +184,7 @@ class UserController extends Controller
         }   
         else
         {
-            $message = 'Incorrect calendar id!';
+            $message = 'Niepoprawny numer id kalendarza!';
         }
         
         return redirect()->action(
@@ -218,7 +220,7 @@ class UserController extends Controller
                     'appointment' => $appointment,
                     'item' => $item,
                     'day' => $day->day_number,
-                    'month' => $month->month,
+                    'month' => $month->month_number,
                     'year' => $year->year,
                     'calendarId' => $calendar->id,
                     'employee' => $employee,
@@ -320,20 +322,26 @@ class UserController extends Controller
         return $daysArray;
     }
     
-    private function formatGraphicAndAppointments($graphicTime, $currentDay) 
+    private function formatGraphicAndAppointments($graphicTime, $chosenDay, $chosenDayDateTime) 
     {
         $graphic = [];
         
         if ($graphicTime !== null)
         {
+            $timeZone = new \DateTimeZone("Europe/Warsaw");
+            $now = new \DateTime(null, $timeZone);
+            
             $workUnits = ($graphicTime->total_time / 30);
-            $startTime = date('G:i', strtotime($graphicTime->start_time));            
+            $startTime = date('G:i', strtotime($graphicTime->start_time));
             
             for ($i = 0; $i < $workUnits; $i++) 
             {
-                $appointment = Appointment::where('day_id', $currentDay->id)->where('start_time', $startTime)->first();
+                $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->first();
                 
                 $appointmentId = 0;
+                
+                $explodedStartTime = explode(":", $startTime);
+                $chosenDayDateTime->setTime($explodedStartTime[0], $explodedStartTime[1], 0);
                 
                 if ($appointment !== null && auth()->user() !== null)
                 {
@@ -362,7 +370,8 @@ class UserController extends Controller
                     $graphic[] = [
                         'time' => $time,
                         'appointment' => $limit,
-                        'appointmentId' => $appointmentId
+                        'appointmentId' => $appointmentId,
+                        'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
                     
                     $timeIncrementedByAppointmentMinutes = strtotime($appointment->end_time, strtotime($startTime));
@@ -373,7 +382,8 @@ class UserController extends Controller
                     $graphic[] = [
                         'time' => $startTime,
                         'appointment' => 0,
-                        'appointmentId' => $appointmentId
+                        'appointmentId' => $appointmentId,
+                        'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
                     
                     $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));

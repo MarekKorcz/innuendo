@@ -118,21 +118,40 @@
                             @if ($graphic[$i]['appointment'] == 0)
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time']}}</div>
-                                    <a href="#makeAnAppointment" data-toggle="modal" data-id="{{$graphic[$i]['time']}}" title="Kliknij by rozpocząć rezerwacje" class="appointment-term box-1" style="background-color: lightgreen;">
-                                        <p style="margin-top: 15px;">
+                                    @if ($graphic[$i]['canMakeAnAppointment'])
+                                        <a href="#makeAnAppointment" 
+                                           data-toggle="modal" 
+                                           data-id="{{$graphic[$i]['time']}}" 
+                                           title="Kliknij by rozpocząć rezerwacje" 
+                                           class="appointment-term box-1" 
+                                           style="background-color: lightgreen;">
+                                            <p style="margin-top: 15px;">
+                                                Wolne
+                                            </p>
+                                        </a>
+                                    @else
+                                        <div class="appointment-term box-1" style="background-color: lightgrey;">
                                             Wolne
-                                        </p>
-                                    </a>
+                                        </div>
+                                    @endif
                                 </div>
                             @elseif ($graphic[$i]['appointment'] == 1)                            
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time']}}</div>
                                     @if ($graphic[$i]['appointmentId'] == 0)
-                                        <div class="box-1">
-                                            Zajęte
-                                        </div>
+                                        @if ($graphic[$i]['canMakeAnAppointment']) 
+                                            <div class="box-1">
+                                                Zajęte
+                                            </div>
+                                        @else
+                                            <div class="box-1" style="background-color: lightgrey;">
+                                                Zajęte
+                                            </div>
+                                        @endif
                                     @elseif ($graphic[$i]['appointmentId'] > 0)
-                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" class="appointment-term box-1">
+                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" 
+                                           class="appointment-term box-1" 
+                                           style="background-color: skyblue;">
                                             <p style="margin-top: 15px;">
                                                 Szczegóły wizyty
                                             </p>
@@ -144,11 +163,19 @@
                                     <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][1]}}</div>
                                     @if ($graphic[$i]['appointmentId'] == 0)
-                                        <div class="box-2">
-                                            Zajęte
-                                        </div>
+                                        @if ($graphic[$i]['canMakeAnAppointment']) 
+                                            <div class="box-2">
+                                                Zajęte
+                                            </div>
+                                        @else
+                                            <div class="box-2" style="background-color: lightgrey;">
+                                                Zajęte
+                                            </div>
+                                        @endif
                                     @elseif ($graphic[$i]['appointmentId'] > 0)
-                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" class="appointment-term box-2">
+                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" 
+                                           class="appointment-term box-2" 
+                                           style="background-color: skyblue;">
                                             <p style="margin-top: 45px;">
                                                 Szczegóły wizyty
                                             </p>
@@ -161,11 +188,19 @@
                                     <div class="box">{{$graphic[$i]['time'][1]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][2]}}</div>
                                     @if ($graphic[$i]['appointmentId'] == 0)
-                                        <div class="box-3">
-                                            Zajęte
-                                        </div>
+                                        @if ($graphic[$i]['canMakeAnAppointment']) 
+                                            <div class="box-3">
+                                                Zajęte
+                                            </div>
+                                        @else
+                                            <div class="box-3" style="background-color: lightgrey;">
+                                                Zajęte
+                                            </div>
+                                        @endif
                                     @elseif ($graphic[$i]['appointmentId'] > 0)
-                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" class="appointment-term box-3">
+                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" 
+                                           class="appointment-term box-3" 
+                                           style="background-color: skyblue;">
                                             <p style="margin-top: 72px;">
                                                 Szczegóły wizyty
                                             </p>
