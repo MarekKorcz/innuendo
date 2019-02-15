@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except(['employeesList', 'employee', 'calendar']);
+        $this->middleware('auth')->except(['employeesList', 'employee', 'propertiesList', 'property', 'calendar']);
     }
     
     /**
@@ -39,6 +39,7 @@ class UserController extends Controller
     /**
      * Shows employee.
      *
+     * @param type $slug
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function employee($slug)
@@ -54,6 +55,54 @@ class UserController extends Controller
         }
         
         return view('employee.show')->with('employee', $employee)->with('calendars', $calendars)->with('properties', $properties);
+    }
+    
+    /**
+     * Shows properties.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function propertiesList()
+    {
+        $properties = Property::all();
+        
+        return view('user.property_index')->with('properties', $properties);
+    }
+    
+    /**
+     * Shows property.
+     * 
+     * @param type $slug
+     * @return type
+     */
+    public function property($slug)
+    {
+        if (is_string($slug) && $slug !== null)
+        {
+            $property = Property::where('slug', $slug)->first();
+            
+            if ($property !== null)
+            {
+                $calendars = Calendar::where('property_id', $property->id)->where('isActive', 1)->get();
+                
+                $employees = [];
+
+                if ($calendars !== null)
+                {
+                    for ($i = 0; $i < count($calendars); $i++)
+                    {
+                        $employees[$i] = User::where('id', $calendars[$i]->employee_id)->first();
+                    }
+                }
+                
+                return view('user.property_show')->with([
+                    'property' => $property,
+                    'employees' => $employees
+                ]);
+            }
+        }
+        
+        return redirect()->route('welcome');
     }
     
     /**

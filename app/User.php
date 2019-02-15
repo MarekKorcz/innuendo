@@ -23,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'boss_id'
+        'name', 'email', 'password'
     ];
 
     /**
@@ -48,14 +48,6 @@ class User extends Authenticatable
     }
     
     /**
-     * Get employees associated to boss
-     */
-    public function employee()
-    {
-        return $this->hasMany('App\User', 'boss_id');
-    }
-    
-    /**
      *      USER
      */
     
@@ -70,22 +62,6 @@ class User extends Authenticatable
     /**
      *      EMPLOYEE
      */
-    
-    /**
-     * Get boss assigned to employee.
-     */
-    public function boss()
-    {
-        return $this->belongsTo('App\User', 'boss_id');
-    }
-    
-    /**
-     * Get workplaces assigned to employee.
-     */
-    public function workplaces()
-    {
-        return $this->belongsToMany('App\Property', 'property_employee', 'employee_id', 'property_id');
-    }
     
     /**
      * Get calendars assigned to employee.

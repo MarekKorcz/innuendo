@@ -28,13 +28,6 @@ class CreateModels extends Migration
             $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
-        Schema::create('property_employee', function (Blueprint $table) {
-            $table->integer('property_id');
-            $table->integer('employee_id');
-            $table->timestamps();
-            $table->primary(['property_id', 'employee_id']);
-        });
-        
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -103,7 +96,6 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->integer('day_id')->unsigned()->index()->foreign()->references("id")->on("days");
-            $table->integer('employee_id');
         });
         
         Schema::create('appointments', function (Blueprint $table) {

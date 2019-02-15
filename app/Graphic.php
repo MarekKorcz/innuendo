@@ -22,7 +22,7 @@ class Graphic extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'end_time', 'total_time', 'day_id', 'employee_id'
+        'start_time', 'end_time', 'total_time', 'day_id'
     ];
     
     /**
@@ -34,8 +34,7 @@ class Graphic extends Model
         'start_time' => 'time',
         'end_time' => 'time',
         'total_time' => 'integer',
-        'day_id' => 'integer',
-        'employee_id' => 'integer'
+        'day_id' => 'integer'
     ];
     
     /**

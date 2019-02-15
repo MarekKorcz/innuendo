@@ -19,8 +19,6 @@ Route::get('/', function ()
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/admin', 'HomeController@admin')->middleware('admin');
-Route::get('/employee', 'HomeController@employee')->middleware('employee');
 
 Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');
 Route::post('/employee/assign/store', 'EmployeeController@store');
@@ -28,6 +26,9 @@ Route::post('/employee/assign/store', 'EmployeeController@store');
 Route::get('/employees', 'UserController@employeesList')->name('employees');
 Route::get('/employee/{slug}', 'UserController@employee')->name('employee');
 Route::get('/employee/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
+
+Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
+Route::get('/user/property/{slug}', 'UserController@property')->name('property');
 
 Route::get('/property/index', 'PropertyController@index');
 Route::get('/property/create', 'PropertyController@create');

@@ -69,16 +69,4 @@ class Property extends Model
     {
         return $this->hasOne('App\Calendar');
     }
-    
-    /**
-     *      EMPLOYEE
-     */
-    
-    /**
-     * The employees that belongs to the property.
-     */
-    public function employees()
-    {
-        return $this->belongsToMany('App\User', 'property_employee', 'property_id', 'employee_id');
-    }
 }

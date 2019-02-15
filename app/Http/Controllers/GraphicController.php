@@ -71,18 +71,12 @@ class GraphicController extends Controller
             
             $minutes += $graphic->i;
             
-            $day = Day::find(Input::get('day_id'));
-            $month = Month::find($day->month_id);
-            $year = Year::find($month->year_id);
-            $calendar = Calendar::find($year->calendar_id);
-            
             // store            
             $graphicTime = Graphic::firstOrCreate([
                 'start_time' => Input::get('start_time'),
                 'end_time' => Input::get('end_time'),
                 'total_time' => $minutes,
-                'day_id' => Input::get('day_id'),
-                'employee_id' => $calendar->employee_id
+                'day_id' => Input::get('day_id')
             ]);
             
             return redirect()
