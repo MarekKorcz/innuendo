@@ -1,10 +1,14 @@
 @extends('layouts.app')
 @section('content')
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+{!! Html::script('js/backend_appointment_show.js') !!}
+
 <div class="container">
 
     <nav class="navbar navbar-inverse">
         <div class="navbar-header">
-            <a href="{{ URL::to('/employee/calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn btn-success">
+            <a href="{{ URL::to('/employee/backend-calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn btn-success">
                 Powrót do kalendarza
             </a>
         </div>
@@ -14,8 +18,8 @@
                     {{ Form::hidden('_method', 'DELETE') }}
                     {{ Form::submit('Odwołaj wizytę', ['class' => 'btn btn-danger']) }}
                 {!!Form::close()!!}
-                <a class="btn btn-primary" href="{{ URL::to('/appointment/index') }}">
-                    Wszystkie wizyty
+                <a class="btn btn-primary" href="{{ URL::to('/employee/backend-appointment/index/' . $appointment->user->id) }}">
+                    Wszystkie wizyty danego usera
                 </a>
             </li>
         </ul>
@@ -27,19 +31,23 @@
         </div>
         <p>Wizyta dnia: <strong>{{$day}} {{$month}} {{$year}}</strong></p>
         <p>Godzina wizyty: <strong>{{$appointment->start_time}}</strong> - <strong>{{$appointment->end_time}}</strong></p>
-        <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}, {{$property->city}}</strong></p>
         <p>Całkowity czas wizyty: <strong>{{$appointment->minutes}} minut</strong></p>
         <p>Rodzaj wizyty: <strong>{{$appointment->item->name}}</strong></p>
         <p>Opis wizyty: <strong>{{$appointment->item->description}}</strong></p>
         <p>Cena: <strong>{{$appointment->item->price}} zł</strong></p>
-        <p>Wykonawca: 
-            <a href="{{ URL::to('employee/' . $employee->slug) }}">
-                <strong>{{$employee->name}}</strong>
-            </a>
-        </p>
+        <p>Wykonawca: <strong>{{$employee->name}}</strong></p>
         <p>
-            Status wizyty: <strong>{{config('appointment-status.' . $appointment->status)}}</strong>
+            Status wizyty: <strong id="status">{{config('appointment-status.' . $appointment->status)}}</strong>
         </p>
+        <select id="appointment-status" class="form-control">
+            @foreach ($statuses as $status)
+                @if ($status['isActive'])
+                    <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}" selected="selected">{{$status['value']}}</option>
+                @else
+                    <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}">{{$status['value']}}</option>
+                @endif
+            @endforeach
+        </select>
     </div>    
 </div>
 @endsection

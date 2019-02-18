@@ -8,19 +8,14 @@
                 <div class="card-header">Moje konto</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
                     <div class="container">
-                        Jesteś zalogowany jako - <strong>{{$user->name}}</strong>
+                        <p>Jesteś zalogowany jako - <strong>{{$user->name}}</strong></p>
                         
-                        
-                        </br>
-                            Links
-                        
+                        @if (auth()->user()->isEmployee)
+                            <a class="btn btn-success" href="{{ URL::to('/employee/backend-graphic') }}">
+                                Grafiki
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

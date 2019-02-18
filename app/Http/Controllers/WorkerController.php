@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Calendar;
 use App\Graphic;
-use App\Property;
 use App\User;
 use App\Year;
 use App\Month;
 use App\Day;
 use App\Appointment;
+use App\Property;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
-class UserController extends Controller
+class WorkerController extends Controller
 {    
     /**
      * Create a new controller instance.
@@ -20,90 +22,26 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except(['employeesList', 'employee', 'propertiesList', 'property', 'calendar']);
+        $this->middleware('employee');
     }
     
     /**
-     * Shows employees.
+     * Shows graphics list.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function employeesList()
+    public function graphicList()
     {
-        $employees = User::where('isEmployee', 1)->get();
+        $calendars = Calendar::where('employee_id', auth()->user()->id)->with('property')->get();
         
-        return view('employee.index')->with('employees', $employees);
-    }
-    
-    /**
-     * Shows employee.
-     *
-     * @param type $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function employee($slug)
-    {
-        $employee = User::where('isEmployee', 1)->where('slug', $slug)->first();
-        $calendars = Calendar::where('employee_id', $employee->id)->where('isActive', 1)->get();
-        
-        $properties = [];
-        
-        for ($i = 0; $i < count($calendars); $i++)
+        if ($calendars !== null)
         {
-            $properties[$i] = Property::where('id', $calendars[$i]->property_id)->first();
-        }
-        
-        return view('employee.show')->with('employee', $employee)->with('calendars', $calendars)->with('properties', $properties);
-    }
-    
-    /**
-     * Shows properties.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function propertiesList()
-    {
-        $properties = Property::all();
-        
-        return view('user.property_index')->with('properties', $properties);
-    }
-    
-    /**
-     * Shows property.
-     * 
-     * @param type $slug
-     * @return type
-     */
-    public function property($slug)
-    {
-        if (is_string($slug) && $slug !== null)
-        {
-            $property = Property::where('slug', $slug)->first();
-            
-            if ($property !== null)
-            {
-                $calendars = Calendar::where('property_id', $property->id)->where('isActive', 1)->get();
-                
-                $employees = [];
-
-                if ($calendars !== null)
-                {
-                    for ($i = 0; $i < count($calendars); $i++)
-                    {
-                        $employees[$i] = User::where('id', $calendars[$i]->employee_id)->first();
-                    }
-                }
-                
-                return view('user.property_show')->with([
-                    'property' => $property,
-                    'employees' => $employees
-                ]);
-            }
+            return view('employee.backend_graphic')->with('calendars', $calendars);
         }
         
         return redirect()->route('welcome');
     }
-    
+
     /**
      * Shows calendar that belongs to employee.
      * 
@@ -115,7 +53,7 @@ class UserController extends Controller
      * @return type
      * @throws Exception
      */
-    public function calendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
+    public function backendCalendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
     {
         $calendar = Calendar::where('id', $calendar_id)->where('isActive', 1)->first();
         
@@ -193,7 +131,7 @@ class UserController extends Controller
                         
                         $employee = User::where('isEmployee', 1)->where('id', $calendar->employee_id)->first();
 
-                        return view('employee.calendar')->with([
+                        return view('employee.backend_calendar')->with([
                             'calendar_id' => $calendar->id,
                             'employee_slug' => $employee->slug,
                             'availablePreviousMonth' => $availablePreviousMonth,
@@ -241,16 +179,16 @@ class UserController extends Controller
     }
     
     /**
-     * Shows an appointment assigned to current user.
+     * Shows an appointment employee or admin.
      * 
      * @param type $id
      * @return type
      */
-    public function appointmentShow($id)
+    public function backendAppointmentShow($id)
     {
         if ($id !== null)
         {
-            $appointment = Appointment::where('id', $id)->where('user_id', auth()->user()->id)->with('item')->first();
+            $appointment = Appointment::where('id', $id)->with('item')->with('user')->first();
             
             if ($appointment !== null)
             {
@@ -263,14 +201,26 @@ class UserController extends Controller
                 $employee = User::where('id', $calendar->employee_id)->first();
                 $property = Property::where('id', $calendar->property_id)->first();
                 
-                return view('user.appointment_show')->with([
+                $statuses = [];
+                
+                for($i = 0; $i < 4; $i++)
+                {
+                    $statuses[] = [
+                        'key' => $i,
+                        'value' => config('appointment-status.' . $i),
+                        'isActive' => $appointment->status == $i ? true : false
+                    ];
+                }
+                
+                return view('employee.backend_appointment_show')->with([
                     'appointment' => $appointment,
                     'day' => $day->day_number,
                     'month' => $month->month,
                     'year' => $year->year,
                     'calendarId' => $calendar->id,
                     'employee' => $employee,
-                    'property' => $property
+                    'property' => $property,
+                    'statuses' => $statuses
                 ]);
             }
         }
@@ -279,13 +229,14 @@ class UserController extends Controller
     }
     
     /**
-     * Shows a list of appointments assigned to current user.
+     * Shows a list of appointments assigned to user.
      * 
+     * @param type $id
      * @return type
      */
-    public function appointmentIndex()
+    public function backendAppointmentIndex($id)
     {
-        $appointments = Appointment::where('user_id', auth()->user()->id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+        $appointments = Appointment::where('user_id', $id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
         
         if ($appointments !== null)
         {
@@ -301,14 +252,13 @@ class UserController extends Controller
                 $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
                 $appointment['date'] = $date;
                 
-                $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
-                $appointment['address'] = $address;
+                $appointment['name'] = $property->name;
                 
                 $employee = $employee->name;
                 $appointment['employee'] = $employee;
             }
             
-            return view('user.appointment_index')->with([
+            return view('employee.backend_appointment_index')->with([
                 'appointments' => $appointments
             ]);
         }
@@ -316,33 +266,41 @@ class UserController extends Controller
         return redirect()->route('welcome');
     }
     
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function appointmentDestroy($id)
-    {        
-        $appointment = Appointment::where('id', $id)->first();
-        $appointment->delete();
+    public function setAppointmentStatus(Request $request)
+    {
+        if ($request->request->all())
+        {
+            $appointment = Appointment::where('id', $request->get('appointmentId'))->first();
+            
+            if ($appointment !== null)
+            {
+                $appointment->status = $request->get('statusId');
+                $appointment->save();
+                
+                $data = [
+                    'type'    => 'success',
+                    'message' => 'Status wizyty został zmieniony!',
+                    'status'  => config('appointment-status.' . $appointment->status)
+                ];
+                
+                return new JsonResponse($data, 200, array(), true);
+                
+            } else {
+                
+                $message = "Wizyta nie istnieje";
+            }
+            
+        } else {
+            
+            $message = "Pusty request";
+        }
         
-        /**
-        * 
-        * 
-        * 
-        * email sanding
-        * 
-        * 
-        * 
-        * 
-        */
-        
-        return redirect()->action(
-            'UserController@appointmentIndex'
-        )->with('success', 'Wizyta została odwołana!');
+        return new JsonResponse(array(
+            'type'    => 'error',
+            'message' => $message            
+        ));
     }
-
+   
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
     {
         $daysArray = [];
@@ -373,27 +331,14 @@ class UserController extends Controller
         $graphic = [];
         
         if ($graphicTime !== null)
-        {
-            $timeZone = new \DateTimeZone("Europe/Warsaw");
-            $now = new \DateTime(null, $timeZone);
-            
+        {            
             $workUnits = ($graphicTime->total_time / 30);
             $startTime = date('G:i', strtotime($graphicTime->start_time));
             
             for ($i = 0; $i < $workUnits; $i++) 
             {
-                $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->first();
-                
-                $appointmentId = 0;
-                
-                $explodedStartTime = explode(":", $startTime);
-                $chosenDayDateTime->setTime($explodedStartTime[0], $explodedStartTime[1], 0);
-                
-                if ($appointment !== null && auth()->user() !== null)
-                {
-                    $appointmentId = $appointment->user_id == auth()->user()->id ? $appointment->id  : 0;
-                }
-                
+                $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->with('user')->with('item')->first();
+
                 if ($appointment !== null)
                 {
                     $limit = $appointment->minutes / 30;
@@ -415,9 +360,7 @@ class UserController extends Controller
                     
                     $graphic[] = [
                         'time' => $time,
-                        'appointment' => $limit,
-                        'appointmentId' => $appointmentId,
-                        'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
+                        'appointment' => $appointment
                     ];
                     
                     $timeIncrementedByAppointmentMinutes = strtotime($appointment->end_time, strtotime($startTime));
@@ -427,9 +370,7 @@ class UserController extends Controller
                 {
                     $graphic[] = [
                         'time' => $startTime,
-                        'appointment' => 0,
-                        'appointmentId' => $appointmentId,
-                        'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
+                        'appointment' => null
                     ];
                     
                     $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));

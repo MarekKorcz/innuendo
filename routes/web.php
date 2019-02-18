@@ -23,6 +23,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');
 Route::post('/employee/assign/store', 'EmployeeController@store');
 
+Route::get('/employee/backend-graphic', 'WorkerController@graphicList')->name('graphicList');
+Route::get('/employee/backend-calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'WorkerController@backendCalendar')->name('backendCalendar');
+Route::get('/employee/backend-appointment/show/{id}', 'WorkerController@backendAppointmentShow');
+Route::get('/employee/backend-appointment/index/{id}', 'WorkerController@backendAppointmentIndex');
+Route::post('/employee/backend-appointment/set-appointment-status', 'WorkerController@setAppointmentStatus');
+
 Route::get('/employees', 'UserController@employeesList')->name('employees');
 Route::get('/employee/{slug}', 'UserController@employee')->name('employee');
 Route::get('/employee/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
