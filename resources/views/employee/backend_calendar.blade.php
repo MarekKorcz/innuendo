@@ -129,50 +129,34 @@
                                             </p>
                                         </a>
                                 </div>
-                            @else          
-                                @if ($graphic[$i]['appointment']->minutes == 30)
-                                    <div class="appointment">
+                            @else   
+                                <div class="appointment">
+                                    @if ($graphic[$i]['appointment']->minutes == 30)
                                         <div class="box">{{$graphic[$i]['time']}}</div>
-                                            <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
-                                               class="appointment-term box-1" 
-                                               style="background-color: skyblue;">
-                                                <p style="margin-top: 15px;">
-                                                    {{$graphic[$i]['appointment']->user->name}} -
-                                                    {{$graphic[$i]['appointment']->item->name}} -
-                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
-                                                </p>
-                                            </a>
-                                    </div>
-                                @elseif ($graphic[$i]['appointment']->minutes == 60)
-                                    <div class="appointment">
+                                        <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
+                                           class="appointment-term box-1" 
+                                           style="background-color: skyblue;">
+                                    @elseif ($graphic[$i]['appointment']->minutes == 60)
                                         <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                         <div class="box">{{$graphic[$i]['time'][1]}}</div>
-                                            <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
-                                               class="appointment-term box-2" 
-                                               style="background-color: skyblue;">
-                                                <p style="margin-top: 45px;">
-                                                    {{$graphic[$i]['appointment']->user->name}} -
-                                                    {{$graphic[$i]['appointment']->item->name}} -
-                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
-                                                </p>
-                                            </a>
-                                    </div>
-                                @elseif ($graphic[$i]['appointment']->minutes == 90)
-                                    <div class="appointment">
+                                        <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
+                                           class="appointment-term box-2" 
+                                           style="background-color: skyblue;">
+                                    @elseif ($graphic[$i]['appointment']->minutes == 90)
                                         <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                         <div class="box">{{$graphic[$i]['time'][1]}}</div>
                                         <div class="box">{{$graphic[$i]['time'][2]}}</div>
-                                            <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
-                                               class="appointment-term box-3" 
-                                               style="background-color: skyblue;">
-                                                <p style="margin-top: 72px;">
-                                                    {{$graphic[$i]['appointment']->user->name}} -
-                                                    {{$graphic[$i]['appointment']->item->name}} -
-                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
-                                                </p>
-                                            </a>
-                                    </div>
-                                @endif
+                                        <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
+                                           class="appointment-term box-3" 
+                                           style="background-color: skyblue;">
+                                    @endif
+                                            <p style="margin-top: 15px;">
+                                                {{$graphic[$i]['appointment']->user->name}} -
+                                                {{$graphic[$i]['appointment']->item->name}} -
+                                                {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
+                                            </p>
+                                        </a>
+                                </div>
                             @endif
                         @endfor
                     @else
@@ -192,7 +176,7 @@
             </div>
             <div class="modal-body">                
                 
-                {{ Form::open(['action' => 'AppointmentController@beforeShowCreatePage', 'method' => 'POST']) }}
+                {{ Form::open(['action' => 'WorkerController@beforeShowCreatePage', 'method' => 'POST']) }}
 
                     <div class="form-group">
                         <label name="appointmentTerm" for="appointmentTerm"></label>
