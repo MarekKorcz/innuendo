@@ -568,11 +568,183 @@ class WorkerController extends Controller
     }
     
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function appointmentEdit($id)
+    {
+        $appointment = Appointment::where('id', $id)->with('item')->first();
+        
+        if ($appointment !== null)
+        {
+            $category = Category::where('id', $appointment->item->category_id)->first();
+            
+            $items = [];
+
+            if ($category !== null)
+            {
+                $itemsObject = Item::where('category_id', $category->id)->get();
+
+                foreach ($itemsObject as $item)
+                {
+                    $items[] = [
+                        'key' => $item->id,
+                        'value' => $item->name . " - " . $item->minutes . " min - " . $item->price . " zł",
+                        'isActive' => $appointment->item->id == $item->id ? true : false
+                    ];
+                }
+            }
+
+            $statuses = [];
+
+            for($i = 0; $i < 4; $i++)
+            {
+                $statuses[] = [
+                    'key' => $i,
+                    'value' => config('appointment-status.' . $i),
+                    'isActive' => $appointment->status == $i ? true : false
+                ];
+            }
+
+            return view('employee.backend_appointment_edit')->with([
+                'appointment' => $appointment,
+                'items' => $items,
+                'statuses' => $statuses
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @return Response
+     */
+    public function appointmentUpdate(Request $request)
+    {        
+        $startTime = $request->get('start_time');
+        $endTime = $request->get('end_time');
+        $item = $request->get('item');
+        $status = $request->get('status');
+        $appointmentId = $request->get('appointmentId');
+        
+        if ($startTime !== null &&
+            $endTime !== null &&
+            $item !== null && is_integer((int)$item) &&
+            $status !== null && is_integer((int)$status) &&
+            $appointmentId !== null && is_integer((int)$appointmentId))
+        {
+            $appointment = Appointment::where('id', $appointmentId)->first();
+            $graphic = Graphic::where('id', $appointment->graphic_id)->first();
+        
+            if ($graphic !== null)
+            {
+                $appointmentStartTime = date('G:i', strtotime($startTime));
+                $appointmentEndTime = date('G:i', strtotime($endTime));
+
+                if ((int)$appointmentStartTime < (int)$appointmentEndTime)
+                {
+                    $explodedAppointmentStartTime = explode(":", $startTime);
+                    $explodedAppointmentEndTime = explode(":", $endTime);
+
+                    for ($i = 0; $i < count($explodedAppointmentStartTime); $i++)
+                    {
+                        if (!is_numeric($explodedAppointmentStartTime[$i]))
+                        {
+                            return redirect()->route('welcome');
+                        }
+                    }
+
+                    for ($i = 0; $i < count($explodedAppointmentEndTime); $i++)
+                    {
+                        if (!is_numeric($explodedAppointmentEndTime[$i]))
+                        {
+                            return redirect()->route('welcome');
+                        }
+                    }
+
+                    $startTime = htmlentities($startTime, ENT_QUOTES, "UTF-8");
+                    $endTime = htmlentities($endTime, ENT_QUOTES, "UTF-8");
+                    $item = htmlentities((int)$item, ENT_QUOTES, "UTF-8");
+                    $status = htmlentities((int)$status, ENT_QUOTES, "UTF-8");
+                    $appointmentId = htmlentities((int)$appointmentId, ENT_QUOTES, "UTF-8");
+                    
+                    $start = new \DateTime($startTime);
+                    $end = new \DateTime($endTime);
+                    
+                    $difference = $start->diff($end);
+                    
+                    $minutes = $difference->i;
+                    $hours= $difference->h;
+                    
+                    $totalMinutes = 0;
+                    $totalMinutes += $minutes != 0 ? $minutes : 0;
+                    $totalMinutes += $hours != 0 ? $hours * 60 : 0;
+                    
+                    if ($this->checkIfStillCanMakeAnAppointment($graphic->id, $startTime, $totalMinutes))
+                    {
+                        $item = Item::where('id', $item)->first();
+                        
+                        if ($totalMinutes == $item->minutes)
+                        {
+                            // store
+                            $appointment->start_time = $startTime;
+                            $appointment->end_time = $endTime;
+
+                            if ($appointment->item_id != $item->id)
+                            {
+                                $appointment->item_id = $item->id;
+                                $appointment->minutes = $item->minutes;
+                            }
+
+                            $appointment->status = $status;
+                            $appointment->save();
+                            
+                            $messageType = 'success';
+                            $message = 'Wizyta została zaktualizowana!';
+                            
+                        } else {
+                            
+                            $messageType = 'error';
+                            $message = 'Wybrany zakres czasu niezgodny z długością wybranego zabiegu';
+                        }
+                        
+                    } else {
+                        
+                        $messageType = 'error';
+                        $message = 'Wizyta koliduję z inną wizytą';
+                    }
+                    
+                } else {
+                    
+                    $messageType = 'error';
+                    $message = 'Godzina rozpoczęcia jest większa niż godzina zakończenia!';
+                }
+                
+                return redirect('/employee/backend-appointment/show/' . $appointment->id)->with($messageType, $message);
+                
+            } else {
+            
+                $message = 'Grafik nie istnieje';
+            }
+            
+        } else {
+            
+            $message = 'Nieprawidłowe dane';
+        } 
+            
+        return redirect()->route('welcome')->with('error', $message);
+    }
+    
+    /**
      * Checks if man still can make an appointment (code from create method)
      * 
      * @param type $graphicId
      * @param type $appointmentTerm
-     * @param type $length
+     * @param type $itemLength
      * 
      * @return boolean|int
      */

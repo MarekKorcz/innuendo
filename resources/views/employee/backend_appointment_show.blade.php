@@ -18,6 +18,9 @@
                     {{ Form::hidden('_method', 'DELETE') }}
                     {{ Form::submit('Odwołaj wizytę', ['class' => 'btn btn-danger']) }}
                 {!!Form::close()!!}
+                <a class="btn btn-dark" href="{{ URL::to('/employee/backend-appointment/edit/' . $appointment->id) }}">
+                    Edytuj wizyte
+                </a>
                 <a class="btn btn-primary" href="{{ URL::to('/employee/backend-appointment/index/' . $appointment->user->id) }}">
                     Wszystkie wizyty danego usera
                 </a>
