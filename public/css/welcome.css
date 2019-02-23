@@ -1,0 +1,44 @@
+.jumbotron {
+    padding: 1rem;
+    border-radius: 0;
+}
+.padding {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+.welcome {
+    width: 75%;
+    margin: 0 auto;
+    padding-top: 2rem;
+}
+.welcome hr {
+    border-top: 2px solid #b4b4b4;
+    width: 95%;
+    margin-top: .3rem;
+    margin-bottom: 1rem;
+}
+
+.landing-text {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+.landing-text h1 {
+    font-size: 300%;
+    font-weight: 500;
+    color: white;
+}
+.landing-text h3 {
+    color: white;
+}
+.landing-text a {
+    color: white;
+}
+#fixed {
+    background: url(background.png) no-repeat center center fixed;
+    display: table;
+    height: 330px;
+    width: 100%;
+    position: relative;
+    background-size: cover;    
+}

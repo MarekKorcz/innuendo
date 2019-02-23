@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-{!! Html::style('css/calendar.css') !!}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 {!! Html::script('js/calendar.js') !!}
+{!! Html::style('css/calendar.css') !!}
 
 <div class="container">
     
