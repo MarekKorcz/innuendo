@@ -99,21 +99,27 @@
     
     <footer class="container-fluid text-center">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-3" style="padding: 15px;">
                 <h4>Kontakt</h4>
-                <h5>Email: mark.korcz@gmail.com</h5>
-                <h5>Tel: 602 342 396</h5>
-            </div>
-            <div class="col-sm-3">
-                <h4>Connect</h4>
-                <a href="#" class="fa fa-facebook"></a>
-                <a href="#" class="fa fa-twitter"></a>
-                <a href="#" class="fa fa-google"></a>
-            </div>
-            <div class="col-sm-3">
-                <a class="navbar-brand" href="{{ route('welcome') }}">
-                    <img src="/img/sacred-geometry.jpg" width="90" height="90">
+                <h5>mark.korcz@gmail.com</h5>
+                <h5>602 342 396</h5>
+                <a id="facebook" href="https://www.facebook.com/Gabinet.Masazu.Mokotow/">
+                    <i class="fab fa-facebook-square"></i>
                 </a>
+            </div>
+            <div class="col-sm-6">
+                <a class="text-center" href="{{ route('welcome') }}">
+                    <img src="/img/sacred-geometry.jpg" width="99" height="99" class="img-fluid">
+                </a>
+                <br>
+                <span id="footer-name">Dom Masażu</span>
+            </div>
+            <div class="col-sm-3">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <p id="copyright">{{ now()->year }} &copy; Wszelkie prawa zastrzeżone</p>
             </div>
         </div>
     </footer>
