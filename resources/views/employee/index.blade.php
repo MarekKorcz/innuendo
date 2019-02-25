@@ -1,22 +1,64 @@
 @extends('layouts.app')
+
 @section('content')
+
+{!! Html::style('css/employee_index.css') !!}
+
 <div class="container">
-
-    <h1>Pracownicy</h1>
-    
-    <hr><br>
-
-    <div class="container">
-        @foreach ($employees as $employee)
-            <a href="{{ URL::to('employee/' . $employee->slug) }}">
-                <div class="d-inline-block bg-warning" style="width: 250px; height: 350px; margin-left: 30px;">
-                    <h3 class="text-center">{{$employee->name}}</h3>
-                    <div class="text-center">
-                        <img src="{{ asset('img/rick-and-morty.jpg') }}" style="width: 200px; height: 280px;"/>
+    <h1 class="text-center padding-top">Pracownicy</h1>
+    @for ($i = 1; $i <= count($employees); $i++)
+        @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
+            <div class="row padding">
+                <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
+                    <div class="card">
+                        <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
+                            <p class="card-text">
+                                {!!$employees[$i]->description!!}
+                            </p>
+                            <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
+                                Zobacz
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </a>
-        @endforeach
-    </div>
+        @elseif ($i % 3 == 0)
+                <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
+                    <div class="card">
+                        <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
+                            <p class="card-text">
+                                {!!$employees[$i]->description!!}
+                            </p>
+                            <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
+                                Zobacz
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
+                <div class="card">
+                    <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
+                        <p class="card-text">
+                            {!!$employees[$i]->description!!}
+                        </p>
+                        <a href="{{ URL::to('employee/' . $employees[$i]->slug) }}" class="btn btn-success">
+                            Zobacz
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endfor   
+    
+    @if (count($employees) % 3 != 0)
+        </div>
+    @endif
 </div>
 @endsection

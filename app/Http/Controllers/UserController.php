@@ -32,7 +32,14 @@ class UserController extends Controller
     {
         $employees = User::where('isEmployee', 1)->get();
         
-        return view('employee.index')->with('employees', $employees);
+        $employeesArray = [];
+        
+        for ($i = 0; $i < count($employees); $i++)
+        {
+            $employeesArray[$i + 1] = $employees[$i];
+        }
+        
+        return view('employee.index')->with('employees', $employeesArray);
     }
     
     /**
@@ -65,7 +72,14 @@ class UserController extends Controller
     {
         $properties = Property::all();
         
-        return view('user.property_index')->with('properties', $properties);
+        $propertiesArray = [];
+        
+        for ($i = 0; $i < count($properties); $i++)
+        {
+            $propertiesArray[$i + 1] = $properties[$i];
+        }
+        
+        return view('user.property_index')->with('properties', $propertiesArray);
     }
     
     /**

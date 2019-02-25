@@ -42,3 +42,9 @@
     position: relative;
     background-size: cover;    
 }
+
+svg.icon {
+    width: 15rem;
+    height: 15rem;
+    margin: 15px;
+}

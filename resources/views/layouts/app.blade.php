@@ -112,7 +112,9 @@
                     <img src="/img/sacred-geometry.jpg" width="99" height="99" class="img-fluid">
                 </a>
                 <br>
-                <span id="footer-name">Dom Masażu</span>
+                <span id="footer-name">
+                    {{ config('app.name') }}
+                </span>
             </div>
             <div class="col-sm-3">
             </div>

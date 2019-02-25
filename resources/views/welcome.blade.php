@@ -67,11 +67,9 @@
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 col-xl-10">
-                <p class="lead">Lorem ipsum dolor sit amet, consectetur 
-                    adipiscing elit. Maecenas erat purus, rutrum ut lacus a, 
-                    fringilla volutpat tortor. Duis bibendum tincidunt posuere. 
-                    Donec cursus nibh nunc, non tincidunt sem dictum vitae.
-                </p>
+                <h2>
+                    Bolą Cie plecy? Powierz je w nasze ręce!
+                </h2>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xl-2">
                 <a href="#">
@@ -133,30 +131,29 @@
     
     <!--Three Column Section-->
     <div class="container-fluid padding">
+        <h1 class="text-center">Plany abonamentowe</h1>
         <div class="row text-center padding">
-            <div class="col-xs-12 col-sm-6 col-md-4">
-                <i class="fas fa-code"></i>
-                <h3>HTML</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur 
-                    adipiscing elit.
-                </p>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                @svg('regular/smile-beam')
+                <h3>2 zabiegi - 110 zł miesięcznie</h3>
+                <p>Cena jednego masażu - 55 zł</p>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-4">
-                <i class="fas fa-bold"></i>
-                <h3>Bootstrap</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur 
-                    adipiscing elit.
-                </p>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                @svg('regular/laugh-beam')
+                <h3>2 zabiegi - 100 zł miesięcznie</h3>
+                <p>Cena jednego masażu - 50 zł</p>
             </div>
-            <div class="col-sm-12 col-md-4">
-                <i class="fas fa-css3"></i>
-                <h3>CSS3</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur 
-                    adipiscing elit.
-                </p>
+        </div>
+        <div class="row text-center padding">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                @svg('regular/grin-hearts')
+                <h3>4 zabiegi - 180 zł miesięcznie</h3>
+                <p>Cena jednego masażu - 45 zł</p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                @svg('regular/surprise')
+                <h3>4 zabiegi - 160 zł miesięcznie</h3>
+                <p>Cena jednego masażu - 40 zł</p>
             </div>
         </div>
     </div>
