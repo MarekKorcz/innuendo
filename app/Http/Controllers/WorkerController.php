@@ -37,8 +37,18 @@ class WorkerController extends Controller
         $calendars = Calendar::where('employee_id', auth()->user()->id)->with('property')->get();
         
         if ($calendars !== null)
-        {
-            return view('employee.backend_graphic')->with('calendars', $calendars);
+        {            
+            $calendarsArray = [];
+
+            if (count($calendars))
+            {
+                for ($i = 0; $i < count($calendars); $i++)
+                {
+                    $calendarsArray[$i + 1] = $calendars[$i];
+                }
+            }
+            
+            return view('employee.backend_graphic')->with('calendars', $calendarsArray);
         }
         
         return redirect()->route('welcome');
