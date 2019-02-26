@@ -18,7 +18,7 @@
         <div class="carousel-inner" role="listbox">
             <div class="carousel-item active">
                 <div class="view">
-                    <img class="d-block w-100" src="img/background1.jpg">
+                    <img class="d-block w-100" src="/img/background1.jpg">
                     <div class="mask rgba-black-light"></div>
                 </div>
 <!--                <div class="carousel-caption">
@@ -29,7 +29,7 @@
             <div class="carousel-item">
                 <!--Mask color-->
                 <div class="view">
-                    <img class="d-block w-100" src="img/background2.jpg">
+                    <img class="d-block w-100" src="/img/background2.jpg">
                     <div class="mask rgba-black-strong"></div>
                 </div>
 <!--                <div class="carousel-caption">
@@ -40,7 +40,7 @@
             <div class="carousel-item">
                 <!--Mask color-->
                 <div class="view">
-                    <img class="d-block w-100" src="img/background3.jpg">
+                    <img class="d-block w-100" src="/img/background3.jpg">
                     <div class="mask rgba-black-slight"></div>
                 </div>
 <!--                <div class="carousel-caption">

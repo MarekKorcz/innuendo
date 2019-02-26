@@ -17,9 +17,11 @@
                             <p class="card-text">
                                 {!!$employees[$i]->description!!}
                             </p>
-                            <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
-                                Zobacz
-                            </a>
+                            <div class="text-center">
+                                <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
+                                    Zobacz
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -32,9 +34,11 @@
                             <p class="card-text">
                                 {!!$employees[$i]->description!!}
                             </p>
-                            <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
-                                Zobacz
-                            </a>
+                            <div class="text-center">
+                                <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
+                                    Zobacz
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -48,9 +52,11 @@
                         <p class="card-text">
                             {!!$employees[$i]->description!!}
                         </p>
-                        <a href="{{ URL::to('employee/' . $employees[$i]->slug) }}" class="btn btn-success">
-                            Zobacz
-                        </a>
+                        <div class="text-center">
+                            <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
+                                Zobacz
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

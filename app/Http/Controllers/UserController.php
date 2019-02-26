@@ -32,14 +32,19 @@ class UserController extends Controller
     {
         $employees = User::where('isEmployee', 1)->get();
         
-        $employeesArray = [];
-        
-        for ($i = 0; $i < count($employees); $i++)
+        if ($employees !== null)
         {
-            $employeesArray[$i + 1] = $employees[$i];
+            $employeesArray = [];
+
+            for ($i = 0; $i < count($employees); $i++)
+            {
+                $employeesArray[$i + 1] = $employees[$i];
+            }
+
+            return view('employee.index')->with('employees', $employeesArray);
         }
         
-        return view('employee.index')->with('employees', $employeesArray);
+        return redirect()->route('welcome');
     }
     
     /**
@@ -51,16 +56,38 @@ class UserController extends Controller
     public function employee($slug)
     {
         $employee = User::where('isEmployee', 1)->where('slug', $slug)->first();
-        $calendars = Calendar::where('employee_id', $employee->id)->where('isActive', 1)->get();
         
-        $properties = [];
-        
-        for ($i = 0; $i < count($calendars); $i++)
+        if ($employee !== null)
         {
-            $properties[$i] = Property::where('id', $calendars[$i]->property_id)->first();
+            $employeeCreatedAt = $employee->created_at->format('d.m.Y');
+            $calendars = Calendar::where('employee_id', $employee->id)->where('isActive', 1)->get();
+
+            $properties = [];
+
+            for ($i = 0; $i < count($calendars); $i++)
+            {
+                $properties[$i] = Property::where('id', $calendars[$i]->property_id)->first();
+            }
+
+            $calendarsArray = [];
+
+            if (count($calendars))
+            {
+                for ($i = 0; $i < count($calendars); $i++)
+                {
+                    $calendarsArray[$i + 1] = $calendars[$i];
+                }
+            }
+
+            return view('employee.show')->with([
+                'employee' => $employee,
+                'employeeCreatedAt' => $employeeCreatedAt,
+                'calendars' => $calendarsArray,
+                'properties' => $properties
+            ]);
         }
         
-        return view('employee.show')->with('employee', $employee)->with('calendars', $calendars)->with('properties', $properties);
+        return redirect()->route('welcome');
     }
     
     /**
@@ -72,14 +99,19 @@ class UserController extends Controller
     {
         $properties = Property::all();
         
-        $propertiesArray = [];
-        
-        for ($i = 0; $i < count($properties); $i++)
+        if ($properties !== null)
         {
-            $propertiesArray[$i + 1] = $properties[$i];
+            $propertiesArray = [];
+
+            for ($i = 0; $i < count($properties); $i++)
+            {
+                $propertiesArray[$i + 1] = $properties[$i];
+            }
+
+            return view('user.property_index')->with('properties', $propertiesArray);
         }
         
-        return view('user.property_index')->with('properties', $propertiesArray);
+        return redirect()->route('welcome');
     }
     
     /**
@@ -96,9 +128,11 @@ class UserController extends Controller
             
             if ($property !== null)
             {
+                $propertyCreatedAt = $property->created_at->format('d.m.Y');
                 $calendars = Calendar::where('property_id', $property->id)->where('isActive', 1)->get();
                 
                 $employees = [];
+                $employeesArray = [];
 
                 if ($calendars !== null)
                 {
@@ -108,9 +142,18 @@ class UserController extends Controller
                     }
                 }
                 
+                if (count($employees))
+                {
+                    for ($i = 0; $i < count($employees); $i++)
+                    {
+                        $employeesArray[$i + 1] = $employees[$i];
+                    }
+                }
+                
                 return view('user.property_show')->with([
                     'property' => $property,
-                    'employees' => $employees
+                    'propertyCreatedAt' => $propertyCreatedAt,
+                    'employees' => $employeesArray
                 ]);
             }
         }

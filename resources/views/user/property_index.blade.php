@@ -11,7 +11,9 @@
             <div class="row padding">
                 <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                     <div class="card">
-                        <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                        <div class="text-center">
+                            @svg('solid/home')
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title text-center">{{$properties[$i]->name}}</h5>
                             <p class="card-text">
@@ -26,7 +28,9 @@
         @elseif ($i % 3 == 0)
                 <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                     <div class="card">
-                        <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                        <div class="text-center">
+                            @svg('solid/home')
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title text-center">{{$properties[$i]->name}}</h5>
                             <p class="card-text">
@@ -42,7 +46,9 @@
         @else
             <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                 <div class="card">
-                    <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                    <div class="text-center">
+                        @svg('solid/home')
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title text-center">{{$properties[$i]->name}}</h5>
                         <p class="card-text">
