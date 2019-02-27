@@ -1,7 +1,7 @@
 @extends('layouts.app')
+
 @section('content')
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 {!! Html::script('js/backend_appointment_show.js') !!}
 
 <div class="container">

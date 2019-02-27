@@ -29,6 +29,7 @@ Route::get('/employee/backend-appointment/show/{id}', 'WorkerController@backendA
 Route::get('/employee/backend-appointment/index/{id}', 'WorkerController@backendAppointmentIndex');
 Route::post('/employee/backend-appointment/set-appointment-status', 'WorkerController@setAppointmentStatus');
 Route::post('/employee/backend-appointment/before-show-create-page', 'WorkerController@beforeShowCreatePage');
+Route::post('/employee/backend-appointment/get-user-from-database', 'WorkerController@getUserFromDatabase');
 Route::get('/employee/backend-appointment/create', 'WorkerController@appointmentCreate');
 Route::post('/employee/backend-appointment/store', 'WorkerController@appointmentStore');
 Route::get('/employee/backend-appointment/edit/{id}', 'WorkerController@appointmentEdit');

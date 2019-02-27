@@ -1,5 +1,10 @@
 @extends('layouts.app')
+
 @section('content')
+
+{!! Html::script('js/backend_appointment_create.js') !!}
+{!! Html::style('css/backend_appointment_create.css') !!}
+
 <div class="container">
 
     <nav class="navbar navbar-inverse">
@@ -28,9 +33,12 @@
         </div>
     
         <div class="form-group">
-            {{ Form::label('users', 'Klient:') }}
-            {{ Form::select('users', $users, null, array('class' => 'form-control')) }}
+            <label for="search">Klient</label>
+            <input id="search" class="form-control" type="text" name="search" placeholder="Szukaj klienta">
         </div>
+        <ul id="result" class="list-group"></ul>
+    
+        <input type="hidden" id="userId" name="userId" value="">
     
         <div class="form-group">
             {{ Form::label('item', 'Rodzaj masażu:') }}

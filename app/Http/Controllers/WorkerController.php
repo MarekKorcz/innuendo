@@ -483,6 +483,26 @@ class WorkerController extends Controller
         return redirect()->route('welcome');
     }
     
+    public function getUserFromDatabase(Request $request)
+    {        
+        if ($request->get('searchField'))
+        {
+            $users = User::where('name', 'like', $request->get('searchField') . '%')->where('isEmployee', null)->where('isAdmin', null)->get();
+            
+            $data = [
+                'type'    => 'success',
+                'users'  => $users !== null ? $users : ""
+            ];
+
+            return new JsonResponse($data, 200, array(), true);
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error',
+            'message' => 'Pusty request'            
+        ));
+    }
+    
     /**
      * Store a newly created resource in storage.
      * 
