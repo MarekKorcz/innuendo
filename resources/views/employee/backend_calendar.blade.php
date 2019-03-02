@@ -151,7 +151,11 @@
                                            style="background-color: skyblue;">
                                     @endif
                                             <p style="margin-top: 15px;">
-                                                {{$graphic[$i]['appointment']->user->name}} -
+                                                @if ($graphic[$i]['appointment']->user)
+                                                    {{$graphic[$i]['appointment']->user->name}} -
+                                                @else
+                                                    {{$graphic[$i]['appointment']->tempUser->name}} -
+                                                @endif
                                                 {{$graphic[$i]['appointment']->item->name}} -
                                                 {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
                                             </p>

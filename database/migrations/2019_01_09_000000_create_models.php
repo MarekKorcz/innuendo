@@ -108,8 +108,19 @@ class CreateModels extends Migration
             $table->softDeletes();
             $table->integer('graphic_id')->unsigned()->index()->foreign()->references("id")->on("graphics");
             $table->integer('day_id')->unsigned()->index()->foreign()->references("id")->on("days");
-            $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
             $table->integer('item_id')->unsigned()->index()->foreign()->references("id")->on("items");
+            $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('temp_user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("temp_users");
+        });
+        
+        Schema::create('temp_users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('surname');
+            $table->string('email')->unique();
+            $table->integer('phone_number');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -130,5 +141,6 @@ class CreateModels extends Migration
         Schema::dropIfExists('days');
         Schema::dropIfExists('graphics');
         Schema::dropIfExists('appointments');
+        Schema::dropIfExists('temp_users');
     }
 }

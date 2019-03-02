@@ -7,6 +7,7 @@ use App\Category;
 use App\Item;
 use App\Graphic;
 use App\User;
+use App\TempUser;
 use App\Year;
 use App\Month;
 use App\Day;
@@ -200,7 +201,16 @@ class WorkerController extends Controller
     {
         if ($id !== null)
         {
-            $appointment = Appointment::where('id', $id)->with('item')->with('user')->first();
+            $appointment = Appointment::where('id', $id)->first();
+            
+            if ($appointment->user_id !== null)
+            {
+                $appointment = Appointment::where('id', $id)->with('item')->with('user')->first();
+                
+            } else {
+                
+                $appointment = Appointment::where('id', $id)->with('item')->with('tempUser')->first();
+            }
             
             if ($appointment !== null)
             {
@@ -249,6 +259,44 @@ class WorkerController extends Controller
     public function backendAppointmentIndex($id)
     {
         $appointments = Appointment::where('user_id', $id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+        
+        if ($appointments !== null)
+        {
+            foreach ($appointments as $appointment)
+            {
+                $day = Day::where('id', $appointment->day_id)->first();
+                $month = Month::where('id', $day->month_id)->first();
+                $year = Year::where('id', $month->year_id)->first();
+                $calendar = Calendar::where('id', $year->calendar_id)->first();
+                $employee = User::where('id', $calendar->employee_id)->first();
+                $property = Property::where('id', $calendar->property_id)->first();
+                
+                $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
+                $appointment['date'] = $date;
+                
+                $appointment['name'] = $property->name;
+                
+                $employee = $employee->name;
+                $appointment['employee'] = $employee;
+            }
+            
+            return view('employee.backend_appointment_index')->with([
+                'appointments' => $appointments
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Shows a list of appointments assigned to temporary user.
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function backendAppointmentIndexTempUser($id)
+    {
+        $appointments = Appointment::where('temp_user_id', $id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
         
         if ($appointments !== null)
         {
@@ -512,22 +560,26 @@ class WorkerController extends Controller
     public function appointmentStore(Request $request)
     {
         $appointmentTerm = $request->get('appointmentTerm');
+        $userId = $request->get('userId');
+        $name = $request->get('name');
+        $surname = $request->get('surname');
+        $email = $request->get('email');
+        $phone = $request->get('phone');
         $item = $request->get('item');
         $calendarId = $request->get('calendarId');
         $graphicId = $request->get('graphicId');
         $year = $request->get('year');
         $month = $request->get('month');
         $day = $request->get('day');
-        $userId = $request->get('users');
         
         if ($appointmentTerm !== null && is_integer((int)$appointmentTerm) &&
+            $userId !== null && is_integer((int)$userId) &&
             $item !== null && is_integer((int)$item) &&
             $calendarId !== null && is_integer((int)$calendarId) &&
             $graphicId !== null && is_integer((int)$graphicId) &&
             $year !== null && is_integer((int)$year) &&
             $month !== null && is_integer((int)$month) &&
-            $day !== null && is_integer((int)$day) &&
-            $userId !== null && is_integer((int)$userId))
+            $day !== null && is_integer((int)$day))
         {            
             $explodedAppointmentTerm = explode(":", $appointmentTerm);
             
@@ -592,9 +644,81 @@ class WorkerController extends Controller
                     ]
                 )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
             }
+            
+        } else if ($appointmentTerm !== null && is_integer((int)$appointmentTerm) &&
+                    $name !== null && is_string($name) &&
+                    $surname !== null && is_string($surname) &&
+                    $phone !== null && is_numeric($phone) &&
+                    $item !== null && is_integer((int)$item) &&
+                    $calendarId !== null && is_integer((int)$calendarId) &&
+                    $graphicId !== null && is_integer((int)$graphicId) &&
+                    $year !== null && is_integer((int)$year) &&
+                    $month !== null && is_integer((int)$month) &&
+                    $day !== null && is_integer((int)$day)) 
+        {
+            
+            $item = Item::where('id', $item)->first();
+                
+            if ($item !== null && $this->checkIfStillCanMakeAnAppointment($graphicId, $appointmentTerm, $item->minutes))
+            {
+                // create temporary user
+                $tempUser = new TempUser();
+                $tempUser->name = $name;
+                $tempUser->surname = $surname;
+                $tempUser->email = $email !== null ? $email : '';
+                $tempUser->phone_number = $phone;
+                $tempUser->save();
+                
+                if ($tempUser !== null)
+                {
+                    $plusTime = "+" . $item->minutes . " minutes";
+                    $endTime = date('G:i', strtotime($plusTime, strtotime($appointmentTerm)));
+
+                    $year = Year::where('year', $year)->where('calendar_id', $calendarId)->first();
+                    $month = Month::where('month_number', $month)->where('year_id', $year->id)->first();
+                    $day = Day::where('day_number', $day)->where('month_id', $month->id)->first();
+
+                    // store
+                    $appointment = new Appointment();
+                    $appointment->start_time = $appointmentTerm;
+                    $appointment->end_time = $endTime;
+                    $appointment->minutes = $item->minutes;
+                    $appointment->graphic_id = $graphicId;
+                    $appointment->day_id = $day->id;
+                    $appointment->temp_user_id = $tempUser->id;
+                    $appointment->item_id = $item->id;
+                    $appointment->save();
+
+                    /**
+                     * 
+                     * 
+                     * 
+                     * email sanding
+                     * 
+                     * 
+                     * 
+                     * 
+                     */  
+                    
+                    return redirect()->action(
+                        'WorkerController@backendAppointmentShow', [
+                            'id' => $appointment->id
+                        ]
+                    )->with('success', 'Wizyta została zarezerwowana. Informacja potwierdzająca została wysłana na maila!');
+                }
+            }
+            
+            return redirect()->action(
+                'WorkerController@backendCalendar', [
+                    'calendarId' => $calendarId,
+                    'year' => $year,
+                    'month_number' => $month,
+                    'day_number' => $day
+                ]
+            )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
         }
         
-        return redirect()->route('welcome');
+        return redirect()->route('welcome')->with('error', 'Niepełne dane');;
     }
     
     /**
@@ -876,10 +1000,19 @@ class WorkerController extends Controller
             
             for ($i = 0; $i < $workUnits; $i++) 
             {
-                $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->with('user')->with('item')->first();
+                $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->first();
 
                 if ($appointment !== null)
                 {
+                    if ($appointment->user_id !== null)
+                    {
+                        $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->with('user')->with('item')->first();
+
+                    } else {
+
+                        $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->with('tempUser')->with('item')->first();
+                    }
+                    
                     $limit = $appointment->minutes / 30;
                     
                     if ($limit > 1)

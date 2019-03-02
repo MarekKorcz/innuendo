@@ -21,7 +21,11 @@
                 <a class="btn btn-dark" href="{{ URL::to('/employee/backend-appointment/edit/' . $appointment->id) }}">
                     Edytuj wizyte
                 </a>
-                <a class="btn btn-primary" href="{{ URL::to('/employee/backend-appointment/index/' . $appointment->user->id) }}">
+                @if ($appointment->user)
+                    <a class="btn btn-primary" href="{{ URL::to('/employee/backend-appointment/index/' . $appointment->user->id) }}">
+                @else
+                    <a class="btn btn-primary" href="{{ URL::to('/employee/backend-appointment/index/temp-user/' . $appointment->tempUser->id) }}">
+                @endif
                     Wszystkie wizyty danego usera
                 </a>
             </li>

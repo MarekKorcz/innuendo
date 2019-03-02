@@ -22,7 +22,7 @@ class Appointment extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'start_time', 'minutes', 'status', 'graphic_id', 'item_id', 'day_id', 'user_id'
+        'start_time', 'start_time', 'minutes', 'status', 'graphic_id', 'item_id', 'day_id', 'user_id', 'temp_user_id'
     ];
     
     /**
@@ -38,7 +38,8 @@ class Appointment extends Model
         'graphic_id' => 'integer',
         'day_id' => 'integer',
         'user_id' => 'integer',
-        'item_id' => 'integer'
+        'item_id' => 'integer',
+        'temp_user_id' => 'integer'
     ];
     
     /**
@@ -83,5 +84,13 @@ class Appointment extends Model
     public function item()
     {
         return $this->belongsTo('App\Item');
+    }
+    
+    /**
+     * Get temporary user that owns appointment.
+     */
+    public function tempUser()
+    {
+        return $this->belongsTo('App\TempUser');
     }
 }

@@ -32,11 +32,23 @@
             @endif
         </div>
     
-        <div class="form-group">
-            <label for="search">Klient</label>
-            <input id="search" class="form-control" type="text" name="search" placeholder="Szukaj klienta">
+        <div id="client">
+            <div class="row">
+                <div id="credential-1" class="col-8 col-sm-8 col-md-10 col-lg-10">
+                    <div class="form-group">
+                        <label for="search">Klient</label>
+                        <input id="search" class="form-control" type="text" name="search" placeholder="Szukaj klienta">
+                    </div>
+                    <ul id="result" class="list-group"></ul>
+                </div>
+                <div class="col-4 col-sm-4 col-md-2 col-lg-2">
+                    <div class="text-center" style="padding: 3px;">
+                        <label for="isNew">Nowy?</label><br>
+                        <input id="isNew" type="checkbox" style="width: 30px; height: 30px;">
+                    </div>
+                </div>
+            </div>            
         </div>
-        <ul id="result" class="list-group"></ul>
     
         <input type="hidden" id="userId" name="userId" value="">
     
