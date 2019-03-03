@@ -18,7 +18,7 @@ class CreateModels extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->string('phone_number');
+            $table->integer('phone_number');
             $table->string('street');
             $table->string('street_number');
             $table->string('house_number')->nullable();

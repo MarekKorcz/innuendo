@@ -26,6 +26,34 @@
                                 @endif
                             </div>
                         </div>
+                        
+                        <div class="form-group row">
+                            <label for="surname" class="col-md-4 col-form-label text-md-right">Nazwisko:</label>
+
+                            <div class="col-md-6">
+                                <input id="surname" type="text" class="form-control{{ $errors->has('surname') ? ' is-invalid' : '' }}" name="surname" value="{{ old('surname') }}" required autofocus>
+
+                                @if ($errors->has('surname'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('surname') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label for="phone_number" class="col-md-4 col-form-label text-md-right">Numer telefonu:</label>
+
+                            <div class="col-md-6">
+                                <input id="phone_number" type="text" class="form-control{{ $errors->has('phone_number') ? ' is-invalid' : '' }}" name="phone_number" value="{{ old('phone_number') }}" required autofocus>
+
+                                @if ($errors->has('phone_number'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('phone_number') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">Adres email:</label>
@@ -66,7 +94,7 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
+                                    Zarejestruj
                                 </button>
                             </div>
                         </div>
