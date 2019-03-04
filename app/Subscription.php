@@ -5,10 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TempUser extends Model
-{
+class Subscription extends Model
+{    
     use SoftDeletes;
-
+    
     /**
      * The attributes that should be mutated to dates.
      *
@@ -22,23 +22,27 @@ class TempUser extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'email', 'phone_number'
+        'name', 'slug', 'description', 'old_price', 'new_price', 'quantity', 'duration'
     ];
     
     /**
-     *      USER
+     * Get properties which belongs to subscription
      */
-    
-    /**
-     * Get appointments associated with user.
-     */
-    public function appointments()
+    public function properties()
     {
-        return $this->hasMany('App\Appointment');
+        return $this->belongsToMany('App\Property');
     }
     
     /**
-     * Get purchases which belong to temporary user.
+     * Get items which belongs to subscription
+     */
+    public function items()
+    {
+        return $this->belongsToMany('App\Item');
+    }
+    
+    /**
+     * Get purchases which belong to subscription.
      */
     public function purchases()
     {

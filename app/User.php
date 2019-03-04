@@ -52,6 +52,14 @@ class User extends Authenticatable
     }
     
     /**
+     * Get purchases which belong to user.
+     */
+    public function purchases()
+    {
+        return $this->hasMany('App\Purchase');
+    }
+    
+    /**
      *      EMPLOYEE
      */
     

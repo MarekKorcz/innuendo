@@ -51,4 +51,12 @@ class Month extends Model
     {
         return $this->hasMany('App\Day');
     }
+    
+    /**
+     * Get purchases which belong to month.
+     */
+    public function purchases()
+    {
+        return $this->hasMany('App\Purchase');
+    }
 }

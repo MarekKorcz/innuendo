@@ -50,4 +50,12 @@ class Item extends Model
     {
         return $this->hasOne('App\Appointment');
     }
+    
+    /**
+     * Get subscriptions which belongs to item
+     */
+    public function subscriptions()
+    {
+        return $this->belongsToMany('App\Subscription');
+    }
 }

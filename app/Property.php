@@ -69,4 +69,12 @@ class Property extends Model
     {
         return $this->hasOne('App\Calendar');
     }
+    
+    /**
+     * Get subscriptions which belongs to property
+     */
+    public function subscriptions()
+    {
+        return $this->belongsToMany('App\Subscription');
+    }
 }

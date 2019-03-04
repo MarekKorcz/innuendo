@@ -22,7 +22,7 @@ class Appointment extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'start_time', 'minutes', 'status', 'graphic_id', 'item_id', 'day_id', 'user_id', 'temp_user_id'
+        'start_time', 'start_time', 'minutes', 'status', 'graphic_id', 'item_id', 'day_id', 'user_id', 'temp_user_id', 'purchase_id'
     ];
     
     /**
@@ -39,7 +39,8 @@ class Appointment extends Model
         'day_id' => 'integer',
         'user_id' => 'integer',
         'item_id' => 'integer',
-        'temp_user_id' => 'integer'
+        'temp_user_id' => 'integer', 
+        'purchase_id' => 'integer'
     ];
     
     /**
@@ -92,5 +93,13 @@ class Appointment extends Model
     public function tempUser()
     {
         return $this->belongsTo('App\TempUser');
+    }
+    
+    /**
+     * Get the purchase that owns the appointment.
+     */
+    public function purchase()
+    {
+        return $this->belongsTo('App\Purchase');
     }
 }

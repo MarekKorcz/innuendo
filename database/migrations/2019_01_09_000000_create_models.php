@@ -111,6 +111,7 @@ class CreateModels extends Migration
             $table->integer('item_id')->unsigned()->index()->foreign()->references("id")->on("items");
             $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
             $table->integer('temp_user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("temp_users");
+            $table->integer('purchase_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("purchases");
         });
         
         Schema::create('temp_users', function (Blueprint $table) {
@@ -121,6 +122,42 @@ class CreateModels extends Migration
             $table->integer('phone_number');
             $table->timestamps();
             $table->softDeletes();
+        });
+        
+        Schema::create('subscriptions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('slug');
+            $table->text('description');
+            $table->decimal('old_price');
+            $table->decimal('new_price');
+            $table->integer('quantity');
+            $table->integer('duration');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+        
+        Schema::create('property_subscriptions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('property_id')->unsigned();
+            $table->integer('subscription_id')->unsigned();
+        });
+        
+        Schema::create('item_subscriptions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('item_id')->unsigned();
+            $table->integer('subscription_id')->unsigned();
+        });
+        
+        Schema::create('purchases', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('available_units');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('month_id')->unsigned()->index()->foreign()->references("id")->on("months");
+            $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
+            $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('temp_user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("temp_users");
         });
     }
 
@@ -142,5 +179,9 @@ class CreateModels extends Migration
         Schema::dropIfExists('graphics');
         Schema::dropIfExists('appointments');
         Schema::dropIfExists('temp_users');
+        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('property_subscriptions');
+        Schema::dropIfExists('item_subscriptions');
+        Schema::dropIfExists('purchases');
     }
 }
