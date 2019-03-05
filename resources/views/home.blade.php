@@ -6,7 +6,7 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header text-center">
-                    <span style="font-size: 27px;">Moje konto</span> - zalogowany jako <strong>{{$user->name}}</strong>
+                    <span style="font-size: 27px;">Moje konto</span> - zalogowany jako <strong>{{$user->name}} {{$user->surname}}</strong>
                 </div>
                 <div class="card-body">
                     <div class="row">

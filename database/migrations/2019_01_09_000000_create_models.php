@@ -137,13 +137,13 @@ class CreateModels extends Migration
             $table->softDeletes();
         });
         
-        Schema::create('property_subscriptions', function (Blueprint $table) {
+        Schema::create('property_subscription', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('property_id')->unsigned();
             $table->integer('subscription_id')->unsigned();
         });
         
-        Schema::create('item_subscriptions', function (Blueprint $table) {
+        Schema::create('item_subscription', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('item_id')->unsigned();
             $table->integer('subscription_id')->unsigned();

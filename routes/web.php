@@ -80,3 +80,9 @@ Route::post('/appointment/store', 'AppointmentController@store');
 Route::get('/appointment/show/{id}', 'UserController@appointmentShow');
 Route::get('/appointment/index', 'UserController@appointmentIndex');
 Route::delete('/appointment/{id}', 'UserController@appointmentDestroy');
+
+Route::get('/subscription/create/{id}', 'SubscriptionController@create');
+Route::post('/subscription/store', 'SubscriptionController@store');
+Route::get('/subscription/show/{slug}', 'SubscriptionController@show');
+Route::get('/subscription/index/property/{id}', 'SubscriptionController@propertySubscriptionIndex');
+Route::get('/subscription/index', 'SubscriptionController@subscriptionIndex');

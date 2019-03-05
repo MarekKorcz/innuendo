@@ -14,6 +14,9 @@
                 <a class="btn btn-primary" href="{{ URL::to('/property/index') }}">
                     View All Properties
                 </a>
+                <a href="{{ URL::to('/subscription/index') }}" class="btn btn-secondary">
+                    View All Subscriptions
+                </a>
                 <a class="btn btn-success" href="{{ URL::to('property/' . $property->id . '/edit') }}">
                     Edit
                 </a>
@@ -26,6 +29,14 @@
     <hr>
 
     <div class="jumbotron">
+        <ul class="nav navbar-nav">
+            <li>
+                <a class="btn btn-success" href="{{ URL::to('/subscription/index/property/' . $property->id) }}">
+                    Property's Subscriptions
+                </a>
+            </li>
+        </ul>
+        
         <div class="text-center" style="margin-bottom: 40px;">
             <h2>Values:</h2>
         </div>
@@ -82,6 +93,12 @@
                         {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
                     {!!Form::close()!!}
                 </div>
+                <div style="padding: 5px;">
+                    <a class="btn btn-success" href="{{ URL::to('subscription/create/' . $property->id) }}">
+                        Create Subscription
+                    </a>
+                </div>
+                
                 @if ($calendar->employee_id != null)
                     <div class="text-center" style="margin-bottom: 40px;">
                         <h2 style="margin-bottom: 15px;">

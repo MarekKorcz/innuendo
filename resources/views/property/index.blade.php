@@ -5,7 +5,12 @@
     <nav class="navbar navbar-inverse">
         <div class="navbar-header"></div>
         <ul class="nav navbar-nav">
-            <li>
+            <li style="padding: 5px;">
+                <a href="{{ URL::to('/subscription/index') }}" class="btn btn-success">
+                    Subscriptions
+                </a>
+            </li>
+            <li style="padding: 5px;">
                 <a href="{{ URL::to('property/create') }}" class="btn btn-primary">
                     Create a Property
                 </a>
