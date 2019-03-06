@@ -155,4 +155,24 @@ class SubscriptionController extends Controller
         
         return redirect()->route('welcome');
     }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        $subscription = Subscription::find($id);
+        
+        if ($subscription !== null)
+        {
+            $subscription->delete();
+        
+            return redirect('/subscription/index')->with('success', 'Subscription deleted!');
+        }
+        
+        return redirect()->route('welcome');
+    }
 }

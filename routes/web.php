@@ -86,3 +86,4 @@ Route::post('/subscription/store', 'SubscriptionController@store');
 Route::get('/subscription/show/{slug}', 'SubscriptionController@show');
 Route::get('/subscription/index/property/{id}', 'SubscriptionController@propertySubscriptionIndex');
 Route::get('/subscription/index', 'SubscriptionController@subscriptionIndex');
+Route::delete('/subscription/{id}', 'SubscriptionController@destroy');

@@ -3,7 +3,12 @@
 <div class="container">
 
     <nav class="navbar navbar-inverse">
-        <div class="navbar-header"></div>
+        <div class="navbar-header">
+            {!!Form::open(['action' => ['SubscriptionController@destroy', $subscription->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                {{ Form::hidden('_method', 'DELETE') }}
+                {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+            {!!Form::close()!!}
+        </div>
         <ul class="nav navbar-nav">
             <li>
                 <a class="btn btn-success" href="{{ URL::to('/property/index') }}">

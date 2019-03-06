@@ -4,8 +4,8 @@
 
     <nav class="navbar navbar-inverse">
         <div class="navbar-header">
-            <a class="btn btn-success" href="{{ URL::previous() }}">
-                Go back
+            <a class="btn btn-success" href="{{ URL::to('/property/index') }}">
+                Go To Properties
             </a>
         </div>
     </nav>
