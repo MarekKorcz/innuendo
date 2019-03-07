@@ -88,3 +88,5 @@ Route::get('/subscription/index/property/{id}', 'SubscriptionController@property
 Route::get('/subscription/index', 'SubscriptionController@subscriptionIndex');
 Route::delete('/subscription/{id}', 'SubscriptionController@destroy');
 Route::post('/subscription/set-subscription-to-property', 'SubscriptionController@setSubscriptionToProperty');
+Route::get('/subscription/{id}/edit', 'SubscriptionController@edit');
+Route::put('/subscription/update', 'SubscriptionController@update');

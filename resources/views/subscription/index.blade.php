@@ -37,6 +37,9 @@
                         <a class="btn btn-primary" href="{{ URL::to('/subscription/show/' . $subscription->slug) }}">
                             Show
                         </a>
+                        <a class="btn btn-success" href="{{ URL::to('/subscription/' . $subscription->id . '/edit') }}">
+                            Edit
+                        </a>
                     </td>
                 </tr>
             @endforeach

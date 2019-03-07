@@ -140,6 +140,72 @@ class SubscriptionController extends Controller
     }
     
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $subscription = Subscription::where('id', $id)->first();
+        
+        if ($subscription !== null)
+        {
+            return view('subscription.edit')->with('subscription', $subscription);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Subscription does not exist');
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function update(Request $request)
+    {
+        $name = $request->get('name');
+        $description = $request->get('description');
+        $old_price = $request->get('old_price');
+        $new_price = $request->get('new_price');
+        $quantity = $request->get('quantity');
+        $duration = $request->get('duration');
+        $subscription_id = $request->get('subscription_id');
+        
+        if ($name !== null && is_string($name) &&
+            $description !== null && is_string($description) &&
+            $old_price !== null && is_integer((int)$old_price) &&
+            $new_price !== null && is_integer((int)$new_price) &&
+            $quantity !== null && is_integer((int)$quantity) &&
+            $duration !== null && is_integer((int)$duration) &&
+            $subscription_id !== null && is_integer((int)$subscription_id))
+        {            
+            $name = htmlentities($name, ENT_QUOTES, "UTF-8");
+            $description = htmlentities($description, ENT_QUOTES, "UTF-8");
+            $old_price = htmlentities((int)$old_price, ENT_QUOTES, "UTF-8");
+            $new_price = htmlentities((int)$new_price, ENT_QUOTES, "UTF-8");
+            $quantity = htmlentities((int)$quantity, ENT_QUOTES, "UTF-8");
+            $duration = htmlentities((int)$duration, ENT_QUOTES, "UTF-8");
+            $subscription_id = htmlentities((int)$subscription_id, ENT_QUOTES, "UTF-8");
+            
+            // store
+            $subscription = Subscription::where('id', $subscription_id)->first();
+            $subscription->name        = $name;
+            $subscription->description = $description;
+            $subscription->old_price   = $old_price;
+            $subscription->new_price   = $new_price;
+            $subscription->quantity    = $quantity;
+            $subscription->duration    = $duration;
+            $subscription->save();
+
+            return redirect('/subscription/show/' . $subscription->slug)->with('success', 'Subscription successfully updated!');
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
      * Shows a list of subscriptions assigned to passed property.
      * 
      * @param int $id

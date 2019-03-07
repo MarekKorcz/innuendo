@@ -7,6 +7,11 @@
 
     <nav class="navbar navbar-inverse">
         <div class="navbar-header">
+            <div style="padding: 5px;">
+                <a class="btn btn-primary" href="{{ URL::to('/subscription/' . $subscription->id . '/edit') }}">
+                    Edit
+                </a>
+            </div>
             {!!Form::open(['action' => ['SubscriptionController@destroy', $subscription->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                 {{ Form::hidden('_method', 'DELETE') }}
                 {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
