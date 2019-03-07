@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Property;
 use App\Subscription;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class SubscriptionController extends Controller
 {
@@ -107,9 +108,32 @@ class SubscriptionController extends Controller
     {        
         $subscription = Subscription::where('slug', $slug)->first();
         
+        $properties = Property::with('subscriptions')->get();
+        
+        $propertiesArr = [];
+        
+        foreach ($properties as $property)
+        {
+            $active = false;
+            
+            foreach ($property->subscriptions as $sub)
+            {
+                if ($sub->id == $subscription->id)
+                {
+                    $active = true;
+                }
+            }
+            
+            $propertiesArr[] = [
+                'id' => $property->id,
+                'name' => $property->name,
+                'active' => $active
+            ];
+        }
+        
         if ($subscription !== null)
         {
-            return view('subscription.show')->with('subscription', $subscription);
+            return view('subscription.show')->with('subscription', $subscription)->with('properties', $propertiesArr);
         }
         
         return redirect()->route('welcome')->with('error', 'Subscription does not exist');
@@ -174,5 +198,59 @@ class SubscriptionController extends Controller
         }
         
         return redirect()->route('welcome');
+    }
+    
+    public function setSubscriptionToProperty(Request $request)
+    {        
+        if ($request->request->all())
+        {
+            $subscription = Subscription::where('id', $request->get('subscriptionId'))->first();
+            $property = Property::where('id', $request->get('propertyId'))->first();
+            
+            if ($subscription !== null && $property !== null)
+            {
+                $active = false;
+                
+                foreach ($property->subscriptions() as $sub)
+                {
+                    foreach ($property->subscriptions as $sub)
+                    {
+                        if ($sub->id == $subscription->id)
+                        {
+                            $active = true;
+                        }
+                    }
+                }
+                
+                if ($active)
+                {
+                    $property->subscriptions()->detach($subscription);
+                    
+                } else {
+                    
+                    $property->subscriptions()->attach($subscription);
+                }
+                
+                $data = [
+                    'type'    => 'success',
+                    'message' => 'Subskrypcja została zmieniona'
+                ];
+                
+                return new JsonResponse($data, 200, array(), true);
+                
+            } else {
+                
+                $message = "Lokalizacja lub subskrypcja nie istnieje!";
+            }
+            
+        } else {
+            
+            $message = "Pusty request";
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error',
+            'message' => $message            
+        ));
     }
 }
