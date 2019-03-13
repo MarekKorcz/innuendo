@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+
+{!! Html::script('js/backend_subscription_create.js') !!}
+
 <div class="container">
 
     <nav class="navbar navbar-inverse">
@@ -15,7 +18,7 @@
 
     <h1>Create a Subscription</h1>
 
-    {{ Form::open(['action' => 'SubscriptionController@store', 'method' => 'POST']) }}
+    {{ Form::open(['id' => 'subscriptionForm', 'action' => 'SubscriptionController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
             <label for="name">Name</label>
@@ -40,6 +43,14 @@
         <div class="form-group">
             <label for="duration">Duration (how many months)</label>
             <input id="duration" class="form-control" type="text" name="duration">
+        </div>
+        <h4 class="text-center">Items</h4>
+        <div id="items" class="form-group">
+            <ul>
+                @foreach($items as $item)
+                    <li class="form-control" value="{{ $item['id'] }}">{{ $item['name'] }} - {{ $item['minutes'] }} min</li>
+                @endforeach
+            </ul>
         </div>
         @if ($property_id)
             {{ Form::hidden('property_id', $property_id) }}

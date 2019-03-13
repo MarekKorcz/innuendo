@@ -25,7 +25,6 @@ class CreateModels extends Migration
             $table->string('city');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
         Schema::create('categories', function (Blueprint $table) {
@@ -36,7 +35,6 @@ class CreateModels extends Migration
             $table->string('image')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
         });
         
         Schema::create('items', function (Blueprint $table) {
@@ -154,10 +152,8 @@ class CreateModels extends Migration
             $table->integer('available_units');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('month_id')->unsigned()->index()->foreign()->references("id")->on("months");
             $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
             $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
-            $table->integer('temp_user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("temp_users");
         });
     }
 
@@ -180,8 +176,8 @@ class CreateModels extends Migration
         Schema::dropIfExists('appointments');
         Schema::dropIfExists('temp_users');
         Schema::dropIfExists('subscriptions');
-        Schema::dropIfExists('property_subscriptions');
-        Schema::dropIfExists('item_subscriptions');
+        Schema::dropIfExists('property_subscription');
+        Schema::dropIfExists('item_subscription');
         Schema::dropIfExists('purchases');
     }
 }

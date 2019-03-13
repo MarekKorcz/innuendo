@@ -1,0 +1,13 @@
+.padding {
+    padding: 2rem;
+}
+
+.padding-top {
+    padding-top: 2rem;
+}
+
+svg.icon {
+    width: 12rem;
+    height: 12rem;
+    color: yellow;
+}

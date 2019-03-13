@@ -10,6 +10,13 @@ use App\Year;
 use App\Month;
 use App\Day;
 use App\Appointment;
+use App\Subscription;
+use App\Purchase;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Redirect;
+use Illuminate\Support\Collection;
 
 class UserController extends Controller
 {    
@@ -562,5 +569,224 @@ class UserController extends Controller
         }
         
         return true;
+    }
+    
+    /**
+     * Shows a list of all subscriptions available for users to buy.
+     * 
+     * @return type
+     */
+    public function subscriptionList()
+    {
+        $subscriptions = Subscription::all();
+        
+        if ($subscriptions !== null)
+        {            
+            return view('user.subscription_list')->with([
+                'subscriptions' => $subscriptions
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Shows the chosen subscription view.
+     * 
+     * @param type $slug
+     */
+    public function subscriptionShow($slug)
+    {
+        $subscription = Subscription::where('slug', $slug)->first();
+        
+        if ($subscription !== null)
+        {
+            $user = User::where('id', auth()->user()->id)->with('purchases')->first();
+            $isPurchasable = true;
+            
+            foreach ($user->purchases as $purchase)
+            {
+                $purchasedSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+                
+                if ($subscription !== null && $subscription->id == $purchasedSubscription->id)
+                {
+                    $subscription['purchase_id'] = $purchase->id;
+                    $isPurchasable = false;
+                    break;
+                }
+            }
+            
+            return view('user.subscription_show')->with([
+                'subscription' => $subscription,
+                'isPurchasable' => $isPurchasable
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Shows subscription's purchase view.
+     * 
+     * @param int $id
+     */
+    public function subscriptionPurchase($id)
+    {
+        $subscription = Subscription::where('id', $id)->first();
+        $user = User::where('id', auth()->user()->id)->with('purchases')->first();
+        
+        foreach ($user->purchases as $purchase)
+        {
+            $userSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+            
+            if ($userSubscription !== null && $userSubscription->id == $subscription->id)
+            {
+                return redirect()->action(
+                    'UserController@subscriptionPurchasedShow', [
+                        'id' => $purchase->id
+                    ]
+                )->with('success', 'Posiadasz już te subskrypcje');
+            }
+        }
+        
+        if ($subscription !== null)
+        {
+            return view('user.subscription_purchase')->with([
+                'subscription' => $subscription
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Subscription purchase method.
+     * 
+     * @param Request $request
+     * @return type
+     */
+    public function subscriptionPurchased(Request $request)
+    {        
+        // validate
+        $rules = array(
+            'terms'             => 'required',
+            'subscription_id'   => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return Redirect::to('user/subscription/purchase/' . Input::get('subscription_id'))
+                ->withErrors($validator)
+                ->withInput(Input::except('password'));
+        } else {
+            
+            $subscription = Subscription::where('id', Input::get('subscription_id'))->first();
+                                    
+            // store
+            $purchase = new Purchase();
+            $purchase->available_units = $subscription->quantity;
+            $purchase->subscription_id = $subscription->id;
+            $purchase->user_id = auth()->user()->id;
+            $purchase->save();
+            
+            /**
+             * 
+             * 
+             * 
+             * 
+             * Email sending
+             * 
+             * 
+             * 
+             * 
+             * 
+             */
+            
+            // redirect
+            return redirect()->action(
+                'UserController@subscriptionPurchasedShow', [
+                    'id' => $purchase->id
+                ]
+            )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
+        }
+    }
+    
+    /**
+     * Shows the purchased subscription view.
+     * 
+     * @param type $id
+     */
+    public function subscriptionPurchasedShow($id) 
+    {
+        $purchase = Purchase::where('id', $id)->where('user_id', auth()->user()->id)->with('subscription')->first();
+        
+        if ($purchase !== null)
+        {
+            $subscriptionCreationDate = new \DateTime($purchase->subscription->created_at->format('Y-m-d'));
+            $interval = new \DateInterval('P12M');
+            $subscriptionCreationDate->add($interval);
+            $expirationDate = $subscriptionCreationDate->format('d - m - Y');
+
+            $appointments = Appointment::where('purchase_id', $purchase->id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+            
+            foreach ($appointments as $appointment)
+            {
+                $day = Day::where('id', $appointment->day_id)->first();
+                $month = Month::where('id', $day->month_id)->first();
+                $year = Year::where('id', $month->year_id)->first();
+                $calendar = Calendar::where('id', $year->calendar_id)->first();
+                $employee = User::where('id', $calendar->employee_id)->first();
+                $property = Property::where('id', $calendar->property_id)->first();
+
+                $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
+                $appointment['date'] = $date;
+
+                $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
+                $appointment['address'] = $address;
+
+                $employee = $employee->name;
+                $appointment['employee'] = $employee;
+            }
+
+            return view('user.subscription_purchased_show')->with([
+                'purchase' => $purchase,
+                'expirationDate' => $expirationDate,
+                'appointments' => $appointments
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Nie posiadasz wykupionej subskrypcji');
+    }
+    
+    /**
+     * Shows a list of purchased subscriptions assigned to current user.
+     * 
+     * @return type
+     */
+    public function purchasedSubscriptionList() 
+    {
+        $user = User::where('id', auth()->user()->id)->with('purchases')->first();
+        $subscriptions = new Collection();
+        
+        foreach ($user->purchases as $purchase)
+        {
+            $subscription = Subscription::where('id', $purchase->subscription_id)->first();
+            
+            if ($subscription !== null)
+            {
+                $subscription['purchase_id'] = $purchase->id;
+                $subscriptions = $subscriptions->push($subscription);
+            }
+        }
+        
+        if ($subscriptions !== null)
+        {            
+            return view('user.subscription_purchased_list')->with([
+                'subscriptions' => $subscriptions
+            ]);
+        }
+        
+        return redirect()->route('welcome');
     }
 }

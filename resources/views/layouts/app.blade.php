@@ -47,6 +47,9 @@
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/user/subscription/list') }}">Pakiety</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ url('user/properties') }}">Lokalizacja</a>
                 </li>
                 <li class="nav-item" style="margin-right: 10px;">

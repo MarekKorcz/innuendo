@@ -50,6 +50,18 @@
                 @endforeach
             </ul>
         </div>
+        <h3 class="text-center">Items</h3>
+        <div class="form-group">
+            <ul id="items" data-subscription_id="{{ $subscription->id }}">
+                @foreach($items as $item)
+                    @if($item['active'])
+                        <li class="form-control" value="{{ $item['id'] }}" data-active="true" style="background-color: lightgreen;">{{ $item['name'] }}</li>
+                    @else
+                        <li class="form-control" value="{{ $item['id'] }}">{{ $item['name'] }}</li>
+                    @endif
+                @endforeach
+            </ul>
+        </div> 
     </div> 
 </div>
 @endsection

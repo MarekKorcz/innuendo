@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Property;
+use App\Category;
+use App\Item;
 use App\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 
 class SubscriptionController extends Controller
 {
@@ -31,10 +34,38 @@ class SubscriptionController extends Controller
         
         if ($property !== null)
         {
-            return view('subscription.create')->with('property_id', $property->id);
+            $categories = Category::all();
+            
+            if ($categories !== null)
+            {
+                $items = new Collection();
+                
+                foreach ($categories as $category)
+                {
+                    $categoryItems = Item::where('category_id', $category->id)->get();
+                    
+                    if ($categoryItems !== null)
+                    {
+                        $items = $items->merge($categoryItems);
+                    }
+                }
+            
+                return view('subscription.create')->with([
+                    'property_id' => $property->id,
+                    'items' => $items
+                ]);
+                
+            } else {
+                
+                $message = "Categories do not exist";
+            }
+            
+        } else {
+            
+            $message = "Property does not exist";
         }
         
-        return redirect()->route('welcome');
+        return redirect()->route('welcome')->with('error', $message);
     }
     
     /**
@@ -44,7 +75,7 @@ class SubscriptionController extends Controller
      * @return type
      */
     public function store(Request $request)
-    {
+    {        
         $name = $request->get('name');
         $description = $request->get('description');
         $old_price = $request->get('old_price');
@@ -52,6 +83,7 @@ class SubscriptionController extends Controller
         $quantity = $request->get('quantity');
         $duration = $request->get('duration');
         $property_id = $request->get('property_id');
+        $items = $request->get('items');
         
         if ($name !== null && is_string($name) &&
             $description !== null && is_string($description) &&
@@ -59,7 +91,8 @@ class SubscriptionController extends Controller
             $new_price !== null && is_integer((int)$new_price) &&
             $quantity !== null && is_integer((int)$quantity) &&
             $duration !== null && is_integer((int)$duration) &&
-            $property_id !== null && is_integer((int)$property_id))
+            $property_id !== null && is_integer((int)$property_id) &&
+            is_array($items) && count($items))
         {            
             $name = htmlentities($name, ENT_QUOTES, "UTF-8");
             $description = htmlentities($description, ENT_QUOTES, "UTF-8");
@@ -78,6 +111,11 @@ class SubscriptionController extends Controller
             $subscription->quantity = $quantity;
             $subscription->duration = $duration;
             $subscription->save();
+            
+            foreach ($items as $item)
+            {
+                $subscription->items()->attach($item);
+            }
             
             $property = Property::where('id', $property_id)->first();
             
@@ -106,37 +144,76 @@ class SubscriptionController extends Controller
      */
     public function show($slug)
     {        
-        $subscription = Subscription::where('slug', $slug)->first();
-        
+        $subscription = Subscription::where('slug', $slug)->with('items')->first();
         $properties = Property::with('subscriptions')->get();
-        
         $propertiesArr = [];
+        $items = new Collection();
         
-        foreach ($properties as $property)
+        if ($subscription !== null && $properties !== null)
         {
-            $active = false;
-            
-            foreach ($property->subscriptions as $sub)
+            foreach ($properties as $property)
             {
-                if ($sub->id == $subscription->id)
+                $active = false;
+
+                foreach ($property->subscriptions as $sub)
                 {
-                    $active = true;
+                    if ($sub->id == $subscription->id)
+                    {
+                        $active = true;
+                    }
+                    
+                    if ($sub !== null)
+                    {
+                        $categories = Category::all();
+                        
+                        foreach ($categories as $category)
+                        {
+                            $categoryItems = Item::where('category_id', $category->id)->get();
+                            
+                            if ($categoryItems !== null)
+                            {
+                                $items = $items->merge($categoryItems);
+                            }
+                        }
+                    }
                 }
+
+                $propertiesArr[] = [
+                    'id' => $property->id,
+                    'name' => $property->name,
+                    'active' => $active
+                ];
+            }            
+            
+            $itemsArr = [];
+            
+            foreach ($items as $item)
+            {
+                $active = false;
+                
+                foreach ($subscription->items as $subscriptionItem)
+                {
+                    if ($item->id == $subscriptionItem->id)
+                    {
+                        $active = true;
+                    }
+                }
+                
+                $itemsArr[] = [
+                    'id' => $item->id,
+                    'name' => $item->name . " - " . $item->minutes . " min",
+                    'active' => $active
+                ];
             }
             
-            $propertiesArr[] = [
-                'id' => $property->id,
-                'name' => $property->name,
-                'active' => $active
-            ];
+            return view('subscription.show')->with([
+                'subscription' => $subscription,
+                'properties' => $propertiesArr,
+                'items' => $itemsArr
+            ]);
         }
         
-        if ($subscription !== null)
-        {
-            return view('subscription.show')->with('subscription', $subscription)->with('properties', $propertiesArr);
-        }
-        
-        return redirect()->route('welcome')->with('error', 'Subscription does not exist');
+        return redirect()->route('welcome')->with('error', 'Something is missing');
     }
     
     /**
@@ -277,14 +354,11 @@ class SubscriptionController extends Controller
             {
                 $active = false;
                 
-                foreach ($property->subscriptions() as $sub)
+                foreach ($property->subscriptions as $sub)
                 {
-                    foreach ($property->subscriptions as $sub)
+                    if ($sub->id == $subscription->id)
                     {
-                        if ($sub->id == $subscription->id)
-                        {
-                            $active = true;
-                        }
+                        $active = true;
                     }
                 }
                 
@@ -307,6 +381,57 @@ class SubscriptionController extends Controller
             } else {
                 
                 $message = "Lokalizacja lub subskrypcja nie istnieje!";
+            }
+            
+        } else {
+            
+            $message = "Pusty request";
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error',
+            'message' => $message            
+        ));
+    }
+    
+    public function setItemToSubscription(Request $request)
+    {        
+        if ($request->request->all())
+        {
+            $subscription = Subscription::where('id', $request->get('subscriptionId'))->first();
+            $item = Item::where('id', $request->get('itemId'))->first();
+            
+            if ($subscription !== null && $item !== null)
+            {
+                $active = false;
+                
+                foreach ($subscription->items as $subscriptionItem)
+                {
+                    if ($subscriptionItem->id == $item->id)
+                    {
+                        $active = true;
+                    }
+                }
+                
+                if ($active)
+                {
+                    $subscription->items()->detach($item);
+                    
+                } else {
+                    
+                    $subscription->items()->attach($item);
+                }
+                
+                $data = [
+                    'type'    => 'success',
+                    'message' => 'Subskrypcja została zmieniona'
+                ];
+                
+                return new JsonResponse($data, 200, array(), true);
+                
+            } else {
+                
+                $message = "Subskrypcja lub zabieg nie istnieje!";
             }
             
         } else {

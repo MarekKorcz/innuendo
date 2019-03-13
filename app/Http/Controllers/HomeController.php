@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Purchase;
 
 class HomeController extends Controller
 {
@@ -23,6 +23,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home')->with('user', auth()->user());
+        $user = auth()->user();
+        $purchasedSubscriptions = Purchase::where('user_id', $user->id)->get();
+        
+        return view('home')->with([
+            'user' => $user,
+            'purchasedSubscriptions' => $purchasedSubscriptions
+        ]);
     }
 }

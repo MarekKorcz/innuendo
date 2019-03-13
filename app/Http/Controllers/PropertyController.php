@@ -29,7 +29,7 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        $properties = Property::where('user_id', auth()->user()->id)->paginate(5);
+        $properties = Property::where('id', '>', 0)->paginate(5);
 
         return view('property.index')
             ->with('properties', $properties);
@@ -80,7 +80,6 @@ class PropertyController extends Controller
             $property->street_number = Input::get('street_number');
             $property->house_number  = Input::get('house_number');
             $property->city          = Input::get('city');
-            $property->user_id       = auth()->user()->id;
             $property->save();
 
             // redirect
@@ -115,7 +114,12 @@ class PropertyController extends Controller
             }
         }
         
-        return view('property.show')->with('property', $property)->with('calendars', $calendars)->with('years', $years)->with('employees', $employees);
+        return view('property.show')->with([
+            'property' => $property,
+            'calendars' => $calendars,
+            'years' => $years,
+            'employees' => $employees
+        ]);
     }
 
     /**

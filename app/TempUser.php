@@ -36,12 +36,4 @@ class TempUser extends Model
     {
         return $this->hasMany('App\Appointment');
     }
-    
-    /**
-     * Get purchases which belong to temporary user.
-     */
-    public function purchases()
-    {
-        return $this->hasMany('App\Purchase');
-    }
 }

@@ -10,23 +10,25 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title text-center">Wizyty</h4>
-                                    <p class="card-text text-center">
-                                        Widok wszystkich wizyt
-                                    </p>
-                                    <div class="text-center">
-                                        <a class="btn btn-success btn-lg" href="{{ URL::to('appointment/index/') }}">
-                                            Pokaż
-                                        </a>
+                        @if (!auth()->user()->isEmployee && !auth()->user()->isAdmin)
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-center">Wizyty</h4>
+                                        <p class="card-text text-center">
+                                            Widok wszystkich wizyt
+                                        </p>
+                                        <div class="text-center">
+                                            <a class="btn btn-success btn-lg" href="{{ URL::to('appointment/index/') }}">
+                                                Pokaż
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                            @if (auth()->user()->isEmployee)
+                            @if (auth()->user()->isEmployee || auth()->user()->isAdmin)
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="card-title text-center">Grafiki</h4>
@@ -41,7 +43,35 @@
                                     </div>
                                 </div>
                             @else
-                                <h3>Subscriptions card (option to add new one or link to show current one)</h3>
+                                @if (count($purchasedSubscriptions))
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title text-center">Twoje pakiety</h4>
+                                            <p class="card-text text-center">
+                                                Widok wszystkich wykupionych pakietów
+                                            </p>
+                                            <div class="text-center">
+                                                <a class="btn btn-success btn-lg" href="{{ URL::to('/user/subscription/list/purchased') }}">
+                                                    Pokaż
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title text-center">Wykup pakiet</h4>
+                                            <p class="card-text text-center">
+                                                Widok pakietów masaży dostępnych w ofercie
+                                            </p>
+                                            <div class="text-center">
+                                                <a class="btn btn-success btn-lg" href="{{ URL::to('/user/subscription/list') }}">
+                                                    Pokaż
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             @endif
                         </div>
                     </div>

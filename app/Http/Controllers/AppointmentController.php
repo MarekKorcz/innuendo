@@ -11,6 +11,7 @@ use App\Year;
 use App\Month;
 use App\Day;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class AppointmentController extends Controller
 {
@@ -142,13 +143,23 @@ class AppointmentController extends Controller
 
                             if ($calendar !== null)
                             {
-                                $category = Category::where('property_id', $calendar->property_id)->first();
+                                $categories = Category::all();
 
-                                if ($category !== null)
+                                if ($categories !== null)
                                 {                                    
                                     $appointmentLengthInMinutes = $appointmentLength * 30;
                                     
-                                    $items = Item::where('category_id', $category->id)->where('minutes', '<=', $appointmentLengthInMinutes)->get();
+                                    $items = new Collection();
+                                    
+                                    foreach ($categories as $category)
+                                    {                                    
+                                        $categoryItems = Item::where('category_id', $category->id)->where('minutes', '<=', $appointmentLengthInMinutes)->get();
+                                        
+                                        if ($categoryItems !== null)
+                                        {
+                                            $items = $items->merge($categoryItems);
+                                        }
+                                    }
                                 }
                             }
                             

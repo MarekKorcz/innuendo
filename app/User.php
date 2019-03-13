@@ -28,18 +28,6 @@ class User extends Authenticatable
     ];
     
     /**
-     *      ADMIN
-     */
-    
-    /**
-     * Get properties record associated with user.
-     */
-    public function properties()
-    {
-        return $this->hasMany('App\Property');
-    }
-    
-    /**
      *      USER
      */
     

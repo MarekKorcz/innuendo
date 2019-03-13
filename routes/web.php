@@ -88,5 +88,13 @@ Route::get('/subscription/index/property/{id}', 'SubscriptionController@property
 Route::get('/subscription/index', 'SubscriptionController@subscriptionIndex');
 Route::delete('/subscription/{id}', 'SubscriptionController@destroy');
 Route::post('/subscription/set-subscription-to-property', 'SubscriptionController@setSubscriptionToProperty');
+Route::post('/subscription/set-item-to-subscription', 'SubscriptionController@setItemToSubscription');
 Route::get('/subscription/{id}/edit', 'SubscriptionController@edit');
 Route::put('/subscription/update', 'SubscriptionController@update');
+
+Route::get('/user/subscription/list', 'UserController@subscriptionList');
+Route::get('/user/subscription/list/purchased', 'UserController@purchasedSubscriptionList');
+Route::get('/user/subscription/show/{slug}', 'UserController@subscriptionShow');
+Route::get('/user/subscription/purchase/{id}', 'UserController@subscriptionPurchase');
+Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
+Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow');

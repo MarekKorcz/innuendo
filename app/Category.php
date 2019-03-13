@@ -29,25 +29,8 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'description', 'image', 'property_id'
+        'name', 'slug', 'description', 'image'
     ];
-    
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'property_id' => 'integer'
-    ];
-    
-    /**
-     * Get the property that owns the category.
-     */
-    public function property()
-    {
-        return $this->belongsTo('App\Property');
-    }
     
     /**
      * Get the items which belong to category.

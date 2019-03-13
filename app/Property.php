@@ -30,37 +30,12 @@ class Property extends Model
      */
     protected $fillable = [
         'name', 'slug', 'description', 'phone_number', 'street', 'street_number', 
-        'house_number', 'city', 'owner_id'
-    ];
-    
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'owner_id' => 'integer'
+        'house_number', 'city'
     ];
     
     /**
      *      ADMIN
      */
-    
-    /**
-     * Get the owner that owns the property
-     */
-    public function owner()
-    {
-        return $this->belongsTo('App\User');
-    }
-    
-    /**
-     * Get the categories which belongs to property
-     */
-    public function categories()
-    {
-        return $this->hasMany('App\Category');
-    }
     
     /**
      * Get the calendar which belong to property

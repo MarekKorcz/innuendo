@@ -22,7 +22,7 @@ class Purchase extends Model
      * @var array
      */
     protected $fillable = [
-        'available_units', 'month_id', 'subscription_id', 'user_id', 'temp_user_id'
+        'available_units', 'subscription_id', 'user_id'
     ];
     
     /**
@@ -32,10 +32,8 @@ class Purchase extends Model
      */
     protected $casts = [
         'available_units' => 'integer',
-        'month_id' => 'integer',
         'subscription_id' => 'integer',
-        'user_id' => 'integer',
-        'temp_user_id' => 'integer'
+        'user_id' => 'integer'
     ];
     
     /**
@@ -44,14 +42,6 @@ class Purchase extends Model
     public function appointments()
     {
         return $this->hasMany('App\Appointment');
-    }
-    
-    /**
-     * Get the month that owns the purchase.
-     */
-    public function month()
-    {
-        return $this->belongsTo('App\Month');
     }
     
     /**
@@ -68,13 +58,5 @@ class Purchase extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
-    }
-    
-    /**
-     * Get the temporary user that owns the purchase.
-     */
-    public function tempUser()
-    {
-        return $this->belongsTo('App\TempUser');
     }
 }
