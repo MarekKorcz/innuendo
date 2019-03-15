@@ -10,6 +10,9 @@ use App\Item;
 use App\Year;
 use App\Month;
 use App\Day;
+use App\User;
+use App\Subscription;
+use App\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -151,6 +154,32 @@ class AppointmentController extends Controller
                                     
                                     $items = new Collection();
                                     
+                                    $user = User::where('id', auth()->user()->id)->with('purchases')->first();
+                                    $userSubscriptionItems = new Collection();
+                                    
+                                    if ($user->purchases !== null)
+                                    {
+                                        foreach ($user->purchases as $purchase)
+                                        {
+                                            $subscription = Subscription::where('id', $purchase->subscription_id)->with('items')->first();
+
+                                            foreach ($subscription->items as $item)
+                                            {
+                                                if ($item->minutes <= $appointmentLengthInMinutes)
+                                                {
+                                                    $item['subscription_id'] = $subscription->id;
+                                                    $item['subscription_name'] = $subscription->name;
+                                                    $userSubscriptionItems = $userSubscriptionItems->push($item);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    if ($userSubscriptionItems !== null)
+                                    {
+                                        $items = $items->merge($userSubscriptionItems);
+                                    }
+                                    
                                     foreach ($categories as $category)
                                     {                                    
                                         $categoryItems = Item::where('category_id', $category->id)->where('minutes', '<=', $appointmentLengthInMinutes)->get();
@@ -258,6 +287,78 @@ class AppointmentController extends Controller
                     $appointment->day_id = $day->id;
                     $appointment->user_id = auth()->user()->id;
                     $appointment->item_id = $item->id;
+                    
+                    if ($request->get('subscription_id'))
+                    {
+                        $subscriptionId = htmlentities((int)$request->get('subscription_id'), ENT_QUOTES, "UTF-8");
+                        $subscription = Subscription::where('id', $subscriptionId)->with('items')->first();
+                        
+                        if ($subscription !== null)
+                        {
+                            $isItemIdentical = false;
+                            
+                            foreach ($subscription->items as $subscriptionItem)
+                            {
+                                if ($subscriptionItem->id == $item->id)
+                                {
+                                    $isItemIdentical = true;
+                                    break;
+                                }
+                            }
+                            
+                            if ($isItemIdentical)
+                            {
+                                $purchase = Purchase::where('user_id', auth()->user()->id)->where('subscription_id', $subscription->id)->first();
+                                
+                                if ($purchase !== null && $purchase->available_units > 0)
+                                {
+                                    $usedAppointmentsCount = 0;
+                                    
+                                    $purchaseAppointments = Appointment::where('purchase_id', $purchase->id)->where('user_id', auth()->user()->id)->where('status', '!=', 2)->get();                                    
+                                    
+                                    foreach ($purchaseAppointments as $purchaseAppointment)
+                                    {
+                                        // appointment date
+                                        $appointmentDay = Day::where('id', $purchaseAppointment->day_id)->first();
+                                        $appointmentMonth = Month::where('id', $appointmentDay->month_id)->first();
+                                        $appointmentYear = Year::where('id', $appointmentMonth->year_id)->first();
+                                        
+                                        $appointmentDay = (string)$appointmentDay->day_number;
+                                        $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
+                                        $appointmentMonth = (string)$appointmentMonth->month_number;
+                                        $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
+                                        
+                                        $appointmentDate = $appointmentYear->year . '-' . $appointmentMonth . '-' . $appointmentDay;
+                                        
+                                        // chosen date                                      
+                                        $chosenDay = (string)$day->day_number;
+                                        $chosenDay = strlen($chosenDay) == 1 ? '0' . $chosenDay : $chosenDay;
+                                        $chosenMonth = (string)$month->month_number;
+                                        $chosenMonth = strlen($chosenMonth) == 1 ? '0' . $chosenMonth : $chosenMonth;
+                                        
+                                        $chosenDate = $year->year . '-' . $chosenMonth . '-' . $chosenDay;
+                                        
+                                        $isInTheSameMonth = date('m', strtotime($appointmentDate)) == date('m', strtotime($chosenDate));
+                                        $isInTheSameYear = date('y', strtotime($appointmentDate)) == date('y', strtotime($chosenDate));
+                                        
+                                        if ($isInTheSameMonth && $isInTheSameYear)
+                                        {
+                                            $usedAppointmentsCount++;
+                                        }
+                                    }
+                                    
+                                    if ($subscription->quantity - $usedAppointmentsCount == $purchase->available_units)
+                                    {
+                                        $appointment->purchase()->associate($purchase->id);
+
+                                        $purchase->available_units = ($purchase->available_units - 1);
+                                        $purchase->save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     $appointment->save();
                     
                     /**

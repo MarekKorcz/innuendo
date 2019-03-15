@@ -27,7 +27,15 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except(['employeesList', 'employee', 'propertiesList', 'property', 'calendar']);
+        $this->middleware('auth')->except([
+            'employeesList', 
+            'employee', 
+            'propertiesList', 
+            'property', 
+            'calendar', 
+            'subscriptionList',
+            'subscriptionShow'
+        ]);
     }
     
     /**
@@ -601,18 +609,22 @@ class UserController extends Controller
         
         if ($subscription !== null)
         {
-            $user = User::where('id', auth()->user()->id)->with('purchases')->first();
             $isPurchasable = true;
             
-            foreach ($user->purchases as $purchase)
+            if (auth()->user() !== null)
             {
-                $purchasedSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+                $user = User::where('id', auth()->user()->id)->with('purchases')->first();
                 
-                if ($subscription !== null && $subscription->id == $purchasedSubscription->id)
+                foreach ($user->purchases as $purchase)
                 {
-                    $subscription['purchase_id'] = $purchase->id;
-                    $isPurchasable = false;
-                    break;
+                    $purchasedSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+
+                    if ($subscription !== null && $subscription->id == $purchasedSubscription->id)
+                    {
+                        $subscription['purchase_id'] = $purchase->id;
+                        $isPurchasable = false;
+                        break;
+                    }
                 }
             }
             

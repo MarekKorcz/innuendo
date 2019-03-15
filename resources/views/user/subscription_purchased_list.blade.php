@@ -2,7 +2,7 @@
 
 @section('content')
 
-{!! Html::style('css/subscription_list.css') !!}
+{!! Html::style('css/subscription_purchased_list.css') !!}
 
 <div class="container">
 

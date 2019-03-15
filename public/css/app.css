@@ -45,3 +45,11 @@ span#footer-name {
 #copyright {
     font-size: 0.7em;
 }
+
+.field-warning {
+    margin: 3px; 
+    padding: 3px; 
+    padding-left: 18px; 
+    background-color: lightcoral;
+    border-radius: 5px;
+}
