@@ -46,6 +46,5 @@
             @endforeach
         </tbody>
     </table>
-    {{ $appointments->links() }}
 </div>
 @endsection

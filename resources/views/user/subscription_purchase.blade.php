@@ -58,16 +58,24 @@
                         <div class="text-center" style="padding-top: 21px;">
                             {{ Form::open(['id' => 'purchaseForm', 'action' => 'UserController@subscriptionPurchased', 'method' => 'POST']) }}
                             
+<!--                                <div class="form-group text-center">
+                                    <label for="subscription-start" style="font-size: 21px;">Data rozpoczęcia:</label>
+                                    <input id="subscription-start" class="form-control col-4" type="date"
+                                        value="{{Carbon\Carbon::now()->format("Y-m-d")}}"
+                                        min="{{Carbon\Carbon::now()->format("Y-m-d")}}"
+                                    >
+                                </div>-->
+                            
                                 <div class="form-group">
-                                    {!! Html::decode(Form::label('terms','<span style="font-size: 27px;">Akceptuje powyższy regulamin</span>')) !!}
+                                    {!! Html::decode(Form::label('terms','<span style="font-size: 21px;">Akceptuje powyższy regulamin:</span>')) !!}
                                     {{ Form::checkbox('terms', null, null, array('class' => 'form-control')) }}
                                 </div>
                                 
                                 {{ Form::hidden('subscription_id', $subscription->id) }}
                                 
-                            {{ Form::submit('Zamawiam', array('class' => 'btn btn-primary btn-lg')) }}
+                                {{ Form::submit('Zamawiam', array('class' => 'btn btn-primary btn-lg')) }}
 
-                        {{ Form::close() }}
+                            {{ Form::close() }}
                         </div>
                     </div>
                 </div>

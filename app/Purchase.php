@@ -22,7 +22,7 @@ class Purchase extends Model
      * @var array
      */
     protected $fillable = [
-        'available_units', 'subscription_id', 'user_id'
+        'subscription_id', 'user_id'
     ];
     
     /**
@@ -31,10 +31,17 @@ class Purchase extends Model
      * @var array
      */
     protected $casts = [
-        'available_units' => 'integer',
         'subscription_id' => 'integer',
         'user_id' => 'integer'
     ];
+    
+    /**
+     * Get intervals which belong to purchase.
+     */
+    public function intervals()
+    {
+        return $this->hasMany('App\Interval');
+    }
     
     /**
      * Get appointments which belong to purchase.

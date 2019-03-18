@@ -12,6 +12,7 @@ use App\Day;
 use App\Appointment;
 use App\Subscription;
 use App\Purchase;
+use App\Interval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -322,13 +323,26 @@ class UserController extends Controller
     {
         if ($id !== null)
         {
-            $appointment = Appointment::where('id', $id)->where('user_id', auth()->user()->id)->with('item')->first();
-            
+            $appointment = Appointment::where('id', $id)->where('user_id', auth()->user()->id)->with('item')->with('purchase')->first();
+
             if ($appointment !== null)
             {
                 $day = Day::where('id', $appointment->day_id)->first();
                 $month = Month::where('id', $day->month_id)->first();
                 $year = Year::where('id', $month->year_id)->first();
+                
+                // appointment date                           
+                $appointmentDay = (string)$day->day_number;
+                $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
+                $appointmentMonth = (string)$month->month_number;
+                $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
+    
+                $now = new \DateTime(date('Y-m-d H:i:s'));
+                $appointmentDate = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
+                
+                $canBeDeleted = $now < $appointmentDate ? true : false;
+                
+                $subscription = $appointment->purchase ? Subscription::where('id', $appointment->purchase->subscription_id)->first() : false;
                 
                 $calendar = Calendar::where('id', $year->calendar_id)->first();
                 
@@ -337,6 +351,8 @@ class UserController extends Controller
                 
                 return view('user.appointment_show')->with([
                     'appointment' => $appointment,
+                    'canBeDeleted' => $canBeDeleted,
+                    'subscription' => $subscription,
                     'day' => $day->day_number,
                     'month' => $month->month,
                     'year' => $year->year,
@@ -357,7 +373,7 @@ class UserController extends Controller
      */
     public function appointmentIndex()
     {
-        $appointments = Appointment::where('user_id', auth()->user()->id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+        $appointments = Appointment::where('user_id', auth()->user()->id)->with('item')->get();
         
         if ($appointments !== null)
         {
@@ -373,6 +389,13 @@ class UserController extends Controller
                 $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
                 $appointment['date'] = $date;
                 
+                // appointment date                           
+                $appointmentDay = (string)$day->day_number;
+                $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
+                $appointmentMonth = (string)$month->month_number;
+                $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
+                $appointment['date_time'] = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
+                
                 $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
                 $appointment['address'] = $address;
                 
@@ -381,7 +404,7 @@ class UserController extends Controller
             }
             
             return view('user.appointment_index')->with([
-                'appointments' => $appointments
+                'appointments' => $appointments->sortByDesc('date_time')
             ]);
         }
         
@@ -396,23 +419,60 @@ class UserController extends Controller
      */
     public function appointmentDestroy($id)
     {        
-        $appointment = Appointment::where('id', $id)->first();
-        $appointment->delete();
+        $appointment = Appointment::where('id', $id)->with('purchase')->first();
         
-        /**
-        * 
-        * 
-        * 
-        * email sanding
-        * 
-        * 
-        * 
-        * 
-        */
-        
-        return redirect()->action(
-            'UserController@appointmentIndex'
-        )->with('success', 'Wizyta została odwołana!');
+        if ($appointment !== null)
+        {
+            if ($appointment->purchase !== null)
+            {
+                $day = Day::where('id', $appointment->day_id)->first();
+                $month = Month::where('id', $day->month_id)->first();
+                $year = Year::where('id', $month->year_id)->first();
+                
+                // appointment date                           
+                $appointmentDay = (string)$day->day_number;
+                $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
+                $appointmentMonth = (string)$month->month_number;
+                $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
+    
+                $now = new \DateTime(date('Y-m-d H:i:s'));
+                $appointmentDate = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
+                $appointmentDateMinusOneDay = $appointmentDate->sub(new \DateInterval('P1D'));
+                
+                if ($now <= $appointmentDateMinusOneDay)
+                {
+                    $purchaseIntervals = Interval::where('purchase_id', $appointment->purchase->id)->get();
+                    
+                    $appointmentDateWithoutTime = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay);
+                    
+                    foreach ($purchaseIntervals as $purchaseInterval)
+                    {
+                        if ($purchaseInterval->start_date <= $appointmentDateWithoutTime && $appointmentDateWithoutTime <= $purchaseInterval->end_date)
+                        {
+                            $purchaseInterval->available_units = $purchaseInterval->available_units + 1;
+                            $purchaseInterval->save();
+                        }
+                    }
+                }
+            }
+            
+            $appointment->delete();
+
+            /**
+            * 
+            * 
+            * 
+            * email sanding
+            * 
+            * 
+            * 
+            * 
+            */
+
+            return redirect()->action(
+                'UserController@appointmentIndex'
+            )->with('success', 'Wizyta została odwołana!');
+        }
     }
 
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
@@ -678,7 +738,7 @@ class UserController extends Controller
      * @return type
      */
     public function subscriptionPurchased(Request $request)
-    {        
+    {
         // validate
         $rules = array(
             'terms'             => 'required',
@@ -694,33 +754,52 @@ class UserController extends Controller
         } else {
             
             $subscription = Subscription::where('id', Input::get('subscription_id'))->first();
-                                    
+            
             // store
             $purchase = new Purchase();
-            $purchase->available_units = $subscription->quantity;
             $purchase->subscription_id = $subscription->id;
             $purchase->user_id = auth()->user()->id;
             $purchase->save();
             
-            /**
-             * 
-             * 
-             * 
-             * 
-             * Email sending
-             * 
-             * 
-             * 
-             * 
-             * 
-             */
-            
-            // redirect
-            return redirect()->action(
-                'UserController@subscriptionPurchasedShow', [
-                    'id' => $purchase->id
-                ]
-            )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
+            if ($purchase !== null)
+            {
+                $startDate = date('Y-m-d');
+                
+                for ($i = 1; $i <= $subscription->duration; $i++)
+                {
+                    $interval = new Interval();
+                    $interval->available_units = $subscription->quantity;
+                    
+                    $interval->start_date = $startDate;
+                    $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
+                    
+                    $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
+                    $interval->end_date = $endDate;
+                    
+                    $interval->purchase_id = $purchase->id;
+                    $interval->save();
+                }
+                
+                /**
+                 * 
+                 * 
+                 * 
+                 * 
+                 * Email sending
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 */
+
+                // redirect
+                return redirect()->action(
+                    'UserController@subscriptionPurchasedShow', [
+                        'id' => $purchase->id
+                    ]
+                )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
+            }
         }
     }
     
@@ -740,19 +819,27 @@ class UserController extends Controller
             $subscriptionCreationDate->add($interval);
             $expirationDate = $subscriptionCreationDate->format('d - m - Y');
 
-            $appointments = Appointment::where('purchase_id', $purchase->id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+            $appointments = Appointment::where('purchase_id', $purchase->id)->with('item')->get();
             
             foreach ($appointments as $appointment)
             {
                 $day = Day::where('id', $appointment->day_id)->first();
                 $month = Month::where('id', $day->month_id)->first();
                 $year = Year::where('id', $month->year_id)->first();
+                
                 $calendar = Calendar::where('id', $year->calendar_id)->first();
                 $employee = User::where('id', $calendar->employee_id)->first();
                 $property = Property::where('id', $calendar->property_id)->first();
 
                 $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
                 $appointment['date'] = $date;
+                
+                // appointment date                           
+                $appointmentDay = (string)$day->day_number;
+                $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
+                $appointmentMonth = (string)$month->month_number;
+                $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
+                $appointment['date_time'] = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
 
                 $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
                 $appointment['address'] = $address;
@@ -764,7 +851,7 @@ class UserController extends Controller
             return view('user.subscription_purchased_show')->with([
                 'purchase' => $purchase,
                 'expirationDate' => $expirationDate,
-                'appointments' => $appointments
+                'appointments' => $appointments->sortByDesc('date_time')
             ]);
         }
         

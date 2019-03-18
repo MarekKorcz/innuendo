@@ -129,11 +129,9 @@ class SubscriptionController extends Controller
                     ]
                 )->with('success', 'Subscription has been successfuly added!');
             }
-            
-            $message = 'Property doesn\'t exist';
         }
         
-        return redirect('/subscription/create/' . $property_id)->with('error', $message != null ? $message : 'Incorrect values');
+        return redirect('/subscription/create/' . $property_id)->with('error', 'Incorrect values');
     }
     
     /**

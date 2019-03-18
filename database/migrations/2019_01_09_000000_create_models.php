@@ -149,11 +149,19 @@ class CreateModels extends Migration
         
         Schema::create('purchases', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('available_units');
             $table->timestamps();
             $table->softDeletes();
             $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
             $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
+        Schema::create('intervals', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('available_units');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->timestamps();
+            $table->integer('purchase_id')->unsigned()->index()->foreign()->references("id")->on("purchases");
         });
     }
 
@@ -179,5 +187,6 @@ class CreateModels extends Migration
         Schema::dropIfExists('property_subscription');
         Schema::dropIfExists('item_subscription');
         Schema::dropIfExists('purchases');
+        Schema::dropIfExists('intervals');
     }
 }

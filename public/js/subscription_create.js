@@ -35,7 +35,6 @@ $(document).ready(function() {
         {
             event.preventDefault();
             $("div#item-warning").append('<p class="field-warning">Wybierz rodzaj zabiegu</p>');
-            
         }
     });
 });

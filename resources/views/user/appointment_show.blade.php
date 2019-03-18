@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+
+{!! Html::style('css/appointment_show.css') !!}
+
 <div class="container">
 
     <nav class="navbar navbar-inverse">
@@ -9,11 +12,14 @@
             </a>
         </div>
         <ul class="nav navbar-nav">
+            @if ($canBeDeleted)
+                <li>                
+                    <a href="#deleteAnAppointment" data-toggle="modal" class="btn btn-danger">
+                        Usuń wizytę
+                    </a>
+                </li>
+            @endif
             <li>
-                {!!Form::open(['action' => ['UserController@appointmentDestroy', $appointment->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                    {{ Form::hidden('_method', 'DELETE') }}
-                    {{ Form::submit('Odwołaj wizytę', ['class' => 'btn btn-danger']) }}
-                {!!Form::close()!!}
                 <a class="btn btn-primary" href="{{ URL::to('/appointment/index') }}">
                     Wszystkie wizyty
                 </a>
@@ -40,6 +46,38 @@
         <p>
             Status wizyty: <strong>{{config('appointment-status.' . $appointment->status)}}</strong>
         </p>
-    </div>    
+        @if ($subscription)
+            <p>Subskrypcja: 
+                <a href="{{ URL::to('user/subscription/purchased/show/' . $appointment->purchase->id) }}">
+                    <strong>{{$subscription->name}}</strong>
+                </a>
+            </p>
+        @endif
+    </div>
+    
+    <div class="modal hide" id="deleteAnAppointment">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Usunięcie wizyty</h3>
+                <button class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Jeśli odwołasz wizytę w okresie ją poprzedzającym, mniejszym niż jedna doba, to wizyta 
+                ta zostanie uznana za wykonaną i nie będzie możliwości wykorzystania jej w przyszłości!!</p>
+                
+                <div class="row">
+                    <div class="col-6">
+                        <a class="btn btn-success" data-dismiss="modal" href="#">Wróć</a>
+                    </div>
+                    <div class="col-6" style="text-align: right;">
+                        {!!Form::open(['action' => ['UserController@appointmentDestroy', $appointment->id], 'method' => 'POST'])!!}
+                            {{ Form::hidden('_method', 'DELETE') }}
+                            {{ Form::submit('Odwołaj wizytę', ['class' => 'btn btn-danger']) }}
+                        {!!Form::close()!!}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
