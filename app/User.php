@@ -24,12 +24,42 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'slug', 'password', 'remember_token', 'isAdmin', 'isEmployee'
+        'slug', 'password', 'remember_token', 'isAdmin', 'isEmployee', 'isBoss', 'code'
     ];
     
     /**
+     *      BOSS
+     */
+    
+    public function boss()
+    {
+        return $this->belongsTo('App\User', 'id');
+    }
+    
+    /**
+     * Get properties which belong to boss.
+     */
+    public function places()
+    {
+        return $this->hasMany('App\Property');
+    }
+
+    /**
      *      USER
      */
+    
+    public function slave()
+    {
+        return $this->hasMany('App\User', 'id');
+    }
+    
+    /**
+     * Get properties which belongs to user
+     */
+    public function properties()
+    {
+        return $this->belongsToMany('App\Property');
+    }
     
     /**
      * Get appointments associated with user.

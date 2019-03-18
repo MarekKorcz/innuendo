@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class Employee
+class Boss
 {
     /**
      * Handle an incoming request.
@@ -17,11 +17,11 @@ class Employee
     {
         if (auth()->user())
         {
-            if (auth()->user()->isEmployee == 1 || auth()->user()->isAdmin == 1)
+            if (auth()->user()->isBoss == 1)
             {
                 return $next($request);
             }
         }
-        return redirect('home')->with('error', 'You have not employee access rights');
+        return redirect('home')->with('error', 'You haven\'t got boss access rights');
     }
 }

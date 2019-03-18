@@ -23,8 +23,16 @@ class CreateModels extends Migration
             $table->string('street_number');
             $table->string('house_number')->nullable();
             $table->string('city');
+            $table->boolean('isPublic')->default(1);
             $table->timestamps();
             $table->softDeletes();
+            $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
+        Schema::create('user_property', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->integer('property_id')->unsigned();
         });
         
         Schema::create('categories', function (Blueprint $table) {
@@ -173,7 +181,7 @@ class CreateModels extends Migration
     public function down()
     {
         Schema::dropIfExists('properties');
-        Schema::dropIfExists('property_employee');
+        Schema::dropIfExists('user_property');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('items');
         Schema::dropIfExists('calendars');

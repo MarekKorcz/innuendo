@@ -22,6 +22,6 @@ class Admin
                 return $next($request);
             }
         }
-        return redirect('home')->with('error', 'You haven\'t got admin access');
+        return redirect('home')->with('error', 'You haven\'t got admin access rights');
     }
 }

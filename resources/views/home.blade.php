@@ -10,7 +10,23 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        @if (!auth()->user()->isEmployee && !auth()->user()->isAdmin)
+                        @if (auth()->user()->isBoss)
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-center">Konfiguracja ustawień pracowników</h4>
+                                        <p class="card-text text-center">
+                                            Widok z opcjami do rejestrowania pracowników, ich listą oraz informacjami dotyczącymi wykupionych subskrypcji
+                                        </p>
+                                        <div class="text-center">
+                                            <a class="btn btn-success btn-lg" href="{{ URL::to('boss/dashboard/') }}">
+                                                Pokaż
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif (!auth()->user()->isEmployee && !auth()->user()->isAdmin)
                             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-body">

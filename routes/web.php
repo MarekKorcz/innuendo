@@ -98,3 +98,6 @@ Route::get('/user/subscription/show/{slug}', 'UserController@subscriptionShow');
 Route::get('/user/subscription/purchase/{id}', 'UserController@subscriptionPurchase');
 Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
 Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow');
+
+Route::get('/boss/dashboard', 'BossController@dashboard');
+Route::post('/boss/set-code', 'BossController@setCode');

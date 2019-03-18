@@ -30,7 +30,7 @@ class Property extends Model
      */
     protected $fillable = [
         'name', 'slug', 'description', 'phone_number', 'street', 'street_number', 
-        'house_number', 'city'
+        'house_number', 'city', 'boss_id'
     ];
     
     /**
@@ -51,5 +51,28 @@ class Property extends Model
     public function subscriptions()
     {
         return $this->belongsToMany('App\Subscription');
+    }
+    
+    /**
+     *      BOSS
+     */
+    
+    /**
+     * Get boss that owns the property.
+     */
+    public function boss()
+    {
+        return $this->belongsTo('App\User');
+    }
+    
+    /**
+     *      USER
+     */
+    /**
+     * Get users which belongs to property
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\User');
     }
 }
