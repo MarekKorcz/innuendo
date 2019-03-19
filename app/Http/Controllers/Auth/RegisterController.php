@@ -65,12 +65,27 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'surname' => $data['surname'],
             'phone_number' => $data['phone_number'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        
+        if ($user && is_string($data['code']))
+        {
+            $code = htmlentities($data['code'], ENT_QUOTES, "UTF-8");
+            
+            $boss = User::where('code', $code)->first();
+            
+            if ($boss !== null)
+            {
+                $user->boss_id = $boss->id;
+                $user->save();
+            }
+        }
+        
+        return $user;
     }
 }

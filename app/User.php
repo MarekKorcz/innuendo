@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\User;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -15,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'phone_number', 'email', 'password'
+        'name', 'surname', 'phone_number', 'email', 'password', 'code'
     ];
 
     /**
@@ -24,16 +25,18 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'slug', 'password', 'remember_token', 'isAdmin', 'isEmployee', 'isBoss', 'code'
+        'slug', 'password', 'remember_token', 'isAdmin', 'isEmployee', 'isBoss', 'boss_id'
     ];
     
     /**
      *      BOSS
      */
     
-    public function boss()
+    public function getWorkers()
     {
-        return $this->belongsTo('App\User', 'id');
+        $workers = User::where('boss_id', $this->id)->get();
+        
+        return count($workers) > 0 ? $workers : null;
     }
     
     /**
@@ -48,9 +51,9 @@ class User extends Authenticatable
      *      USER
      */
     
-    public function slave()
+    public function getBoss()
     {
-        return $this->hasMany('App\User', 'id');
+        return User::where('id', $this->boss_id)->first();
     }
     
     /**
