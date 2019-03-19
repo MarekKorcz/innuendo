@@ -39,25 +39,36 @@ class BossController extends Controller
      */
     public function setCode(Request $request)
     {
-        // validate
-        $rules = array(
-            'code' => 'required'
-        );
-        $validator = Validator::make(Input::all(), $rules);
-
-        // process the login
-        if ($validator->fails()) {
-            return Redirect::to('boss/dashboard')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
-        } else {
+        $code = $request->request->get('code');
+        
+        if (is_string($code))
+        {
+            if ($code == "true")
+            {
+                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $charactersLength = strlen($characters);
+                $code = "";
+                
+                for ($i = 0; $i < 12; $i++) 
+                {
+                    $code .= $characters[rand(0, $charactersLength - 1)];
+                }
+                
+                $message = 'Rejestracja pracowników została WŁĄCZONA';
+                
+            } else if ($code = "false") {
+                
+                $code = null;
+                $message = 'Rejestracja pracowników została WYŁĄCZONA';
+            }
+            
             // store
             $boss = auth()->user();
-            $boss->code = Input::get('code');
+            $boss->code = $code;
             $boss->save();
-
-            // redirect
-            return redirect('/boss/dashboard')->with('success', 'Kod rejestracyjny dla pracowników został zapisany!');
         }
+
+        // redirect
+        return redirect('/boss/dashboard')->with('success', $message);
     }
 }
