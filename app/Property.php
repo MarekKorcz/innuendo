@@ -30,7 +30,7 @@ class Property extends Model
      */
     protected $fillable = [
         'name', 'slug', 'description', 'phone_number', 'street', 'street_number', 
-        'house_number', 'city', 'boss_id'
+        'house_number', 'city', 'isPublic', 'boss_id'
     ];
     
     /**
@@ -62,7 +62,9 @@ class Property extends Model
      */
     public function boss()
     {
-        return $this->belongsTo('App\User');
+        $boss = User::where('id', $this->boss_id)->first();
+        
+        return count($boss) > 0 ? $boss : null;
     }
     
     /**

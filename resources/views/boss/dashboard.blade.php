@@ -32,5 +32,40 @@
             {{ Form::close() }}
         </div>
     </div>
+    
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Twoje lokalizacje</h4>
+                        <p class="card-text text-center">
+                            Widok Twoich lokalizacji z listą pracowników do nich przynależących
+                        </p>
+                        <div class="text-center">
+                            <a class="btn btn-success btn-lg" href="{{ URL::to('boss/property/list/') }}">
+                                Pokaż
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Twoje wykupione subskrypcje</h4>
+                        <p class="card-text text-center">
+                            Widok wykupionych subskrypcji ze szczegółowymi informacjami ich dotyczącymi oraz listą pracowników z nich korzystających
+                        </p>
+                        <div class="text-center">
+<!--                            <a class="btn btn-success btn-lg" href="{{ URL::to('boss/dashboard/') }}">
+                                Pokaż
+                            </a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

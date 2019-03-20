@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Property;
+use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
-use Redirect;
 
 class BossController extends Controller
 {    
@@ -70,5 +69,84 @@ class BossController extends Controller
 
         // redirect
         return redirect('/boss/dashboard')->with('success', $message);
+    }
+    
+    /**
+     * Shows list of properties
+     * 
+     * @param Request $request
+     * @return type
+     */
+    public function propertyList()
+    {
+        $boss = auth()->user();
+        
+        if ($boss !== null)
+        {
+            $properties = Property::where('boss_id', auth()->user()->id)->get();
+
+            if ($properties !== null)
+            {
+                if (count($properties) == 1)
+                {
+                    return redirect()->action(
+                        'BossController@property', [
+                            'id' => $properties->first()->id
+                        ]
+                    );
+                
+                } else {
+                    
+                    $propertiesArray = [];
+
+                    for ($i = 0; $i < count($properties); $i++)
+                    {
+                        $propertiesArray[$i + 1] = $properties[$i];
+                    }
+
+                    return view('boss.property_list')->with('properties', $propertiesArray);
+                }
+            }
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Shows property.
+     * 
+     * @param integer $id
+     * @return type
+     */
+    public function property($id)
+    {
+        if ($id !== null)
+        {
+            $property = Property::where('id', $id)->first();
+            
+            if ($property !== null)
+            {
+                $workers = auth()->user()->getWorkers();                
+                $propertyCreatedAt = $property->created_at->format('d.m.Y');
+                
+//                $workersArray = [];
+//                
+//                if ($workers !== null)
+//                {
+//                    for ($i = 0; $i < count($workers); $i++)
+//                    {
+//                        $workersArray[$i + 1] = $workers[$i];
+//                    }
+//                }
+                        
+                return view('boss.property_show')->with([
+                    'property' => $property,
+                    'workers' => $workers,
+                    'propertyCreatedAt' => $propertyCreatedAt
+                ]);
+            }
+        }
+        
+        return redirect()->route('welcome');
     }
 }

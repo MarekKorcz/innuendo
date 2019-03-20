@@ -101,3 +101,5 @@ Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptio
 
 Route::get('/boss/dashboard', 'BossController@dashboard');
 Route::post('/boss/set-code', 'BossController@setCode');
+Route::get('/boss/property/list', 'BossController@propertyList');
+Route::get('/boss/property/{id}', 'BossController@property');

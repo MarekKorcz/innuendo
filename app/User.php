@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\User;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -44,7 +43,9 @@ class User extends Authenticatable
      */
     public function places()
     {
-        return $this->hasMany('App\Property');
+        $properties = Property::where('boss_id', $this->id)->get();
+        
+        return count($properties) > 0 ? $properties : null;
     }
 
     /**
@@ -53,7 +54,9 @@ class User extends Authenticatable
     
     public function getBoss()
     {
-        return User::where('id', $this->boss_id)->first();
+        $boss = User::where('id', $this->boss_id)->first();
+        
+        return $boss !== null ? $boss : null;
     }
     
     /**
