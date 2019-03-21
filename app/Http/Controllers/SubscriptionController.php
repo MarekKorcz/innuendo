@@ -197,11 +197,27 @@ class SubscriptionController extends Controller
                     }
                 }
                 
-                $itemsArr[] = [
-                    'id' => $item->id,
-                    'name' => $item->name . " - " . $item->minutes . " min",
-                    'active' => $active
-                ];
+                $notExistsYet = true;
+                
+                if (count($itemsArr) > 0)
+                {
+                    foreach ($itemsArr as $itemElement)
+                    {
+                        if ($itemElement['id'] == $item->id)
+                        {
+                            $notExistsYet = false;
+                        }
+                    }
+                }
+                
+                if ($notExistsYet)
+                {
+                    $itemsArr[] = [
+                        'id' => $item->id,
+                        'name' => $item->name . " - " . $item->minutes . " min",
+                        'active' => $active
+                    ];
+                }
             }
             
             return view('subscription.show')->with([

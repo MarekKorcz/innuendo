@@ -48,4 +48,12 @@ class Subscription extends Model
     {
         return $this->hasMany('App\Purchase');
     }
+    
+    /**
+     * Get code's chosen properties associated with subscription.
+     */
+    public function chosenProperties()
+    {
+        return $this->belongsToMany('App\Property', 'chosen_property_chosen_subscription');
+    }
 }

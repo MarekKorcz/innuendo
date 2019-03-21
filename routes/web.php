@@ -20,6 +20,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/admin/user/list', 'AdminController@userList');
+Route::get('/admin/user/show/{id}', 'AdminController@userShow');
+Route::put('/admin/user/edit', 'AdminController@userEdit');
+
 Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');
 Route::post('/employee/assign/store', 'EmployeeController@store');
 

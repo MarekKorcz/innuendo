@@ -29,7 +29,7 @@ class CreateModels extends Migration
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
-        Schema::create('user_property', function (Blueprint $table) {
+        Schema::create('property_user', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('property_id')->unsigned();
@@ -171,6 +171,26 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->integer('purchase_id')->unsigned()->index()->foreign()->references("id")->on("purchases");
         });
+        
+        Schema::create('codes', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('code');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
+        Schema::create('code_property', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('property_id')->unsigned();
+            $table->integer('code_id')->unsigned();
+        });
+        
+        Schema::create('chosen_property_chosen_subscription', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('subscription_id')->unsigned();
+            $table->integer('property_id')->unsigned();
+        });
     }
 
     /**
@@ -196,5 +216,8 @@ class CreateModels extends Migration
         Schema::dropIfExists('item_subscription');
         Schema::dropIfExists('purchases');
         Schema::dropIfExists('intervals');
+        Schema::dropIfExists('codes');
+        Schema::dropIfExists('code_property');
+        Schema::dropIfExists('chosen_property_chosen_subscription');
     }
 }

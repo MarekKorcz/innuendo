@@ -1,9 +1,9 @@
 $(document).ready(function() {
     
-    $("#copy-button").on('click', function() {
+    $(".copy-button").on('click', function() {
         
-        var copyText = document.getElementById("code-text");
-        copyText.select();
+        var copyText = document.getElementByClassName("code-text");
+        copyText[0].select();
         document.execCommand("copy");
     });
 });

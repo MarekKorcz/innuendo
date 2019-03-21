@@ -81,6 +81,16 @@ class PropertyController extends Controller
             $property->house_number  = Input::get('house_number');
             $property->city          = Input::get('city');
             $property->save();
+            
+            $users = User::where('isAdmin', null)->where('isEmployee', null)->get();
+            
+            if ($users !== null)
+            {
+                foreach ($users as $user)
+                {
+                    $user->properties()->attach($property);
+                }
+            }
 
             // redirect
             return redirect('/property/index')->with('success', 'Property successfully created!');
@@ -187,8 +197,32 @@ class PropertyController extends Controller
     public function destroy($id)
     {
         $property = Property::find($id);
-        $property->delete();
         
-        return redirect('/property/index')->with('success', 'Property deleted!');
+        if ($property !== null)
+        {
+            $users = User::where('isAdmin', null)->with('properties')->get();
+            
+            foreach ($users as $user)
+            {
+                $userProperties = $user->properties;
+                
+                if ($userProperties !== null)
+                {
+                    foreach ($userProperties as $userProperty)
+                    {
+                        if ($userProperty->id == $property->id)
+                        {
+                            $user->properties()->detach($property);
+                        }
+                    }
+                }
+            }
+            
+            $property->delete();
+
+            return redirect('/property/index')->with('success', 'Property deleted!');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'There is no such property');
     }
 }

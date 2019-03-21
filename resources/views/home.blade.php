@@ -90,6 +90,23 @@
                                 @endif
                             @endif
                         </div>
+                        @if (auth()->user()->isAdmin)
+                            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-center">Konta użytkowników</h4>
+                                        <p class="card-text text-center">
+                                            Widok z listą wszystkich użytkowników
+                                        </p>
+                                        <div class="text-center">
+                                            <a class="btn btn-success btn-lg" href="{{ URL::to('/admin/user/list') }}">
+                                                Pokaż
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

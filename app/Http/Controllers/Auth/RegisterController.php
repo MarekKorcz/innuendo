@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Property;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -82,9 +83,30 @@ class RegisterController extends Controller
             if ($boss !== null)
             {
                 $user->boss_id = $boss->id;
-                $user->save();
+                
+                $bossProperties = Property::where('boss_id', $boss->id)->get();
+                
+                if ($bossProperties !== null)
+                {
+                    foreach ($bossProperties as $property)
+                    {
+                        $user->properties()->attach($property);
+                    }
+                }
             }
         }
+        
+        $publicProperties = Property::where('boss_id', null)->get();
+                
+        if ($publicProperties !== null)
+        {
+            foreach ($publicProperties as $property)
+            {
+                $user->properties()->attach($property);
+            }
+        }
+        
+        $user->save();
         
         return $user;
     }

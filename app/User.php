@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'phone_number', 'email', 'password', 'code'
+        'name', 'surname', 'phone_number', 'email', 'password'
     ];
 
     /**
@@ -41,11 +41,19 @@ class User extends Authenticatable
     /**
      * Get properties which belong to boss.
      */
-    public function places()
+    public function getPlaces()
     {
         $properties = Property::where('boss_id', $this->id)->get();
         
         return count($properties) > 0 ? $properties : null;
+    }
+    
+    /**
+     * Get codes associated with boss.
+     */
+    public function codes()
+    {
+        return $this->hasMany('App\Code');
     }
 
     /**

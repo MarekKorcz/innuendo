@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Code;
 use App\Property;
-use App\User;
 use Illuminate\Http\Request;
 
 class BossController extends Controller
@@ -23,10 +23,60 @@ class BossController extends Controller
      */
     public function dashboard()
     {
-        $code = auth()->user()->code;
+        $boss = auth()->user();
+        $codes = Code::where('user_id', $boss->id)->with('properties')->get();
+        
+        $codesArray = [];
+        
+        foreach ($codes as $code)
+        {
+            $properties = [];
+            
+            foreach ($code->properties as $property)
+            {                
+                $property = Property::where('id', $property->id)->with('subscriptions')->with('chosenSubscriptons')->first();
+                
+                $allPropertySubscriptions = $property->subscriptions;
+                $chosenPropertySubscriptions = $property->chosenSubscriptons;
+                
+                $subscriptions = [];
+                
+                foreach ($allPropertySubscriptions as $propertySubscription)
+                {
+                    $isChosen = false;
+                    
+                    foreach ($chosenPropertySubscriptions as $chosenPropertySubscription)
+                    {
+                        if ($propertySubscription->id == $chosenPropertySubscription->id)
+                        {
+                            $isChosen = true;
+                            break;
+                        }
+                    }
+                    
+                    $subscriptions[] = [
+                        'subscription_id' => $propertySubscription->id,
+                        'subscription_name' => $propertySubscription->name,
+                        'isChosen' => $isChosen
+                    ];
+                }
+                
+                $properties[] = [
+                    'property_id' => $property->id,
+                    'property_name' => $property->name,
+                    'subscriptions' => $subscriptions
+                ];
+            }
+            
+            $codesArray[] = [
+                'code_id' => $code->id,
+                'code' => $code->code,
+                'properties' => $properties
+            ];
+        }
         
         return view('boss.dashboard')->with([
-            'code' => $code
+            'codes' => $codesArray
         ]);
     }
     

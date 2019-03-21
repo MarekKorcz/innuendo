@@ -19,7 +19,7 @@
                             <p class="card-text">
                                 {!!$properties[$i]->description!!}
                             </p>
-                            <a href="{{ URL::to('user/property/' . $properties[$i]->slug) }}" class="btn btn-success">
+                            <a href="{{ URL::to('boss/property/' . $properties[$i]->id) }}" class="btn btn-success">
                                 Zobacz
                             </a>
                         </div>
@@ -36,7 +36,7 @@
                             <p class="card-text">
                                 {!!$properties[$i]->description!!}
                             </p>
-                            <a href="{{ URL::to('user/property/' . $properties[$i]->slug) }}" class="btn btn-success">
+                            <a href="{{ URL::to('boss/property/' . $properties[$i]->id) }}" class="btn btn-success">
                                 Zobacz
                             </a>
                         </div>
@@ -54,7 +54,7 @@
                         <p class="card-text">
                             {!!$properties[$i]->description!!}
                         </p>
-                        <a href="{{ URL::to('user/property/' . $properties[$i]->slug) }}" class="btn btn-success">
+                        <a href="{{ URL::to('boss/property/' . $properties[$i]->id) }}" class="btn btn-success">
                             Zobacz
                         </a>
                     </div>
