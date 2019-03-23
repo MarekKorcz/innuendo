@@ -174,22 +174,22 @@ class CreateModels extends Migration
         
         Schema::create('codes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('user_id')->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('boss_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
-        Schema::create('code_property', function (Blueprint $table) {
+        Schema::create('chosen_properties', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('property_id')->unsigned();
-            $table->integer('code_id')->unsigned();
+            $table->integer('code_id')->unsigned()->index()->foreign()->references("id")->on("codes");
+            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
         });
         
-        Schema::create('chosen_property_chosen_subscription', function (Blueprint $table) {
+        Schema::create('chosen_property_subscription', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('subscription_id')->unsigned();
-            $table->integer('property_id')->unsigned();
+            $table->integer('chosen_property_id')->unsigned()->index()->foreign()->references("id")->on("chosen_properties");
+            $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
         });
     }
 
@@ -201,7 +201,7 @@ class CreateModels extends Migration
     public function down()
     {
         Schema::dropIfExists('properties');
-        Schema::dropIfExists('user_property');
+        Schema::dropIfExists('property_user');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('items');
         Schema::dropIfExists('calendars');
@@ -217,7 +217,7 @@ class CreateModels extends Migration
         Schema::dropIfExists('purchases');
         Schema::dropIfExists('intervals');
         Schema::dropIfExists('codes');
-        Schema::dropIfExists('code_property');
-        Schema::dropIfExists('chosen_property_chosen_subscription');
+        Schema::dropIfExists('chosen_properties');
+        Schema::dropIfExists('chosen_property_subscription');
     }
 }

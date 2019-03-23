@@ -4,36 +4,31 @@
 {!! Html::script('js/boss_dashboard.js') !!}
 
 <div class="container">
+    
     <div class="jumbotron" style="margin-top: 30px;">
-        @foreach ($codes as $code)
-            <div class="text-center">
-                {{ Form::open(['id' => 'register-code', 'action' => 'BossController@setCode', 'method' => 'POST']) }}
+        @if (count($codes))    
+            @for ($i = 1; $i <= count($codes); $i++)
+                @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
+                    <div class="row padding">
+                        @include('boss.code_tile')
+                @elseif ($i % 3 == 0)
+                        @include('boss.code_tile')
+                    </div>
+                @else
+                    @include('boss.code_tile')
+                @endif
+            @endfor   
 
-                    
-                
-                    @if ($code->code)
-                        <p>
-                            Przy rejestracji pracownicy muszą wpisać poniższy kod!
-                        </p>
-                        <p>
-                            Kod do rejestracji:
-                            <input id="code-text" type="text" data-code_id="{{$code->code_id}}" value="{{$code->code}}" style="margin: 0px 12px 0px 12px;">
-                            <a class="btn btn-info copy-button">
-                                Kopjuj kod!
-                            </a>
-                        </p>
-
-                        <input name="code" type="hidden" value="false">
-                        {{ Form::submit('Wyłącz rejestracje', array('class' => 'btn btn-warning')) }}
-                    @else
-                        <input name="code" type="hidden" value="true">
-                        {{ Form::submit('Włącz rejestracje', array('class' => 'btn btn-success')) }}
-                    @endif
-
-
-                {{ Form::close() }}
-            </div>
-        @foreach
+            @if (count($codes) % 3 != 0)
+                </div>
+            @endif
+        @endif
+        
+        <div class="text-center">
+            
+            
+            
+        </div>
     </div>
     
     <div class="jumbotron">

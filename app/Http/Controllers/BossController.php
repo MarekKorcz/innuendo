@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Code;
 use App\Property;
+use App\ChosenProperty;
 use Illuminate\Http\Request;
 
 class BossController extends Controller
@@ -24,20 +25,21 @@ class BossController extends Controller
     public function dashboard()
     {
         $boss = auth()->user();
-        $codes = Code::where('user_id', $boss->id)->with('properties')->get();
+        $codes = Code::where('boss_id', $boss->id)->with('chosenProperties')->get();
         
         $codesArray = [];
         
-        foreach ($codes as $code)
+        for ($i = 0; $i < count($codes); $i++)
         {
             $properties = [];
             
-            foreach ($code->properties as $property)
-            {                
-                $property = Property::where('id', $property->id)->with('subscriptions')->with('chosenSubscriptons')->first();
+            foreach ($codes[$i]->chosenProperties as $property)
+            {
+                $chosenProperty = ChosenProperty::where('property_id', $property->property_id)->where('code_id', $codes[$i]->id)->with('subscriptions')->first();
+                $property = Property::where('id', $property->property_id)->with('subscriptions')->first();
                 
+                $chosenPropertySubscriptions = $chosenProperty->subscriptions;
                 $allPropertySubscriptions = $property->subscriptions;
-                $chosenPropertySubscriptions = $property->chosenSubscriptons;
                 
                 $subscriptions = [];
                 
@@ -68,9 +70,9 @@ class BossController extends Controller
                 ];
             }
             
-            $codesArray[] = [
-                'code_id' => $code->id,
-                'code' => $code->code,
+            $codesArray[$i + 1] = [
+                'code_id' => $codes[$i]->id,
+                'code' => $codes[$i]->code,
                 'properties' => $properties
             ];
         }
@@ -89,6 +91,7 @@ class BossController extends Controller
     public function setCode(Request $request)
     {
         $code = $request->request->get('code');
+        $codeId = $request->request->get('code_id');
         
         if (is_string($code))
         {
@@ -96,29 +99,35 @@ class BossController extends Controller
             {
                 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                 $charactersLength = strlen($characters);
-                $code = "";
+                $codeText = "";
                 
                 for ($i = 0; $i < 12; $i++) 
                 {
-                    $code .= $characters[rand(0, $charactersLength - 1)];
+                    $codeText .= $characters[rand(0, $charactersLength - 1)];
                 }
                 
                 $message = 'Rejestracja pracowników została WŁĄCZONA';
                 
             } else if ($code = "false") {
                 
-                $code = null;
+                $codeText = null;
                 $message = 'Rejestracja pracowników została WYŁĄCZONA';
             }
             
             // store
-            $boss = auth()->user();
-            $boss->code = $code;
-            $boss->save();
+            $code = Code::where('id', $codeId)->first();
+            
+            if ($code !== null)
+            {
+                $code->code = $codeText;
+                $code->save();
+                
+                // redirect
+                return redirect('/boss/dashboard')->with('success', $message);
+            }
         }
 
-        // redirect
-        return redirect('/boss/dashboard')->with('success', $message);
+        return redirect()->route('welcome');
     }
     
     /**

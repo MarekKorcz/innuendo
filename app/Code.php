@@ -22,7 +22,7 @@ class Code extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'code', 'user_id'
+        'code', 'boss_id'
     ];
     
     /**
@@ -31,17 +31,8 @@ class Code extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'user_id' => 'integer'
+        'boss_id' => 'integer'
     ];
-    
-    
-    /**
-     * Get properties which belongs to code
-     */
-    public function properties()
-    {
-        return $this->belongsToMany('App\Property');
-    }
     
     /**
      * Get boss that owns the code.
@@ -49,5 +40,13 @@ class Code extends Authenticatable
     public function boss()
     {
         return $this->belongsTo('App\User');
+    }
+    
+    /**
+     * Get chosenProperties which belongs to code.
+     */
+    public function chosenProperties()
+    {
+        return $this->hasMany('App\ChosenProperty');
     }
 }

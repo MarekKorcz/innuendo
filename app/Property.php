@@ -68,19 +68,11 @@ class Property extends Model
     }
     
     /**
-     * Get codes associated with property.
+     * Get ChosenProperties which belongs to property.
      */
-    public function codes()
+    public function chosenProperties()
     {
-        return $this->belongsToMany('App\Code');
-    }
-    
-    /**
-     * Get code's chosen subscriptions associated with property.
-     */
-    public function chosenSubscriptons()
-    {
-        return $this->belongsToMany('App\Subscription', 'chosen_property_chosen_subscription');
+        return $this->hasMany('App\ChosenProperty');
     }
     
     /**

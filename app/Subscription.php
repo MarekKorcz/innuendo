@@ -50,10 +50,10 @@ class Subscription extends Model
     }
     
     /**
-     * Get code's chosen properties associated with subscription.
+     * Get ChosenProperties which belongs to subscription.
      */
     public function chosenProperties()
     {
-        return $this->belongsToMany('App\Property', 'chosen_property_chosen_subscription');
+        return $this->belongsToMany('App\ChosenProperty', 'chosen_property_subscription');
     }
 }
