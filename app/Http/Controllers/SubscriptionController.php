@@ -412,8 +412,11 @@ class SubscriptionController extends Controller
     {        
         if ($request->request->all())
         {
-            $subscription = Subscription::where('id', $request->get('subscriptionId'))->first();
-            $item = Item::where('id', $request->get('itemId'))->first();
+            $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
+            $itemId = htmlentities((int)$request->get('itemId'), ENT_QUOTES, "UTF-8");
+            
+            $subscription = Subscription::where('id', $subscriptionId)->first();
+            $item = Item::where('id', $itemId)->first();
             
             if ($subscription !== null && $item !== null)
             {

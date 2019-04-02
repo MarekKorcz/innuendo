@@ -107,3 +107,8 @@ Route::get('/boss/dashboard', 'BossController@dashboard');
 Route::post('/boss/set-code', 'BossController@setCode');
 Route::get('/boss/property/list', 'BossController@propertyList');
 Route::get('/boss/property/{id}', 'BossController@property');
+Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
+Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
+Route::post('/subscription/delete-chosen-property', 'BossController@deleteChosenProperty');
+Route::get('/code/add', 'BossController@addCode');
+Route::delete('/code/{id}', 'BossController@destroyCode');

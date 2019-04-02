@@ -182,6 +182,7 @@ class CreateModels extends Migration
         
         Schema::create('chosen_properties', function (Blueprint $table) {
             $table->increments('id');
+            $table->timestamps();
             $table->integer('code_id')->unsigned()->index()->foreign()->references("id")->on("codes");
             $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
         });
