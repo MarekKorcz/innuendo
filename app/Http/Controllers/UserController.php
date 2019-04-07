@@ -11,6 +11,7 @@ use App\Month;
 use App\Day;
 use App\Appointment;
 use App\Subscription;
+use App\ChosenProperty;
 use App\Purchase;
 use App\Interval;
 use Illuminate\Http\Request;
@@ -810,9 +811,9 @@ class UserController extends Controller
      */
     public function subscriptionPurchasedShow($id) 
     {
-        $purchase = Purchase::where('id', $id)->where('user_id', auth()->user()->id)->with('subscription')->first();
+        $purchase = Purchase::where('id', $id)->with('subscription')->with('chosenProperty')->first();
         
-        if ($purchase !== null)
+        if ($purchase !== null && $purchase->chosenProperty->user_id == auth()->user()->id)
         {
             $subscriptionCreationDate = new \DateTime($purchase->subscription->created_at->format('Y-m-d'));
             $interval = new \DateInterval('P12M');
@@ -863,27 +864,82 @@ class UserController extends Controller
      * 
      * @return type
      */
-    public function purchasedSubscriptionList() 
+    public function purchasedSubscriptionPropertyList() 
     {
-        $user = User::where('id', auth()->user()->id)->with('purchases')->first();
-        $subscriptions = new Collection();
+        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+        $properties = new Collection();
         
-        foreach ($user->purchases as $purchase)
+        foreach ($user->chosenProperties as $chosenProperty)
         {
-            $subscription = Subscription::where('id', $purchase->subscription_id)->first();
+            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('property')->first();
             
-            if ($subscription !== null)
+            if ($chosenProperty->property !== null)
             {
-                $subscription['purchase_id'] = $purchase->id;
-                $subscriptions = $subscriptions->push($subscription);
+                $properties = $properties->push($chosenProperty->property);
             }
         }
         
-        if ($subscriptions !== null)
-        {            
-            return view('user.subscription_purchased_list')->with([
-                'subscriptions' => $subscriptions
-            ]);
+        if (count($properties) > 0)
+        {          
+            if (count($properties) == 1)
+            {
+                return redirect()->action(
+                    'UserController@purchasedSubscriptionList', [
+                        'propertyId' => $properties->first()->id
+                    ]
+                );
+                
+            } else {
+                
+                return view('user.subscription_purchased_property_list')->with([
+                    'properties' => $properties
+                ]);
+            }
+            
+        } else {
+            
+            return redirect()->route('home')->with('error', "Nie posiadasz żadnej wykupionej subskrypcji");
+        }
+    }
+    
+    /**
+     * Shows a list of purchased subscriptions assigned to passed user's property.
+     * 
+     * @param type $propertyId
+     * @return type
+     */
+    public function purchasedSubscriptionList($propertyId) 
+    {
+        $chosenProperties = ChosenProperty::where([
+            'property_id' => $propertyId,
+            'user_id' => auth()->user()->id
+        ])->with('purchases')->get();
+        
+        if (count($chosenProperties) > 0)
+        {
+            $subscriptions = new Collection();
+
+            foreach ($chosenProperties as $chosenProperty)
+            {
+                foreach ($chosenProperty->purchases as $purchase)
+                {
+                    $purchase = Purchase::where('id', $purchase->id)->with('subscription')->first();
+
+                    $subscription = $purchase->subscription;
+                    $subscription['purchase_id'] = $purchase->id;
+                    $subscriptions = $subscriptions->push($subscription);
+                }
+            }
+            
+            $property = Property::where('id', $propertyId)->first();
+
+            if (count($subscriptions) > 0 && $property !== null)
+            {            
+                return view('user.subscription_purchased_list')->with([
+                    'subscriptions' => $subscriptions,
+                    'property' => $property
+                ]);
+            }
         }
         
         return redirect()->route('welcome');

@@ -30,7 +30,7 @@ class Property extends Model
      */
     protected $fillable = [
         'name', 'slug', 'description', 'phone_number', 'street', 'street_number', 
-        'house_number', 'city', 'isPublic', 'boss_id'
+        'house_number', 'city', 'boss_id'
     ];
     
     /**
@@ -73,16 +73,5 @@ class Property extends Model
     public function chosenProperties()
     {
         return $this->hasMany('App\ChosenProperty');
-    }
-    
-    /**
-     *      USER
-     */
-    /**
-     * Get users which belongs to property
-     */
-    public function users()
-    {
-        return $this->belongsToMany('App\User');
     }
 }

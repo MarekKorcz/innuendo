@@ -19,7 +19,7 @@ class ChosenProperty extends Model
      * @var array
      */
     protected $fillable = [
-        'code_id', 'property_id', 
+        'code_id', 'user_id', 'property_id', 
     ];
     
     /**
@@ -29,6 +29,7 @@ class ChosenProperty extends Model
      */
     protected $casts = [
         'code_id' => 'integer',
+        'user_id' => 'integer',
         'property_id' => 'integer'
     ];
     
@@ -41,11 +42,27 @@ class ChosenProperty extends Model
     }
     
     /**
+     * Get user associated to chosenProperty.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+    
+    /**
      * Get property which belongs to ChosenProperty.
      */
     public function property()
     {
         return $this->belongsTo('App\Property');
+    }
+    
+    /**
+     * Get purchases which belongs to ChosenProperty.
+     */
+    public function purchases()
+    {
+        return $this->hasMany('App\Purchase');
     }
     
     /**

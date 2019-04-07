@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use App\Property;
+use App\Code;
+use App\ChosenProperty;
+use App\Purchase;
+use App\Interval;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Collection;
 
 class RegisterController extends Controller
 {
@@ -76,33 +80,61 @@ class RegisterController extends Controller
         
         if ($user && is_string($data['code']))
         {
-            $code = htmlentities($data['code'], ENT_QUOTES, "UTF-8");
+            $code = Code::where('code', htmlentities($data['code'], ENT_QUOTES, "UTF-8"))->with('chosenProperties')->first();
             
-            $boss = User::where('code', $code)->first();
-            
-            if ($boss !== null)
+            if ($code !== null)
             {
-                $user->boss_id = $boss->id;
+                $user->boss_id = $code->boss_id;
                 
-                $bossProperties = Property::where('boss_id', $boss->id)->get();
-                
-                if ($bossProperties !== null)
+                $bossCodeChosenProperties = new Collection();
+                        
+                if ($code->chosenProperties !== null)
                 {
-                    foreach ($bossProperties as $property)
+                    foreach ($code->chosenProperties as $chosenProperty)
                     {
-                        $user->properties()->attach($property);
+                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('subscriptions')->first();
+                        $bossCodeChosenProperties->push($chosenProperty);
                     }
                 }
-            }
-        }
-        
-        $publicProperties = Property::where('boss_id', null)->get();
+                        
+                if (count($bossCodeChosenProperties))
+                {
+                    foreach ($bossCodeChosenProperties as $bossChosenProperty)
+                    {
+                        $userChosenProperty = new ChosenProperty();
+                        $userChosenProperty->user_id = $user->id;
+                        $userChosenProperty->property_id = $bossChosenProperty->id;
+                        $userChosenProperty->save();
+                        
+                        foreach ($bossChosenProperty->subscriptions as $subscription)
+                        {
+                            $purchase = new Purchase();
+                            $purchase->subscription_id = $subscription->id;
+                            $purchase->chosen_property_id = $userChosenProperty->id;
+                            $purchase->save();
+                            
+                            $startDate = date('Y-m-d');
                 
-        if ($publicProperties !== null)
-        {
-            foreach ($publicProperties as $property)
-            {
-                $user->properties()->attach($property);
+                            for ($i = 1; $i <= $subscription->duration; $i++)
+                            {
+                                // for now, all Intervals starts when someone register
+                                // later on there can be an option to set some sort of "subscription start time" 
+                                // and based on that, make new Intervals
+                                $interval = new Interval();
+                                $interval->available_units = $subscription->quantity;
+
+                                $interval->start_date = $startDate;
+                                $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
+
+                                $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
+                                $interval->end_date = $endDate;
+
+                                $interval->purchase_id = $purchase->id;
+                                $interval->save();
+                            }
+                        }
+                    }
+                }
             }
         }
         

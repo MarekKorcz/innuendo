@@ -22,7 +22,8 @@ class Purchase extends Model
      * @var array
      */
     protected $fillable = [
-        'subscription_id', 'user_id'
+        'subscription_id',
+        'chosen_property_id'
     ];
     
     /**
@@ -32,7 +33,7 @@ class Purchase extends Model
      */
     protected $casts = [
         'subscription_id' => 'integer',
-        'user_id' => 'integer'
+        'chosen_property_id' => 'integer'
     ];
     
     /**
@@ -60,10 +61,10 @@ class Purchase extends Model
     }
     
     /**
-     * Get the user that owns the purchase.
+     * Get the chosenProperty that owns the purchase.
      */
-    public function user()
+    public function chosenProperty()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\ChosenProperty');
     }
 }

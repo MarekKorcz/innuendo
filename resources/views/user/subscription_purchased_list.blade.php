@@ -6,7 +6,7 @@
 
 <div class="container">
 
-    <h1 class="text-center padding">Lista wykupionych pakietów</h2>
+    <h1 class="text-center padding">Lista wykupionych pakietów w <strong>{{$property->name}}</strong></h2>
     
     <hr>
 

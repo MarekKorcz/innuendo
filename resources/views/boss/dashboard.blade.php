@@ -128,9 +128,9 @@
                             Widok wykupionych subskrypcji ze szczegółowymi informacjami ich dotyczącymi oraz listą pracowników z nich korzystających
                         </p>
                         <div class="text-center">
-<!--                            <a class="btn btn-success btn-lg" href="{{ URL::to('boss/dashboard/') }}">
+                            <a class="btn btn-success btn-lg" href="{{ URL::to('boss/subscription/list/') }}">
                                 Pokaż
-                            </a>-->
+                            </a>
                         </div>
                     </div>
                 </div>

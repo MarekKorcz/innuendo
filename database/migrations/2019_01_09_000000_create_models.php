@@ -23,16 +23,9 @@ class CreateModels extends Migration
             $table->string('street_number');
             $table->string('house_number')->nullable();
             $table->string('city');
-            $table->boolean('isPublic')->default(1);
             $table->timestamps();
             $table->softDeletes();
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
-        });
-        
-        Schema::create('property_user', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->integer('property_id')->unsigned();
         });
         
         Schema::create('categories', function (Blueprint $table) {
@@ -160,7 +153,7 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
-            $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('chosen_property_id')->unsigned()->index()->foreign()->references("id")->on("chosen_properties");
         });
         
         Schema::create('intervals', function (Blueprint $table) {
@@ -183,7 +176,8 @@ class CreateModels extends Migration
         Schema::create('chosen_properties', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('code_id')->unsigned()->index()->foreign()->references("id")->on("codes");
+            $table->integer('code_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("codes");
+            $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
             $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
         });
         
@@ -202,7 +196,6 @@ class CreateModels extends Migration
     public function down()
     {
         Schema::dropIfExists('properties');
-        Schema::dropIfExists('property_user');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('items');
         Schema::dropIfExists('calendars');

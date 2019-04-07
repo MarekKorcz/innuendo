@@ -6,8 +6,10 @@ use App\Code;
 use App\Property;
 use App\Subscription;
 use App\ChosenProperty;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 
 class BossController extends Controller
 {    
@@ -207,6 +209,34 @@ class BossController extends Controller
     }
     
     /**
+     * Shows list of subscriptions
+     * 
+     * @param Request $request
+     * @return type
+     */
+    public function subscriptionList()
+    {
+        $boss = auth()->user();
+        
+        if ($boss !== null)
+        {
+            $properties = Property::where('boss_id', auth()->user()->id)->with('subscriptions')->get();
+
+            if ($properties !== null)
+            {
+                $firstProperty = $properties->first();
+                
+                return view('boss.subscription_dashboard')->with([
+                    'properties' => $properties,
+                    'firstPropertySubscriptions' => $firstProperty->subscriptions
+                ]);
+            }
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
      * Creates new code
      * 
      * @return type
@@ -277,6 +307,76 @@ class BossController extends Controller
             'BossController@dashboard'
         )->with($type, $message);
     }
+    
+    
+    
+    
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Shows a list of appointments assigned to user.
+     * 
+     * @param type $id
+     * @return type
+     */
+//    public function backendAppointmentIndex($id)
+//    {
+//        $appointments = Appointment::where('user_id', $id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+//        
+//        if ($appointments !== null)
+//        {
+//            foreach ($appointments as $appointment)
+//            {
+//                $day = Day::where('id', $appointment->day_id)->first();
+//                $month = Month::where('id', $day->month_id)->first();
+//                $year = Year::where('id', $month->year_id)->first();
+//                $calendar = Calendar::where('id', $year->calendar_id)->first();
+//                $employee = User::where('id', $calendar->employee_id)->first();
+//                $property = Property::where('id', $calendar->property_id)->first();
+//                
+//                $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
+//                $appointment['date'] = $date;
+//                
+//                $appointment['name'] = $property->name;
+//                
+//                $employee = $employee->name;
+//                $appointment['employee'] = $employee;
+//            }
+//            
+//            return view('employee.backend_appointment_index')->with([
+//                'appointments' => $appointments
+//            ]);
+//        }
+//        
+//        return redirect()->route('welcome');
+//    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public function setSubscriptionToChosenPropertySubscription(Request $request)
     {        
@@ -432,6 +532,141 @@ class BossController extends Controller
         return new JsonResponse(array(
             'type'    => 'error',
             'message' => $message            
+        ));
+    }
+    
+    public function getPropertySubscriptions(Request $request)
+    {        
+        if ($request->request->all())
+        {
+            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
+            $property = Property::where('id', $propertyId)->with('subscriptions')->first();
+            
+            $message = "Błąd zapytania";
+            $type = "error";
+            
+            if ($property !== null)
+            {
+                $propertySubscriptions = $property->subscriptions;
+                
+                if (count($propertySubscriptions) > 0)
+                {
+                    $message = "Subskrypcje danej lokalizacji zostały wczytane";
+                    $type = "success";
+                    
+                    $subscriptions = [];
+                    
+                    foreach ($propertySubscriptions as $propertySubscription)
+                    {
+                        $subscriptions[] = [
+                            'id' => $propertySubscription->id,
+                            'name' => $propertySubscription->name,
+                            'description' => $propertySubscription->name,
+                            'old_price' => $propertySubscription->old_price,
+                            'new_price' => $propertySubscription->new_price,
+                            'quantity' => $propertySubscription->quantity,
+                            'duration' => $propertySubscription->duration,
+                        ];
+                    }
+                    
+                    $data = [
+                        'type'    => $type,
+                        'message' => $message,
+                        'propertySubscriptions' => $subscriptions
+                    ];
+                    
+                } else {
+                    
+                    $message = "Dana lokalizacja nie posiada subskrypcji";
+                    $type = "error";
+                    
+                    $data = [
+                        'type'    => $type,
+                        'message' => $message
+                    ];
+                }
+
+                return new JsonResponse($data, 200, array(), true);
+            }
+            
+        } else {
+            
+            $message = "Pusty request";
+            $type = "error";
+        }
+        
+        return new JsonResponse(array(
+            'type'    => $type,
+            'message' => $message            
+        ));
+    }
+    
+    public function getSubscriptionWorkers(Request $request)
+    {        
+        if ($request->request->all())
+        {
+            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
+            $property = Property::where('id', $propertyId)->first();
+            
+            $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
+            $subscription = Subscription::where('id', $subscriptionId)->first();
+            
+            if ($property !== null && $subscription !== null)
+            {
+                $workers = User::where('boss_id', auth()->user()->id)->with('chosenProperties')->get();
+                $workersCollection = new Collection();
+                
+                foreach ($workers as $worker)
+                {
+                    if (count($worker->chosenProperties) > 0)
+                    {
+                        foreach ($worker->chosenProperties as $chosenProperty)
+                        {
+                            if ($chosenProperty->property_id == $property->id)
+                            {
+                                $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+
+                                if (count($chosenProperty->purchases) > 0)
+                                {
+                                    foreach($chosenProperty->purchases as $purchase)
+                                    {
+                                        if ($purchase->subscription_id == $subscription->id)
+                                        {
+                                            $workersCollection->push($worker);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                $workersArr = [];
+                
+                foreach ($workersCollection as $workerCollection)
+                {
+                    $workersArr[] = [
+                        'id' => $workerCollection->id,
+                        'name' => $workerCollection->name,
+                        'surname' => $workerCollection->surname,
+                        'email' => $workerCollection->email,
+                        'phone_number' => $workerCollection->phone_number,
+                    ];
+                }
+
+                $data = [
+                    'type'    => 'success',
+                    'message' => "Udało się pobrać użytkowników posiadający daną subskrypcje",
+                    'workers' => $workersArr
+                ];
+
+                return new JsonResponse($data, 200, array(), true);
+            }
+        }
+        
+        return new JsonResponse(array(
+            'type'    => "error",
+            'message' => "Pusty request"            
         ));
     }
 }

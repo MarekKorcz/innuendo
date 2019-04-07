@@ -97,7 +97,8 @@ Route::get('/subscription/{id}/edit', 'SubscriptionController@edit');
 Route::put('/subscription/update', 'SubscriptionController@update');
 
 Route::get('/user/subscription/list', 'UserController@subscriptionList');
-Route::get('/user/subscription/list/purchased', 'UserController@purchasedSubscriptionList');
+Route::get('/user/subscription/purchased/property/list', 'UserController@purchasedSubscriptionPropertyList');
+Route::get('/user/subscription/list/purchased/{propertyId}', 'UserController@purchasedSubscriptionList');
 Route::get('/user/subscription/show/{slug}', 'UserController@subscriptionShow');
 Route::get('/user/subscription/purchase/{id}', 'UserController@subscriptionPurchase');
 Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
@@ -107,8 +108,18 @@ Route::get('/boss/dashboard', 'BossController@dashboard');
 Route::post('/boss/set-code', 'BossController@setCode');
 Route::get('/boss/property/list', 'BossController@propertyList');
 Route::get('/boss/property/{id}', 'BossController@property');
+Route::get('/boss/subscription/list', 'BossController@subscriptionList');
 Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
 Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
+Route::post('/boss/get/property/subscription', 'BossController@getPropertySubscriptions');
+Route::post('/boss/get/subscription/workers', 'BossController@getSubscriptionWorkers');
 Route::post('/subscription/delete-chosen-property', 'BossController@deleteChosenProperty');
 Route::get('/code/add', 'BossController@addCode');
 Route::delete('/code/{id}', 'BossController@destroyCode');
+
+
+
+
+
+
+//Route::get('/test', 'HomeController@test');

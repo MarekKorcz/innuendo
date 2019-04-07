@@ -10,10 +10,10 @@ use App\Item;
 use App\Year;
 use App\Month;
 use App\Day;
-use App\User;
 use App\Subscription;
 use App\Purchase;
 use App\Interval;
+use App\ChosenProperty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -143,7 +143,7 @@ class AppointmentController extends Controller
                                 }
                             }
 
-                            $calendar = Calendar::find($calendarId)->first();
+                            $calendar = Calendar::where('id', $calendarId)->first();
 
                             if ($calendar !== null)
                             {
@@ -155,60 +155,67 @@ class AppointmentController extends Controller
                                     
                                     $items = new Collection();
                                     
-                                    $user = User::where('id', auth()->user()->id)->with('purchases')->first();
+                                    $chosenProperties = ChosenProperty::where([
+                                        'user_id' => auth()->user()->id,
+                                        'property_id' => $calendar->property_id
+                                    ])->with('purchases')->get();
+                                    
                                     $userSubscriptionItems = new Collection();
                                     
-                                    if ($user->purchases !== null)
+                                    if (count($chosenProperties) > 0)
                                     {
-                                        foreach ($user->purchases as $purchase)
+                                        foreach ($chosenProperties as $chosenProperty)
                                         {
-                                            $subscription = Subscription::where('id', $purchase->subscription_id)->with('items')->first();
-                                            
-                                            if ($purchase !== null)
-                                            {                        
-                                                // chosen date                                      
-                                                $chosenDay = (string)$day;
-                                                $chosenDay = strlen($chosenDay) == 1 ? '0' . $chosenDay : $chosenDay;
-                                                $chosenMonth = (string)$month;
-                                                $chosenMonth = strlen($chosenMonth) == 1 ? '0' . $chosenMonth : $chosenMonth;
+                                            foreach ($chosenProperty->purchases as $purchase)
+                                            {
+                                                $subscription = Subscription::where('id', $purchase->subscription_id)->with('items')->first();
 
-                                                $chosenDate = new \DateTime($year . '-' . $chosenMonth . '-' . $chosenDay);
+                                                if ($purchase !== null)
+                                                {                        
+                                                    // chosen date                                      
+                                                    $chosenDay = (string)$day;
+                                                    $chosenDay = strlen($chosenDay) == 1 ? '0' . $chosenDay : $chosenDay;
+                                                    $chosenMonth = (string)$month;
+                                                    $chosenMonth = strlen($chosenMonth) == 1 ? '0' . $chosenMonth : $chosenMonth;
 
-                                                // purchase intervals
-                                                $purchaseIntervals = Interval::where('purchase_id', $purchase->id)->get();
-                                                $currentInterval = new Collection();
+                                                    $chosenDate = new \DateTime($year . '-' . $chosenMonth . '-' . $chosenDay);
 
-                                                // looking for interval corresponding to the given date
-                                                foreach ($purchaseIntervals as $purchaseInterval)
-                                                {
-                                                    $startDate = new \DateTime($purchaseInterval->start_date);
-                                                    $endDate = new \DateTime($purchaseInterval->end_date);
+                                                    // purchase intervals
+                                                    $purchaseIntervals = Interval::where('purchase_id', $purchase->id)->get();
+                                                    $currentInterval = new Collection();
 
-                                                    if ($startDate <= $chosenDate && $chosenDate <= $endDate)
+                                                    // looking for interval corresponding to the given date
+                                                    foreach ($purchaseIntervals as $purchaseInterval)
                                                     {
-                                                        $currentInterval->push($purchaseInterval);
-                                                        break;
-                                                    }
-                                                }
+                                                        $startDate = new \DateTime($purchaseInterval->start_date);
+                                                        $endDate = new \DateTime($purchaseInterval->end_date);
 
-                                                if (count($currentInterval))
-                                                {
-                                                    $interval = $currentInterval->all()[0];
-
-                                                    if ($interval && $interval->available_units > 0)
-                                                    {
-                                                        foreach ($subscription->items as $item)
+                                                        if ($startDate <= $chosenDate && $chosenDate <= $endDate)
                                                         {
-                                                            if ($item->minutes <= $appointmentLengthInMinutes)
+                                                            $currentInterval->push($purchaseInterval);
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if (count($currentInterval))
+                                                    {
+                                                        $interval = $currentInterval->all()[0];
+
+                                                        if ($interval && $interval->available_units > 0)
+                                                        {
+                                                            foreach ($subscription->items as $item)
                                                             {
-                                                                $item['subscription_id'] = $subscription->id;
-                                                                $item['subscription_name'] = $subscription->name;
-                                                                $userSubscriptionItems = $userSubscriptionItems->push($item);
+                                                                if ($item->minutes <= $appointmentLengthInMinutes)
+                                                                {
+                                                                    $item['subscription_id'] = $subscription->id;
+                                                                    $item['subscription_name'] = $subscription->name;
+                                                                    $userSubscriptionItems = $userSubscriptionItems->push($item);
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
-                                            }                                            
+                                                }                                            
+                                            }
                                         }
                                     }
                                     
@@ -345,7 +352,14 @@ class AppointmentController extends Controller
                             
                             if ($isItemIdentical)
                             {
-                                $purchase = Purchase::where('user_id', auth()->user()->id)->where('subscription_id', $subscription->id)->first();
+                                $calendar = Calendar::where('id', $calendarId)->first();
+                                
+                                $chosenProperty = ChosenProperty::where([
+                                    'user_id' => auth()->user()->id,
+                                    'property_id' => $calendar->property_id
+                                ])->first();
+                                
+                                $purchase = Purchase::where('chosen_property_id', $chosenProperty->id)->where('subscription_id', $subscription->id)->first();
                                                                 
                                 if ($purchase !== null)
                                 {                        

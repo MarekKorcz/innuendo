@@ -68,14 +68,6 @@ class User extends Authenticatable
     }
     
     /**
-     * Get properties which belongs to user
-     */
-    public function properties()
-    {
-        return $this->belongsToMany('App\Property');
-    }
-    
-    /**
      * Get appointments associated with user.
      */
     public function appointments()
@@ -84,11 +76,11 @@ class User extends Authenticatable
     }
     
     /**
-     * Get purchases which belong to user.
+     * Get chosenProperties which belongs to user.
      */
-    public function purchases()
+    public function chosenProperties()
     {
-        return $this->hasMany('App\Purchase');
+        return $this->hasMany('App\ChosenProperty');
     }
     
     /**

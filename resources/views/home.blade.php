@@ -59,7 +59,7 @@
                                     </div>
                                 </div>
                             @else
-                                @if (count($purchasedSubscriptions))
+                                @if ($hasPurchasedSubscription)
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title text-center">Twoje pakiety</h4>
@@ -67,7 +67,7 @@
                                                 Widok wszystkich wykupionych pakietów
                                             </p>
                                             <div class="text-center">
-                                                <a class="btn btn-success btn-lg" href="{{ URL::to('/user/subscription/list/purchased') }}">
+                                                <a class="btn btn-success btn-lg" href="{{ URL::to('/user/subscription/purchased/property/list') }}">
                                                     Pokaż
                                                 </a>
                                             </div>

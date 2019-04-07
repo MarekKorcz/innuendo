@@ -80,6 +80,15 @@ class PropertyController extends Controller
             $property->street_number = Input::get('street_number');
             $property->house_number  = Input::get('house_number');
             $property->city          = Input::get('city');
+            
+            
+            // przy tworzeniu property, na sztywno dodawaj do boss_id id Admina, 
+            // po to by przy rejestracji nowego użytkownika nie potrzebnie nie dodały się komuś przez przypadek 
+            // ChosenProperty. Jeśli zdecydujesz, że Property ma być publiczne wtedy ustawisz w edycji usunięcie 
+            // swojego id dzięki czemu będzie publicznie możliwe 
+            
+            
+            
             $property->save();
             
             $users = User::where('isAdmin', null)->where('isEmployee', null)->get();
