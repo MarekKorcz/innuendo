@@ -46,12 +46,6 @@
     
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/user/subscription/list') }}">Pakiety</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('user/properties') }}">Lokalizacja</a>
-                </li>
                 <li class="nav-item" style="margin-right: 10px;">
                     <a class="nav-link" href="{{ url('employees') }}">Pracownicy</a>
                 </li>
@@ -72,6 +66,18 @@
                             </a>
                         </li>
                     @endif
+<!--                    @if (Auth::user()->isBoss)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/boss/properties/subscription/purchase') }}">Pakiety</a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/user/properties/subscription') }}">Pakiety</a>
+                        </li>
+                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('user/properties') }}">Lokalizacje</a>
+                    </li>-->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('home') }}">
                             Moje konto

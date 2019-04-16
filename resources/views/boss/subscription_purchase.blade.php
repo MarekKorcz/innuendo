@@ -2,9 +2,7 @@
 
 @section('content')
 
-<!--{!! Html::style('css/bootstrap_datepicker.css') !!}
-{!! Html::script('js/bootstrap_datepicker.js') !!}-->
-{!! Html::script('js/subscription_purchase.js') !!}
+<!--{!! Html::script('js/property_show.js') !!}-->
 
 <div class="container">
 
@@ -58,17 +56,13 @@
                             We have no obligation to, and you should not expect us to, review content on our Site, including User Contributions (defined below) or contributions by our independent contributors.</p>
                         </div>
                         <div class="text-center" style="padding-top: 21px;">
-                            {{ Form::open(['id' => 'purchaseForm', 'action' => 'UserController@subscriptionPurchased', 'method' => 'POST']) }}
-
-<!--                                <div class="dates">
-                                    <label>Wybierz datę rozpoczęcia subskrypcji:</label>
-                                    <input id="subscription_start" 
-                                           name="subscription_start"
-                                           type="text" 
-                                           value="{{date('Y-m-d')}}"
-                                           placeholder="{{date('Y-m-d')}}" 
-                                           class="form-control" 
-                                           autocomplete="off"
+                            {{ Form::open(['id' => 'purchaseForm', 'action' => 'BossController@subscriptionPurchased', 'method' => 'POST']) }}
+                            
+<!--                                <div class="form-group text-center">
+                                    <label for="subscription-start" style="font-size: 21px;">Data rozpoczęcia:</label>
+                                    <input id="subscription-start" class="form-control col-4" type="date"
+                                        value="{{Carbon\Carbon::now()->format("Y-m-d")}}"
+                                        min="{{Carbon\Carbon::now()->format("Y-m-d")}}"
                                     >
                                 </div>-->
                             
@@ -77,10 +71,8 @@
                                     {{ Form::checkbox('terms', null, null, array('class' => 'form-control')) }}
                                 </div>
                                 
-                                {{ Form::hidden('property_id', $property->id) }}
                                 {{ Form::hidden('subscription_id', $subscription->id) }}
-                                
-                                <label>Subskrypcja zacznie się od dnia w którym zostanie wykonany pierwszy zabieg</label>
+                                {{ Form::hidden('property_id', $property->id) }}
                                 
                                 {{ Form::submit('Zamawiam', array('class' => 'btn btn-primary btn-lg')) }}
 

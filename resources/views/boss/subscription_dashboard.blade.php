@@ -10,37 +10,89 @@
         <h2>Wybierz lokalizacje której subskrypcje chcesz zobaczyć:</h2>
     </div>
     <div id="properties" class="wrapper cont">
-        @foreach ($properties as $key => $property)
-            @if ($key == 0)
-                <div class="text-center highlighted" data-property_id="{{$property->id}}">
+        @foreach ($propertiesWithPurchasedSubscriptions as $propertyWithPurchasedSubscriptions)
+            @if ($propertyWithPurchasedSubscriptions['property']->isSelected)
+                <div class="text-center highlighted" data-property_id="{{$propertyWithPurchasedSubscriptions['property']->id}}">
             @else
-                <div class="text-center box" data-property_id="{{$property->id}}">
+                <div class="text-center box" data-property_id="{{$propertyWithPurchasedSubscriptions['property']->id}}">
             @endif
                     <div class="data">
-                        <p><strong>{{$property->name}}</strong></p>
-                        {!!$property->description!!}
-                        <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}} {{$property->city}}</strong></p>
+                        <p><strong>{{$propertyWithPurchasedSubscriptions['property']->name}}</strong></p>
+                        {!!$propertyWithPurchasedSubscriptions['property']->description!!}
+                        <p>Adres: 
+                            <strong>
+                                {{$propertyWithPurchasedSubscriptions['property']->street}} 
+                                {{$propertyWithPurchasedSubscriptions['property']->street_number}} / 
+                                {{$propertyWithPurchasedSubscriptions['property']->house_number}} 
+                                {{$propertyWithPurchasedSubscriptions['property']->city}}
+                            </strong>
+                        </p>
                     </div>
                 </div>
         @endforeach
     </div>
     <div class="text-center">
-        <h2>Subskrypcje należące do wybranej lokalizacji:</h2>
+        <h2>Subskrypcje wykupione dla wybranej lokalizacji:</h2>
     </div>
     <div id="subscriptions" class="wrapper cont">
-        @foreach ($firstPropertySubscriptions as $subscription)
-            <div class="box text-center" data-subscription_id="{{$subscription->id}}">
-                <div class="data">
-                    <p>Nazwa: <strong>{{$subscription->name}}</strong></p>
-                    {!!$subscription->description!!}
-                    <p>Cena regularna: <strong>{{$subscription->old_price}}</strong></p>
-                    <p>Cena z subskrypcją: <strong>{{$subscription->new_price}}</strong></p>
-                    <p>Ilość zabiegów w miesiącu: <strong>{{$subscription->quantity}}</strong></p>
-                    <p>Czas subskrypcji (w miesiącach): <strong>{{$subscription->duration}}</strong></p>
-                </div>
-            </div>
+        @foreach ($propertiesWithPurchasedSubscriptions as $propertyWithPurchasedSubscriptions)
+            @if ($propertyWithPurchasedSubscriptions['property']->isSelected == true)
+                @foreach ($propertyWithPurchasedSubscriptions['subscriptions'] as $subscription)
+                    @if ($subscription->isSelected)
+                        <div class="text-center highlighted" data-subscription_id="{{$subscription->id}}">
+                    @else
+                        <div class="text-center box" data-subscription_id="{{$subscription->id}}">
+                    @endif
+                        <div class="data">
+                            <p>Nazwa: <strong>{{$subscription->name}}</strong></p>
+                            {!!$subscription->description!!}
+                            <p>Cena regularna: <strong>{{$subscription->old_price}}</strong></p>
+                            <p>Cena z subskrypcją: <strong>{{$subscription->new_price}}</strong></p>
+                            <p>Ilość zabiegów w miesiącu: <strong>{{$subscription->quantity}}</strong></p>
+                            <p>Czas subskrypcji (w miesiącach): <strong>{{$subscription->duration}}</strong></p>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
         @endforeach
     </div>
-    <div id="workers"></div>
+    <div id="workers">
+        <div class="text-center">                        
+            <p>
+                <h2>Pracownicy przypisani do danej subskrypcji:</h2>
+                <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $propertyId . '/' . $subscriptionId . '/0') }}">
+                    Wszystkie wizyty pracowników
+                </a>
+            </p>
+        </div>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>                
+                    <td>Imie</td>
+                    <td>Nazwisko</td>
+                    <td>Email</td>
+                    <td>Telefon</td>
+                    <td>Wizyty</td>
+                </tr>
+            </thead>
+            <tbody id="workersTable">
+                @if ($workers !== null)
+                    @foreach ($workers as $worker)
+                        <tr>
+                            <td>{{$worker['name']}}</td>
+                            <td>{{$worker['surname']}}</td>
+                            <td>{{$worker['email']}}</td>
+                            <td>{{$worker['phone_number']}}</td>
+                            <td>
+                                <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $propertyId . '/' . $subscriptionId . '/' . $worker['id']) }}">
+                                    Pokaż
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection

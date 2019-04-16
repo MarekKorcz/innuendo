@@ -5,13 +5,15 @@
 {!! Html::style('css/property_list.css') !!}
 
 <div class="container">
-    <h1 class="text-center padding-top">Twoje Lokalizacje</h1>
-    
-    
-    <div class="wrapper">
+    <h1 class="text-center">Wybierz Lokalizacje z której interesują Cie pakiety</h1>
+    <div id="properties" class="wrapper">
         @foreach ($properties as $property)
-            <div class="card">
-                <div class="text-center box">
+            @if ($property->boss_id)
+                <div class="text-center box card" style="background-color: lightgreen;">
+            @else
+                <div class="text-center box card">
+            @endif
+                <div class="card-body">
                     <p>
                         <strong>
                             {{$property->name}}
@@ -26,9 +28,9 @@
                             {{$property->city}}
                         </strong>
                     </p>
-                    <div>
-                        <h1>Todo: link do widoku zmiany opisu property bossa</h1>
-                    </div>
+                    <a href="{{ URL::to('user/property/subscription/list/' . $property->id) }}" class="btn btn-success">
+                        Zobacz
+                    </a>
                 </div>
             </div>
         @endforeach

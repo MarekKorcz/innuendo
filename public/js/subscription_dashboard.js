@@ -112,8 +112,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 workers.empty();
                 
                 let workersTab = `
-                    <div class="text-center">
-                        <h2>Pracownicy przypisani do danej subskrypcji:</h2>
+                    <div class="text-center">                        
+                        <p>
+                            <h2>Pracownicy przypisani do danej subskrypcji:</h2>
+                            <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + propertyId + `/` + subscriptionId + `/0">
+                                Wszystkie wizyty pracowników
+                            </a>
+                        </p>
                     </div>
                     <table class="table table-striped table-bordered">
                         <thead>
@@ -122,7 +127,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <td>Nazwisko</td>
                                 <td>Email</td>
                                 <td>Telefon</td>
-                                <td>Akcja</td>
+                                <td>Wizyty</td>
                             </tr>
                         </thead>
                         <tbody id="workersTable"></tbody>
@@ -141,7 +146,11 @@ window.addEventListener('DOMContentLoaded', () => {
                             <td>` + worker.surname + `</td>
                             <td>` + worker.email + `</td>
                             <td>` + worker.phone_number + `</td>
-                            <td>` + worker.name + `</td>
+                            <td>
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + propertyId + `/` + subscriptionId + `/` + worker.id + `">
+                                    Pokaż
+                                </a>
+                            </td>
                         </tr>
                     `;
                     

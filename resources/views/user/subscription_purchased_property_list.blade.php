@@ -9,28 +9,24 @@
         <h1 class="text-center padding">Lista lokalizacji z wykupionymi pakietami</h1>
         <hr>
     </div>
-    <div id="properties" class="wrapper cont">
+    <div class="wrapper">
         @foreach ($properties as $property)
-            <div class="text-center box">
-                <div class="card">
+            <div class="card">
+                <div class="card-body">
+                    @if ($property->boss_id)
+                        <p style="color: blue;">#private property</p>
+                    @endif
+                    <strong>
+                        {{$property->name}}
+                    </strong>
+                    <p class="card-text">
+                        {!!$property->description!!}
+                        <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}} {{$property->city}}</strong></p>
+                    </p>
                     <div class="text-center">
-                        @svg('brands/dev')
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-center">
-                            <strong>
-                                {{$property->name}}
-                            </strong>
-                        </h5>
-                        <p class="card-text">
-                            {!!$property->description!!}
-                            <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}} {{$property->city}}</strong></p>
-                        </p>
-                        <div class="text-center">
-                            <a class="btn btn-success" href="{{ URL::to('user/subscription/list/purchased/' . $property->id) }}">
-                                Zobacz
-                            </a>                                    
-                        </div>
+                        <a class="btn btn-success" href="{{ URL::to('user/subscription/list/purchased/' . $property->id) }}">
+                            Zobacz
+                        </a>                                    
                     </div>
                 </div>
             </div>

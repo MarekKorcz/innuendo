@@ -24,10 +24,10 @@
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <div class="text-center">
                     @if ($isPurchasable)
-                        <a href="{{ URL::to('user/subscription/purchase/' . $subscription->id)}}" class="btn btn-success btn-lg">
+                        <a href="{{ URL::to('user/subscription/purchase/' . $property->id . '/' . $subscription->id)}}" class="btn btn-success btn-lg">
                             Przejdz do widoku realizacji
                         </a>
-                    @else
+                    @else                    
                         <a href="{{ URL::to('user/subscription/purchased/show/' . $subscription->purchase_id)}}" class="btn btn-success btn-lg">
                             Przejdz do wykupionej subskrypcji
                         </a>

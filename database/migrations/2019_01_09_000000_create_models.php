@@ -142,6 +142,17 @@ class CreateModels extends Migration
             $table->integer('subscription_id')->unsigned();
         });
         
+        Schema::create('substarts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->integer('user_id');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
+            $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
+        });
+        
         Schema::create('item_subscription', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('item_id')->unsigned();
@@ -207,6 +218,7 @@ class CreateModels extends Migration
         Schema::dropIfExists('temp_users');
         Schema::dropIfExists('subscriptions');
         Schema::dropIfExists('property_subscription');
+        Schema::dropIfExists('substarts');
         Schema::dropIfExists('item_subscription');
         Schema::dropIfExists('purchases');
         Schema::dropIfExists('intervals');

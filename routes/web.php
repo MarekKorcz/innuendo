@@ -44,9 +44,6 @@ Route::get('/employees', 'UserController@employeesList')->name('employees');
 Route::get('/employee/{slug}', 'UserController@employee')->name('employee');
 Route::get('/employee/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
 
-Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
-Route::get('/user/property/{slug}', 'UserController@property')->name('property');
-
 Route::get('/property/index', 'PropertyController@index');
 Route::get('/property/create', 'PropertyController@create');
 Route::post('/property/store', 'PropertyController@store');
@@ -96,11 +93,20 @@ Route::post('/subscription/set-item-to-subscription', 'SubscriptionController@se
 Route::get('/subscription/{id}/edit', 'SubscriptionController@edit');
 Route::put('/subscription/update', 'SubscriptionController@update');
 
-Route::get('/user/subscription/list', 'UserController@subscriptionList');
+
+
+Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
+Route::get('/user/property/{id}', 'UserController@property')->name('property');
+
+
+Route::get('/user/properties/subscription', 'UserController@propertiesSubscription');
+Route::get('/user/property/subscription/list/{id}', 'UserController@propertySubscriptionList');
 Route::get('/user/subscription/purchased/property/list', 'UserController@purchasedSubscriptionPropertyList');
 Route::get('/user/subscription/list/purchased/{propertyId}', 'UserController@purchasedSubscriptionList');
-Route::get('/user/subscription/show/{slug}', 'UserController@subscriptionShow');
-Route::get('/user/subscription/purchase/{id}', 'UserController@subscriptionPurchase');
+
+
+Route::get('/user/subscription/show/{propertyId}/{subscriptionId}', 'UserController@subscriptionShow');
+Route::get('/user/subscription/purchase/{propertyId}/{subscriptionId}', 'UserController@subscriptionPurchase');
 Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
 Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow');
 
@@ -108,7 +114,12 @@ Route::get('/boss/dashboard', 'BossController@dashboard');
 Route::post('/boss/set-code', 'BossController@setCode');
 Route::get('/boss/property/list', 'BossController@propertyList');
 Route::get('/boss/property/{id}', 'BossController@property');
-Route::get('/boss/subscription/list', 'BossController@subscriptionList');
+Route::get('/boss/subscription/list/{propertyId}/{subscriptionId}', 'BossController@subscriptionList');
+Route::get('/boss/properties/subscription/purchase', 'BossController@propertiesSubscriptionPurchase');
+Route::get('/boss/property/subscriptions/purchase/{id}', 'BossController@propertySubscriptionsPurchase');
+Route::post('/boss/subscription/purchased', 'BossController@subscriptionPurchased');
+Route::get('/boss/worker/appointment/list/{propertyId}/{subscriptionId}/{userId}', 'BossController@workerAppointmentList');
+Route::get('/boss/subscription/purchase/{propertyId}/{subscriptionId}', 'BossController@subscriptionPurchase');
 Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
 Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
 Route::post('/boss/get/property/subscription', 'BossController@getPropertySubscriptions');

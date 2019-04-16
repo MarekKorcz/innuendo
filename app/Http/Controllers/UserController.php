@@ -31,12 +31,8 @@ class UserController extends Controller
     {
         $this->middleware('auth')->except([
             'employeesList', 
-            'employee', 
-            'propertiesList', 
-            'property', 
-            'calendar', 
-            'subscriptionList',
-            'subscriptionShow'
+            'employee',
+            'calendar'
         ]);
     }
     
@@ -114,18 +110,63 @@ class UserController extends Controller
      */
     public function propertiesList()
     {
-        $properties = Property::all();
+        $bossId = 0;
+        $user = auth()->user();
+        $bossProperties = new Collection();
+        
+        if ($user !== null)
+        {
+            if ($user->boss_id !== null)
+            {
+                $bossId = $user->boss_id;
+
+            } else if ($user->isBoss !== null) {
+
+                $bossId = $user->id;
+            }
+
+            if ($bossId !== 0)
+            {
+                $bossProperties = Property::where('boss_id', $bossId)->get();
+            }
+        }
+        
+        $properties = Property::where('boss_id', null)->get();
         
         if ($properties !== null)
         {
-            $propertiesArray = [];
-
-            for ($i = 0; $i < count($properties); $i++)
+            if (count($bossProperties) > 0)
             {
-                $propertiesArray[$i + 1] = $properties[$i];
+                foreach ($bossProperties as $bossProperty)
+                {
+                    $properties->push($bossProperty);
+                }
+            }
+            
+            if (count($properties) == 1)
+            {
+                return redirect()->action(
+                    'UserController@property', [
+                        'id' => $properties->first()->id,
+                    ]
+                );
             }
 
-            return view('user.property_index')->with('properties', $propertiesArray);
+            foreach ($properties as $property)
+            {
+                if ($property->boss_id !== null)
+                {
+                    $property['isPurchased'] = true;
+                    
+                } else {
+                    
+                    $property['isPurchased'] = false;
+                }
+            }
+
+            return view('user.property_index')->with([
+                'properties' => $properties->sortBy('isPurchased', SORT_REGULAR, true)
+            ]);
         }
         
         return redirect()->route('welcome');
@@ -134,43 +175,47 @@ class UserController extends Controller
     /**
      * Shows property.
      * 
-     * @param type $slug
+     * @param type $id
      * @return type
      */
-    public function property($slug)
-    {
-        if (is_string($slug) && $slug !== null)
+    public function property($id)
+    {        
+        if (is_integer((int)$id) && $id !== null)
         {
-            $property = Property::where('slug', $slug)->first();
+            $property = Property::where('id', $id)->first();
             
             if ($property !== null)
             {
                 $propertyCreatedAt = $property->created_at->format('d.m.Y');
                 $calendars = Calendar::where('property_id', $property->id)->where('isActive', 1)->get();
-                
-                $employees = [];
-                $employeesArray = [];
+                $employees = new Collection();
 
-                if ($calendars !== null)
+                if (count($calendars) > 0)
                 {
-                    for ($i = 0; $i < count($calendars); $i++)
+                    foreach ($calendars as $calendar)
                     {
-                        $employees[$i] = User::where('id', $calendars[$i]->employee_id)->first();
+                        $employee = User::where('id', $calendar->employee_id)->first();
+                        
+                        if ($employee !== null)
+                        {
+                            $employee['calendar'] = $calendar->id;
+                            
+                            $employees->push($employee);
+                        }
                     }
                 }
                 
-                if (count($employees))
-                {
-                    for ($i = 0; $i < count($employees); $i++)
-                    {
-                        $employeesArray[$i + 1] = $employees[$i];
-                    }
-                }
+                $today = [
+                    'year' => date('Y'),
+                    'month' => date('n'),
+                    'day' => date('j')
+                ];
                 
                 return view('user.property_show')->with([
                     'property' => $property,
                     'propertyCreatedAt' => $propertyCreatedAt,
-                    'employees' => $employeesArray
+                    'employees' => $employees,
+                    'today' => $today
                 ]);
             }
         }
@@ -641,17 +686,74 @@ class UserController extends Controller
     }
     
     /**
-     * Shows a list of all subscriptions available for users to buy.
+     * Shows a list of all property with subscriptions to buy.
      * 
      * @return type
      */
-    public function subscriptionList()
-    {
-        $subscriptions = Subscription::all();
+    public function propertiesSubscription()
+    {        
+        $properties = Property::where('boss_id', null)->with('subscriptions')->get();
         
-        if ($subscriptions !== null)
+        if (count($properties) > 0)
         {            
+            return view('user.property_list')->with([
+                'properties' => $properties
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Shows a list of all subscriptions available for users to buy.
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function propertySubscriptionList($id)
+    {
+        $property = Property::where('id', $id)->with('subscriptions')->first();
+        
+        if ($property !== null && $property->subscriptions)
+        {            
+            $subscriptions = $property->subscriptions;
+            
+            foreach ($subscriptions as $subscription)
+            {
+                $subscription['purchase_id'] = null;
+            }
+            
+            $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+                    
+//            todo: test this code   >>>
+            if ($user->chosenProperties)
+            {
+                foreach ($user->chosenProperties as $chosenProperty)
+                {
+                    if ($chosenProperty->property_id == $property->id)
+                    {
+                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+                                                
+                        if ($chosenProperty->purchases)
+                        {
+                            foreach ($subscriptions as $subscription)
+                            {
+                                foreach ($chosenProperty->purchases as $purchase)
+                                {
+                                    if ($subscription->id == $purchase->subscription_id)
+                                    {
+                                        $subscription['purchase_id'] = $purchase->id;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }   
+//            <<<
+
             return view('user.subscription_list')->with([
+                'property' => $property,
                 'subscriptions' => $subscriptions
             ]);
         }
@@ -662,11 +764,19 @@ class UserController extends Controller
     /**
      * Shows the chosen subscription view.
      * 
-     * @param type $slug
+     * @param type $propertyId
+     * @param type $subscriptionId
      */
-    public function subscriptionShow($slug)
+    public function subscriptionShow($propertyId, $subscriptionId)
     {
-        $subscription = Subscription::where('slug', $slug)->first();
+        $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
+        $propertyId = (int)$propertyId;
+        
+        $subscriptionId = htmlentities((int)$subscriptionId, ENT_QUOTES, "UTF-8");
+        $subscriptionId = (int)$subscriptionId;
+        
+        $property = Property::where('id', $propertyId)->first();
+        $subscription = Subscription::where('id', $subscriptionId)->first();
         
         if ($subscription !== null)
         {
@@ -674,22 +784,34 @@ class UserController extends Controller
             
             if (auth()->user() !== null)
             {
-                $user = User::where('id', auth()->user()->id)->with('purchases')->first();
+                $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
                 
-                foreach ($user->purchases as $purchase)
+                if ($user->chosenProperties)
                 {
-                    $purchasedSubscription = Subscription::where('id', $purchase->subscription_id)->first();
-
-                    if ($subscription !== null && $subscription->id == $purchasedSubscription->id)
+                    foreach ($user->chosenProperties as $chosenProperty)
                     {
-                        $subscription['purchase_id'] = $purchase->id;
-                        $isPurchasable = false;
-                        break;
+                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+                        
+                        if ($chosenProperty !== null && $chosenProperty->property_id == $propertyId && $chosenProperty->purchases)
+                        {
+                            foreach ($chosenProperty->purchases as $purchase)
+                            {
+                                $purchasedSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+
+                                if ($subscription !== null && $subscription->id == $purchasedSubscription->id)
+                                {
+                                    $subscription['purchase_id'] = $purchase->id;
+                                    $isPurchasable = false;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
             
             return view('user.subscription_show')->with([
+                'property' => $property,
                 'subscription' => $subscription,
                 'isPurchasable' => $isPurchasable
             ]);
@@ -701,30 +823,55 @@ class UserController extends Controller
     /**
      * Shows subscription's purchase view.
      * 
-     * @param int $id
+     * @param type $propertyId
+     * @param type $subscriptionId
+     * @return type
      */
-    public function subscriptionPurchase($id)
+    public function subscriptionPurchase($propertyId, $subscriptionId)
     {
-        $subscription = Subscription::where('id', $id)->first();
-        $user = User::where('id', auth()->user()->id)->with('purchases')->first();
+        $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
+        $propertyId = (int)$propertyId;
         
-        foreach ($user->purchases as $purchase)
+        $subscriptionId = htmlentities((int)$subscriptionId, ENT_QUOTES, "UTF-8");
+        $subscriptionId = (int)$subscriptionId;
+        
+        $property = Property::where('id', $propertyId)->first();
+        $subscription = Subscription::where('id', $subscriptionId)->first();
+        
+        if ($subscription !== null && $property !== null)
         {
-            $userSubscription = Subscription::where('id', $purchase->subscription_id)->first();
-            
-            if ($userSubscription !== null && $userSubscription->id == $subscription->id)
+            $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+
+            if ($user->chosenProperties)
             {
-                return redirect()->action(
-                    'UserController@subscriptionPurchasedShow', [
-                        'id' => $purchase->id
-                    ]
-                )->with('success', 'Posiadasz już te subskrypcje');
+                foreach ($user->chosenProperties as $chosenProperty)
+                {
+                    $chosenProperty = ChosenProperty::where([
+                        'id' => $chosenProperty->id,
+                        'property_id' => $property->id
+                    ])->with('purchases')->first();
+                    
+                    if ($chosenProperty !== null && $chosenProperty->purchases)
+                    {
+                        foreach ($chosenProperty->purchases as $purchase)
+                        {
+                            $userSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+
+                            if ($userSubscription !== null && $userSubscription->id == $subscription->id)
+                            {
+                                return redirect()->action(
+                                    'UserController@subscriptionPurchasedShow', [
+                                        'id' => $purchase->id
+                                    ]
+                                )->with('success', 'Posiadasz już te subskrypcje');
+                            }
+                        }
+                    }
+                }
             }
-        }
-        
-        if ($subscription !== null)
-        {
+
             return view('user.subscription_purchase')->with([
+                'property' => $property,
                 'subscription' => $subscription
             ]);
         }
@@ -743,63 +890,111 @@ class UserController extends Controller
         // validate
         $rules = array(
             'terms'             => 'required',
+            'property_id'       => 'required',
             'subscription_id'   => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('user/subscription/purchase/' . Input::get('subscription_id'))
+            return Redirect::to('user/subscription/purchase/' . Input::get('property_id') . '/' . Input::get('subscription_id'))
                 ->withErrors($validator)
                 ->withInput(Input::except('password'));
         } else {
             
             $subscription = Subscription::where('id', Input::get('subscription_id'))->first();
+            $property = Property::where('id', Input::get('property_id'))->first();
             
-            // store
-            $purchase = new Purchase();
-            $purchase->subscription_id = $subscription->id;
-            $purchase->user_id = auth()->user()->id;
-            $purchase->save();
-            
-            if ($purchase !== null)
+            if ($subscription !== null && $property !== null)
             {
-                $startDate = date('Y-m-d');
-                
-                for ($i = 1; $i <= $subscription->duration; $i++)
-                {
-                    $interval = new Interval();
-                    $interval->available_units = $subscription->quantity;
-                    
-                    $interval->start_date = $startDate;
-                    $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
-                    
-                    $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
-                    $interval->end_date = $endDate;
-                    
-                    $interval->purchase_id = $purchase->id;
-                    $interval->save();
-                }
-                
-                /**
-                 * 
-                 * 
-                 * 
-                 * 
-                 * Email sending
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
-                 */
+                // check if such a subscription hasn't already been purchased!
+                $isPurchasable = true;
 
-                // redirect
-                return redirect()->action(
-                    'UserController@subscriptionPurchasedShow', [
-                        'id' => $purchase->id
-                    ]
-                )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
+                $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+
+                if (count($user->chosenProperties) > 0)
+                {
+                    foreach ($user->chosenProperties as $chosenProperty)
+                    {
+                        if ($chosenProperty->property_id == Input::get('property_id'))
+                        {
+                            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+
+                            if ($chosenProperty->purchases)
+                            {
+                                foreach ($chosenProperty->purchases as $purchase)
+                                {
+                                    if ($purchase->subscription_id == Input::get('subscription_id'))
+                                    {
+                                        $isPurchasable = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($isPurchasable)
+                {
+                    $chosenProperty = ChosenProperty::where([
+                        'property_id' => $property->id,
+                        'user_id' => auth()->user()->id
+                    ])->first();
+                    
+                    if ($chosenProperty === null)
+                    {
+                        $chosenProperty = new ChosenProperty();
+                        $chosenProperty->property_id = $property->id;
+                        $chosenProperty->user_id = auth()->user()->id;
+                        $chosenProperty->save();
+                    }
+                    
+                    // store
+                    $purchase = new Purchase();
+                    $purchase->subscription_id = $subscription->id;
+                    $purchase->chosen_property_id = $chosenProperty->id;
+                    $purchase->save();
+
+                    if ($purchase !== null)
+                    {
+                        $startDate = date('Y-m-d');
+
+                        for ($i = 1; $i <= $subscription->duration; $i++)
+                        {
+                            $interval = new Interval();
+                            $interval->available_units = $subscription->quantity;
+
+                            $interval->start_date = $startDate;
+                            $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
+
+                            $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
+                            $interval->end_date = $endDate;
+
+                            $interval->purchase_id = $purchase->id;
+                            $interval->save();
+                        }
+
+                        /**
+                         * 
+                         * 
+                         * 
+                         * 
+                         * Email sending
+                         * 
+                         * 
+                         * 
+                         * 
+                         * 
+                         */
+
+                        // redirect
+                        return redirect()->action(
+                            'UserController@subscriptionPurchasedShow', [
+                                'id' => $purchase->id
+                            ]
+                        )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
+                    }
+                }
             }
         }
     }
@@ -817,7 +1012,7 @@ class UserController extends Controller
         {
             $subscriptionCreationDate = new \DateTime($purchase->subscription->created_at->format('Y-m-d'));
             $interval = new \DateInterval('P12M');
-            $subscriptionCreationDate->add($interval);
+            $subscriptionCreationDate->add($interval);            
             $expirationDate = $subscriptionCreationDate->format('d - m - Y');
 
             $appointments = Appointment::where('purchase_id', $purchase->id)->with('item')->get();
@@ -874,7 +1069,7 @@ class UserController extends Controller
             $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('property')->first();
             
             if ($chosenProperty->property !== null)
-            {
+            {                
                 $properties = $properties->push($chosenProperty->property);
             }
         }

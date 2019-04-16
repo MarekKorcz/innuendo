@@ -7,6 +7,7 @@ use App\Code;
 use App\ChosenProperty;
 use App\Purchase;
 use App\Interval;
+use App\Substart;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -113,13 +114,25 @@ class RegisterController extends Controller
                             $purchase->chosen_property_id = $userChosenProperty->id;
                             $purchase->save();
                             
-                            $startDate = date('Y-m-d');
-                
+                            $substart = Substart::where([
+                                'user_id' => $code->boss_id,
+                                'subscription_id' => $subscription->id,
+                                'property_id' => $bossChosenProperty->property_id
+                            ])->first();
+                            
+                            $now = date('Y-m-d');
+                                                          
+                            if ($substart !== null && $substart->start_date <= $now && $substart->end_date > $now)
+                            {
+                                $startDate = $substart->start_date;
+                                
+                            } else {
+                                
+                                $startDate = date('Y-m-d');
+                            }
+                                    
                             for ($i = 1; $i <= $subscription->duration; $i++)
                             {
-                                // for now, all Intervals starts when someone register
-                                // later on there can be an option to set some sort of "subscription start time" 
-                                // and based on that, make new Intervals
                                 $interval = new Interval();
                                 $interval->available_units = $subscription->quantity;
 
@@ -131,7 +144,7 @@ class RegisterController extends Controller
 
                                 $interval->purchase_id = $purchase->id;
                                 $interval->save();
-                            }
+                            }                          
                         }
                     }
                 }
