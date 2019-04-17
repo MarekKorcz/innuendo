@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/properties_subscription_purchase.css') !!}
+{!! Html::style('css/home.css') !!}
 
 <div class="container" style="padding: 2rem;">
     <div class="card-header text-center">

@@ -1086,4 +1086,10 @@ class BossController extends Controller
             return $workersArr;
         }
     }
+    
+    
+    
+    // todo: action for subscription purchase
+    
+    
 }
