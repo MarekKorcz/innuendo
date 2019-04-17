@@ -12,7 +12,7 @@ class Substart extends Model
      * @var array
      */
     protected $fillable = [
-        'start_date', 'end_date', 'property_id', 'subscription_id'
+        'start_date', 'end_date', 'user_id', 'boss_id', 'property_id', 'subscription_id', 'purchase_id'
     ];
     
     /**
@@ -23,23 +23,19 @@ class Substart extends Model
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'user_id' => 'integer',
+        'boss_id' => 'integer',
+        'isActive' => 'boolean',
         'property_id' => 'integer',
-        'subscription_id' => 'integer'
+        'subscription_id' => 'integer',
+        'purchase_id' => 'integer'
     ];
     
     /**
-     * Get the property that owns subscription start.
+     * Get the purchase that owns subscription start.
      */
-    public function property()
+    public function purchase()
     {
-        return $this->belongsTo('App\Property');
-    }
-    
-    /**
-     * Get the subscription that owns subscription start.
-     */
-    public function subscription()
-    {
-        return $this->belongsTo('App\Property');
+        return $this->belongsTo('App\Purchase');
     }
 }

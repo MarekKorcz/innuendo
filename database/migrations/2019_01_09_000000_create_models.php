@@ -146,11 +146,14 @@ class CreateModels extends Migration
             $table->increments('id');
             $table->date('start_date');
             $table->date('end_date');
-            $table->integer('user_id');
+            $table->integer('user_id')->nullable();
+            $table->integer('boss_id')->nullable();
+            $table->boolean('isActive')->default(0);
+            $table->integer('property_id');
+            $table->integer('subscription_id');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
-            $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
+            $table->integer('purchase_id')->unsigned()->index()->foreign()->references("id")->on("purchases");
         });
         
         Schema::create('item_subscription', function (Blueprint $table) {

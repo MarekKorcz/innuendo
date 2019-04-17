@@ -74,12 +74,4 @@ class Property extends Model
     {
         return $this->hasMany('App\ChosenProperty');
     }
-    
-    /**
-     * Get subscriptions starts which belong to property.
-     */
-    public function substarts()
-    {
-        return $this->hasMany('App\Substart');
-    }
 }

@@ -958,21 +958,18 @@ class UserController extends Controller
                     if ($purchase !== null)
                     {
                         $startDate = date('Y-m-d');
+                                    
+                        $interval = new Interval();
+                        $interval->available_units = $subscription->quantity * $subscription->duration;
 
-                        for ($i = 1; $i <= $subscription->duration; $i++)
-                        {
-                            $interval = new Interval();
-                            $interval->available_units = $subscription->quantity;
+                        $interval->start_date = $startDate;
+                        $startDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
 
-                            $interval->start_date = $startDate;
-                            $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
+                        $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
+                        $interval->end_date = $endDate;
 
-                            $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
-                            $interval->end_date = $endDate;
-
-                            $interval->purchase_id = $purchase->id;
-                            $interval->save();
-                        }
+                        $interval->purchase_id = $purchase->id;
+                        $interval->save();
 
                         /**
                          * 

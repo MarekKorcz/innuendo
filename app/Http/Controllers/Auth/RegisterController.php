@@ -109,42 +109,57 @@ class RegisterController extends Controller
                         
                         foreach ($bossChosenProperty->subscriptions as $subscription)
                         {
-                            $purchase = new Purchase();
-                            $purchase->subscription_id = $subscription->id;
-                            $purchase->chosen_property_id = $userChosenProperty->id;
-                            $purchase->save();
-                            
                             $substart = Substart::where([
-                                'user_id' => $code->boss_id,
+                                'boss_id' => $code->boss_id,
                                 'subscription_id' => $subscription->id,
                                 'property_id' => $bossChosenProperty->property_id
                             ])->first();
                             
-                            $now = date('Y-m-d');
-                                                          
+                            $now = new \DateTime();
+                            
                             if ($substart !== null && $substart->start_date <= $now && $substart->end_date > $now)
                             {
-                                $startDate = $substart->start_date;
+                                $purchase = new Purchase();
+                                $purchase->subscription_id = $subscription->id;
+                                $purchase->chosen_property_id = $userChosenProperty->id;                            
+                                $purchase->save();
                                 
-                            } else {
-                                
-                                $startDate = date('Y-m-d');
-                            }
+                                if ($substart->isActive)
+                                {
+                                    $startDate = $substart->start_date;
                                     
-                            for ($i = 1; $i <= $subscription->duration; $i++)
-                            {
-                                $interval = new Interval();
-                                $interval->available_units = $subscription->quantity;
+                                    for ($i = 1; $i <= $subscription->duration; $i++)
+                                    {
+                                        $interval = new Interval();
+                                        $interval->available_units = $subscription->quantity;
 
-                                $interval->start_date = $startDate;
-                                $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
+                                        $interval->start_date = $startDate;
+                                        $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
 
-                                $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
-                                $interval->end_date = $endDate;
+                                        $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
+                                        $interval->end_date = $endDate;
 
-                                $interval->purchase_id = $purchase->id;
-                                $interval->save();
-                            }                          
+                                        $interval->purchase_id = $purchase->id;
+                                        $interval->save();
+                                    }
+                                    
+                                } else {
+                                    
+                                    $startDate = date('Y-m-d');
+                                    
+                                    $interval = new Interval();
+                                    $interval->available_units = $subscription->quantity * $subscription->duration;
+
+                                    $interval->start_date = $startDate;
+                                    $startDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
+
+                                    $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
+                                    $interval->end_date = $endDate;
+
+                                    $interval->purchase_id = $purchase->id;
+                                    $interval->save();
+                                }
+                            }
                         }
                     }
                 }

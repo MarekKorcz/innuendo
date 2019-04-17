@@ -67,4 +67,12 @@ class Purchase extends Model
     {
         return $this->belongsTo('App\ChosenProperty');
     }
+    
+    /**
+     * Get subscription start that belongs to purchase.
+     */
+    public function substart()
+    {
+        return $this->hasOne('App\Substart');
+    }
 }

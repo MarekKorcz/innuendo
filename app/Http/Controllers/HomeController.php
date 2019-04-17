@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\ChosenProperty;
-
-
 //// to tests
 //use App\Property;
 //use App\Subscription;
