@@ -12,6 +12,7 @@ use App\Day;
 use App\Month;
 use App\Year;
 use App\Calendar;
+use App\Substart;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -75,7 +76,10 @@ class BossController extends Controller
                         
                         
                         
-                        $chosenProperty = ChosenProperty::where('property_id', $bossProperty->id)->where('code_id', $codes[$i]->id)->with('subscriptions')->first();
+                        $chosenProperty = ChosenProperty::where([
+                            'property_id' => $bossProperty->id,
+                            'code_id' => $codes[$i]->id
+                        ])->with('subscriptions')->first();
 
                         foreach ($allPropertySubscriptions as $propertySubscription)
                         {
@@ -93,11 +97,24 @@ class BossController extends Controller
                                     }
                                 }
                             }
+                            
+                            $isSubscriptionStarted = null;
+                            
+                            $substart = Substart::where([
+                                'property_id' => $bossProperty->id,
+                                'subscription_id' => $propertySubscription->id
+                            ])->first();
+
+                            if ($substart !== null && $substart->isActive == 1)
+                            {
+                                $isSubscriptionStarted = "(od " . $substart->start_date->format("Y-m-d") . " do " . $substart->end_date->format("Y-m-d") . ")";
+                            }
 
                             $subscriptions[] = [
                                 'subscription_id' => $propertySubscription->id,
                                 'subscription_name' => $propertySubscription->name,
-                                'isChosen' => $isChosen
+                                'isChosen' => $isChosen,
+                                'isSubscriptionStarted' => $isSubscriptionStarted
                             ];
                         }
 

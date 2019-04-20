@@ -51,6 +51,9 @@
                                                                 style="background-color: lightgreen;"
                                                             >
                                                                 {{$subscription['subscription_name']}}
+                                                                @if ($subscription['isSubscriptionStarted'] !== null)
+                                                                    {{$subscription['isSubscriptionStarted']}}
+                                                                @endif
                                                             </li>
                                                         @else
                                                             <li class="form-control" 
@@ -58,6 +61,9 @@
                                                                 data-active="false"
                                                             >
                                                                 {{$subscription['subscription_name']}}
+                                                                @if ($subscription['isSubscriptionStarted'] !== null)
+                                                                    {{$subscription['isSubscriptionStarted']}}
+                                                                @endif
                                                             </li>
                                                         @endif
                                                     @endforeach
