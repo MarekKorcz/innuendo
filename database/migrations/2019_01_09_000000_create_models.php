@@ -110,6 +110,7 @@ class CreateModels extends Migration
             $table->integer('item_id')->unsigned()->index()->foreign()->references("id")->on("items");
             $table->integer('user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
             $table->integer('temp_user_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("temp_users");
+            $table->integer('interval_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("intervals");
             $table->integer('purchase_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("purchases");
         });
         
@@ -166,6 +167,7 @@ class CreateModels extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->softDeletes();
+            $table->integer('substart_id')->nullable();
             $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
             $table->integer('chosen_property_id')->unsigned()->index()->foreign()->references("id")->on("chosen_properties");
         });

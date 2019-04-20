@@ -22,7 +22,7 @@ class Appointment extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'start_time', 'minutes', 'status', 'graphic_id', 'item_id', 'day_id', 'user_id', 'temp_user_id', 'purchase_id'
+        'start_time', 'start_time', 'minutes', 'status', 'graphic_id', 'item_id', 'day_id', 'user_id', 'temp_user_id', 'interval_id', 'purchase_id'
     ];
     
     /**
@@ -40,6 +40,7 @@ class Appointment extends Model
         'user_id' => 'integer',
         'item_id' => 'integer',
         'temp_user_id' => 'integer', 
+        'interval_id' => 'integer',
         'purchase_id' => 'integer'
     ];
     
@@ -93,6 +94,14 @@ class Appointment extends Model
     public function tempUser()
     {
         return $this->belongsTo('App\TempUser');
+    }
+    
+    /**
+     * Get the interval that owns the appointment.
+     */
+    public function interval()
+    {
+        return $this->belongsTo('App\Interval');
     }
     
     /**

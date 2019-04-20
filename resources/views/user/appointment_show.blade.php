@@ -7,7 +7,7 @@
 
     <nav class="navbar navbar-inverse">
         <div class="navbar-header">
-            <a href="{{ URL::to('/employee/calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn btn-success">
+            <a href="{{ URL::to('/employee/calendar/'. $calendarId . '/' . $year . '/' . $month_number . '/' . $day) }}" class="btn btn-success">
                 Powrót do kalendarza
             </a>
         </div>

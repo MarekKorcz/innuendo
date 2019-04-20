@@ -34,4 +34,12 @@ class Interval extends Model
     {
         return $this->belongsTo('App\Purchase');
     }
+    
+    /**
+     * Get appointments which belong to interval.
+     */
+    public function appointments()
+    {
+        return $this->hasMany('App\Appointment');
+    }
 }

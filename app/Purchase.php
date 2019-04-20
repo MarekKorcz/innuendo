@@ -22,6 +22,7 @@ class Purchase extends Model
      * @var array
      */
     protected $fillable = [
+        'substart_id',
         'subscription_id',
         'chosen_property_id'
     ];
@@ -32,6 +33,7 @@ class Purchase extends Model
      * @var array
      */
     protected $casts = [
+        'substart_id' => 'integer',
         'subscription_id' => 'integer',
         'chosen_property_id' => 'integer'
     ];

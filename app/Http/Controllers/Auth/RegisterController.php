@@ -121,7 +121,8 @@ class RegisterController extends Controller
                             {
                                 $purchase = new Purchase();
                                 $purchase->subscription_id = $subscription->id;
-                                $purchase->chosen_property_id = $userChosenProperty->id;                            
+                                $purchase->chosen_property_id = $userChosenProperty->id;                       
+                                $purchase->substart_id = $substart->id;                       
                                 $purchase->save();
                                 
                                 if ($substart->isActive)

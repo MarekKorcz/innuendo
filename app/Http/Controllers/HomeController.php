@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 //// to tests
-//use App\Property;
-//use App\Subscription;
-//use App\User;
+//use App\Appointment;
+//use App\Interval;
+//use App\Substart;
+//use App\Purchase;
+//use App\Day;
+//use App\Month;
+//use App\Year;
 //use Illuminate\Support\Collection;
 
 class HomeController extends Controller
@@ -52,12 +56,6 @@ class HomeController extends Controller
     }
     
 //    public function test()
-//    {  
-//        $subscription = Subscription::where('id', 4)->first();
-//        $property = Property::where('id', 1)->first();
-//        
-//        $purchases = Purchase::where('')
-//        
-//        dump();die;
+//    {
 //    }
 }

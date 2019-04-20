@@ -14,6 +14,7 @@ use App\Subscription;
 use App\ChosenProperty;
 use App\Purchase;
 use App\Interval;
+use App\Substart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -401,6 +402,7 @@ class UserController extends Controller
                     'subscription' => $subscription,
                     'day' => $day->day_number,
                     'month' => $month->month,
+                    'month_number' => $month->month_number,
                     'year' => $year->year,
                     'calendarId' => $calendar->id,
                     'employee' => $employee,
@@ -953,6 +955,21 @@ class UserController extends Controller
                     $purchase = new Purchase();
                     $purchase->subscription_id = $subscription->id;
                     $purchase->chosen_property_id = $chosenProperty->id;
+                    $purchase->save();
+                    
+                    $startDate = date('Y-m-d');
+                    
+                    $substart = new Substart();
+                    $substart->start_date = $startDate;
+                    $endDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
+                    $substart->end_date = $endDate;
+                    $substart->user_id = auth()->user()->id;
+                    $substart->property_id = $property->id;
+                    $substart->subscription_id = $subscription->id;
+                    $substart->purchase_id = $purchase->id;
+                    $substart->save();
+                    
+                    $purchase->substart_id = $substart->id;
                     $purchase->save();
 
                     if ($purchase !== null)
