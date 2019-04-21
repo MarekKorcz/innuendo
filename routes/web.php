@@ -104,7 +104,6 @@ Route::get('/user/property/subscription/list/{id}', 'UserController@propertySubs
 Route::get('/user/subscription/purchased/property/list', 'UserController@purchasedSubscriptionPropertyList');
 Route::get('/user/subscription/list/purchased/{propertyId}', 'UserController@purchasedSubscriptionList');
 
-
 Route::get('/user/subscription/show/{propertyId}/{subscriptionId}', 'UserController@subscriptionShow');
 Route::get('/user/subscription/purchase/{propertyId}/{subscriptionId}', 'UserController@subscriptionPurchase');
 Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');

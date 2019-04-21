@@ -21,7 +21,7 @@
                     <div class="text-center">
                         @if ($subscription->purchase_id)
                             <a class="btn btn-success" href="{{ URL::to('user/subscription/purchased/show/' . $subscription->purchase_id) }}">
-                                Zobacz wykupione
+                                Posiadasz już ten pakiet
                             </a>
                         @else
                             <a class="btn btn-success" href="{{ URL::to('user/subscription/show/' . $property->id . '/' . $subscription->id) }}">

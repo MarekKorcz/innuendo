@@ -697,10 +697,21 @@ class UserController extends Controller
         $properties = Property::where('boss_id', null)->with('subscriptions')->get();
         
         if (count($properties) > 0)
-        {            
-            return view('user.property_list')->with([
-                'properties' => $properties
-            ]);
+        {         
+            if (count($properties) == 1)
+            {
+                return redirect()->action(
+                    'UserController@propertySubscriptionList', [
+                        'id' => $properties->first()->id
+                    ]
+                );
+                
+            } else {
+                
+                return view('user.property_list')->with([
+                    'properties' => $properties
+                ]);
+            }
         }
         
         return redirect()->route('welcome');
@@ -714,7 +725,9 @@ class UserController extends Controller
      */
     public function propertySubscriptionList($id)
     {
-        $property = Property::where('id', $id)->with('subscriptions')->first();
+        $propertyId = htmlentities((int)$id, ENT_QUOTES, "UTF-8");
+        $property = Property::where('id', (int)$id)->with('subscriptions')->first();
+        
         
         if ($property !== null && $property->subscriptions)
         {            
@@ -727,7 +740,6 @@ class UserController extends Controller
             
             $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
                     
-//            todo: test this code   >>>
             if ($user->chosenProperties)
             {
                 foreach ($user->chosenProperties as $chosenProperty)
@@ -751,8 +763,7 @@ class UserController extends Controller
                         }
                     }
                 }
-            }   
-//            <<<
+            }
 
             return view('user.subscription_list')->with([
                 'property' => $property,
@@ -780,21 +791,22 @@ class UserController extends Controller
         $property = Property::where('id', $propertyId)->first();
         $subscription = Subscription::where('id', $subscriptionId)->first();
         
-        if ($subscription !== null)
+        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+        
+        if ($subscription !== null && $property !== null && 
+           ($property->boss_id == null || ($property->boss_id !== null && $user->getBoss() !== null && $user->getBoss()->id == $property->boss_id)))
         {
             $isPurchasable = true;
-            
-            if (auth()->user() !== null)
+
+            if ($user->chosenProperties)
             {
-                $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-                
-                if ($user->chosenProperties)
+                foreach ($user->chosenProperties as $chosenProperty)
                 {
-                    foreach ($user->chosenProperties as $chosenProperty)
+                    if ($chosenProperty->property_id == $property->id)
                     {
                         $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-                        
-                        if ($chosenProperty !== null && $chosenProperty->property_id == $propertyId && $chosenProperty->purchases)
+
+                        if ($chosenProperty->purchases)
                         {
                             foreach ($chosenProperty->purchases as $purchase)
                             {
@@ -840,42 +852,52 @@ class UserController extends Controller
         $property = Property::where('id', $propertyId)->first();
         $subscription = Subscription::where('id', $subscriptionId)->first();
         
-        if ($subscription !== null && $property !== null)
+        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+        
+        if ($subscription !== null && $property !== null && 
+           ($property->boss_id == null || ($property->boss_id !== null && $user->getBoss() !== null && $user->getBoss()->id == $property->boss_id)))
         {
-            $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-
+            // zrób tak żeby usery należące do szefa nie mogły wykupywać sobie jego subskrypcji!!
+            
             if ($user->chosenProperties)
             {
                 foreach ($user->chosenProperties as $chosenProperty)
                 {
-                    $chosenProperty = ChosenProperty::where([
-                        'id' => $chosenProperty->id,
-                        'property_id' => $property->id
-                    ])->with('purchases')->first();
-                    
-                    if ($chosenProperty !== null && $chosenProperty->purchases)
+                    if ($chosenProperty->property_id == $property->id)
                     {
-                        foreach ($chosenProperty->purchases as $purchase)
-                        {
-                            $userSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
 
-                            if ($userSubscription !== null && $userSubscription->id == $subscription->id)
+                        if ($chosenProperty->purchases)
+                        {
+                            foreach ($chosenProperty->purchases as $purchase)
                             {
-                                return redirect()->action(
-                                    'UserController@subscriptionPurchasedShow', [
-                                        'id' => $purchase->id
-                                    ]
-                                )->with('success', 'Posiadasz już te subskrypcje');
+                                $userSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+
+                                if ($userSubscription !== null && $userSubscription->id == $subscription->id)
+                                {
+                                    return redirect()->action(
+                                        'UserController@subscriptionPurchasedShow', [
+                                            'id' => $purchase->id
+                                        ]
+                                    )->with('success', 'Posiadasz już te subskrypcje');
+                                }
                             }
                         }
                     }
                 }
             }
-
-            return view('user.subscription_purchase')->with([
-                'property' => $property,
-                'subscription' => $subscription
-            ]);
+            
+            if ($property->boss_id !== null && $property->boss_id !== $user->id)
+            {
+                return redirect()->route('welcome')->with('error', 'Nie posiadasz uprawnień do wykupywania pakietu z prywatnej lokalizacji');
+                
+            } else {
+                
+                return view('user.subscription_purchase')->with([
+                    'property' => $property,
+                    'subscription' => $subscription
+                ]);
+            }
         }
         
         return redirect()->route('welcome');
@@ -1065,7 +1087,7 @@ class UserController extends Controller
             ]);
         }
         
-        return redirect()->route('welcome')->with('error', 'Nie posiadasz wykupionej subskrypcji');
+        return redirect()->route('welcome')->with('error', 'Ten wykupiony pakiet nie należy do Ciebie');
     }
     
     /**
@@ -1119,35 +1141,46 @@ class UserController extends Controller
      */
     public function purchasedSubscriptionList($propertyId) 
     {
-        $chosenProperties = ChosenProperty::where([
-            'property_id' => $propertyId,
-            'user_id' => auth()->user()->id
-        ])->with('purchases')->get();
+        $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
+        $propertyId = (int)$propertyId;
         
-        if (count($chosenProperties) > 0)
+        $property = Property::where('id', $propertyId)->first();
+        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+        
+        if ($property !== null && 
+           ($property->boss_id == null || ($property->boss_id !== null && $user->getBoss() !== null && $user->getBoss()->id == $property->boss_id)))
         {
-            $subscriptions = new Collection();
-
-            foreach ($chosenProperties as $chosenProperty)
+            if ($user->chosenProperties)
             {
-                foreach ($chosenProperty->purchases as $purchase)
+                $subscriptions = new Collection();
+                
+                foreach ($user->chosenProperties as $chosenProperty)
                 {
-                    $purchase = Purchase::where('id', $purchase->id)->with('subscription')->first();
+                    if ($chosenProperty->property_id == $property->id)
+                    {
+                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+                        
+                        if ($chosenProperty->purchases)
+                        {
+                            foreach ($chosenProperty->purchases as $purchase)
+                            {
+                                $purchase = Purchase::where('id', $purchase->id)->with('subscription')->first();
 
-                    $subscription = $purchase->subscription;
-                    $subscription['purchase_id'] = $purchase->id;
-                    $subscriptions = $subscriptions->push($subscription);
+                                $subscription = $purchase->subscription;
+                                $subscription['purchase_id'] = $purchase->id;
+                                $subscriptions = $subscriptions->push($subscription);
+                            }
+                        }
+                    }
                 }
-            }
-            
-            $property = Property::where('id', $propertyId)->first();
-
-            if (count($subscriptions) > 0 && $property !== null)
-            {            
-                return view('user.subscription_purchased_list')->with([
-                    'subscriptions' => $subscriptions,
-                    'property' => $property
-                ]);
+                
+                if (count($subscriptions) > 0 && $property !== null)
+                {            
+                    return view('user.subscription_purchased_list')->with([
+                        'subscriptions' => $subscriptions,
+                        'property' => $property
+                    ]);
+                }
             }
         }
         
