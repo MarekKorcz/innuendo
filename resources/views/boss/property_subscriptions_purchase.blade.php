@@ -28,7 +28,7 @@
                         </a>
                     @else
                         <a href="{{ URL::to('boss/subscription/purchase/' . $property->id) . '/' . $subscription->id }}" class="btn btn-success">
-                            Zobacz
+                            Zamów
                         </a>
                     @endif
                 </div>

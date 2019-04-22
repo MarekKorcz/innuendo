@@ -30,9 +30,9 @@ class BossController extends Controller
     }
     
     /**
-     * Shows boss dashboard
+     * Shows boss codes
      */
-    public function dashboard()
+    public function codes()
     {
         $boss = auth()->user();
         $codes = Code::where('boss_id', $boss->id)->get();
@@ -70,11 +70,6 @@ class BossController extends Controller
                                 }
                             }
                         }
-                        
-                        
-                        // todo: widok zakupu subskrypcji dla bossa, nowe hiperlinki do kafelków od subkrypcji wykupionych i niewykupionych
-                        
-                        
                         
                         $chosenProperty = ChosenProperty::where([
                             'property_id' => $bossProperty->id,
@@ -135,7 +130,7 @@ class BossController extends Controller
             }
         }
         
-        return view('boss.dashboard')->with([
+        return view('boss.codes')->with([
             'codes' => $codesArray
         ]);
     }
@@ -181,7 +176,7 @@ class BossController extends Controller
                 $code->save();
                 
                 // redirect
-                return redirect('/boss/dashboard')->with('success', $message);
+                return redirect('/boss/codes')->with('success', $message);
             }
         }
 
@@ -232,7 +227,11 @@ class BossController extends Controller
     {
         if ($id !== null)
         {
-            $property = Property::where('id', $id)->first();
+            $propertyId = htmlentities((int)$id, ENT_QUOTES, "UTF-8");
+            $property = Property::where([
+                'id' => $propertyId,
+                'boss_id' => auth()->user()->id
+            ])->first();
             
             if ($property !== null)
             {
@@ -247,7 +246,7 @@ class BossController extends Controller
             }
         }
         
-        return redirect()->route('welcome');
+        return redirect()->route('welcome')->with('error', 'Ta lokalizacja nie należy do Ciebie');
     }
     
     /**
@@ -269,7 +268,7 @@ class BossController extends Controller
         
             if ($propertyId !== 0)
             {
-                $givenProperty = Property::where('id', $propertyId)->where('boss_id', auth()->user()->id)->with('subscriptions')->first();
+                $givenProperty = Property::where('id', $propertyId)->where('boss_id', $boss->id)->with('subscriptions')->first();
             }
             
             $chosenSubscription = null;
@@ -281,14 +280,14 @@ class BossController extends Controller
                 $chosenSubscription = Subscription::where('id', $subscriptionId)->first();
             }            
             
-            $properties = Property::where('boss_id', auth()->user()->id)->with('chosenProperties')->get();
+            $properties = Property::where('boss_id', $boss->id)->with('chosenProperties')->get();
             $chosenProperties = new Collection();
             
             foreach ($properties as $property)
             {
                 foreach ($property->chosenProperties as $chosenProperty)
                 {
-                    if ($chosenProperty->user !== null && $chosenProperty->user->id == auth()->user()->id)
+                    if ($chosenProperty->user !== null && $chosenProperty->user->id == $boss->id)
                     {
                         $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
                         $chosenProperties->push($chosenProperty);
@@ -435,20 +434,21 @@ class BossController extends Controller
      */
     public function propertySubscriptionsPurchase($id)
     {
-        // todo: jeśli property ma kilka suskrypcji dostępnych a boss wykupi jedną to podświetl jakoś 
-        // tą kupioną i po klinięciu w nią przekieruj do widoku zarządzania daną subskrypcją
+        $boss = auth()->user();
         
-        // todo: jeśli kliknie w niewykupioną to przekieruj do widoku zakupu subskrypcji wraz z umową
-        
-        // todo: umożliwienie tworzenia kodów tylko na podstawie subskrypcji wykupionych przez bossa
-        
-        
-        $property = Property::where('id', $id)->where('boss_id', auth()->user()->id)->with('subscriptions')->first();
+        $property = Property::where([
+            'id' => $id,
+            'boss_id' => $boss->id
+        ])->with('subscriptions')->first();
         
         if ($property !== null)
         {
             $subscriptionsCollection = new Collection();
-            $chosenProperty = ChosenProperty::where('user_id', auth()->user()->id)->where('property_id', $property->id)->with('purchases')->first();
+            
+            $chosenProperty = ChosenProperty::where([
+                'user_id' => $boss->id,
+                'property_id' => $property->id
+            ])->with('purchases')->first();
             
             foreach ($property->subscriptions as $subscription)
             {
@@ -463,10 +463,10 @@ class BossController extends Controller
                             $isPurchased = true;
                         }
                     }
+                    
+                    $subscription['isPurchased'] = $isPurchased;
+                    $subscriptionsCollection->push($subscription);
                 }
-                
-                $subscription['isPurchased'] = $isPurchased;
-                $subscriptionsCollection->push($subscription);
             }
             
             return view('boss.property_subscriptions_purchase')->with([
@@ -501,7 +501,8 @@ class BossController extends Controller
 
             if ($subscription !== null && $property !== null)
             {
-                $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+                $boss = auth()->user();
+                $user = User::where('id', $boss->id)->with('chosenProperties')->first();
 
                 if ($user->chosenProperties)
                 {
@@ -519,12 +520,23 @@ class BossController extends Controller
 
                                     if ($userSubscription !== null && $userSubscription->id == $subscription->id)
                                     {
-                                        dump('redirect to show subscription view');die;
-        //                                return redirect()->action(
-        //                                    'UserController@subscriptionPurchasedShow', [
-        //                                        'id' => $purchase->id
-        //                                    ]
-        //                                )->with('success', 'Posiadasz już te subskrypcje');
+                                        if ($property->boss_id !== null && $property->boss_id == $boss->id)
+                                        {
+                                            return redirect()->action(
+                                                'BossController@subscriptionList', [
+                                                    'propertyId' => $property->id,
+                                                    'subscriptionId' => $subscription->id
+                                                ]
+                                            )->with('success', 'Posiadasz już te subskrypcje');
+                                            
+                                        } else {
+                                            
+                                            return redirect()->action(
+                                                'UserController@subscriptionPurchasedShow', [
+                                                    'id' => $purchase->id
+                                                ]
+                                            )->with('success', 'Posiadasz już te subskrypcje');
+                                        }
                                     }
                                 }
                             }
@@ -651,7 +663,7 @@ class BossController extends Controller
         }
         
         return redirect()->action(
-            'BossController@dashboard'
+            'BossController@codes'
         )->with($type, $message);
     }
     
@@ -696,7 +708,7 @@ class BossController extends Controller
         }
         
         return redirect()->action(
-            'BossController@dashboard'
+            'BossController@codes'
         )->with($type, $message);
     }
     
@@ -715,6 +727,12 @@ class BossController extends Controller
 //                i wypełnij w widoku placeholder imieniem i nazwiskiem danej osoby
                 
 //        jesli nie podane id to wczytaj wizyty wszystkich userów na ten miesiąc, dotyczące tej danej subskrypcji
+        
+//        input wczytujący i wyświetlający wizyty danego usera
+        
+//        wyświetlanie wizyt w danych miesiącach
+        
+        
         
         $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
         $property = Property::where('id', $propertyId)->first();
@@ -1103,10 +1121,4 @@ class BossController extends Controller
             return $workersArr;
         }
     }
-    
-    
-    
-    // todo: action for subscription purchase
-    
-    
 }

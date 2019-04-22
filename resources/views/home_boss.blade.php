@@ -75,12 +75,12 @@
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Konfiguracja ustawień pracowników</h4>
+                <h4 class="card-title text-center">Generacja kodów rejestracji</h4>
                 <p class="card-text text-center">
-                    Widok z opcjami do rejestrowania pracowników, ich listą oraz informacjami dotyczącymi wykupionych subskrypcji
+                    Widok generacji kodów do rejestracji dla praconików w celu przydzielenia ich do odpowiednich pakietów
                 </p>
                 <div class="text-center">
-                    <a class="btn btn-success btn-lg" href="{{ URL::to('boss/dashboard/') }}">
+                    <a class="btn btn-success btn-lg" href="{{ URL::to('boss/codes/') }}">
                         Pokaż
                     </a>
                 </div>

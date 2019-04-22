@@ -26,9 +26,9 @@
                             {{$property->city}}
                         </strong>
                     </p>
-                    <div>
-                        <h1>Todo: link do widoku zmiany opisu property bossa</h1>
-                    </div>
+                    <a href="{{ URL::to('boss/property/' . $property->id) }}" class="btn btn-success">
+                        Zobacz
+                    </a>
                 </div>
             </div>
         @endforeach

@@ -27,7 +27,9 @@
                             Zobacz
                         </a>
                     @else
-                        <h1>todo: purchase subscriptionS view</h1>
+                        <a href="{{ URL::to('user/property/subscription/list/' . $property->id) }}" class="btn btn-success">
+                            Zobacz
+                        </a>
                     @endif
                 </div>
             </div>

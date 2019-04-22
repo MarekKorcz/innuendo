@@ -5,6 +5,7 @@
 
     <h1 class="text-center" style="padding: 2rem;">{{ $property->name }}</h1>
     
+    // todo: dodaj tutaj edycje danych lokalizacji
     
     <div class="jumbotron">
         <div class="row">
