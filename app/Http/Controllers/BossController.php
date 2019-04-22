@@ -13,9 +13,14 @@ use App\Month;
 use App\Year;
 use App\Calendar;
 use App\Substart;
+use App\Purchase;
+use App\Interval;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Redirect;
 
 class BossController extends Controller
 {    
@@ -562,82 +567,134 @@ class BossController extends Controller
      */
     public function subscriptionPurchased(Request $request)
     {
-        
-        dump($request->request->all());die;
-        
-        
-        
-        
-        // todo: sprawdz czy nie ma już takiej subskrypcji w razie gdyby ktos z palca wpisał fakowe property i subscription id's
-        
-        
-        
-        
-        
-        
-        
-//        // validate
-//        $rules = array(
-//            'terms'             => 'required',
-//            'subscription_id'   => 'required'
-//        );
-//        $validator = Validator::make(Input::all(), $rules);
-//
-//        // process the login
-//        if ($validator->fails()) {
-//            return Redirect::to('user/subscription/purchase/' . Input::get('subscription_id'))
-//                ->withErrors($validator)
-//                ->withInput(Input::except('password'));
-//        } else {
-//            
-//            $subscription = Subscription::where('id', Input::get('subscription_id'))->first();
-//            
-//            // store
-//            $purchase = new Purchase();
-//            $purchase->subscription_id = $subscription->id;
-//            $purchase->user_id = auth()->user()->id;
-//            $purchase->save();
-//            
-//            if ($purchase !== null)
-//            {
-//                $startDate = date('Y-m-d');
-//                
-//                for ($i = 1; $i <= $subscription->duration; $i++)
-//                {
-//                    $interval = new Interval();
-//                    $interval->available_units = $subscription->quantity;
-//                    
-//                    $interval->start_date = $startDate;
-//                    $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
-//                    
-//                    $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
-//                    $interval->end_date = $endDate;
-//                    
-//                    $interval->purchase_id = $purchase->id;
-//                    $interval->save();
-//                }
-//                
-//                /**
-//                 * 
-//                 * 
-//                 * 
-//                 * 
-//                 * Email sending
-//                 * 
-//                 * 
-//                 * 
-//                 * 
-//                 * 
-//                 */
-//
-//                // redirect
-//                return redirect()->action(
-//                    'UserController@subscriptionPurchasedShow', [
-//                        'id' => $purchase->id
-//                    ]
-//                )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
-//            }
-//        }
+        // validate
+        $rules = array(
+            'terms'             => 'required',
+            'property_id'       => 'required',
+            'subscription_id'   => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('boss/subscription/purchase/' . Input::get('property_id') . '/' . Input::get('subscription_id'))
+                ->withErrors($validator)
+                ->withInput(Input::except('password'));
+        } else {
+
+            $subscription = Subscription::where('id', Input::get('subscription_id'))->first();
+            $property = Property::where('id', Input::get('property_id'))->first();
+            
+            if ($subscription !== null && $property !== null)
+            {
+                // check if such a subscription hasn't already been purchased!
+                $isPurchasable = true;
+
+                $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+
+                if (count($boss->chosenProperties) > 0)
+                {
+                    foreach ($boss->chosenProperties as $chosenProperty)
+                    {
+                        if ($chosenProperty->property_id == $property->id)
+                        {
+                            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+
+                            if ($chosenProperty->purchases)
+                            {
+                                foreach ($chosenProperty->purchases as $purchase)
+                                {
+                                    if ($purchase->subscription_id == $subscription->id)
+                                    {
+                                        $isPurchasable = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($isPurchasable)
+                {
+                    $chosenProperty = ChosenProperty::where([
+                        'property_id' => $property->id,
+                        'user_id' => $boss->id
+                    ])->first();
+                    
+                    if ($chosenProperty === null)
+                    {
+                        $chosenProperty = new ChosenProperty();
+                        $chosenProperty->property_id = $property->id;
+                        $chosenProperty->user_id = $boss->id;
+                        $chosenProperty->subscriptions()->attach($subscription);
+                        $chosenProperty->save();
+                        
+                    } else {
+                        
+                        $chosenProperty->subscriptions()->attach($subscription);
+                        $chosenProperty->save();
+                    }
+                    
+                    // store
+                    $purchase = new Purchase();
+                    $purchase->subscription_id = $subscription->id;
+                    $purchase->chosen_property_id = $chosenProperty->id;
+                    $purchase->save();
+                    
+                    $startDate = date('Y-m-d');
+                    
+                    $substart = new Substart();
+                    $substart->start_date = $startDate;
+                    $endDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
+                    $substart->end_date = $endDate;
+                    $substart->user_id = auth()->user()->id;
+                    $substart->property_id = $property->id;
+                    $substart->subscription_id = $subscription->id;
+                    $substart->purchase_id = $purchase->id;
+                    $substart->save();
+                    
+                    $purchase->substart_id = $substart->id;
+                    $purchase->save();
+
+                    if ($purchase !== null)
+                    {
+                        $startDate = date('Y-m-d');
+                                    
+                        $interval = new Interval();
+                        $interval->available_units = $subscription->quantity * $subscription->duration;
+
+                        $interval->start_date = $startDate;
+                        $startDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
+
+                        $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
+                        $interval->end_date = $endDate;
+
+                        $interval->purchase_id = $purchase->id;
+                        $interval->save();
+
+                        /**
+                         * 
+                         * 
+                         * 
+                         * 
+                         * Email sending
+                         * 
+                         * 
+                         * 
+                         * 
+                         * 
+                         */
+
+                        // redirect
+                        return redirect()->action(
+                            'BossController@subscriptionList', [
+                                'propertyId' => $property->id,
+                                'subscriptionId' => $subscription->id
+                            ]
+                        )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
+                    }
+                }
+            }
+        }
     }
     
     /**
