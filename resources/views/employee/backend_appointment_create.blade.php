@@ -19,7 +19,7 @@
     
     <h1 style="padding-top: 30px;">Zarezerwuj wizytę</h1>
 
-    {{ Form::open(['action' => 'WorkerController@appointmentStore', 'method' => 'POST']) }}
+    {{ Form::open(['id' => 'appointment-create', 'action' => 'WorkerController@appointmentStore', 'method' => 'POST']) }}
 
         <div class="form-group">
             <p>
@@ -37,9 +37,11 @@
                 <div id="credential-1" class="col-8 col-sm-8 col-md-10 col-lg-10">
                     <div class="form-group">
                         <label for="search">Klient</label>
-                        <input id="search" class="form-control" type="text" name="search" placeholder="Szukaj klienta">
+                        <input id="search" class="form-control" type="text" name="search" placeholder="Szukaj klienta" autocomplete="off">
                     </div>
+                    <div class="warning"></div>
                     <ul id="result" class="list-group"></ul>
+                    <input id="userId" type="hidden" name="userId" value="">
                 </div>
                 <div class="col-4 col-sm-4 col-md-2 col-lg-2">
                     <div class="text-center" style="padding: 3px;">
@@ -49,17 +51,8 @@
                 </div>
             </div>            
         </div>
-    
-        <input type="hidden" id="userId" name="userId" value="">
-    
-        <div class="form-group">
-            {{ Form::label('item', 'Rodzaj masażu:') }}
-            <select name="item" class="form-control">
-                @foreach ($items as $item)
-                    <option value="{{$item->id}}">{{$item->name}} - {{$item->minutes}} minut - {{$item->price}} zł</option>
-                @endforeach
-            </select>
-        </div>
+        
+        <div id="items"></div>
     
         @if ($calendarId)
             {{ Form::hidden('calendarId', $calendarId) }}
@@ -89,6 +82,18 @@
             {{ Form::hidden('day', $day) }}
         @else
             {{ Form::hidden('day', Input::old('day')) }}
+        @endif
+        
+        @if ($possibleAppointmentLengthInMinutes)
+            {{ Form::hidden('possibleAppointmentLengthInMinutes', $possibleAppointmentLengthInMinutes) }}
+        @else
+            {{ Form::hidden('possibleAppointmentLengthInMinutes', Input::old('possibleAppointmentLengthInMinutes')) }}
+        @endif
+        
+        @if ($propertyId)
+            {{ Form::hidden('propertyId', $propertyId) }}
+        @else
+            {{ Form::hidden('propertyId', Input::old('propertyId')) }}
         @endif
         
         {{ Form::submit('Zarezerwuj', array('class' => 'btn btn-primary')) }}

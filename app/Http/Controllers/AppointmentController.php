@@ -113,7 +113,10 @@ class AppointmentController extends Controller
 
                     if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
                     {
-                        $chosenAppointment = Appointment::where('graphic_id', $graphicId)->where('start_time', $appointmentTerm)->first();
+                        $chosenAppointment = Appointment::where([
+                            'graphic_id' => $graphicId,
+                            'start_time' => $appointmentTerm
+                        ])->first();
 
                         if ($chosenAppointment == null)
                         {
@@ -126,7 +129,10 @@ class AppointmentController extends Controller
 
                                 if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                                 {
-                                    $nextAppointmentAvailable = Appointment::where('graphic_id', $graphicId)->where('start_time', $appointmentTermIncremented)->first();
+                                    $nextAppointmentAvailable = Appointment::where([
+                                        'graphic_id' => $graphicId,
+                                        'start_time' => $appointmentTermIncremented
+                                    ])->first();
 
                                     if ($nextAppointmentAvailable === null)
                                     {
@@ -149,7 +155,7 @@ class AppointmentController extends Controller
                             {
                                 $categories = Category::all();
 
-                                if ($categories !== null)
+                                if (count($categories) > 0)
                                 {                                    
                                     $appointmentLengthInMinutes = $appointmentLength * 30;
                                     
@@ -168,7 +174,7 @@ class AppointmentController extends Controller
                                         {
                                             $subscription = Subscription::where('id', $purchase->subscription_id)->with('items')->first();
                      
-                                            // chosen date                                      
+                                            // chosen date
                                             $chosenDay = (string)$day;
                                             $chosenDay = strlen($chosenDay) == 1 ? '0' . $chosenDay : $chosenDay;
                                             $chosenMonth = (string)$month;
@@ -197,7 +203,7 @@ class AppointmentController extends Controller
                                             {
                                                 $interval = $currentInterval->first();
 
-                                                if ($interval && $interval->available_units > 0)
+                                                if ($interval->available_units > 0)
                                                 {
                                                     foreach ($subscription->items as $item)
                                                     {
@@ -355,7 +361,10 @@ class AppointmentController extends Controller
                                 
                                 if ($chosenProperty !== null)
                                 {
-                                    $purchase = Purchase::where('chosen_property_id', $chosenProperty->id)->where('subscription_id', $subscription->id)->first();
+                                    $purchase = Purchase::where([
+                                        'chosen_property_id' => $chosenProperty->id,
+                                        'subscription_id' => $subscription->id
+                                    ])->first();
 
                                     if ($purchase !== null)
                                     {                        
@@ -388,14 +397,15 @@ class AppointmentController extends Controller
                                         {
                                             $interval = $currentInterval->first();
 
-                                            if ($interval && $interval->available_units > 0)
+                                            if ($interval->available_units > 0)
                                             {
                                                 $appointment->purchase()->associate($purchase->id);
 
                                                 $interval->available_units = ($interval->available_units - 1);
                                                 $interval->save();
                                                 
-                                                // todo: zobacz czy wizyty które są abonamentowe mogą być robione poza czasem trwania wykupionej subskrypcji
+                                                // todo: zobacz czy wizyty które są abonamentowe mogą być robione poza czasem trwania 
+                                                // wykupionej subskrypcji
                                                
                                                 $appointment->interval_id = $interval->id;
 
