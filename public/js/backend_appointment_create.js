@@ -75,11 +75,6 @@ $(document).ready(function()
     
     $("#appointment-create").submit(function(event) 
     {        
-        
-        // następnie sprawdzanie czy w podane purchase istnieje jeśli podane purchase_id oraz zapis wizyty w tym przypadku
-        // również zapis bez purchase_id
-        
-        
         let searchInput = $("input#userId");
         
         if (searchInput.length == 1)

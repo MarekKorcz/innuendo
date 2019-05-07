@@ -553,7 +553,7 @@ class WorkerController extends Controller
     {        
         if ($request->get('searchField'))
         {
-            $users = User::where('name', 'like', $request->get('searchField') . '%')->where([
+            $users = User::where('name', 'like', $request->get('searchField') . '%')->orWhere('surname', 'like', $request->get('searchField') . '%')->where([
                 'isEmployee' => null,
                 'isAdmin' => null,
                 'isBoss' => null

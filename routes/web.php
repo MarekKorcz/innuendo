@@ -121,9 +121,11 @@ Route::get('/boss/worker/appointment/list/{propertyId}/{subscriptionId}/{userId}
 Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
 Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
 Route::post('/boss/get/property/subscription', 'BossController@getPropertySubscriptions');
+Route::post('/boss/get/subscription/substarts', 'BossController@getSubscriptionSubstarts');
 Route::post('/boss/get/subscription/workers', 'BossController@getSubscriptionWorkers');
 Route::post('/subscription/delete-chosen-property', 'BossController@deleteChosenProperty');
-
-
+Route::post('/boss/get-subscription-users-from-database', 'BossController@getSubscriptionUsersFromDatabase');
+Route::post('/boss/get-user-appointments-from-database', 'BossController@getUserAppointmentsFromDatabase');
+Route::post('/boss/get-users-appointments-from-database', 'BossController@getUsersAppointmentsFromDatabase');
 
 //Route::get('/test', 'HomeController@test');

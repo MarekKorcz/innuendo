@@ -1045,10 +1045,16 @@ class UserController extends Controller
         
         if ($purchase !== null && $purchase->chosenProperty->user_id == auth()->user()->id)
         {
-            $subscriptionCreationDate = new \DateTime($purchase->subscription->created_at->format('Y-m-d'));
-            $interval = new \DateInterval('P12M');
-            $subscriptionCreationDate->add($interval);            
-            $expirationDate = $subscriptionCreationDate->format('d - m - Y');
+            $expirationDate = null;
+            $substart = Substart::where('id', $purchase->substart_id)->first();
+                    
+            if ($substart->isActive)
+            {
+                $subscriptionCreationDate = new \DateTime($purchase->subscription->created_at->format('Y-m-d'));
+                $interval = new \DateInterval('P12M');
+                $subscriptionCreationDate->add($interval);            
+                $expirationDate = $subscriptionCreationDate->format('d - m - Y');
+            }
 
             $appointments = Appointment::where('purchase_id', $purchase->id)->with('item')->get();
             

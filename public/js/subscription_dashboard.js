@@ -38,7 +38,22 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            getSubscriptionWorkers(propertyId, element.dataset.subscription_id)
+            getSubscriptionSubstarts(propertyId, element.dataset.subscription_id)
+        }
+    });
+    
+    window.addEventListener("click", function(event)
+    {        
+        let element = event.target;
+        
+        if (element.classList.contains('substart'))
+        {
+            eraseHighlightFromElementChildren(element);
+            element.classList.add("highlighted");
+            element.classList.remove("box");
+            
+            let elementSubstartId = element.dataset.substart_id;
+            getSubscriptionWorkers(elementSubstartId);
         }
     });
     
@@ -59,10 +74,11 @@ window.addEventListener('DOMContentLoaded', () => {
         .then((data) => {
             if (data.type === "success")
             {
-                console.log(data.message);
-                
                 let subscriptions = $("#subscriptions");
                 subscriptions.empty();
+                
+                let substarts = $("#substarts");
+                substarts.empty();
                 
                 let workers = $("#workers");
                 workers.empty();
@@ -88,9 +104,9 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    function getSubscriptionWorkers(propertyId, subscriptionId)
+    function getSubscriptionSubstarts(propertyId, subscriptionId)
     {
-        return fetch('http://localhost:8000/boss/get/subscription/workers', {
+        return fetch('http://localhost:8000/boss/get/subscription/substarts', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -103,19 +119,144 @@ window.addEventListener('DOMContentLoaded', () => {
             })
         })
         .then((res) => res.json())
-        .then((data) => {
+        .then((data) => {            
+            let substarts = $("#substarts");
+            substarts.empty();
+            
+            let workers = $("#workers");
+            workers.empty();
+            
             if (data.type === "success")
             {
-                console.log(data.message);
+                // >> adding substarts
+                $.each(data.substarts, function (index, substart) 
+                {
+                    let substartNode = ``;
+                    
+                    if (substart.id == data.newestSubstart[0].id)
+                    {
+                        substartNode = `
+                            <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id +`">
+                                <div class="data">
+                                    <p>
+                                        Od: <strong>` + substart.start_date + `</strong> 
+                                        do: <strong>` + substart.end_date + `</strong>
+                                    </p>                    
+                                    <p>` + substart.isActiveMessage + `</p>
+                                </div>
+                            </div>
+                        `;
+                        
+                    } else {
+                        
+                        substartNode = `
+                            <div class="substart text-center" data-substart_id="` + substart.id +`">
+                                <div class="data">
+                                    <p>
+                                        Od: <strong>` + substart.start_date + `</strong> 
+                                        do: <strong>` + substart.end_date + `</strong>
+                                    </p>                    
+                                    <p>` + substart.isActiveMessage + `</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    substarts.append(substartNode);
+                });  
+                // << adding substarts
                 
-                let workers = $("#workers");
-                workers.empty();
+                // >> adding workers
+                if (data.workers.length > 0)
+                {
+                    let workersTab = `
+                        <div class="text-center">                        
+                            <p>
+                                <h2>Pracownicy przypisani do danej subskrypcji:</h2>
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + data.subscriptionId + `/0">
+                                    Wszystkie wizyty pracowników
+                                </a>
+                            </p>
+                        </div>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>                
+                                    <td>Imie</td>
+                                    <td>Nazwisko</td>
+                                    <td>Email</td>
+                                    <td>Telefon</td>
+                                    <td>Wizyty</td>
+                                </tr>
+                            </thead>
+                            <tbody id="workersTable"></tbody>
+                        </table>
+                    `;
+
+                    workers.append(workersTab);
+
+                    let workersTable = $("tbody#workersTable");                
+
+                    $.each(data.workers, function (index, worker) 
+                    {
+                        let workerNode = `
+                            <tr>
+                                <td>` + worker.name + `</td>
+                                <td>` + worker.surname + `</td>
+                                <td>` + worker.email + `</td>
+                                <td>` + worker.phone_number + `</td>
+                                <td>
+                                    <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + data.subscriptionId + `/` + worker.id + `">
+                                        Pokaż
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+
+                        workersTable.append(workerNode);
+                    });
+
+                } else if (data.workers.length == 0) {
+
+                    let workersTab = `
+                        <div class="text-center">                        
+                            <p>
+                                <h2>Brak pracowników przypisanych do danej subskrypcji</h2>
+                            </p>
+                        </div>
+                    `;
+
+                    workers.append(workersTab);
+                }
+                // << adding workers
+            }
+        });
+    }
+    
+    function getSubscriptionWorkers(substartId)
+    {
+        return fetch('http://localhost:8000/boss/get/subscription/workers', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-type': 'application/json',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            body: JSON.stringify({
+                substartId: parseInt(substartId)
+            })
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            let workers = $("#workers");
+            workers.empty();
                 
+            if (data.type === "success")
+            {
                 let workersTab = `
                     <div class="text-center">                        
                         <p>
                             <h2>Pracownicy przypisani do danej subskrypcji:</h2>
-                            <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + propertyId + `/` + subscriptionId + `/0">
+                            <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + data.subscriptionId + `/0">
                                 Wszystkie wizyty pracowników
                             </a>
                         </p>
@@ -147,7 +288,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             <td>` + worker.email + `</td>
                             <td>` + worker.phone_number + `</td>
                             <td>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + propertyId + `/` + subscriptionId + `/` + worker.id + `">
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + data.subscriptionId + `/` + worker.id + `">
                                     Pokaż
                                 </a>
                             </td>
@@ -156,6 +297,18 @@ window.addEventListener('DOMContentLoaded', () => {
                     
                     workersTable.append(workerNode);
                 });
+                
+            } else if (data.type === "error") {
+                
+                let workersTab = `
+                    <div class="text-center">                        
+                        <p>
+                            <h2>Brak pracowników przypisanych do danej subskrypcji</h2>
+                        </p>
+                    </div>
+                `;
+                
+                workers.append(workersTab);
             }
         });
     }

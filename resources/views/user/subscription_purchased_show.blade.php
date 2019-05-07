@@ -13,13 +13,17 @@
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h3>Opis</h3>
                 <p>Nazwa: <strong>{{$purchase->subscription->name}}</strong></p>
-                <p>Opis: <strong>{{$purchase->subscription->description}}</strong></p>
+                <p>{{$purchase->subscription->description}}</p>
                 
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h2>Stan subskrypcji</h2>
-                <p>Dostępne zabiegi w obecnym miesiącu: <strong>{{$purchase->available_units}}</strong></p>
-                <p>Ważny do: <strong>{{$expirationDate}}r</strong></p>
+                <h2>Status subskrypcji</h2>
+                @if ($expirationDate !== null)
+                    <p>Dostępne zabiegi w obecnym miesiącu: <strong>{{$purchase->available_units}}</strong></p>
+                    <p>Ważny do: <strong>{{$expirationDate}}r</strong></p>
+                @else
+                    <p>Subskrypcja nieaktywna. Aktywacja nastąpi wraz z pierwszym wykonanym zabiegiem</p>
+                @endif
             </div>
         </div>
     </div>

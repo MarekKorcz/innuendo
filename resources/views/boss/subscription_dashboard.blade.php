@@ -56,6 +56,36 @@
             @endif
         @endforeach
     </div>
+                    
+    <div class="text-center">
+        <h2>Okres trwania subskrypcji:</h2>
+    </div>
+    <div id="substarts" class="wrapper cont">
+        @foreach ($substarts as $substart)
+            @if ($substart->id == $newestSubstart->id)
+                <div class="substart text-center highlighted" data-substart_id="{{$newestSubstart->id}}">
+            @else
+                <div class="substart text-center box" data-substart_id="{{$substart->id}}">
+            @endif
+                <div class="data">
+                    <p>
+                        Od: <strong>{{$substart->start_date->format('Y-m-d')}}</strong> 
+                        do: <strong>{{$substart->end_date->format('Y-m-d')}}</strong>
+                    </p>                    
+                    @if ($substart->end_date < $today)
+                        <p>Czas trwania dobiegł końca</p>
+                    @elseif ($substart->start_date <= $today && $today <= $substart->end_date)
+                        @if ($substart->isActive == 1)
+                            <p>Aktywna</p>
+                        @elseif ($substart->isActive == 0)
+                            <p>Nieaktywna</p>
+                        @endif
+                    @endif
+                </div>
+            </div>            
+        @endforeach
+    </div>
+                    
     <div id="workers">
         <div class="text-center">                        
             <p>
