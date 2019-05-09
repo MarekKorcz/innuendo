@@ -345,7 +345,7 @@ class SubscriptionController extends Controller
      */
     public function destroy($id)
     {
-        $subscription = Subscription::find($id);
+        $subscription = Subscription::where('id', $id)->first();
         
         if ($subscription !== null)
         {
@@ -354,7 +354,7 @@ class SubscriptionController extends Controller
             return redirect('/subscription/index')->with('success', 'Subscription deleted!');
         }
         
-        return redirect()->route('welcome');
+        return redirect()->route('welcome')->with('error', 'Such subscription doesn\'t exist');
     }
     
     public function setSubscriptionToProperty(Request $request)

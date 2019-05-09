@@ -28,7 +28,7 @@ class GraphicController extends Controller
      */
     public function create($id)
     {
-        $day = Day::find($id);
+        $day = Day::where('id', $id)->first();
         
         return view('graphic.create')->with('day', $day);
     }
@@ -40,17 +40,14 @@ class GraphicController extends Controller
      */
     public function store()
     {
-        // validate
         $rules = array(
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time'
         );
         $validator = Validator::make(Input::all(), $rules);
 
-        // process the login
         if ($validator->fails()) {
             return Redirect::to('graphic/create')
-                ->withInput(Input::except('password'))
                 ->withErrors($validator);
         } else {
             
@@ -68,7 +65,6 @@ class GraphicController extends Controller
             
             $minutes += $graphic->i;
             
-            // store            
             $graphicTime = Graphic::firstOrCreate([
                 'start_time' => Input::get('start_time'),
                 'end_time' => Input::get('end_time'),
@@ -76,32 +72,11 @@ class GraphicController extends Controller
                 'day_id' => Input::get('day_id')
             ]);
             
-            return redirect()
-                    ->action('DayController@show', ['id' => Input::get('day_id')])
-                    ->with('success', 'Graphic has been successfully added!')
+            return redirect()->action(
+                        'DayController@show', [
+                            'id' => Input::get('day_id')
+                    ])->with('success', 'Graphic has been successfully added!')
             ;
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

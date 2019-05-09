@@ -29,7 +29,7 @@ class MonthController extends Controller
      */
     public function create($id)
     {
-        $year = Year::find($id);
+        $year = Year::where('id', $id)->first();
         
         return view('month.create')->with('year', $year);
     }
@@ -41,21 +41,18 @@ class MonthController extends Controller
      */
     public function store()
     {
-        // validate
         $rules = array(
             'month' => 'required',
             'month_number' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
-        // process the login
         if ($validator->fails()) {
             return Redirect::to('month/create')
-                ->withInput(Input::except('password'))
                 ->withErrors($validator);
         } else {
             
-            $year = Year::find(Input::get('year_id'));
+            $year = Year::where('id', Input::get('year_id'))->first();
             
             $monthNumber = strlen(Input::get('month_number')) == 2 ? Input::get('month_number') : "0" . Input::get('month_number');
             $yearNumber = $year->year;
@@ -64,8 +61,7 @@ class MonthController extends Controller
             
             $currentMonth = new \DateTime($yearMonth . "-01");
             $numberInMonth = $currentMonth->format("t");
-            
-            // store            
+                 
             $month = Month::firstOrCreate([
                 'month' => Input::get('month'),
                 'month_number' => Input::get('month_number'),
@@ -73,9 +69,10 @@ class MonthController extends Controller
                 'year_id' => Input::get('year_id')
             ]);
             
-            return redirect()
-                    ->action('MonthController@show', ['id' => $month->id])
-                    ->with('success', 'Month successfully created!')
+            return redirect()->action(
+                        'MonthController@show', [
+                            'id' => $month->id
+                    ])->with('success', 'Month successfully created!')
             ;
         }
     }
@@ -88,17 +85,21 @@ class MonthController extends Controller
      */
     public function show($id)
     {        
-        $month = Month::find($id);
+        $month = Month::where('id', $id)->first();
         $days = Day::where('month_id', $month->id)->orderBy('day_number')->get();
         
         if ($month)
         {
-            $year = Year::find($month->year_id);
+            $year = Year::where('id', $month->year_id)->first();
         }
         
         $days = $this->formatDaysToCalendarForm($days, $month->days_in_month);
         
-        return view('month.show')->with('month', $month)->with('days', $days)->with('year', $year);
+        return view('month.show')->with([
+            'month' => $month,
+            'days' => $days,
+            'year' => $year
+        ]);
     }
 
     /**
@@ -109,15 +110,22 @@ class MonthController extends Controller
      */
     public function destroy($id)
     {
-        $month = Month::find($id);
-        $year = Year::find($month->year_id);
+        $month = Month::where('id', $id)->first();
         
-        $month->delete();
+        if ($month !== null)
+        {
+            $year = Year::where('id', $month->year_id)->first();
+            
+            $month->delete();
+
+            return redirect()->action(
+                        'YearController@show', [
+                            'id' => $year->id
+                    ])->with('success', 'Month has been successfully deleted!')
+            ;
+        }
         
-        return redirect()
-                ->action('YearController@show', ['id' => $year->id])
-                ->with('success', 'Month has been successfully deleted!')
-        ;
+        return redirect()->route('welcome')->with('error', 'Such month doesn\'t exist');
     }
     
     private function formatDaysToCalendarForm($days, $daysInMonth) 

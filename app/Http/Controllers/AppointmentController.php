@@ -103,7 +103,7 @@ class AppointmentController extends Controller
                 $request->session()->forget('month');
                 $request->session()->forget('day');
 
-                $graphic = Graphic::find($graphicId);
+                $graphic = Graphic::where('id', $graphicId)->first();
         
                 if ($graphic !== null)
                 {
@@ -318,11 +318,21 @@ class AppointmentController extends Controller
                     $plusTime = "+" . $item->minutes . " minutes";
                     $endTime = date('G:i', strtotime($plusTime, strtotime($appointmentTerm)));
                     
-                    $year = Year::where('year', $year)->where('calendar_id', $calendarId)->first();
-                    $month = Month::where('month_number', $month)->where('year_id', $year->id)->first();
-                    $day = Day::where('day_number', $day)->where('month_id', $month->id)->first();
+                    $year = Year::where([
+                        'year' => $year,
+                        'calendar_id' => $calendarId
+                    ])->first();
                     
-                    // store
+                    $month = Month::where([
+                        'month_number' => $month,
+                        'year_id' => $year->id
+                    ])->first();
+                    
+                    $day = Day::where([
+                        'day_number' => $day,
+                        'month_id' => $month->id
+                    ])->first();
+                    
                     $appointment = new Appointment();
                     $appointment->start_time = $appointmentTerm;
                     $appointment->end_time = $endTime;
@@ -473,7 +483,7 @@ class AppointmentController extends Controller
      */
     private function checkIfStillCanMakeAnAppointment($graphicId, $appointmentTerm, $itemLength)
     {
-        $graphic = Graphic::find($graphicId);
+        $graphic = Graphic::where('id', $graphicId)->first();
         
         if ($graphic !== null)
         {
@@ -483,7 +493,10 @@ class AppointmentController extends Controller
 
             if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
             {
-                $chosenAppointment = Appointment::where('graphic_id', $graphicId)->where('start_time', $appointmentTerm)->first();
+                $chosenAppointment = Appointment::where([
+                    'graphic_id' => $graphicId,
+                    'start_time' => $appointmentTerm
+                ])->first();
 
                 if ($chosenAppointment == null)
                 {
@@ -498,7 +511,10 @@ class AppointmentController extends Controller
 
                         if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                         {
-                            $nextAppointmentAvailable = Appointment::where('graphic_id', $graphicId)->where('start_time', $appointmentTermIncremented)->first();
+                            $nextAppointmentAvailable = Appointment::where([
+                                'graphic_id' => $graphicId,
+                                'start_time' => $appointmentTermIncremented
+                            ])->first();
 
                             if ($nextAppointmentAvailable === null)
                             {

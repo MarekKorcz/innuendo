@@ -29,8 +29,8 @@ class Property extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'description', 'phone_number', 'street', 'street_number', 
-        'house_number', 'city', 'boss_id'
+        'name', 'slug', 'description', 'email', 'phone_number', 'street', 'street_number', 
+        'house_number', 'post_code', 'city', 'boss_id'
     ];
     
     /**

@@ -26,6 +26,10 @@
             {{ Form::textarea('description', Input::old('description'), array('id' => 'article-ckeditor', 'class' => 'form-control')) }}
         </div>
         <div class="form-group">
+            {{ Form::label('email', 'Email') }}
+            {{ Form::text('email', Input::old('email'), array('class' => 'form-control')) }}
+        </div>
+        <div class="form-group">
             {{ Form::label('phone_number', 'Phone number') }}
             {{ Form::number('phone_number', Input::old('phone_number'), array('class' => 'form-control')) }}
         </div>
@@ -35,15 +39,28 @@
         </div>
         <div class="form-group">
             {{ Form::label('street_number', 'Street number') }}
-            {{ Form::number('street_number', Input::old('street_number'), array('class' => 'form-control')) }}
+            {{ Form::text('street_number', Input::old('street_number'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
             {{ Form::label('house_number', 'House number') }}
-            {{ Form::number('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
+            {{ Form::text('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
+        </div>
+        <div class="form-group">
+            {{ Form::label('post_code', 'Post Code') }}
+            {{ Form::text('post_code', Input::old('post_code'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
             {{ Form::label('city', 'City') }}
             {{ Form::text('city', Input::old('city'), array('class' => 'form-control')) }}
+        </div>
+        <div class="form-group">
+            {{ Form::label('user', 'Users:') }}
+            <select id="user" name="user" class="form-control">
+                <option value="0"></option>
+                @foreach ($users as $user)
+                    <option value="{{$user->id}}">{{$user->name}} {{$user->surname}}</option>
+                @endforeach
+            </select>
         </div>
 
         {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}

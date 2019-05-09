@@ -29,7 +29,7 @@ class YearController extends Controller
      */
     public function create($id)
     {
-        $calendar = Calendar::find($id);
+        $calendar = Calendar::where('id', $id)->first();
         
         return view('year.create')->with('calendar', $calendar);
     }
@@ -50,7 +50,6 @@ class YearController extends Controller
         // process the login
         if ($validator->fails()) {
             return Redirect::to('year/create')
-                ->withInput(Input::except('password'))
                 ->withErrors($validator);
         } else {
             // store            
@@ -59,9 +58,10 @@ class YearController extends Controller
                 'calendar_id' => Input::get('calendar_id')
             ]);
             
-            return redirect()
-                    ->action('YearController@show', ['id' => $year->id])
-                    ->with('success', 'Year successfully created!')
+            return redirect()->action(
+                        'YearController@show', [
+                            'id' => $year->id
+                    ])->with('success', 'Year successfully created!')
             ;
         }
     }
@@ -74,15 +74,19 @@ class YearController extends Controller
      */
     public function show($id)
     {        
-        $year = Year::find($id);
+        $year = Year::where('id', $id)->first();
         $months = Month::where('year_id', $year->id)->orderBy('month_number')->get();
         
         if ($year)
         {
-            $calendar = Calendar::find($year->calendar_id);
+            $calendar = Calendar::where('id', $year->calendar_id)->first();
         }
         
-        return view('year.show')->with('year', $year)->with('months', $months)->with('property_id', $calendar->property_id);
+        return view('year.show')->with([
+            'year' => $year,
+            'months' => $months,
+            'property_id' => $calendar->property_id
+        ]);
     }
 
     /**
@@ -93,15 +97,16 @@ class YearController extends Controller
      */
     public function destroy($id)
     {
-        $year = Year::find($id);
+        $year = Year::where('id', $id)->first();
         
-        $calendar = Calendar::find($year->calendar_id);
+        $calendar = Calendar::where('id', $year->calendar_id)->first();
         
         $year->delete();
         
-        return redirect()
-                ->action('PropertyController@show', ['id' => $calendar->property_id])
-                ->with('success', 'Year has been successfully deleted!')
+        return redirect()->action(
+                    'PropertyController@show', [
+                        'id' => $calendar->property_id
+                ])->with('success', 'Year has been successfully deleted!')
         ;
     }
 }

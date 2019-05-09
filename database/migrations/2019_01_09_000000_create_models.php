@@ -18,15 +18,32 @@ class CreateModels extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->integer('phone_number');
+            $table->text('email');
+            $table->integer('phone_number')->nullable();
             $table->string('street');
-            $table->string('street_number');
+            $table->string('street_number')->nullable();
             $table->string('house_number')->nullable();
+            $table->string('post_code')->nullable();
             $table->string('city');
             $table->timestamps();
             $table->softDeletes();
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
         });
+        
+//        Schema::create('billings', function (Blueprint $table) {
+//            $table->increments('id');
+//            $table->string('website');
+//            $table->string('email');
+//            $table->integer('nip');
+//            $table->integer('krs')->nullable();
+//            $table->string('bank_name');
+//            $table->integer('account_number');
+//            $table->integer('swift');
+//            $table->timestamps();
+//            $table->softDeletes();
+//            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
+//            $table->integer('boss_id')->unsigned()->index()->foreign()->references("id")->on("users");
+//        });
         
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
@@ -212,6 +229,7 @@ class CreateModels extends Migration
     public function down()
     {
         Schema::dropIfExists('properties');
+//        Schema::dropIfExists('billings');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('items');
         Schema::dropIfExists('calendars');

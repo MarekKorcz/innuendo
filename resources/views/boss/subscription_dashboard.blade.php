@@ -57,7 +57,7 @@
         @endforeach
     </div>
                     
-    <div class="text-center">
+    <div id="substarts-header" class="text-center">
         <h2>Okres trwania subskrypcji:</h2>
     </div>
     <div id="substarts" class="wrapper cont">

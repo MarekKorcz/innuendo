@@ -28,10 +28,13 @@ class EmployeeController extends Controller
      */
     public function assign($id)
     {
-        $calendar = Calendar::find($id);
+        $calendar = Calendar::where('id', $id)->first();
         $employees = User::where('isEmployee', 1)->pluck('name', 'id');
         
-        return view('employee.assign')->with('calendar', $calendar)->with('employees', $employees);
+        return view('employee.assign')->with([
+            'calendar' => $calendar,
+            'employees' => $employees
+        ]);
     }
 
     /**
@@ -41,27 +44,23 @@ class EmployeeController extends Controller
      */
     public function store()
     {
-        // validate
         $rules = array(
             'employee'  => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
-        // process the login
         if ($validator->fails()) {
             return Redirect::to('employee/store')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+                ->withErrors($validator);
         } else {
             // load employee
-            $employee = User::find(Input::get('employee'));
+            $employee = User::where('id', Input::get('employee'))->first();
             
             // assign it to calendar
-            $calendar = Calendar::find(Input::get('calendar_id'));
+            $calendar = Calendar::where('id', Input::get('calendar_id'))->first();
             $calendar->employee_id = $employee->id;
             $calendar->save();
 
-            // redirect
             return redirect()->action(
                 'PropertyController@show', [
                     'id' => $calendar->property_id

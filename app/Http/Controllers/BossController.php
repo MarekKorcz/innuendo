@@ -230,6 +230,14 @@ class BossController extends Controller
      */
     public function property($id)
     {
+        
+        
+        
+        // 
+        
+        
+        
+        
         if ($id !== null)
         {
             $propertyId = htmlentities((int)$id, ENT_QUOTES, "UTF-8");
@@ -615,8 +623,7 @@ class BossController extends Controller
 
         if ($validator->fails()) {
             return Redirect::to('boss/subscription/purchase/' . Input::get('property_id') . '/' . Input::get('subscription_id'))
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+                ->withErrors($validator);
         } else {
 
             $subscription = Subscription::where('id', Input::get('subscription_id'))->first();
@@ -818,10 +825,6 @@ class BossController extends Controller
      */
     public function workerAppointmentList($propertyId, $subscriptionId, $userId = 0)
     {
-//        input wczytujący i wyświetlający wizyty danego usera
-        
-//        wyświetlanie wizyt w danych periodach
-        
         // popraw liste wyświetlanych wizyt (więcej szczegółów)
         
 //        CZEMU WYSWIETLA WSZYSTKIE WIZYTY PO WEJSCIU TU (WIZYTY WSZYSTKICH USEROW ZAMIAST JEDNEGO WYBRANEGO)
@@ -833,17 +836,25 @@ class BossController extends Controller
         $subscription = Subscription::where('id', $subscriptionId)->first();
         
         $userId = htmlentities((int)$userId, ENT_QUOTES, "UTF-8");
+        $userId = (int)$userId;
         
         if ($property !== null && $subscription !== null)
         {
             $boss = auth()->user();
                     
             if ($userId !== 0 && is_int($userId))
-            {
-                $workers = User::where([
+            {              
+                $workers = new Collection();
+                
+                $worker = User::where([
                     'id' => $userId,
                     'boss_id' => $boss->id
                 ])->with('chosenProperties')->first();
+                
+                if ($worker !== null)
+                {
+                    $workers->push($worker);
+                }
                 
             } else {
                 
@@ -859,7 +870,7 @@ class BossController extends Controller
             
             $appointmentsCollection = new Collection();
             
-            if ($workers !== null)
+            if (count($workers) > 0)
             {
                 foreach ($workers as $worker)
                 {
@@ -894,7 +905,7 @@ class BossController extends Controller
                                             if ($substart !== null)
                                             {
                                                 $currentInterval = Interval::where('purchase_id', $purchase->id)->where('start_date', '<=', $today)->where('end_date', '>=', $today)->first();
-                                                
+                                                                                                
                                                 if ($currentInterval !== null)
                                                 {
                                                     $appointments = Appointment::where([
@@ -1127,7 +1138,10 @@ class BossController extends Controller
             
             if ($property !== null)
             {
-                $chosenProperty = ChosenProperty::where('property_id', $property->id)->where('user_id', auth()->user()->id)->with('purchases')->first();
+                $chosenProperty = ChosenProperty::where([
+                    'property_id' => $property->id,
+                    'user_id' => auth()->user()->id
+                ])->with('purchases')->first();
                 
                 if (count($chosenProperty) > 0)
                 {

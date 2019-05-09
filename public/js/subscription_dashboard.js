@@ -77,6 +77,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 let subscriptions = $("#subscriptions");
                 subscriptions.empty();
                 
+                let substartsHeader = $("#substarts-header");
+                substartsHeader.empty();
+                
                 let substarts = $("#substarts");
                 substarts.empty();
                 
@@ -119,7 +122,11 @@ window.addEventListener('DOMContentLoaded', () => {
             })
         })
         .then((res) => res.json())
-        .then((data) => {            
+        .then((data) => {          
+            
+            let substartsHeader = $("#substarts-header");
+            substartsHeader.empty();
+                
             let substarts = $("#substarts");
             substarts.empty();
             
@@ -128,6 +135,10 @@ window.addEventListener('DOMContentLoaded', () => {
             
             if (data.type === "success")
             {
+                substartsHeader.append(`
+                    <h2>Okres trwania subskrypcji:</h2>
+                `);
+                
                 // >> adding substarts
                 $.each(data.substarts, function (index, substart) 
                 {

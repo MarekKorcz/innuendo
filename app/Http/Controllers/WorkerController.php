@@ -77,7 +77,10 @@ class WorkerController extends Controller
      */
     public function backendCalendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
     {
-        $calendar = Calendar::where('id', $calendar_id)->where('isActive', 1)->first();
+        $calendar = Calendar::where([
+            'id' => $calendar_id,
+            'isActive' => 1
+        ])->first();
         
         if ($calendar !== null)
         {
@@ -85,22 +88,34 @@ class WorkerController extends Controller
             
             if ($year == 0)
             {
-                $year = Year::where('calendar_id', $calendar->id)->where('year', $currentDate->format("Y"))->first();
+                $year = Year::where([
+                    'calendar_id' => $calendar->id,
+                    'year' => $currentDate->format("Y")
+                ])->first();
             }
             else if (is_numeric($year) && (int)$year > 0)
             {
-                $year = Year::where('calendar_id', $calendar->id)->where('year', $year)->first();
+                $year = Year::where([
+                    'calendar_id' => $calendar->id,
+                    'year' => $year
+                ])->first();
             }
             
             if ($year !== null)
             {
                 if ($month_number == 0)
                 {
-                    $month = Month::where('year_id', $year->id)->where('month_number', $currentDate->format("n"))->first();
+                    $month = Month::where([
+                        'year_id' => $year->id,
+                        'month_number' => $currentDate->format("n")
+                    ])->first();
                 }
                 else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12)
                 {
-                    $month = Month::where('year_id', $year->id)->where('month_number', $month_number)->first();
+                    $month = Month::where([
+                        'year_id' => $year->id,
+                        'month_number' => $month_number
+                    ])->first();
                 }
 
                 if ($month !== null)
@@ -113,11 +128,17 @@ class WorkerController extends Controller
 
                         if ((int)$day_number === 0)
                         {
-                            $currentDay = Day::where('month_id', $month->id)->where('day_number', $currentDate->format("d"))->first();
+                            $currentDay = Day::where([
+                                'month_id' => $month->id,
+                                'day_number' => $currentDate->format("d")
+                            ])->first();
                         }
                         else
                         {
-                            $currentDay = Day::where('month_id', $month->id)->where('day_number', $day_number)->first();
+                            $currentDay = Day::where([
+                                'month_id' => $month->id,
+                                'day_number' => $day_number
+                            ])->first();
                         }
 
                         if ($currentDay !== null)
@@ -151,7 +172,10 @@ class WorkerController extends Controller
                             $availableNextMonth = true;
                         }
                         
-                        $employee = User::where('isEmployee', 1)->where('id', $calendar->employee_id)->first();
+                        $employee = User::where([
+                            'isEmployee' => 1,
+                            'id' => $calendar->employee_id
+                        ])->first();
 
                         return view('employee.backend_calendar')->with([
                             'calendar_id' => $calendar->id,
@@ -214,11 +238,17 @@ class WorkerController extends Controller
             
             if ($appointment->user_id !== null)
             {
-                $appointment = Appointment::where('id', $id)->with('item')->with('user')->first();
+                $appointment = Appointment::where('id', $id)->with([
+                    'item',
+                    'user'
+                ])->first();
                 
             } else {
                 
-                $appointment = Appointment::where('id', $id)->with('item')->with('tempUser')->first();
+                $appointment = Appointment::where('id', $id)->with([
+                    'item',
+                    'tempUser'
+                ])->first();
             }
             
             if ($appointment !== null)
@@ -453,7 +483,7 @@ class WorkerController extends Controller
                 $request->session()->forget('month');
                 $request->session()->forget('day');
 
-                $graphic = Graphic::find($graphicId);
+                $graphic = Graphic::where('id', $graphicId)->first();
         
                 if ($graphic !== null)
                 {
@@ -1206,7 +1236,7 @@ class WorkerController extends Controller
      */
     private function checkIfStillCanMakeAnAppointment($graphicId, $appointmentTerm, $itemLength)
     {
-        $graphic = Graphic::find($graphicId);
+        $graphic = Graphic::where('id', $graphicId)->first();
         
         if ($graphic !== null)
         {
@@ -1216,7 +1246,10 @@ class WorkerController extends Controller
 
             if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
             {
-                $chosenAppointment = Appointment::where('graphic_id', $graphicId)->where('start_time', $appointmentTerm)->first();
+                $chosenAppointment = Appointment::where([
+                    'graphic_id' => $graphicId,
+                    'start_time' => $appointmentTerm
+                ])->first();
 
                 if ($chosenAppointment == null)
                 {
@@ -1231,7 +1264,10 @@ class WorkerController extends Controller
 
                         if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                         {
-                            $nextAppointmentAvailable = Appointment::where('graphic_id', $graphicId)->where('start_time', $appointmentTermIncremented)->first();
+                            $nextAppointmentAvailable = Appointment::where([
+                                'graphic_id' => $graphicId,
+                                'start_time' => $appointmentTermIncremented
+                            ])->first();
 
                             if ($nextAppointmentAvailable === null)
                             {
@@ -1302,17 +1338,32 @@ class WorkerController extends Controller
             
             for ($i = 0; $i < $workUnits; $i++) 
             {
-                $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->first();
+                $appointment = Appointment::where([
+                    'day_id' => $chosenDay->id,
+                    'start_time' => $startTime
+                ])->first();
 
                 if ($appointment !== null)
                 {
                     if ($appointment->user_id !== null)
                     {
-                        $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->with('user')->with('item')->first();
+                        $appointment = Appointment::where([
+                            'day_id' => $chosenDay->id,
+                            'start_time' => $startTime
+                        ])->with([
+                            'user',
+                            'item'
+                        ])->first();
 
                     } else {
 
-                        $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->with('tempUser')->with('item')->first();
+                        $appointment = Appointment::where([
+                            'day_id' => $chosenDay->id,
+                            'start_time' => $startTime
+                        ])->with([
+                            'tempUser',
+                            'item'
+                        ])->first();
                     }
                     
                     $limit = $appointment->minutes / 30;
@@ -1360,7 +1411,10 @@ class WorkerController extends Controller
     {
         if ($month->month_number == 1)
         {
-            $year = Year::where('calendar_id', $calendar->id)->where('year', ($year->year - 1))->first();
+            $year = Year::where([
+                'calendar_id' => $calendar->id,
+                'year' => ($year->year - 1)
+            ])->first();
             
             if ($year === null)
             {
@@ -1368,7 +1422,10 @@ class WorkerController extends Controller
             }
             else
             {
-                $month = Month::where('year_id', $year->id)->where('month_number', 12)->first();
+                $month = Month::where([
+                    'year_id' => $year->id,
+                    'month_number' => 12
+                ])->first();
                 
                 if ($month === null) 
                 {
@@ -1378,7 +1435,10 @@ class WorkerController extends Controller
         }
         else
         {
-            $month = Month::where('year_id', $year->id)->where('month_number', ($month->month_number - 1))->first();
+            $month = Month::where([
+                'year_id' => $year->id,
+                'month_number' => ($month->month_number - 1)
+            ])->first();
                 
             if ($month === null) 
             {
@@ -1393,7 +1453,10 @@ class WorkerController extends Controller
     {
         if ($month->month_number == 12)
         {
-            $year = Year::where('calendar_id', $calendar->id)->where('year', ($year->year + 1))->first();
+            $year = Year::where([
+                'calendar_id' => $calendar->id,
+                'year' => ($year->year + 1)
+            ])->first();
             
             if ($year === null)
             {
@@ -1401,7 +1464,10 @@ class WorkerController extends Controller
             }
             else
             {
-                $month = Month::where('year_id', $year->id)->where('month_number', 1)->first();
+                $month = Month::where([
+                    'year_id' => $year->id,
+                    'month_number' => 1
+                ])->first();
                 
                 if ($month === null) 
                 {
@@ -1411,7 +1477,10 @@ class WorkerController extends Controller
         }
         else
         {
-            $month = Month::where('year_id', $year->id)->where('month_number', ($month->month_number + 1))->first();
+            $month = Month::where([
+                'year_id' => $year->id,
+                'month_number' => ($month->month_number + 1)
+            ])->first();
                 
             if ($month === null) 
             {

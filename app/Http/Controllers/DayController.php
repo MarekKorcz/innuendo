@@ -30,7 +30,7 @@ class DayController extends Controller
      */
     public function create($id)
     {
-        $month = Month::find($id);
+        $month = Month::where('id', $id)->first();
         
         return view('day.create')->with('month', $month);
     }
@@ -42,22 +42,19 @@ class DayController extends Controller
      */
     public function store()
     {
-        // validate
         $rules = array(
             'start_day' => 'required|numeric',
             'end_day' => 'required|numeric|gte:start_day'
         );
         $validator = Validator::make(Input::all(), $rules);
 
-        // process the login
         if ($validator->fails()) {
             return Redirect::to('day/create')
-                ->withInput(Input::except('password'))
                 ->withErrors($validator);
         } else {
             
-            $month = Month::find(Input::get('month_id'));
-            $year = Year::find($month->year_id);
+            $month = Month::where('id', Input::get('month_id'))->first();
+            $year = Year::where('id', $month->year_id)->first();
             
             $monthNumber = strlen($month->month_number) == 2 ? $month->month_number : "0" . $month->month_number;
             $yearNumber = $year->year;
@@ -71,7 +68,6 @@ class DayController extends Controller
                     $dayNumber = strlen($i) == 2 ? $i : "0" . $i;
                     
                     $fullDate = $yearMonth . "-" . $dayNumber;
-                    
                     $dayDate = new \DateTime($fullDate);
                     
                     if ($dayDate->format("N") != 7)
@@ -85,9 +81,11 @@ class DayController extends Controller
                 }
             }
 
-            return redirect()
-                    ->action('MonthController@show', ['id' => $month->id])
-                    ->with('success', 'Days have been successfully created!')
+            return redirect()->action(
+                        'MonthController@show', [
+                            'id' => $month->id
+                        ]
+                    )->with('success', 'Days have been successfully created!')
             ;
         }
     }
@@ -100,7 +98,7 @@ class DayController extends Controller
      */
     public function show($id)
     {
-        $day = Day::find($id);
+        $day = Day::where('id', $id)->first();
         $graphicTime = Graphic::where('day_id', $day->id)->first();
         
         $graphic = [];
@@ -119,6 +117,7 @@ class DayController extends Controller
                     $startTime,
                     'place to show asigned employee'
                 ];
+                
                 $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));
                 $startTime = date('G:i', $timeIncrementedBy30Minutes);
             }
@@ -126,20 +125,13 @@ class DayController extends Controller
         
         if ($day)
         {
-            $month = Month::find($day->month_id);
+            $month = Month::where('id', $day->month_id)->first();
         }
         
-        return view('day.show')->with('day', $day)->with('graphic', $graphic)->with('month', $month);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
+        return view('day.show')->with([
+            'day' => $day,
+            'graphic' => $graphic,
+            'month' => $month
+        ]);
     }
 }

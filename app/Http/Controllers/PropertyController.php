@@ -30,9 +30,18 @@ class PropertyController extends Controller
     public function index()
     {
         $properties = Property::where('id', '>', 0)->paginate(5);
+        
+        if (count($properties) > 0)
+        {
+            foreach ($properties as $property)
+            {
+                $property['boss'] = User::where('id', $property->boss_id)->first();
+            }
+            
+            return view('property.index')->with('properties', $properties);
+        }
 
-        return view('property.index')
-            ->with('properties', $properties);
+        return redirect()->action('PropertyController@create');
     }
 
     /**
@@ -42,7 +51,14 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        return view('property.create');
+        $users = User::where([
+            'isAdmin' => null,
+            'isEmployee' => null,
+            'isBoss' => 1,
+            'boss_id' => null
+        ])->get();
+        
+        return view('property.create')->with('users', $users);
     }
 
     /**
@@ -52,56 +68,51 @@ class PropertyController extends Controller
      */
     public function store()
     {
-        // validate
         $rules = array(
             'name'          => 'required',
-            'description'   => 'required',
-            'phone_number'  => 'required',
+            'email'         => 'required',
             'street'        => 'required',
-            'street_number' => 'required',
-            'house_number'  => 'required',
             'city'          => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
-        // process the login
         if ($validator->fails()) {
             return Redirect::to('property/create')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+                ->withErrors($validator);
         } else {
-            // store
+            
+            $bossId = null;
+            
+            if (Input::get('user') !== 0)
+            {
+                $boss = User::where([
+                    'id' => Input::get('user'),
+                    'isAdmin' => null,
+                    'isEmployee' => null,
+                    'isBoss' => 1,
+                    'boss_id' => null
+                ])->first();
+                
+                if ($boss !== null)
+                {
+                    $bossId = $boss->id;
+                }
+            }
+            
             $property = new Property();
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
             $property->description   = Input::get('description');
+            $property->email         = Input::get('email');
             $property->phone_number  = Input::get('phone_number');
             $property->street        = Input::get('street');
             $property->street_number = Input::get('street_number');
             $property->house_number  = Input::get('house_number');
+            $property->post_code     = Input::get('post_code');
             $property->city          = Input::get('city');
-            
-            
-            // Todo:  przy tworzeniu property, na sztywno dodawaj do boss_id id Admina, 
-            // po to by przy rejestracji nowego użytkownika nie potrzebnie nie dodały się komuś przez przypadek 
-            // ChosenProperty. Jeśli zdecydujesz, że Property ma być publiczne wtedy ustawisz w edycji usunięcie 
-            // swojego id dzięki czemu będzie publicznie możliwe 
-            
-            
-            
+            $property->boss_id       = $bossId !== null ? $bossId : auth()->user()->id;           
             $property->save();
-            
-            $users = User::where('isAdmin', null)->where('isEmployee', null)->get();
-            
-            if ($users !== null)
-            {
-                foreach ($users as $user)
-                {
-                    $user->properties()->attach($property);
-                }
-            }
 
-            // redirect
             return redirect('/property/index')->with('success', 'Property successfully created!');
         }
     }
@@ -114,31 +125,38 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-        $property = Property::find($id);
-        $calendars = Calendar::where('property_id', $property->id)->get();
+        $property = Property::where('id', $id)->first();
         
-        $years = [];
-        $employees = [];
-        
-        foreach ($calendars as $calendar)
+        if ($property !== null)
         {
-            if ($calendar)
+            $property['boss'] = User::where('id', $property->boss_id)->first();
+            $calendars = Calendar::where('property_id', $property->id)->get();
+
+            $years = [];
+            $employees = [];
+
+            foreach ($calendars as $calendar)
             {
-                $years[$calendar->id] = Year::where('calendar_id', $calendar->id)->orderBy('year', 'desc')->get();
-                
-                if ($calendar->employee_id != null)
+                if ($calendar)
                 {
-                    $employees[$calendar->id] = User::find($calendar->employee_id);
+                    $years[$calendar->id] = Year::where('calendar_id', $calendar->id)->orderBy('year', 'desc')->get();
+
+                    if ($calendar->employee_id != null)
+                    {
+                        $employees[$calendar->id] = User::where('id', $calendar->employee_id)->first();
+                    }
                 }
             }
+
+            return view('property.show')->with([
+                'property' => $property,
+                'calendars' => $calendars,
+                'years' => $years,
+                'employees' => $employees
+            ]);
         }
         
-        return view('property.show')->with([
-            'property' => $property,
-            'calendars' => $calendars,
-            'years' => $years,
-            'employees' => $employees
-        ]);
+        return redirect()->route('welcome')->with('error', 'There is no such property');
     }
 
     /**
@@ -149,9 +167,38 @@ class PropertyController extends Controller
      */
     public function edit($id)
     {
-        $property = Property::find($id);
+        $property = Property::where('id', $id)->first();
         
-        return view('property.edit')->with('property', $property);
+        if ($property !== null)
+        {
+            $users = User::where([
+                'isAdmin' => null,
+                'isEmployee' => null,
+                'isBoss' => 1,
+                'boss_id' => null
+            ])->get();
+            
+            $admins = User::where([
+                'isAdmin' => 1,
+                'isEmployee' => null,
+                'isBoss' => null,
+                'boss_id' => null
+            ])->get();
+            
+            if (count($admins) > 0)
+            {
+                foreach ($admins as $admin)
+                {
+                    $users->push($admin);
+                }
+                
+                $property['users'] = $users;
+
+                return view('property.edit')->with('property', $property);
+            }
+        }
+        
+        return redirect()->route('welcome');
     }
 
     /**
@@ -162,37 +209,51 @@ class PropertyController extends Controller
      */
     public function update($id)
     {
-        // validate
         $rules = array(
             'name'          => 'required',
-            'description'   => 'required',
-            'phone_number'  => 'required',
+            'email'         => 'required',
             'street'        => 'required',
-            'street_number' => 'required',
-            'house_number'  => 'required',
             'city'          => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
-        // process the login
         if ($validator->fails()) {
-            return Redirect::to('property/create')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+            return Redirect::to('/property/' . $id . '/edit')
+                ->withErrors($validator);
         } else {
-            // store
-            $property = Property::find($id);
+            
+            $boss = null;
+            
+            if (Input::get('user') !== 0)
+            {
+                $boss = User::where([
+                    'id' => Input::get('user'),
+                    'isAdmin' => null,
+                    'isEmployee' => null,
+                    'isBoss' => 1,
+                    'boss_id' => null
+                ])->first();
+            }
+            
+            $property = Property::where('id', $id)->first();
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
             $property->description   = Input::get('description');
+            $property->email         = Input::get('email');
             $property->phone_number  = Input::get('phone_number');
             $property->street        = Input::get('street');
             $property->street_number = Input::get('street_number');
             $property->house_number  = Input::get('house_number');
+            $property->post_code     = Input::get('post_code');
             $property->city          = Input::get('city');
+            
+            if ($boss !== null)
+            {
+                $property->boss_id = $boss->id; 
+            }
+            
             $property->save();
 
-            // redirect
             return redirect('/property/index')->with('success', 'Property successfully updated!');
         }
     }
@@ -205,28 +266,10 @@ class PropertyController extends Controller
      */
     public function destroy($id)
     {
-        $property = Property::find($id);
+        $property = Property::where('id', $id)->first();
         
         if ($property !== null)
         {
-            $users = User::where('isAdmin', null)->with('properties')->get();
-            
-            foreach ($users as $user)
-            {
-                $userProperties = $user->properties;
-                
-                if ($userProperties !== null)
-                {
-                    foreach ($userProperties as $userProperty)
-                    {
-                        if ($userProperty->id == $property->id)
-                        {
-                            $user->properties()->detach($property);
-                        }
-                    }
-                }
-            }
-            
             $property->delete();
 
             return redirect('/property/index')->with('success', 'Property deleted!');

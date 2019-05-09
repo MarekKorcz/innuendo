@@ -27,7 +27,7 @@ class CalendarController extends Controller
      */
     public function create($id)
     {
-        $property = Property::find($id);
+        $property = Property::where('id', $id)->first();
         
         $calendar = Calendar::create([
             'property_id' => $property->id
@@ -49,18 +49,22 @@ class CalendarController extends Controller
      */
     public function activate(Request $request, $calendar_id)
     {
-        $calendar = Calendar::find($calendar_id);
+        $calendar = Calendar::where('id', $calendar_id)->first();
+        $property_id = $request->get('property_id');
         
-        $calendar->isActive = 1;
-        $calendar->save();
+        if ($calendar !== null && $calendar->property_id == $property_id)
+        {
+            $calendar->isActive = 1;
+            $calendar->save();
+
+            return redirect()->action(
+                'PropertyController@show', [
+                    'id' => $property_id
+                ]
+            )->with('success', 'Calendar has been successfully activated!');
+        }
         
-        $property_id = $request->property_id;
-            
-        return redirect()->action(
-            'PropertyController@show', [
-                'id' => $property_id
-            ]
-        )->with('success', 'Calendar has been successfully activated!');
+        return redirect()->route('welcome')->with('error', 'Such calendar doesn\'t exist');
     }
     
     /**
@@ -72,18 +76,22 @@ class CalendarController extends Controller
      */
     public function deactivate(Request $request, $calendar_id)
     {
-        $calendar = Calendar::find($calendar_id);
+        $calendar = Calendar::where('id', $calendar_id)->first();
+        $property_id = $request->get('property_id');
         
-        $calendar->isActive = 0;
-        $calendar->save();
+        if ($calendar !== null && $calendar->property_id == $property_id)
+        {
+            $calendar->isActive = 0;
+            $calendar->save();
+
+            return redirect()->action(
+                'PropertyController@show', [
+                    'id' => $property_id
+                ]
+            )->with('success', 'Calendar has been successfully deactivated!');
+        }
         
-        $property_id = $request->property_id;
-            
-        return redirect()->action(
-            'PropertyController@show', [
-                'id' => $property_id
-            ]
-        )->with('success', 'Calendar has been successfully deactivated!');
+        return redirect()->route('welcome')->with('error', 'Such calendar doesn\'t exist');
     }
     
     /**
@@ -94,15 +102,20 @@ class CalendarController extends Controller
      */
     public function destroy(Request $request, $calendar_id)
     {        
-        $calendar = Calendar::find($calendar_id);
-        $calendar->delete();
+        $calendar = Calendar::where('id', $calendar_id)->first();
+        $property_id = $request->get('property_id');
         
-        $property_id = $request->property_id;
+        if ($calendar !== null && $calendar->property_id == $property_id)
+        {
+            $calendar->delete();
+            
+            return redirect()->action(
+                'PropertyController@show', [
+                    'id' => $property_id
+                ]
+            )->with('success', 'Calendar deleted!');
+        }
         
-        return redirect()->action(
-            'PropertyController@show', [
-                'id' => $property_id
-            ]
-        )->with('success', 'Calendar deleted!');
+        return redirect()->route('welcome')->with('error', 'Such calendar doesn\'t exist');
     }
 }

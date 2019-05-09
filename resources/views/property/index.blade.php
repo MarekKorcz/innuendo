@@ -24,13 +24,11 @@
         <thead>
             <tr>
                 <td>Name</td>
-                <td>Slug</td>
-                <td>Description</td>
-                <td>Phone number</td>
+                <td>Email</td>
+                <td>Phone</td>
                 <td>Street</td>
-                <td>Street number</td>
-                <td>House number</td>
                 <td>City</td>
+                <td>Owner</td>
                 <td>Actions</td>
             </tr>
         </thead>
@@ -38,13 +36,11 @@
             @foreach($properties as $key => $value)
             <tr>
                 <td>{{ $value->name }}</td>
-                <td>{{ $value->slug }}</td>
-                <td>{!! $value->description !!}</td>
+                <td>{{ $value->email }}</td>
                 <td>{{ $value->phone_number }}</td>
                 <td>{{ $value->street }}</td>
-                <td>{{ $value->street_number }}</td>
-                <td>{{ $value->house_number }}</td>
                 <td>{{ $value->city }}</td>
+                <td>{{ $value->boss->name }} {{ $value->boss->surname }}</td>
 
                 <td>
                     <a class="btn btn-small btn-success" href="{{ URL::to('property/' . $value->id) }}" style="margin-bottom: 5px;">

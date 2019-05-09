@@ -69,12 +69,18 @@ class UserController extends Controller
      */
     public function employee($slug)
     {
-        $employee = User::where('isEmployee', 1)->where('slug', $slug)->first();
+        $employee = User::where([
+            'isEmployee' => 1,
+            'slug' => $slug
+        ])->first();
         
         if ($employee !== null)
         {
             $employeeCreatedAt = $employee->created_at->format('d.m.Y');
-            $calendars = Calendar::where('employee_id', $employee->id)->where('isActive', 1)->get();
+            $calendars = Calendar::where([
+                'employee_id' => $employee->id,
+                'isActive' => 1
+            ])->get();
 
             $properties = [];
 
@@ -188,7 +194,10 @@ class UserController extends Controller
             if ($property !== null)
             {
                 $propertyCreatedAt = $property->created_at->format('d.m.Y');
-                $calendars = Calendar::where('property_id', $property->id)->where('isActive', 1)->get();
+                $calendars = Calendar::where([
+                    'property_id' => $property->id,
+                    'isActive' => 1
+                ])->get();
                 $employees = new Collection();
 
                 if (count($calendars) > 0)
@@ -237,7 +246,10 @@ class UserController extends Controller
      */
     public function calendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
     {
-        $calendar = Calendar::where('id', $calendar_id)->where('isActive', 1)->first();
+        $calendar = Calendar::where([
+            'id' => $calendar_id,
+            'isActive' => 1
+        ])->first();
         
         if ($calendar !== null)
         {
@@ -245,22 +257,34 @@ class UserController extends Controller
             
             if ($year == 0)
             {
-                $year = Year::where('calendar_id', $calendar->id)->where('year', $currentDate->format("Y"))->first();
+                $year = Year::where([
+                    'calendar_id' => $calendar->id,
+                    'year' => $currentDate->format("Y")
+                ])->first();
             }
             else if (is_numeric($year) && (int)$year > 0)
             {
-                $year = Year::where('calendar_id', $calendar->id)->where('year', $year)->first();
+                $year = Year::where([
+                    'calendar_id' => $calendar->id,
+                    'year' => $year
+                ])->first();
             }
             
             if ($year !== null)
             {
                 if ($month_number == 0)
                 {
-                    $month = Month::where('year_id', $year->id)->where('month_number', $currentDate->format("n"))->first();
+                    $month = Month::where([
+                        'year_id' => $year->id,
+                        'month_number' => $currentDate->format("n")
+                    ])->first();
                 }
                 else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12)
                 {
-                    $month = Month::where('year_id', $year->id)->where('month_number', $month_number)->first();
+                    $month = Month::where([
+                        'year_id' => $year->id,
+                        'month_number' => $month_number
+                    ])->first();
                 }
 
                 if ($month !== null)
@@ -273,11 +297,17 @@ class UserController extends Controller
 
                         if ((int)$day_number === 0)
                         {
-                            $currentDay = Day::where('month_id', $month->id)->where('day_number', $currentDate->format("d"))->first();
+                            $currentDay = Day::where([
+                                'month_id' => $month->id,
+                                'day_number' => $currentDate->format("d")
+                            ])->first();
                         }
                         else
                         {
-                            $currentDay = Day::where('month_id', $month->id)->where('day_number', $day_number)->first();
+                            $currentDay = Day::where([
+                                'month_id' => $month->id,
+                                'day_number' => $day_number
+                            ])->first();
                         }
 
                         if ($currentDay !== null)
@@ -311,7 +341,10 @@ class UserController extends Controller
                             $availableNextMonth = true;
                         }
                         
-                        $employee = User::where('isEmployee', 1)->where('id', $calendar->employee_id)->first();
+                        $employee = User::where([
+                            'isEmployee' => 1,
+                            'id' => $calendar->employee_id
+                        ])->first();
 
                         return view('employee.calendar')->with([
                             'calendar_id' => $calendar->id,
@@ -370,7 +403,13 @@ class UserController extends Controller
     {
         if ($id !== null)
         {
-            $appointment = Appointment::where('id', $id)->where('user_id', auth()->user()->id)->with('item')->with('purchase')->first();
+            $appointment = Appointment::where([
+                'id' => $id,
+                'user_id' => auth()->user()->id
+            ])->with([
+                'item',
+                'purchase'
+            ])->first();
 
             if ($appointment !== null)
             {
@@ -562,7 +601,10 @@ class UserController extends Controller
             
             for ($i = 0; $i < $workUnits; $i++) 
             {
-                $appointment = Appointment::where('day_id', $chosenDay->id)->where('start_time', $startTime)->first();
+                $appointment = Appointment::where([
+                    'day_id' => $chosenDay->id,
+                    'start_time' => $startTime
+                ])->first();
                 
                 $appointmentId = 0;
                 
@@ -625,7 +667,10 @@ class UserController extends Controller
     {
         if ($month->month_number == 1)
         {
-            $year = Year::where('calendar_id', $calendar->id)->where('year', ($year->year - 1))->first();
+            $year = Year::where([
+                'calendar_id' => $calendar->id,
+                'year' => ($year->year - 1)
+            ])->first();
             
             if ($year === null)
             {
@@ -633,7 +678,10 @@ class UserController extends Controller
             }
             else
             {
-                $month = Month::where('year_id', $year->id)->where('month_number', 12)->first();
+                $month = Month::where([
+                    'year_id' => $year->id,
+                    'month_number' => 12
+                ])->first();
                 
                 if ($month === null) 
                 {
@@ -643,7 +691,10 @@ class UserController extends Controller
         }
         else
         {
-            $month = Month::where('year_id', $year->id)->where('month_number', ($month->month_number - 1))->first();
+            $month = Month::where([
+                'year_id' => $year->id,
+                'month_number' => ($month->month_number - 1)
+            ])->first();
                 
             if ($month === null) 
             {
@@ -658,7 +709,10 @@ class UserController extends Controller
     {
         if ($month->month_number == 12)
         {
-            $year = Year::where('calendar_id', $calendar->id)->where('year', ($year->year + 1))->first();
+            $year = Year::where([
+                'calendar_id' => $calendar->id,
+                'year' => ($year->year + 1)
+            ])->first();
             
             if ($year === null)
             {
@@ -666,7 +720,10 @@ class UserController extends Controller
             }
             else
             {
-                $month = Month::where('year_id', $year->id)->where('month_number', 1)->first();
+                $month = Month::where([
+                    'year_id' => $year->id,
+                    'month_number' => 1
+                ])->first();
                 
                 if ($month === null) 
                 {
@@ -676,7 +733,10 @@ class UserController extends Controller
         }
         else
         {
-            $month = Month::where('year_id', $year->id)->where('month_number', ($month->month_number + 1))->first();
+            $month = Month::where([
+                'year_id' => $year->id,
+                'month_number' => ($month->month_number + 1)
+            ])->first();
                 
             if ($month === null) 
             {
@@ -726,8 +786,9 @@ class UserController extends Controller
     public function propertySubscriptionList($id)
     {
         $propertyId = htmlentities((int)$id, ENT_QUOTES, "UTF-8");
-        $property = Property::where('id', (int)$id)->with('subscriptions')->first();
+        $propertyId = (int)$propertyId;
         
+        $property = Property::where('id', $propertyId)->with('subscriptions')->first();
         
         if ($property !== null && $property->subscriptions)
         {            
@@ -911,7 +972,6 @@ class UserController extends Controller
      */
     public function subscriptionPurchased(Request $request)
     {
-        // validate
         $rules = array(
             'terms'             => 'required',
             'property_id'       => 'required',
@@ -921,8 +981,7 @@ class UserController extends Controller
 
         if ($validator->fails()) {
             return Redirect::to('user/subscription/purchase/' . Input::get('property_id') . '/' . Input::get('subscription_id'))
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+                ->withErrors($validator);
         } else {
             
             $subscription = Subscription::where('id', Input::get('subscription_id'))->first();
@@ -1041,7 +1100,10 @@ class UserController extends Controller
      */
     public function subscriptionPurchasedShow($id) 
     {
-        $purchase = Purchase::where('id', $id)->with('subscription')->with('chosenProperty')->first();
+        $purchase = Purchase::where('id', $id)->with([
+            'subscription',
+            'chosenProperty'
+        ])->first();
         
         if ($purchase !== null && $purchase->chosenProperty->user_id == auth()->user()->id)
         {
