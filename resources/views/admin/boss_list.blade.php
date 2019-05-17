@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <div class="container" style="padding: 18px;">
-    <h1>TempUser users entites:</h1>
-    
+    <h2>TempUser boss entites:</h2>
+
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
@@ -12,12 +12,12 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($tempUsers as $tempUser)
+            @foreach($tempBosses as $tempBoss)
                 <tr>
-                    <td>{{$tempUser->name}} {{$tempUser->surname}}</td>
-                    <td>{{$tempUser->created_at}}</td>
+                    <td>{{$tempBoss->name}} {{$tempBoss->surname}}</td>
+                    <td>{{$tempBoss->created_at}}</td>
                     <td>
-                        <a class="btn btn-primary" href="{{ URL::to('/admin/temp-user/user/show/' . $tempUser->id) }}">
+                        <a class="btn btn-primary" href="{{ URL::to('/admin/temp-user/boss/show/' . $tempBoss->id) }}">
                             Show
                         </a>
                     </td>
@@ -26,8 +26,8 @@
         </tbody>
     </table>
 
-    <h1>Active users:</h1>
-    
+    <h2>Active bosses:</h2>
+
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
@@ -37,12 +37,12 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
+            @foreach($bosses as $boss)
                 <tr>
-                    <td>{{$user->name}} {{$user->surname}}</td>
-                    <td>{{$user->created_at}}</td>
+                    <td>{{$boss->name}} {{$boss->surname}}</td>
+                    <td>{{$boss->created_at}}</td>
                     <td>
-                        <a class="btn btn-primary" href="{{ URL::to('/admin/user/show/' . $user->id) }}">
+                        <a class="btn btn-primary" href="{{ URL::to('/admin/boss/show/' . $boss->id) }}">
                             Show
                         </a>
                     </td>

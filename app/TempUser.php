@@ -30,10 +30,22 @@ class TempUser extends Model
      */
     
     /**
-     * Get appointments associated with user.
+     * Get appointments associated with temporary user.
      */
     public function appointments()
     {
         return $this->hasMany('App\Appointment');
+    }
+    
+    /**
+     *      BOSS
+     */
+    
+    /**
+     * Get temporary property associated with temporary user.
+     */
+    public function tempProperty()
+    {
+        return $this->hasOne('App\TempProperty');
     }
 }

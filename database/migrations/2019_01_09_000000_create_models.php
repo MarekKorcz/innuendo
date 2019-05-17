@@ -137,6 +137,24 @@ class CreateModels extends Migration
             $table->string('surname');
             $table->string('email')->unique();
             $table->integer('phone_number');
+            $table->boolean('isBoss')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+        
+        Schema::create('temp_properties', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('slug');
+            $table->text('description')->nullable();
+            $table->text('email');
+            $table->integer('phone_number')->nullable();
+            $table->string('street');
+            $table->string('street_number')->nullable();
+            $table->string('house_number')->nullable();
+            $table->string('post_code')->nullable();
+            $table->string('city');
+            $table->integer('temp_user_id')->unsigned()->index()->foreign()->references("id")->on("temp_users");
             $table->timestamps();
             $table->softDeletes();
         });
@@ -157,6 +175,12 @@ class CreateModels extends Migration
         Schema::create('property_subscription', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('property_id')->unsigned();
+            $table->integer('subscription_id')->unsigned();
+        });
+        
+        Schema::create('temp_property_subscription', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('temp_property_id')->unsigned();
             $table->integer('subscription_id')->unsigned();
         });
         
@@ -239,8 +263,10 @@ class CreateModels extends Migration
         Schema::dropIfExists('graphics');
         Schema::dropIfExists('appointments');
         Schema::dropIfExists('temp_users');
+        Schema::dropIfExists('temp_properties');
         Schema::dropIfExists('subscriptions');
         Schema::dropIfExists('property_subscription');
+        Schema::dropIfExists('temp_property_subscription');
         Schema::dropIfExists('substarts');
         Schema::dropIfExists('item_subscription');
         Schema::dropIfExists('purchases');

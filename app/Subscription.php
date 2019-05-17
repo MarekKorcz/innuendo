@@ -34,6 +34,14 @@ class Subscription extends Model
     }
     
     /**
+     * Get temporary properties which belongs to subscription
+     */
+    public function tempProperties()
+    {
+        return $this->belongsToMany('App\TempProperty', 'temp_property_subscription');
+    }
+    
+    /**
      * Get items which belongs to subscription
      */
     public function items()

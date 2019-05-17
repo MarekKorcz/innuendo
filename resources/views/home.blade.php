@@ -20,46 +20,52 @@
                     </a>
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title text-center">Grafiki</h4>
-                <p class="card-text text-center">
-                    Grafiki wraz z opisem lokalizacji oraz wykonujących zabiegi
-                </p>
-                <div class="text-center">
-                    <a class="btn btn-success btn-lg" href="{{ URL::to('/user/properties') }}">
-                        Pokaż
-                    </a>
+        </div>        
+        @if ($showGraphicsView)
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Grafiki</h4>
+                    <p class="card-text text-center">
+                        Grafiki wraz z opisem lokalizacji oraz wykonujących zabiegi
+                    </p>
+                    <div class="text-center">
+                        <a class="btn btn-success btn-lg" href="{{ URL::to('/user/properties') }}">
+                            Pokaż
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title text-center">Pakiety</h4>
-                <p class="card-text text-center">
-                    Widok z Twoimi wykupionymi pakietami przypisanymi do lokalizacji
-                </p>
-                <div class="text-center">
-                    <a class="btn btn-success btn-lg" href="{{ URL::to('user/subscription/purchased/property/list/') }}">
-                        Pokaż
-                    </a>
+        @endif
+        @if ($showSubscriptionsView)
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Pakiety</h4>
+                    <p class="card-text text-center">
+                        Widok z Twoimi wykupionymi pakietami przypisanymi do lokalizacji
+                    </p>
+                    <div class="text-center">
+                        <a class="btn btn-success btn-lg" href="{{ URL::to('user/subscription/purchased/property/list/') }}">
+                            Pokaż
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title text-center">Wykup dodatkowy pakiet</h4>
-                <p class="card-text text-center">
-                    Widok z dostępnymi pakietami w wybranych lokalizacjach
-                </p>
-                <div class="text-center">
-                    <a class="btn btn-success btn-lg" href="{{ URL::to('user/properties/subscription/') }}">
-                        Pokaż
-                    </a>
+        @endif
+        @if ($showPurchaseSubscriptionsView)
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Wykup pakiet</h4>
+                    <p class="card-text text-center">
+                        Widok z dostępnymi pakietami w wybranych lokalizacjach
+                    </p>
+                    <div class="text-center">
+                        <a class="btn btn-success btn-lg" href="{{ URL::to('user/properties/subscription/') }}">
+                            Pokaż
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>
 @endsection

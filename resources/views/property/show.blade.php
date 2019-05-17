@@ -1,45 +1,25 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-
-    <nav class="navbar navbar-inverse">
-        <div class="navbar-header">
-            {!!Form::open(['action' => ['PropertyController@destroy', $property->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                {{ Form::hidden('_method', 'DELETE') }}
-                {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
-            {!!Form::close()!!}
-        </div>
-        <ul class="nav navbar-nav">
-            <li>
-                <a class="btn btn-primary" href="{{ URL::to('/property/index') }}">
-                    View All Properties
-                </a>
-                <a href="{{ URL::to('/subscription/index') }}" class="btn btn-secondary">
-                    View All Subscriptions
-                </a>
-                <a class="btn btn-success" href="{{ URL::to('property/' . $property->id . '/edit') }}">
-                    Edit
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <h2 style="padding: 20px;">{{ $property->name }}</h2>
-    
-    <hr>
-
-    <div class="jumbotron">
-        <ul class="nav navbar-nav">
-            <li>
-                <a class="btn btn-success" href="{{ URL::to('/subscription/index/property/' . $property->id) }}">
-                    Property's Subscriptions
-                </a>
-            </li>
-        </ul>
+    <div class="jumbotron" style="margin-top: 15px;">
+        <nav class="navbar navbar-inverse">
+            <div class="navbar-header">
+                {!!Form::open(['action' => ['PropertyController@destroy', $property->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                    {{ Form::hidden('_method', 'DELETE') }}
+                    {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                {!!Form::close()!!}
+            </div>
+            <ul class="nav navbar-nav">
+                <li>
+                    <a class="btn btn-success" href="{{ URL::to('property/' . $property->id . '/edit') }}">
+                        Edit
+                    </a>
+                </li>
+            </ul>
+        </nav>
         
-        <div class="text-center" style="margin-bottom: 40px;">
-            <h2>Values:</h2>
-        </div>
+        <h2 class="text-center">Property values:</h2>
+        
         <table class="table table-striped">
             <tr>
                 <th>Name:</th>
@@ -66,6 +46,41 @@
                 <td>{{ $property->post_code }}</td>
             </tr>
         </table>
+        
+        <h3 class="text-center">Subscriptions:</h3>
+    
+        <ul class="nav navbar-nav">
+            <li>
+                <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('subscription/create/' . $property->id) }}">
+                    Create Subscription
+                </a>
+            </li>
+        </ul>
+
+        @if (count($subscriptions) > 0)
+            <table class="table table-striped">
+                <tr>
+                    <th>Name:</th>
+                    <th>Description:</th>
+                    <th>Old Price:</th>
+                    <th>New price:</th>
+                    <th>Quantity:</th>
+                    <th>Duration:</th>
+                </tr>
+                    @foreach ($subscriptions as $subscription)
+                        <tr>
+                            <td>{{ $subscription->name }}</td>
+                            <td>{!! $subscription->description !!}</td>
+                            <td>{{ $subscription->old_price }}</td>
+                            <td>{{ $subscription->new_price }}</td>
+                            <td>{{ $subscription->quantity }}</td>
+                            <td>{{ $subscription->duration }}</td>
+                        </tr>
+                    @endforeach
+            </table>
+        @else
+            <h4>There is no subscriptions attached</h4>
+        @endif
     </div>
         
     @if ($calendars)
@@ -76,13 +91,13 @@
                         {!!Form::open(['action' => ['CalendarController@deactivate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                             {{ Form::hidden('property_id', $property->id) }}
                             {{ Form::hidden('_method', 'POST') }}
-                            {{ Form::submit('Deactivate calendar', ['class' => 'btn btn-primary']) }}
+                            {{ Form::submit('Deactivate Calendar', ['class' => 'btn btn-primary']) }}
                         {!!Form::close()!!}
                     @else
                         {!!Form::open(['action' => ['CalendarController@activate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                             {{ Form::hidden('property_id', $property->id) }}
                             {{ Form::hidden('_method', 'POST') }}
-                            {{ Form::submit('Activate calendar', ['class' => 'btn btn-success']) }}
+                            {{ Form::submit('Activate Calendar', ['class' => 'btn btn-success']) }}
                         {!!Form::close()!!}
                     @endif
                 </div>
@@ -90,13 +105,8 @@
                     {!!Form::open(['action' => ['CalendarController@destroy', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                         {{ Form::hidden('property_id', $property->id) }}
                         {{ Form::hidden('_method', 'DELETE') }}
-                        {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                        {{ Form::submit('Delete Calendar', ['class' => 'btn btn-danger']) }}
                     {!!Form::close()!!}
-                </div>
-                <div style="padding: 5px;">
-                    <a class="btn btn-success" href="{{ URL::to('subscription/create/' . $property->id) }}">
-                        Create Subscription
-                    </a>
                 </div>
                 
                 @if ($calendar->employee_id != null)
@@ -127,7 +137,7 @@
                     <h1 class="text-center">New calendar</h1>
                     <div class="text-center" style="padding-top: 30px;">
                         <a class="btn btn-primary" href="{{ action('EmployeeController@assign', $calendar->id) }}">
-                            Assign calendar to Employee
+                            Assign Calendar to Employee
                         </a>
                     </div>
                 @endif

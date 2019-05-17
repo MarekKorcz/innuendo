@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Property;
+use App\TempProperty;
 use App\Calendar;
 use App\Year;
 use App\User;
+use App\TempUser;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -29,19 +31,36 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        $properties = Property::where('id', '>', 0)->paginate(5);
+        $properties = Property::where('id', '!=', 0)->get();
         
         if (count($properties) > 0)
         {
             foreach ($properties as $property)
             {
-                $property['boss'] = User::where('id', $property->boss_id)->first();
+                if ($property->boss_id > 0) 
+                {
+                    $property['boss'] = User::where('id', $property->boss_id)->first();
+                }
             }
-            
-            return view('property.index')->with('properties', $properties);
         }
-
-        return redirect()->action('PropertyController@create');
+        
+        $tempProperties = TempProperty::where('id', '!=', 0)->get();
+        
+        if (count($tempProperties) > 0)
+        {
+            foreach ($tempProperties as $tempProperty)
+            {
+                if ($tempProperty->temp_user_id > 0) 
+                {
+                    $tempProperty['owner'] = TempUser::where('id', $tempProperty->temp_user_id)->first();
+                }
+            }
+        }
+        
+        return view('property.index')->with([
+            'properties' => $properties,
+            'tempProperties' => $tempProperties
+        ]);
     }
 
     /**
@@ -125,7 +144,7 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-        $property = Property::where('id', $id)->first();
+        $property = Property::where('id', $id)->with('subscriptions')->first();
         
         if ($property !== null)
         {
@@ -150,6 +169,7 @@ class PropertyController extends Controller
 
             return view('property.show')->with([
                 'property' => $property,
+                'subscriptions' => $property->subscriptions,
                 'calendars' => $calendars,
                 'years' => $years,
                 'employees' => $employees
@@ -157,6 +177,32 @@ class PropertyController extends Controller
         }
         
         return redirect()->route('welcome')->with('error', 'There is no such property');
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function tempPropertyShow($id)
+    {
+        $tempProperty = TempProperty::where('id', $id)->with('subscriptions')->first();
+        
+        if ($tempProperty !== null)
+        {
+            if ($tempProperty->temp_user_id > 0)
+            {
+                $tempProperty['owner'] = TempUser::where('id', $tempProperty->temp_user_id)->first();
+            }
+            
+            return view('property.temp_property_show')->with([
+                'tempProperty' => $tempProperty,
+                'subscriptions' => $tempProperty->subscriptions
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'There is no such temporary property');
     }
 
     /**
@@ -196,6 +242,24 @@ class PropertyController extends Controller
 
                 return view('property.edit')->with('property', $property);
             }
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function tempPropertyEdit($id)
+    {
+        $tempProperty = TempProperty::where('id', $id)->first();
+        
+        if ($tempProperty !== null)
+        {
+            return view('property.temp_property_edit')->with('tempProperty', $tempProperty);
         }
         
         return redirect()->route('welcome');
@@ -257,6 +321,43 @@ class PropertyController extends Controller
             return redirect('/property/index')->with('success', 'Property successfully updated!');
         }
     }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function tempPropertyUpdate($id)
+    {
+        $rules = array(
+            'name'          => 'required',
+            'email'         => 'required',
+            'street'        => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('/property/' . $id . '/edit')
+                ->withErrors($validator);
+        } else {
+            
+            $tempProperty = TempProperty::where('id', $id)->first();
+            $tempProperty->name          = Input::get('name');
+            $tempProperty->slug          = str_slug(Input::get('name'));
+            $tempProperty->description   = Input::get('description');
+            $tempProperty->email         = Input::get('email');
+            $tempProperty->phone_number  = Input::get('phone_number');
+            $tempProperty->street        = Input::get('street');
+            $tempProperty->street_number = Input::get('street_number');
+            $tempProperty->house_number  = Input::get('house_number');
+            $tempProperty->post_code     = Input::get('post_code');
+            $tempProperty->city          = Input::get('city');            
+            $tempProperty->save();
+
+            return redirect('/temp-property/' . $tempProperty->id)->with('success', 'Temporary property successfully updated!');
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -276,5 +377,33 @@ class PropertyController extends Controller
         }
         
         return redirect()->route('welcome')->with('error', 'There is no such property');
+    }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function tempPropertyDestroy($id)
+    {
+        $tempProperty = TempProperty::where('id', $id)->with('subscriptions')->first();
+        
+        if ($tempProperty !== null)
+        {
+            if ($tempProperty->subscriptions)
+            {
+                foreach ($tempProperty->subscriptions as $subscription)
+                {
+                    $tempProperty->subscriptions()->detach($subscription);
+                }
+            }
+            
+            $tempProperty->delete();
+
+            return redirect('/property/index')->with('success', 'Temporary property deleted!');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'There is no such temporary property');
     }
 }

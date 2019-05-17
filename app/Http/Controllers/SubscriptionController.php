@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Property;
+use App\TempProperty;
 use App\Category;
 use App\Item;
 use App\Subscription;
@@ -34,7 +35,7 @@ class SubscriptionController extends Controller
         
         if ($property !== null)
         {
-            $categories = Category::all();
+            $categories = Category::where('id', '!=', null)->get();
             
             if ($categories !== null)
             {
@@ -125,7 +126,7 @@ class SubscriptionController extends Controller
                 
                 return redirect()->action(
                     'SubscriptionController@show', [
-                        'slug' => $subscription->slug
+                        'id' => $subscription->id
                     ]
                 )->with('success', 'Subscription has been successfuly added!');
             }
@@ -137,14 +138,16 @@ class SubscriptionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param $slug
+     * @param $id
      * @return Response
      */
-    public function show($slug)
+    public function show($id)
     {        
-        $subscription = Subscription::where('slug', $slug)->with('items')->first();
+        $subscription = Subscription::where('id', $id)->with('items')->first();
         $properties = Property::with('subscriptions')->get();
+        $tempProperties = TempProperty::with('subscriptions')->get();
         $propertiesArr = [];
+        $tempPropertiesArr = [];
         $items = new Collection();
         
         if ($subscription !== null && $properties !== null)
@@ -181,7 +184,44 @@ class SubscriptionController extends Controller
                     'name' => $property->name,
                     'active' => $active
                 ];
-            }            
+            }   
+            
+            if (count($tempProperties) > 0)
+            {
+                foreach ($tempProperties as $tempProperty)
+                {
+                    $active = false;
+
+                    foreach ($tempProperty->subscriptions as $sub)
+                    {
+                        if ($sub->id == $subscription->id)
+                        {
+                            $active = true;
+                        }
+
+                        if ($sub !== null)
+                        {
+                            $categories = Category::all();
+
+                            foreach ($categories as $category)
+                            {
+                                $categoryItems = Item::where('category_id', $category->id)->get();
+
+                                if ($categoryItems !== null)
+                                {
+                                    $items = $items->merge($categoryItems);
+                                }
+                            }
+                        }
+                    }
+
+                    $tempPropertiesArr[] = [
+                        'id' => $tempProperty->id,
+                        'name' => $tempProperty->name,
+                        'active' => $active
+                    ];
+                }            
+            }
             
             $itemsArr = [];
             
@@ -223,6 +263,7 @@ class SubscriptionController extends Controller
             return view('subscription.show')->with([
                 'subscription' => $subscription,
                 'properties' => $propertiesArr,
+                'tempProperties' => $tempPropertiesArr,
                 'items' => $itemsArr
             ]);
         }
@@ -290,29 +331,7 @@ class SubscriptionController extends Controller
             $subscription->duration    = $duration;
             $subscription->save();
 
-            return redirect('/subscription/show/' . $subscription->slug)->with('success', 'Subscription successfully updated!');
-        }
-        
-        return redirect()->route('welcome');
-    }
-    
-    /**
-     * Shows a list of subscriptions assigned to passed property.
-     * 
-     * @param int $id
-     * @return type
-     */
-    public function propertySubscriptionIndex($id)
-    {
-        $property = Property::where('id', $id)->with('subscriptions')->first();
-        
-        if ($property !== null)
-        {            
-            $subscriptions = $property->subscriptions;
-            
-            return view('subscription.index')->with([
-                'subscriptions' => $subscriptions
-            ]);
+            return redirect('/subscription/show/' . $subscription->id)->with('success', 'Subscription successfully updated!');
         }
         
         return redirect()->route('welcome');
@@ -325,13 +344,17 @@ class SubscriptionController extends Controller
      */
     public function subscriptionIndex()
     {
-        $subscriptions = Subscription::all();
+        $subscriptions = Subscription::where('id', '!=', null)->get();
         
-        if ($subscriptions !== null)
+        if (count($subscriptions) > 0)
         {            
             return view('subscription.index')->with([
                 'subscriptions' => $subscriptions
             ]);
+            
+        } elseif (count($subscriptions) == 0) {
+            
+            return redirect()->route('property_index')->with('success', 'Choose property in which you wanna create subscription!');
         }
         
         return redirect()->route('welcome');
@@ -362,7 +385,7 @@ class SubscriptionController extends Controller
         if ($request->request->all())
         {
             $subscription = Subscription::where('id', $request->get('subscriptionId'))->first();
-            $property = Property::where('id', $request->get('propertyId'))->first();
+            $property = Property::where('id', $request->get('propertyId'))->with('subscriptions')->first();
             
             if ($subscription !== null && $property !== null)
             {
@@ -383,6 +406,57 @@ class SubscriptionController extends Controller
                 } else {
                     
                     $property->subscriptions()->attach($subscription);
+                }
+                
+                $data = [
+                    'type'    => 'success',
+                    'message' => 'Subskrypcja została zmieniona'
+                ];
+                
+                return new JsonResponse($data, 200, array(), true);
+                
+            } else {
+                
+                $message = "Lokalizacja lub subskrypcja nie istnieje!";
+            }
+            
+        } else {
+            
+            $message = "Pusty request";
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error',
+            'message' => $message            
+        ));
+    }
+    
+    public function setSubscriptionToTemporaryProperty(Request $request)
+    {        
+        if ($request->request->all())
+        {
+            $subscription = Subscription::where('id', $request->get('subscriptionId'))->first();
+            $tempProperty = TempProperty::where('id', $request->get('tempPropertyId'))->with('subscriptions')->first();
+            
+            if ($subscription !== null && $tempProperty !== null)
+            {
+                $active = false;
+                
+                foreach ($tempProperty->subscriptions as $sub)
+                {
+                    if ($sub->id == $subscription->id)
+                    {
+                        $active = true;
+                    }
+                }
+                
+                if ($active)
+                {
+                    $tempProperty->subscriptions()->detach($subscription);
+                    
+                } else {
+                    
+                    $tempProperty->subscriptions()->attach($subscription);
                 }
                 
                 $data = [

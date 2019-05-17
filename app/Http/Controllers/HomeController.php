@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use App\Property;
+
 //// to tests
 //use App\Appointment;
 //use App\Interval;
@@ -10,7 +13,6 @@ namespace App\Http\Controllers;
 //use App\ChosenProperty;
 //use App\Subscription;
 //use App\User;
-//use App\Property;
 //use App\Item;
 //use App\Graphic;
 //use App\Calendar;
@@ -39,7 +41,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
+        // todo: zanim dokończysz odpowiednie wyświetlanie danych dla różncyh poziomów rejestracji w zależności od posiadanych 
+        // praw dostępu czy po prostu danych w db to zadbaj o odpowiednie przypisywanie do szefów propertisów oraz tworzenia dla nich chosenProperties 
+        // żeby póżniej na etapie przypisywania codów, workerzy mogli poprawnie przyisać sobie subskrypcje
+        
+        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
         
         if ($user->isAdmin !== null)
         {
@@ -55,7 +61,47 @@ class HomeController extends Controller
             
         } else {
             
-            $route = 'home';
+            // showGraphicsView
+            $showGraphics = false;
+            
+            if ($user->boss_id)
+            {
+                $showGraphics = true;
+                
+            } else {
+                
+                $properties = Property::where('boss_id', null)->get();
+                
+                if (count($properties) > 0)
+                {
+                    $showGraphics = true;
+                }
+            }
+            // >>
+            
+            // >> showPurchaseSubscriptionsView
+            $publicProperties = Property::where('boss_id', null)->with('subscriptions')->get();
+            $showPurchaseSubscriptions = false;
+
+            if (count($publicProperties) > 0)
+            {
+                foreach ($publicProperties as $publicProperty)
+                {
+                    if (count($publicProperty->subscriptions) > 0)
+                    {
+                        $showPurchaseSubscriptions = true;
+                        break;
+                    }
+                }
+            }
+            // >>
+            
+            return view('home')->with([
+                'user' => $user,
+                'showGraphicsView' => $showGraphics,
+                'showSubscriptionsView' => count($user->chosenProperties) > 0 ? true : false,
+                'showPurchaseSubscriptionsView' => $showPurchaseSubscriptions
+            ]);
         }
         
         return view($route)->with([

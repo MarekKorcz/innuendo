@@ -5,19 +5,10 @@
 
 <div class="container">
 
-    <nav class="navbar navbar-inverse">
-        <div class="navbar-header">
-            <a class="btn btn-success" href="{{ URL::previous() }}">
-                Wróć
-            </a>
-        </div>
-    </nav>
-
     <div class="jumbotron">
         <div class="text-center" style="margin-bottom: 40px;">
             <h2>Użytkownik - <strong>{{$user->name}}</strong></h2>
         </div>
-        
         
         {{ Form::open(['action' => ['AdminController@userEdit', $user->id], 'method' => 'POST']) }}
 

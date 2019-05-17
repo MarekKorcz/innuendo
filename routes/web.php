@@ -21,8 +21,16 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/admin/user/list', 'AdminController@userList');
+Route::get('/admin/boss/list', 'AdminController@bossList');
+Route::get('/admin/employee/list', 'AdminController@employeeList');
 Route::get('/admin/user/show/{id}', 'AdminController@userShow');
+Route::get('/admin/boss/show/{id}', 'AdminController@bossShow');
+Route::get('/admin/temp-user/boss/show/{id}', 'AdminController@tempUserBossShow');
+Route::get('/admin/temp-user/user/show/{id}', 'AdminController@tempUserUserShow');
+Route::get('/admin/employee/show/{id}', 'AdminController@employeeShow');
 Route::put('/admin/user/edit', 'AdminController@userEdit');
+Route::get('/admin/boss/create', 'AdminController@bossCreate');
+Route::post('/admin/boss/store', 'AdminController@bossStore');
 
 Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');
 Route::post('/employee/assign/store', 'EmployeeController@store');
@@ -45,13 +53,17 @@ Route::get('/employees', 'UserController@employeesList')->name('employees');
 Route::get('/employee/{slug}', 'UserController@employee')->name('employee');
 Route::get('/employee/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
 
-Route::get('/property/index', 'PropertyController@index');
+Route::get('/property/index', 'PropertyController@index')->name('property_index');
 Route::get('/property/create', 'PropertyController@create');
 Route::post('/property/store', 'PropertyController@store');
 Route::get('/property/{id}', 'PropertyController@show');
+Route::get('/temp-property/{id}', 'PropertyController@tempPropertyShow');
 Route::get('/property/{id}/edit', 'PropertyController@edit');
+Route::get('/temp-property/{id}/edit', 'PropertyController@tempPropertyEdit');
 Route::put('/property/{id}', 'PropertyController@update');
+Route::put('/temp-property/{id}', 'PropertyController@tempPropertyUpdate');
 Route::delete('/property/{id}', 'PropertyController@destroy');
+Route::delete('/temp-property/{id}', 'PropertyController@tempPropertyDestroy');
 
 Route::get('/calendar/{id}', 'CalendarController@create');
 Route::post('/calendar/activate/{id}', 'CalendarController@activate');
@@ -85,11 +97,11 @@ Route::delete('/appointment/{id}', 'UserController@appointmentDestroy');
 
 Route::get('/subscription/create/{id}', 'SubscriptionController@create');
 Route::post('/subscription/store', 'SubscriptionController@store');
-Route::get('/subscription/show/{slug}', 'SubscriptionController@show');
-Route::get('/subscription/index/property/{id}', 'SubscriptionController@propertySubscriptionIndex');
+Route::get('/subscription/show/{id}', 'SubscriptionController@show');
 Route::get('/subscription/index', 'SubscriptionController@subscriptionIndex');
 Route::delete('/subscription/{id}', 'SubscriptionController@destroy');
 Route::post('/subscription/set-subscription-to-property', 'SubscriptionController@setSubscriptionToProperty');
+Route::post('/subscription/set-subscription-to-temporary-property', 'SubscriptionController@setSubscriptionToTemporaryProperty');
 Route::post('/subscription/set-item-to-subscription', 'SubscriptionController@setItemToSubscription');
 Route::get('/subscription/{id}/edit', 'SubscriptionController@edit');
 Route::put('/subscription/update', 'SubscriptionController@update');

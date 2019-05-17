@@ -1,16 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-
-    <nav class="navbar navbar-inverse">
-        <div class="navbar-header">
-            <a class="btn btn-success" href="{{ URL::to('/property/index') }}">
-                Go To Properties
-            </a>
-        </div>
-    </nav>
-
-    <h1 class="text-center">Subscriptions</h1>
+    <h2 class="text-center">Subscriptions</h2>
     
     <table class="table table-striped table-bordered">
         <thead>
@@ -34,7 +25,7 @@
                     <td>{{$subscription->quantity}}</td>
                     <td>{{$subscription->duration}}</td>
                     <td>
-                        <a class="btn btn-primary" href="{{ URL::to('/subscription/show/' . $subscription->slug) }}">
+                        <a class="btn btn-primary" href="{{ URL::to('/subscription/show/' . $subscription->id) }}">
                             Show
                         </a>
                         <a class="btn btn-success" href="{{ URL::to('/subscription/' . $subscription->id . '/edit') }}">

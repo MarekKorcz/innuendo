@@ -59,13 +59,6 @@
                         </li>
                     @endif
                 @else
-                    @if (Auth::user()->isAdmin)
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/property/index') }}">
-                                Property index
-                            </a>
-                        </li>
-                    @endif
 <!--                    @if (Auth::user()->isBoss)
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/boss/properties/subscription/purchase') }}">Pakiety</a>
