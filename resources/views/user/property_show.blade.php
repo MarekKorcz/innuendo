@@ -2,106 +2,54 @@
 
 @section('content')
 
-{!! Html::script('js/property_show.js') !!}
+{!! Html::style('css/property_show.css') !!}
 
 <div class="container">
 
-    <h1 class="text-center" style="padding: 2rem;">{{ $property->name }}</h1>
-    
-<!--    Carousel Wrapper
-    <div id="carousel-example-2" class="carousel slide carousel-fade" data-ride="carousel">
-        Indicators
-        <ol class="carousel-indicators">
-            <li data-target="#carousel-example-2" data-slide-to="0" class="active"></li>
-            <li data-target="#carousel-example-2" data-slide-to="1"></li>
-            <li data-target="#carousel-example-2" data-slide-to="2"></li>
-        </ol>
-        /.Indicators
-        Slides
-        <div class="carousel-inner" role="listbox">
-            <div class="carousel-item active">
-                <div class="view">
-                    <img class="d-block w-100 img-fluid" src="/img/background1.jpg">
-                    <div class="mask rgba-black-light"></div>
-                </div>
-                <div class="carousel-caption">
-                    <h3 class="h3-responsive">Light mask</h3>
-                    <p>First text</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                Mask color
-                <div class="view">
-                    <img class="d-block w-100 img-fluid" src="/img/background2.jpg">
-                    <div class="mask rgba-black-strong"></div>
-                </div>
-                <div class="carousel-caption">
-                    <h3 class="h3-responsive">Strong mask</h3>
-                    <p>Secondary text</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                Mask color
-                <div class="view">
-                    <img class="d-block w-100 img-fluid" src="/img/background3.jpg">
-                    <div class="mask rgba-black-slight"></div>
-                </div>
-                <div class="carousel-caption">
-                    <h3 class="h3-responsive">Slight mask</h3>
-                    <p>Third text</p>
-                </div>
-            </div>
-        </div>
-        /.Slides
-        Controls
-        <a class="carousel-control-prev" href="#carousel-example-2" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carousel-example-2" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-        /.Controls
-    </div>
-    /.Carousel Wrapper-->
-    
+    <h1 class="text-center" style="padding: 2rem;">Grafiki w {{ $property->name }}</h1>
+   
     <div class="jumbotron">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h3>Opis</h3>
                 <p>Nazwa: <strong>{{$property->name}}</strong></p>
                 <p>Data powstania: <strong>{{ $propertyCreatedAt }}</strong></p>
-                <span>Opis: {!! $property->description !!}</span>
+                @if ($property->description)
+                    <span>Opis: {!! $property->description !!}</span>
+                @endif
                 <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</strong></p>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <img class="img-fluid" src="/img/column2.jpg">
+                <h2>todo: Place to show something??</h2>
             </div>
         </div>
     </div>
     
-    <h2 class="text-center" style="padding: 2rem;">Pracownicy z grafikami:</h2>
+    <h2 class="text-center" style="padding: 2rem;">Grafiki naszych pracowników:</h2>
     
     <div class="wrapper">
-        @foreach ($employees as $employee)
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-center">{{$employee->name}}</h5>
-                    <p class="card-text">
-                        {!!$employee->description!!}
-                    </p>
-                    <div class="text-center">
-                        <a href="{{ URL::to('employee/' . $employee->slug) }}" class="btn btn-success btn-lg">
-                            Zobacz Profil
-                        </a>
-                        <a href="{{ URL::to('employee/calendar/' . $employee->calendar . '/' . $today['year'] . '/' . $today['month'] . '/' . $today['day'] ) }}" class="btn btn-success btn-lg">
-                            Zobacz Grafik
-                        </a>
+        @if (count($employees) > 0)
+            @foreach ($employees as $employee)
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{$employee->name}}</h5>
+                        <p class="card-text">
+                            {!!$employee->description!!}
+                        </p>
+                        <div class="text-center">
+                            <a href="{{ URL::to('employee/' . $employee->slug) }}" class="btn btn-success btn-lg">
+                                Zobacz Profil
+                            </a>
+                            <a href="{{ URL::to('employee/calendar/' . $employee->calendar . '/' . $today['year'] . '/' . $today['month'] . '/' . $today['day'] ) }}" class="btn btn-success btn-lg">
+                                Zobacz Grafik
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        @else
+            <h3 class="text-center">Obecnie żaden z naszych pracowników nie jest przypisany do lokalizacji</h3>
+        @endif
     </div>
 </div>
 @endsection

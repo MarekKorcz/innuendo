@@ -35,7 +35,11 @@
             </tr>
             <tr>
                 <td>{{ $property->name }}</td>
-                <td>{{ $property->boss->name }} {{ $property->boss->surname }}</td>
+                @if ($property->boss !== null)
+                    <td>{{ $property->boss->name }} {{ $property->boss->surname }}</td>
+                @else
+                    <td>Public</td>
+                @endif
                 <td>{!! $property->description !!}</td>
                 <td>{{ $property->email }}</td>
                 <td>{{ $property->phone_number }}</td>

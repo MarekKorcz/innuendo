@@ -137,6 +137,7 @@ class CreateModels extends Migration
             $table->string('surname');
             $table->string('email')->unique();
             $table->integer('phone_number');
+            $table->string('register_code')->nullable();
             $table->boolean('isBoss')->default(0);
             $table->timestamps();
             $table->softDeletes();
@@ -146,7 +147,6 @@ class CreateModels extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('slug');
-            $table->text('description')->nullable();
             $table->text('email');
             $table->integer('phone_number')->nullable();
             $table->string('street');

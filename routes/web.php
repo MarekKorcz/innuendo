@@ -20,6 +20,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/temp-boss/register/{code}', 'Auth\RegisterController@tempUserBossRegistrationCreate')->name('tempBossRegisterAddress');
+Route::post('/temp-boss/register/store', 'Auth\RegisterController@tempUserBossRegistrationStore');
+
 Route::get('/admin/user/list', 'AdminController@userList');
 Route::get('/admin/boss/list', 'AdminController@bossList');
 Route::get('/admin/employee/list', 'AdminController@employeeList');
@@ -122,14 +125,16 @@ Route::get('/boss/codes', 'BossController@codes');
 Route::post('/boss/set-code', 'BossController@setCode');
 Route::get('/code/add', 'BossController@addCode');
 Route::delete('/code/{id}', 'BossController@destroyCode');
-Route::get('/boss/property/list', 'BossController@propertyList');
-Route::get('/boss/property/{id}', 'BossController@property');
+//Route::get('/boss/property/list', 'BossController@propertyList');
+//Route::get('/boss/property/{id}', 'BossController@property');
+Route::get('/boss/property/{id}/edit', 'BossController@propertyEdit');
+Route::put('/boss/property/update', 'BossController@propertyUpdate');
 Route::get('/boss/subscription/list/{propertyId}/{subscriptionId}', 'BossController@subscriptionList');
 Route::get('/boss/properties/subscription/purchase', 'BossController@propertiesSubscriptionPurchase');
-Route::get('/boss/property/subscriptions/purchase/{id}', 'BossController@propertySubscriptionsPurchase');
+//Route::get('/boss/property/subscriptions/purchase/{id}', 'BossController@propertySubscriptionsPurchase');
 Route::get('/boss/subscription/purchase/{propertyId}/{subscriptionId}', 'BossController@subscriptionPurchase');
 Route::post('/boss/subscription/purchased', 'BossController@subscriptionPurchased');
-Route::get('/boss/worker/appointment/list/{propertyId}/{subscriptionId}/{userId}', 'BossController@workerAppointmentList');
+Route::get('/boss/worker/appointment/list/{substartId}/{userId}', 'BossController@workerAppointmentList');
 Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
 Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
 Route::post('/boss/get/property/subscription', 'BossController@getPropertySubscriptions');

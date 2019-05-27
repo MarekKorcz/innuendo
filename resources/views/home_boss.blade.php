@@ -21,7 +21,8 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        
+<!--        <div class="card">
             <div class="card-body">
                 <h4 class="card-title text-center">Grafiki</h4>
                 <p class="card-text text-center">
@@ -33,8 +34,9 @@
                     </a>
                 </div>
             </div>
-        </div>
-        <div class="card">
+        </div>-->
+        
+<!--        <div class="card">
             <div class="card-body">
                 <h4 class="card-title text-center">Twoje lokalizacje</h4>
                 <p class="card-text text-center">
@@ -46,8 +48,9 @@
                     </a>
                 </div>
             </div>
-        </div>
-        <div class="card">
+        </div>-->
+
+<!--        <div class="card">
             <div class="card-body">
                 <h4 class="card-title text-center">Pakiety</h4>
                 <p class="card-text text-center">
@@ -59,12 +62,13 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div>-->
+        
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Panel zarządzania subskrypcjami</h4>
+                <h4 class="card-title text-center">Panel zarządzania lokalizacjami i subskrypcjami</h4>
                 <p class="card-text text-center">
-                    Widok subskrypcji przypisanych do lokalizacji oraz pracowników zarejestrowanych do korzystania z nich 
+                    Widok z lokalizacjami oraz z przypisanymi do nich subskrypcjami wraz z pracownikami zarejestrowanymi do korzystania z nich 
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success btn-lg" href="{{ URL::to('boss/subscription/list/0/0') }}">
@@ -73,6 +77,7 @@
                 </div>
             </div>
         </div>
+
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title text-center">Generacja kodów rejestracji</h4>

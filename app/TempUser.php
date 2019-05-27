@@ -22,7 +22,7 @@ class TempUser extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'email', 'phone_number'
+        'name', 'surname', 'email', 'phone_number', 'register_code', 'isBoss'
     ];
     
     /**

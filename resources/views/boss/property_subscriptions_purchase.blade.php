@@ -8,32 +8,36 @@
         <h1>Subskrypcje przypisane do {{$property->name}}</h1>
     </div>
     <div id="subscriptions" class="wrapper">
-        @foreach ($subscriptions as $subscription)
-            @if ($subscription->isPurchased)
-                <div class="card" style="background-color: lightgreen;">
-            @else
-                <div class="card">
-            @endif
-                <div class="text-center">
-                    ZDJĘCIE
+        @if (count($subscriptions) > 0)
+            @foreach ($subscriptions as $subscription)
+                @if ($subscription->isPurchased)
+                    <div class="card" style="background-color: lightgreen;">
+                @else
+                    <div class="card">
+                @endif
+                    <div class="text-center">
+                        ZDJĘCIE
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{$subscription->name}}</h5>
+                        <p class="card-text">
+                            {!!$subscription->description!!}
+                        </p>
+                        @if ($subscription->isPurchased)
+                            <a href="{{ URL::to('boss/subscription/list/' . $property->id) . '/' . $subscription->id }}" class="btn btn-success">
+                                Zobacz
+                            </a>
+                        @else
+                            <a href="{{ URL::to('boss/subscription/purchase/' . $property->id) . '/' . $subscription->id }}" class="btn btn-success">
+                                Zamów
+                            </a>
+                        @endif
+                    </div>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">{{$subscription->name}}</h5>
-                    <p class="card-text">
-                        {!!$subscription->description!!}
-                    </p>
-                    @if ($subscription->isPurchased)
-                        <a href="{{ URL::to('boss/subscription/list/' . $property->id) . '/' . $subscription->id }}" class="btn btn-success">
-                            Zobacz
-                        </a>
-                    @else
-                        <a href="{{ URL::to('boss/subscription/purchase/' . $property->id) . '/' . $subscription->id }}" class="btn btn-success">
-                            Zamów
-                        </a>
-                    @endif
-                </div>
-            </div>
-        @endforeach
+            @endforeach
+        @else
+            <h3>tu musi byc lista z Buttonem do zakupu</h3>
+        @endif
     </div>
 </div>
 @endsection

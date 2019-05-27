@@ -17,7 +17,9 @@
                             {{$property->name}}
                         </strong>
                     </p>
-                    {!!$property->description!!}
+                    @if ($property->description)
+                        {!!$property->description!!}
+                    @endif
                     <p>Adres: 
                         <strong>
                             {{$property->street}} 

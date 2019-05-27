@@ -19,9 +19,11 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title text-center">{{$property->name}}</h5>
-                    <p class="card-text">
-                        {!!$property->description!!}
-                    </p>
+                    @if ($property->description)
+                        <p class="card-text">
+                            {!!$property->description!!}
+                        </p>
+                    @endif
                     @if ($property->isOwn)
                         <a href="{{ URL::to('boss/property/subscriptions/purchase/' . $property->id) }}" class="btn btn-success">
                             Zobacz

@@ -11,10 +11,6 @@
                 {{ Form::text('name', $tempProperty->name, array('class' => 'form-control')) }}
             </div>
             <div class="form-group">
-                {{ Form::label('description', 'Description') }}
-                {{ Form::textarea('description', $tempProperty->description, array('id' => 'article-ckeditor', 'class' => 'form-control')) }}
-            </div>
-            <div class="form-group">
                 {{ Form::label('email', 'Email') }}
                 {{ Form::text('email', $tempProperty->email, array('class' => 'form-control')) }}
             </div>

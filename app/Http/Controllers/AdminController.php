@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\TempUser;
 use App\TempProperty;
+use App\Mail\AdminTempBossCreate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -285,6 +286,17 @@ class AdminController extends Controller
             $boss->surname = Input::get('surname');
             $boss->email = Input::get('boss_email');
             $boss->phone_number = Input::get('boss_phone_number');
+            
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $codeText = "";
+
+            for ($i = 0; $i < 20; $i++) 
+            {
+                $codeText .= $characters[rand(0, $charactersLength - 1)];
+            }
+                
+            $boss->register_code = $codeText;
             $boss->isBoss = 1;
             $boss->save();
             
@@ -300,8 +312,10 @@ class AdminController extends Controller
                 $property->house_number  = Input::get('house_number');
                 $property->post_code     = Input::get('post_code');
                 $property->city          = "Warszawa";
-                $property->boss_id       = $boss->id;
+                $property->temp_user_id  = $boss->id;
                 $property->save();
+                
+                \Mail::to($boss)->send(new AdminTempBossCreate($boss));
 
                 return redirect('/admin/boss/list')->with('success', 'Boss and property successfully created!');
             }

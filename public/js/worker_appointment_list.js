@@ -105,29 +105,30 @@ $(document).ready(function() {
         })
         .then((res) => res.json())
         .then((data) => {
+            
+            $("#appointments-table").html('');
+                
+            let appointmentsTable = `
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>                
+                            <td>Data</td>
+                            <td>Godzina</td>
+                            <td>Pracownik</td>
+                            <td>Zabieg</td>
+                            <td>Wykonawca</td>
+                            <td>Status</td>
+                        </tr>
+                    </thead>
+                    <tbody id="appointments">
+                    </tbody>
+                </table>
+            `;
+
+            $("div#appointments-table").append(appointmentsTable);
+                
             if (data.type === "success")
-            {           
-                $("#appointments-table").html('');
-                
-                let appointmentsTable = `
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>                
-                                <td>Data</td>
-                                <td>Godzina</td>
-                                <td>Pracownik</td>
-                                <td>Zabieg</td>
-                                <td>Wykonawca</td>
-                                <td>Status</td>
-                            </tr>
-                        </thead>
-                        <tbody id="appointments">
-                        </tbody>
-                    </table>
-                `;
-                
-                $("div#appointments-table").append(appointmentsTable);
-                
+            {                         
                 $.each(data.appointments, function(key, value) 
                 {
                     $("div#appointments-table > table > tbody#appointments").append(`
@@ -164,29 +165,30 @@ $(document).ready(function() {
         })
         .then((res) => res.json())
         .then((data) => {
+            
+            $("#appointments-table").html('');
+                
+            let appointmentsTable = `
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>                
+                            <td>Data</td>
+                            <td>Godzina</td>
+                            <td>Pracownik</td>
+                            <td>Zabieg</td>
+                            <td>Wykonawca</td>
+                            <td>Status</td>
+                        </tr>
+                    </thead>
+                    <tbody id="appointments">
+                    </tbody>
+                </table>
+            `;
+
+            $("div#appointments-table").append(appointmentsTable);
+                
             if (data.type === "success")
             {          
-                $("#appointments-table").html('');
-                
-                let appointmentsTable = `
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>                
-                                <td>Data</td>
-                                <td>Godzina</td>
-                                <td>Pracownik</td>
-                                <td>Zabieg</td>
-                                <td>Wykonawca</td>
-                                <td>Status</td>
-                            </tr>
-                        </thead>
-                        <tbody id="appointments">
-                        </tbody>
-                    </table>
-                `;
-                
-                $("div#appointments-table").append(appointmentsTable);
-                
                 $.each(data.appointments, function(key, value) 
                 {
                     $("div#appointments-table > table > tbody#appointments").append(`

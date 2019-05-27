@@ -57,6 +57,34 @@ class HomeController extends Controller
             
         } else if ($user->isBoss !== null) {
             
+            // todo: zrób żeby kafelek Pakiety nie wyświetlał się kiedy nie ma żadnych chosenProperties
+            // dodaj widok do zamawiania (purchase subscrypcji) 
+            
+//            // >> showPurchaseSubscriptionsView
+//            $publicProperties = Property::where('boss_id', null)->with('subscriptions')->get();
+//            $showPurchaseSubscriptions = false;
+//
+//            if (count($publicProperties) > 0)
+//            {
+//                foreach ($publicProperties as $publicProperty)
+//                {
+//                    if (count($publicProperty->subscriptions) > 0)
+//                    {
+//                        $showPurchaseSubscriptions = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            // >>
+//            
+//            return view('home')->with([
+//                'user' => $user,
+//                'showGraphicsView' => $showGraphics,
+//                'showSubscriptionsView' => count($user->chosenProperties) > 0 ? true : false,
+//                'showPurchaseSubscriptionsView' => $showPurchaseSubscriptions
+//            ]);
+            
+            
             $route = 'home_boss';
             
         } else {

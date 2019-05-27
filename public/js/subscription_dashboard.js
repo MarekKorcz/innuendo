@@ -87,19 +87,42 @@ window.addEventListener('DOMContentLoaded', () => {
                 workers.empty();
                 
                 $.each(data.propertySubscriptions, function (index, subscription) 
-                {                    
-                    let subscriptionNode = `
-                        <div class="box text-center" data-subscription_id="` + subscription.id + `">
-                            <div class="data">
-                                <p>Nazwa: <strong>` + subscription.name + `</strong></p>
-                                ` + subscription.description + `
-                                <p>Cena regularna: <strong>` + subscription.old_price + `</strong></p>
-                                <p>Cena z subskrypcją: <strong>` + subscription.new_price + `</strong></p>
-                                <p>Ilość zabiegów w miesiącu: <strong>` + subscription.quantity + `</strong></p>
-                                <p>Czas subskrypcji (w miesiącach): <strong>` + subscription.duration + `</strong></p>
+                {       
+                    let subscriptionNode = null;
+                    
+                    if (subscription.isPurchased === false)
+                    {
+                        subscriptionNode = `
+                            <div class="box text-center" data-subscription_id="` + subscription.id + `">
+                                <div class="data">
+                                    <p>Nazwa: <strong>` + subscription.name + `</strong></p>
+                                    ` + subscription.description + `
+                                    <p>Cena regularna: <strong>` + subscription.old_price + `</strong></p>
+                                    <p>Cena z subskrypcją: <strong>` + subscription.new_price + `</strong></p>
+                                    <p>Ilość zabiegów w miesiącu: <strong>` + subscription.quantity + `</strong></p>
+                                    <p>Czas subskrypcji (w miesiącach): <strong>` + subscription.duration + `</strong></p>
+                                </div>
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/purchase/` + subscription.property_id + `/` + subscription.id + `">
+                                    Kup subskrypcje
+                                </a>
                             </div>
-                        </div>
-                    `;
+                        `;
+                        
+                    } else {
+                        
+                        subscriptionNode = `
+                            <div class="box text-center" data-subscription_id="` + subscription.id + `">
+                                <div class="data">
+                                    <p>Nazwa: <strong>` + subscription.name + `</strong></p>
+                                    ` + subscription.description + `
+                                    <p>Cena regularna: <strong>` + subscription.old_price + `</strong></p>
+                                    <p>Cena z subskrypcją: <strong>` + subscription.new_price + `</strong></p>
+                                    <p>Ilość zabiegów w miesiącu: <strong>` + subscription.quantity + `</strong></p>
+                                    <p>Czas subskrypcji (w miesiącach): <strong>` + subscription.duration + `</strong></p>
+                                </div>
+                            </div>
+                        `;
+                    }
                     
                     subscriptions.append(subscriptionNode);
                 });

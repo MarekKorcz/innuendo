@@ -23,7 +23,6 @@
         <table class="table table-striped">
             <tr>
                 <th>Name:</th>
-                <th>Description:</th>
                 <th>Email:</th>
                 <th>Phone number:</th>
                 <th>Street:</th>
@@ -35,7 +34,6 @@
             </tr>
             <tr>
                 <td>{{ $tempProperty->name }}</td>
-                <td>{!! $tempProperty->description !!}</td>
                 <td>{{ $tempProperty->email }}</td>
                 <td>{{ $tempProperty->phone_number }}</td>
                 <td>{{ $tempProperty->street }}</td>

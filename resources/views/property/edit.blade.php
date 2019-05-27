@@ -56,6 +56,11 @@
         <div class="form-group">
             {{ Form::label('user', 'Users:') }}
             <select id="user" name="user" class="form-control">
+                @if ($property->boss_id == 0 || $property->boss_id == null)
+                    <option value="0" selected="true">Public</option>
+                @else
+                    <option value="0">Public</option>
+                @endif
                 @foreach ($property->users as $user)
                     @if ($user->id == $property->boss_id)
                         <option value="{{$user->id}}" selected="true">{{$user->name}} {{$user->surname}}</option>

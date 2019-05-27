@@ -16,9 +16,11 @@
             @endif
                 <div class="card-body">
                     <h5 class="card-title text-center">{{$property->name}}</h5>
-                    <p class="card-text">
-                        {!!$property->description!!}
-                    </p>
+                    @if ($property->description)
+                        <p class="card-text">
+                            {!!$property->description!!}
+                        </p>
+                    @endif
                     <a href="{{ URL::to('user/property/' . $property->id) }}" class="btn btn-success">
                         Zobacz
                     </a>

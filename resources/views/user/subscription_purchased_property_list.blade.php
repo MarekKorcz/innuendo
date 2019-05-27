@@ -20,7 +20,9 @@
                         {{$property->name}}
                     </strong>
                     <p class="card-text">
-                        {!!$property->description!!}
+                        @if ($property->description)
+                            {!!$property->description!!}
+                        @endif
                         <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}} {{$property->city}}</strong></p>
                     </p>
                     <div class="text-center">

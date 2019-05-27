@@ -297,12 +297,12 @@ class PropertyController extends Controller
                     'isBoss' => 1,
                     'boss_id' => null
                 ])->first();
+                
             }
             
             $property = Property::where('id', $id)->first();
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
-            $property->description   = Input::get('description');
             $property->email         = Input::get('email');
             $property->phone_number  = Input::get('phone_number');
             $property->street        = Input::get('street');
@@ -314,6 +314,10 @@ class PropertyController extends Controller
             if ($boss !== null)
             {
                 $property->boss_id = $boss->id; 
+                
+            } else {
+                
+                $property->boss_id = 0;
             }
             
             $property->save();
