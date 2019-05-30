@@ -2,7 +2,7 @@
 
 @section('content')
 
-<!--{!! Html::script('js/property_show.js') !!}-->
+{!! Html::script('js/subscription_purchase.js') !!}
 
 <div class="container">
 
@@ -69,6 +69,7 @@
                                 <div class="form-group">
                                     {!! Html::decode(Form::label('terms','<span style="font-size: 21px;">Akceptuje powyższy regulamin:</span>')) !!}
                                     {{ Form::checkbox('terms', null, null, array('class' => 'form-control')) }}
+                                    <div class="warning"></div>
                                 </div>
                                 
                                 {{ Form::hidden('subscription_id', $subscription->id) }}

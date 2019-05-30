@@ -126,7 +126,7 @@ class BossController extends Controller
                                             
                                         } else {
                                             
-                                            $isSubscriptionStarted = "(jeszcze nie aktywna)";
+                                            $isSubscriptionStarted = "(jeszcze nie aktywowana)";
                                         }
 
                                         $subscriptions[] = [
@@ -454,7 +454,7 @@ class BossController extends Controller
                                             ])->first();
 
                                             if ($substart !== null)
-                                            {
+                                            {                                                
                                                 // >> check whether substart is current or not
                                                 $substart['isCurrent'] = false;
                                                 
@@ -471,7 +471,7 @@ class BossController extends Controller
                                                 $purchase['substart'] = $substart;
                                             }
                                             // <<
-                                        }                                        
+                                        }
                                     }
                                     
                                     $subscription['purchases'] = $purchases;
@@ -537,12 +537,18 @@ class BossController extends Controller
                     }
                 }
                 // <<
-            }
+            }            
+            
+            // >> get substarts attached to chosen property and subscription
+            $substarts = Substart::where([
+                'property_id' => $propertyId,
+                'subscription_id' => $subscriptionId
+            ])->get();
+            // <<
             
             return view('boss.subscription_dashboard')->with([
                 'propertiesWithSubscriptions' => $propertiesWithSubscriptions,
-                'propertyId' => $propertyId,
-                'subscriptionId' => $subscriptionId
+                'substart' => count($substarts) > 0 ? $substarts->last() : null
             ]);
             
         } else {
@@ -683,66 +689,59 @@ class BossController extends Controller
     public function subscriptionPurchase($propertyId, $subscriptionId)
     {
         $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
-        $propertyId = (int)$propertyId;
+        $property = Property::where('id', (int)$propertyId)->first();
         
         $subscriptionId = htmlentities((int)$subscriptionId, ENT_QUOTES, "UTF-8");
-        $subscriptionId = (int)$subscriptionId;
-        
-        if ($propertyId && $subscriptionId)
+        $subscription = Subscription::where('id', (int)$subscriptionId)->first();
+            
+        if ($property !== null && $subscription !== null)
         {
-            $subscription = Subscription::where('id', $subscriptionId)->first();
-            $property = Property::where('id', $propertyId)->first();
+            $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
 
-            if ($subscription !== null && $property !== null)
+            if ($boss !== null && count($boss->chosenProperties) > 0)
             {
-                $boss = auth()->user();
-                $user = User::where('id', $boss->id)->with('chosenProperties')->first();
-
-                if ($user->chosenProperties)
+                $today = new \DateTime(date('Y-m-d'));
+                
+                foreach ($boss->chosenProperties as $chosenProperty)
                 {
-                    foreach ($user->chosenProperties as $chosenProperty)
+                    if ($chosenProperty->property_id == $property->id)
                     {
-                        if ($chosenProperty->property_id == $propertyId)
+                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+
+                        if (count($chosenProperty->purchases) > 0)
                         {
-                            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-
-                            if ($chosenProperty->purchases)
+                            foreach ($chosenProperty->purchases as $purchase)
                             {
-                                foreach ($chosenProperty->purchases as $purchase)
+                                $chosenSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+                                
+                                if ($chosenSubscription !== null && $chosenSubscription->id == $subscription->id)
                                 {
-                                    $userSubscription = Subscription::where('id', $purchase->subscription_id)->first();
-
-                                    if ($userSubscription !== null && $userSubscription->id == $subscription->id)
+                                    $substart = Substart::where([
+                                        'property_id' => $property->id,
+                                        'subscription_id' => $subscription->id,
+                                        'purchase_id' => $purchase->id
+                                    ])->first();
+                                    
+                                    if ($substart !== null && $substart->start_date <= $today && $substart->end_date >= $today)
                                     {
-                                        if ($property->boss_id !== null && $property->boss_id == $boss->id)
-                                        {
-                                            return redirect()->action(
-                                                'BossController@subscriptionList', [
-                                                    'propertyId' => $property->id,
-                                                    'subscriptionId' => $subscription->id
-                                                ]
-                                            )->with('success', 'Posiadasz już te subskrypcje');
-                                            
-                                        } else {
-                                            
-                                            return redirect()->action(
-                                                'UserController@subscriptionPurchasedShow', [
-                                                    'id' => $purchase->id
-                                                ]
-                                            )->with('success', 'Posiadasz już te subskrypcje');
-                                        }
+                                        return redirect()->action(
+                                            'BossController@subscriptionList', [
+                                                'propertyId' => $property->id,
+                                                'subscriptionId' => $subscription->id
+                                            ]
+                                        )->with('success', 'Posiadasz już te subskrypcje');
                                     }
                                 }
                             }
                         }
                     }
                 }
-
-                return view('boss.subscription_purchase')->with([
-                    'property' => $property,
-                    'subscription' => $subscription
-                ]);
             }
+
+            return view('boss.subscription_purchase')->with([
+                'property' => $property,
+                'subscription' => $subscription
+            ]);
         }
         
         return redirect()->route('welcome');
@@ -756,7 +755,6 @@ class BossController extends Controller
      */
     public function subscriptionPurchased(Request $request)
     {
-        // validate
         $rules = array(
             'terms'             => 'required',
             'property_id'       => 'required',
@@ -822,28 +820,27 @@ class BossController extends Controller
                         $chosenProperty->save();
                     }
                     
-                    // store
                     $purchase = new Purchase();
                     $purchase->subscription_id = $subscription->id;
                     $purchase->chosen_property_id = $chosenProperty->id;
                     $purchase->save();
                     
-                    $startDate = date('Y-m-d');
-                    
-                    $substart = new Substart();
-                    $substart->start_date = $startDate;
-                    $endDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
-                    $substart->end_date = $endDate;
-                    $substart->user_id = auth()->user()->id;
-                    $substart->property_id = $property->id;
-                    $substart->subscription_id = $subscription->id;
-                    $substart->purchase_id = $purchase->id;
-                    $substart->save();
+                        $startDate = date('Y-m-d');
+
+                        $substart = new Substart();
+                        $substart->start_date = $startDate;
+                        $endDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
+                        $substart->end_date = $endDate;
+                        $substart->boss_id = auth()->user()->id;
+                        $substart->property_id = $property->id;
+                        $substart->subscription_id = $subscription->id;
+                        $substart->purchase_id = $purchase->id;
+                        $substart->save();
                     
                     $purchase->substart_id = $substart->id;
                     $purchase->save();
 
-                    if ($purchase !== null)
+                    if ($purchase !== null && $substart !== null)
                     {
                         $startDate = date('Y-m-d');
                                     
@@ -851,11 +848,12 @@ class BossController extends Controller
                         $interval->available_units = $subscription->quantity * $subscription->duration;
 
                         $interval->start_date = $startDate;
-                        $startDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
+                        $startDate = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate)));
 
                         $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
                         $interval->end_date = $endDate;
 
+                        $interval->substart_id = $substart->id;
                         $interval->purchase_id = $purchase->id;
                         $interval->save();
 
@@ -882,6 +880,8 @@ class BossController extends Controller
                     }
                 }
             }
+            
+            return redirect()->route('welcome')->with('error', 'Niedozwolona próba');
         }
     }
     
@@ -998,7 +998,7 @@ class BossController extends Controller
                 $workers = User::where('boss_id', $boss->id)->with('chosenProperties')->get();
             }
             
-//            ogarnij tutaj wyswietlanie wizyt na podstawie czasu trwania subskrypcji
+//           todo:  ogarnij tutaj wyswietlanie wizyt na podstawie czasu trwania subskrypcji
 //            * jesli jest mozliwosc wyswietlenia perioodu zgodnego z czasem terazniejszym to wyswietl, 
 //            * jesli jest nieaktywna subskrypcja wyswietl wszystkie
 //            * jesli subskrypcja sie zakonczyla wyswietl ostatni mozliwy
@@ -1418,8 +1418,7 @@ class BossController extends Controller
                     'type'    => 'success',
                     'message' => "Udało się pobrać użytkowników posiadający daną subskrypcje",
                     'workers' => $workers,
-                    'propertyId' => $substart->property_id,
-                    'subscriptionId' => $substart->subscription_id
+                    'substartId' => $substart->id
                 ];
 
                 return new JsonResponse($data, 200, array(), true);
@@ -1582,8 +1581,7 @@ class BossController extends Controller
                         'substarts' => $this->turnSubstartObjectsToArrays($substarts),
                         'newestSubstart' => $this->turnSubstartObjectsToArrays($newestSubstart),
                         'workers' => $workers,
-                        'propertyId' => $property->id,
-                        'subscriptionId' => $subscription->id
+                        'lastSubstartId' => $substarts->last()->id
                     ];
 
                     return new JsonResponse($data, 200, array(), true);
@@ -1614,11 +1612,11 @@ class BossController extends Controller
                 
                 if ($substarts->isActive == 1)
                 {
-                    $isActiveMessage = "Aktywna";
+                    $isActiveMessage = "Aktywowana";
                 
                 } elseif ($substarts->isActive == 0) {
                     
-                    $isActiveMessage = "Nieaktywna";
+                    $isActiveMessage = "Nieaktywowana";
                 }
             }
                                         
@@ -1643,11 +1641,11 @@ class BossController extends Controller
 
                     if ($substart->isActive == 1)
                     {
-                        $isActiveMessage = "Aktywna";
+                        $isActiveMessage = "Aktywowana";
 
                     } elseif ($substart->isActive == 0) {
 
-                        $isActiveMessage = "Nieaktywna";
+                        $isActiveMessage = "Nieaktywowana";
                     }
                 }
             

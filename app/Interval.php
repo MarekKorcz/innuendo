@@ -12,7 +12,7 @@ class Interval extends Model
      * @var array
      */
     protected $fillable = [
-        'available_units', 'start_date', 'end_date', 'purchase_id'
+        'available_units', 'used_units', 'start_date', 'end_date', 'substart_id', 'purchase_id'
     ];
     
     /**
@@ -22,10 +22,20 @@ class Interval extends Model
      */
     protected $casts = [
         'available_units' => 'integer',
+        'used_units' => 'integer',
         'start_date' => 'date',
         'end_date' => 'date',
+        'substart_id' => 'integer',
         'purchase_id' => 'integer'
     ];
+    
+    /**
+     * Get the purchase that owns the interval.
+     */
+    public function substart()
+    {
+        return $this->belongsTo('App\Substart');
+    }
     
     /**
      * Get the purchase that owns the interval.

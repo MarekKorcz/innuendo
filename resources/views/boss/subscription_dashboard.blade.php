@@ -94,9 +94,9 @@
                                         </p>
                                         @if ($purchase->substart->isCurrent)
                                             @if ($purchase->substart->isActive == 1)
-                                                <p>Aktywna</p>
+                                                <p>Aktywowana</p>
                                             @elseif ($purchase->substart->isActive == 0)
-                                                <p>Nieaktywna</p>
+                                                <p>Nieaktywowana</p>
                                             @endif
                                         @else
                                             <p>Czas trwania dobiegł końca</p>
@@ -122,7 +122,7 @@
                                     @if (count($purchase->substart->workers) > 0)
                                         <div class="text-center">
                                             <h2>Pracownicy przypisani do danej subskrypcji:</h2>
-                                            <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $propertyId . '/' . $subscriptionId . '/0') }}">
+                                            <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/0') }}">
                                                 Wszystkie wizyty pracowników
                                             </a>
                                             <table class="table table-striped table-bordered">
@@ -143,7 +143,7 @@
                                                         <td>{{$worker['email']}}</td>
                                                         <td>{{$worker['phone_number']}}</td>
                                                         <td>
-                                                            <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $propertyId . '/' . $subscriptionId . '/' . $worker['id']) }}">
+                                                            <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/' . $worker['id']) }}">
                                                                 Pokaż
                                                             </a>
                                                         </td>

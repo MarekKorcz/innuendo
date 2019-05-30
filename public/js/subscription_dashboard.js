@@ -207,7 +207,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <div class="text-center">                        
                             <p>
                                 <h2>Pracownicy przypisani do danej subskrypcji:</h2>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + data.subscriptionId + `/0">
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.lastSubstartId + `/0">
                                     Wszystkie wizyty pracowników
                                 </a>
                             </p>
@@ -239,7 +239,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <td>` + worker.email + `</td>
                                 <td>` + worker.phone_number + `</td>
                                 <td>
-                                    <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + data.subscriptionId + `/` + worker.id + `">
+                                    <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.lastSubstartId + `/` + worker.id + `">
                                         Pokaż
                                     </a>
                                 </td>
@@ -290,7 +290,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     <div class="text-center">                        
                         <p>
                             <h2>Pracownicy przypisani do danej subskrypcji:</h2>
-                            <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + data.subscriptionId + `/0">
+                            <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.substartId + `/0">
                                 Wszystkie wizyty pracowników
                             </a>
                         </p>
@@ -322,7 +322,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             <td>` + worker.email + `</td>
                             <td>` + worker.phone_number + `</td>
                             <td>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + data.subscriptionId + `/` + worker.id + `">
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.substartId + `/` + worker.id + `">
                                     Pokaż
                                 </a>
                             </td>

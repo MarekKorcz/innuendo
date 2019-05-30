@@ -32,6 +32,14 @@ class Substart extends Model
     ];
     
     /**
+     * Get intervals which belong to purchase.
+     */
+    public function intervals()
+    {
+        return $this->hasMany('App\Interval');
+    }
+    
+    /**
      * Get the purchase that owns subscription start.
      */
     public function purchase()
