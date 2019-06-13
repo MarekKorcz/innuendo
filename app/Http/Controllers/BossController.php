@@ -772,9 +772,21 @@ class BossController extends Controller
             
             if ($subscription !== null && $property !== null)
             {
-                // check if such a subscription hasn't already been purchased!
-                $isPurchasable = true;
+                $chosenProperty = ChosenProperty::where([
+                    'property_id' => $property->id,
+                    'user_id' => auth()->user()->id
+                ])->first();
 
+                if ($chosenProperty === null)
+                {
+                    $chosenProperty = new ChosenProperty();
+                    $chosenProperty->property_id = $property->id;
+                    $chosenProperty->user_id = auth()->user()->id;
+                    $chosenProperty->save();
+                }
+                
+                // >> check if such a subscription hasn't already been purchased!
+                $isPurchasable = true;
                 $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
 
                 if (count($boss->chosenProperties) > 0)
@@ -798,28 +810,10 @@ class BossController extends Controller
                         }
                     }
                 }
+                // <<
 
                 if ($isPurchasable)
                 {
-                    $chosenProperty = ChosenProperty::where([
-                        'property_id' => $property->id,
-                        'user_id' => $boss->id
-                    ])->first();
-                    
-                    if ($chosenProperty === null)
-                    {
-                        $chosenProperty = new ChosenProperty();
-                        $chosenProperty->property_id = $property->id;
-                        $chosenProperty->user_id = $boss->id;
-                        $chosenProperty->subscriptions()->attach($subscription);
-                        $chosenProperty->save();
-                        
-                    } else {
-                        
-                        $chosenProperty->subscriptions()->attach($subscription);
-                        $chosenProperty->save();
-                    }
-                    
                     $purchase = new Purchase();
                     $purchase->subscription_id = $subscription->id;
                     $purchase->chosen_property_id = $chosenProperty->id;
@@ -839,9 +833,13 @@ class BossController extends Controller
                     
                     $purchase->substart_id = $substart->id;
                     $purchase->save();
+                    
+                    $chosenProperty->subscriptions()->attach($subscription);
+                    $chosenProperty->save();
 
                     if ($purchase !== null && $substart !== null)
-                    {
+                    {                        
+                        // >> create interval
                         $startDate = date('Y-m-d');
                                     
                         $interval = new Interval();
@@ -856,6 +854,7 @@ class BossController extends Controller
                         $interval->substart_id = $substart->id;
                         $interval->purchase_id = $purchase->id;
                         $interval->save();
+                        // <<
 
                         /**
                          * 

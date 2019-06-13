@@ -12,6 +12,7 @@ use App\Property;
 //use App\Purchase;
 //use App\ChosenProperty;
 //use App\Subscription;
+//use App\Property;
 //use App\User;
 //use App\Item;
 //use App\Graphic;

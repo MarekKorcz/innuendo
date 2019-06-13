@@ -134,13 +134,20 @@ class RegisterController extends Controller
                                         $purchase->chosen_property_id = $userChosenProperty->id;                       
                                         $purchase->substart_id = $substart->id;                       
                                         $purchase->save();
+                                        
+                                        $startDate = $substart->start_date;
 
                                         if ($substart->isActive)
-                                        {
-                                            $startDate = $substart->start_date;
+                                        {                                            
+                                            // >> todo: sprawdz czy kiedy aktywowana subskrypcja to czy tu też się dobrze wszystko zapisuję
 
                                             for ($i = 1; $i <= $subscription->duration; $i++)
                                             {
+                                                $bossInterval = Interval::where([
+                                                    'start_date' => $startDate,
+                                                    'substart_id' => $substart->id
+                                                ])->first();
+                                                
                                                 $interval = new Interval();
                                                 $interval->available_units = $subscription->quantity;
 
@@ -150,23 +157,28 @@ class RegisterController extends Controller
                                                 $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
                                                 $interval->end_date = $endDate;
 
+                                                $interval->interval_id = $bossInterval->id;
                                                 $interval->purchase_id = $purchase->id;
                                                 $interval->save();
                                             }
+                                            
+                                            // << todo
 
                                         } else {
 
-                                            $startDate = date('Y-m-d');
-
+                                            $bossInterval = Interval::where([
+                                                'start_date' => $startDate,
+                                                'end_date' => $substart->end_date,
+                                                'substart_id' => $substart->id
+                                            ])->first();
+                                            
                                             $interval = new Interval();
                                             $interval->available_units = $subscription->quantity * $subscription->duration;
 
-                                            $interval->start_date = $startDate;
-                                            $startDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
+                                            $interval->start_date = $bossInterval->start_date;
+                                            $interval->end_date = $bossInterval->end_date;
 
-                                            $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
-                                            $interval->end_date = $endDate;
-
+                                            $interval->interval_id = $bossInterval->id;
                                             $interval->purchase_id = $purchase->id;
                                             $interval->save();
                                         }

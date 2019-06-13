@@ -215,11 +215,12 @@ class CreateModels extends Migration
         
         Schema::create('intervals', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('available_units');
-            $table->integer('used_units');
+            $table->integer('available_units')->nullable();
+            $table->integer('used_units')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->timestamps();
+            $table->integer('interval_id')->nullable();
             $table->integer('substart_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("substarts");
             $table->integer('purchase_id')->unsigned()->index()->foreign()->references("id")->on("purchases");
         });

@@ -202,18 +202,42 @@ class AppointmentController extends Controller
                                             if (count($currentInterval) == 1)
                                             {
                                                 $interval = $currentInterval->first();
-
-                                                if ($interval->available_units > 0)
+                                                
+                                                if ($interval->substart_id == null)
                                                 {
-                                                    foreach ($subscription->items as $item)
+                                                    // >> purchased subscription worker scenario
+                                                    $bossInterval = Interval::where('id', $interval->interval_id)->first();                                                               
+
+                                                    if ($bossInterval !== null && $bossInterval->available_units > 0)
                                                     {
-                                                        if ($item->minutes <= $appointmentLengthInMinutes)
+                                                        foreach ($subscription->items as $item)
                                                         {
-                                                            $item['subscription_id'] = $subscription->id;
-                                                            $item['subscription_name'] = $subscription->name;
-                                                            $userSubscriptionItems = $userSubscriptionItems->push($item);
+                                                            if ($item->minutes <= $appointmentLengthInMinutes)
+                                                            {
+                                                                $item['subscription_id'] = $subscription->id;
+                                                                $item['subscription_name'] = $subscription->name;
+                                                                $userSubscriptionItems = $userSubscriptionItems->push($item);
+                                                            }
                                                         }
                                                     }
+                                                    // <<
+                                                
+                                                } else {
+                                                    
+                                                    // >> purchased subscription owner scenario
+                                                    if ($interval->available_units > 0)
+                                                    {
+                                                        foreach ($subscription->items as $item)
+                                                        {
+                                                            if ($item->minutes <= $appointmentLengthInMinutes)
+                                                            {
+                                                                $item['subscription_id'] = $subscription->id;
+                                                                $item['subscription_name'] = $subscription->name;
+                                                                $userSubscriptionItems = $userSubscriptionItems->push($item);
+                                                            }
+                                                        }
+                                                    }
+                                                    // <<
                                                 }
                                             }                                          
                                         }
@@ -333,13 +357,15 @@ class AppointmentController extends Controller
                         'month_id' => $month->id
                     ])->first();
                     
+                    $user = auth()->user();
+                    
                     $appointment = new Appointment();
                     $appointment->start_time = $appointmentTerm;
                     $appointment->end_time = $endTime;
                     $appointment->minutes = $item->minutes;
                     $appointment->graphic_id = $graphicId;
                     $appointment->day_id = $day->id;
-                    $appointment->user_id = auth()->user()->id;
+                    $appointment->user_id = $user->id;
                     $appointment->item_id = $item->id;
                     
                     if ($request->get('subscription_id'))
@@ -365,19 +391,21 @@ class AppointmentController extends Controller
                                 $calendar = Calendar::where('id', $calendarId)->first();
                                 
                                 $chosenProperty = ChosenProperty::where([
-                                    'user_id' => auth()->user()->id,
+                                    'user_id' => $user->id,
                                     'property_id' => $calendar->property_id
                                 ])->first();
                                 
                                 if ($chosenProperty !== null)
                                 {
-                                    $purchase = Purchase::where([
+                                    $purchases = Purchase::where([
                                         'chosen_property_id' => $chosenProperty->id,
                                         'subscription_id' => $subscription->id
-                                    ])->first();
+                                    ])->get();
 
-                                    if ($purchase !== null)
+                                    if (count($purchases) > 0)
                                     {                        
+                                        $purchase = $purchases->last();
+                                        
                                         // chosen date                                      
                                         $chosenDay = (string)$day->day_number;
                                         $chosenDay = strlen($chosenDay) == 1 ? '0' . $chosenDay : $chosenDay;
@@ -387,7 +415,10 @@ class AppointmentController extends Controller
                                         $chosenDate = new \DateTime($year->year . '-' . $chosenMonth . '-' . $chosenDay);
 
                                         // purchase intervals
-                                        $purchaseIntervals = Interval::where('purchase_id', $purchase->id)->get();
+                                        $purchaseIntervals = Interval::where([
+                                            'purchase_id' => $purchase->id
+                                        ])->get();
+                                        
                                         $currentInterval = new Collection();
 
                                         // looking for interval corresponding to the given date
@@ -406,30 +437,68 @@ class AppointmentController extends Controller
                                         if (count($currentInterval) == 1)
                                         {
                                             $interval = $currentInterval->first();
-
-                                            if ($interval->available_units > 0)
+                                            
+                                            if ($interval->substart_id == null)
                                             {
-                                                $appointment->purchase()->associate($purchase->id);
-
-                                                $interval->available_units = ($interval->available_units - 1);
-                                                $interval->save();
+                                                // >> purchased subscription worker scenario
+                                                $bossInterval = Interval::where('id', $interval->interval_id)->first();                                                               
                                                 
-                                                // todo: zobacz czy wizyty które są abonamentowe mogą być robione poza czasem trwania 
-                                                // wykupionej subskrypcji
-                                               
-                                                $appointment->interval_id = $interval->id;
+                                                if ($bossInterval !== null && $bossInterval->available_units > 0)
+                                                {
+                                                    $appointment->purchase()->associate($purchase->id);
 
+                                                    $bossInterval->available_units = ($bossInterval->available_units - 1);
+                                                    
+                                                    $bossInterval->save();
+                                                    $interval->save();
+
+                                                    // todo: zobacz czy wizyty które są abonamentowe mogą być robione poza czasem trwania 
+                                                    // wykupionej subskrypcji
+
+                                                    $appointment->interval_id = $interval->id;
+
+                                                } else {
+
+                                                    return redirect()->action(
+                                                        'UserController@calendar', [
+                                                            'calendarId' => $calendarId,
+                                                            'year' => $year->year,
+                                                            'month_number' => $month->month_number,
+                                                            'day_number' => $day->day_number
+                                                        ]
+                                                    )->with('error', 'Liczba dostępnych wizyt subskrypcji dla danego miesiąca została przekroczona!');
+                                                }
+                                                // <<
+                                                
                                             } else {
+                                                
+                                                // >> purchased subscription owner scenario
+                                                if ($interval->available_units > 0)
+                                                {
+                                                    $appointment->purchase()->associate($purchase->id);
 
-                                                return redirect()->action(
-                                                    'UserController@calendar', [
-                                                        'calendarId' => $calendarId,
-                                                        'year' => $year->year,
-                                                        'month_number' => $month->month_number,
-                                                        'day_number' => $day->day_number
-                                                    ]
-                                                )->with('error', 'Liczba dostępnych wizyt subskrypcji dla danego miesiąca została przekroczona!');
+                                                    $interval->available_units = ($interval->available_units - 1);
+                                                    $interval->save();
+
+                                                    $appointment->interval_id = $interval->id;
+
+                                                } else {
+
+                                                    return redirect()->action(
+                                                        'UserController@calendar', [
+                                                            'calendarId' => $calendarId,
+                                                            'year' => $year->year,
+                                                            'month_number' => $month->month_number,
+                                                            'day_number' => $day->day_number
+                                                        ]
+                                                    )->with('error', 'Liczba dostępnych wizyt subskrypcji dla danego miesiąca została przekroczona!');
+                                                }
+                                                // <<
                                             }
+
+                                        } else {
+                                            
+                                            return redirect()->route('welcome')->with('error', 'Subskrypcja już nie obowiązuję');
                                         }
                                     }
                                 }

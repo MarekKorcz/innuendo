@@ -12,7 +12,7 @@ class Interval extends Model
      * @var array
      */
     protected $fillable = [
-        'available_units', 'used_units', 'start_date', 'end_date', 'substart_id', 'purchase_id'
+        'available_units', 'used_units', 'start_date', 'end_date', 'interval_id', 'substart_id', 'purchase_id'
     ];
     
     /**
@@ -25,6 +25,7 @@ class Interval extends Model
         'used_units' => 'integer',
         'start_date' => 'date',
         'end_date' => 'date',
+        'interval_id' => 'integer',
         'substart_id' => 'integer',
         'purchase_id' => 'integer'
     ];

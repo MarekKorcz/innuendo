@@ -46,15 +46,21 @@
         <p>
             Status wizyty: <strong id="status">{{config('appointment-status.' . $appointment->status)}}</strong>
         </p>
-        <select id="appointment-status" class="form-control">
-            @foreach ($statuses as $status)
-                @if ($status['isActive'])
-                    <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}" selected="selected">{{$status['value']}}</option>
-                @else
-                    <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}">{{$status['value']}}</option>
-                @endif
-            @endforeach
-        </select>
+        @if ($isActivated)
+            <select id="appointment-status" class="form-control">
+                @foreach ($statuses as $status)
+                    @if ($status['isActive'])
+                        <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}" selected="selected">{{$status['value']}}</option>
+                    @else
+                        <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}">{{$status['value']}}</option>
+                    @endif
+                @endforeach
+            </select>
+        @else
+            <a class="btn btn-primary" href="{{ URL::to('/employee/activate-subscription/' . $subscriptionPurchaseId . '/' . $appointment->id) }}">
+                Aktywuj subskrypcje
+            </a>
+        @endif
     </div>    
 </div>
 @endsection

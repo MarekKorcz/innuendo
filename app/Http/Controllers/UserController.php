@@ -510,56 +510,50 @@ class UserController extends Controller
         
         if ($appointment !== null)
         {
-            if ($appointment->purchase !== null)
+            if ($appointment->status !== 1)
             {
-                $day = Day::where('id', $appointment->day_id)->first();
-                $month = Month::where('id', $day->month_id)->first();
-                $year = Year::where('id', $month->year_id)->first();
-                
-                // appointment date                           
-                $appointmentDay = (string)$day->day_number;
-                $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
-                $appointmentMonth = (string)$month->month_number;
-                $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
-    
-                $now = new \DateTime(date('Y-m-d H:i:s'));
-                $appointmentDate = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
-                $appointmentDateMinusOneDay = $appointmentDate->sub(new \DateInterval('P1D'));
-                
-                if ($now <= $appointmentDateMinusOneDay)
+                if ($appointment->interval_id !== null)
                 {
-                    $purchaseIntervals = Interval::where('purchase_id', $appointment->purchase->id)->get();
-                    
-                    $appointmentDateWithoutTime = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay);
-                    
-                    foreach ($purchaseIntervals as $purchaseInterval)
+                    $appointmentInterval = Interval::where('id', $appointment->interval_id)->first();
+
+                    if ($appointmentInterval !== null)
                     {
-                        if ($purchaseInterval->start_date <= $appointmentDateWithoutTime && $appointmentDateWithoutTime <= $purchaseInterval->end_date)
+                        if ($appointmentInterval->substart_id === null)
                         {
-                            $purchaseInterval->available_units = $purchaseInterval->available_units + 1;
-                            $purchaseInterval->save();
+                            $bossMainInterval = Interval::where('id', $appointmentInterval->interval_id)->first();
+                            $bossMainInterval->available_units = ($bossMainInterval->available_units + 1);
+                            $bossMainInterval->save();
+
+                        } elseif ($appointmentInterval->substart_id !== null) {
+
+                            $appointmentInterval->available_units = ($appointmentInterval->available_units + 1);
+                            $appointmentInterval->save();
                         }
                     }
                 }
+                
+                $appointment->delete();
+
+                /**
+                * 
+                * 
+                * 
+                * email sanding
+                * 
+                * 
+                * 
+                * 
+                */
+
+                return redirect()->action(
+                    'UserController@appointmentIndex'
+                )->with('success', 'Wizyta została usunięta!');
             }
             
-            $appointment->delete();
-
-            /**
-            * 
-            * 
-            * 
-            * email sanding
-            * 
-            * 
-            * 
-            * 
-            */
-
-            return redirect()->action(
-                'UserController@appointmentIndex'
-            )->with('success', 'Wizyta została odwołana!');
+            return redirect()->route('welcome')->with('error', 'Nie można usunąć już wykonanej wizyty');
         }
+        
+        return redirect()->route('welcome')->with('error', 'Wizyta o podanym id nie istnieje');
     }
 
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
