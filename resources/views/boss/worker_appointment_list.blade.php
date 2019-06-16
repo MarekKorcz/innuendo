@@ -7,11 +7,11 @@
 <div class="container">
     
     <div class="text-center">
-        <h2>Zabiegi pracowników dotyczące subskrypcji - {{$subscription->name}}</h2>
+        <h2>Zabiegi dotyczące subskrypcji - {{$subscription->name}}</h2>
     </div>
     <div id="workers-panel" class="wrapper cont">
         <div class="text-center">
-            <label for="search">Wpisz imię lub nazwisko pracownika:</label>
+            <label for="search">Wpisz imię lub nazwisko:</label>
             @if($worker !== null)
                 <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" autocomplete="off">
             @else
@@ -24,7 +24,7 @@
         <div class="text-center">
             @if ($substart->isActive)
                 <label for="timePeriod">Wybierz okres rozliczeniowy:</label>
-                <select id="timePeriod" class="form-control">
+                <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
                     @foreach ($intervals as $interval)
                         @if ($interval->start_date <= $today && $interval->end_date >= $today)
                             <option value="{{$interval->id}}" selected>{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
@@ -61,7 +61,7 @@
                 <tr>                
                     <td>Data</td>
                     <td>Godzina</td>
-                    <td>Pracownik</td>
+                    <td>Imię i Nazwisko</td>
                     <td>Zabieg</td>
                     <td>Wykonawca</td>
                     <td>Status</td>

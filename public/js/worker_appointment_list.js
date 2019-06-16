@@ -44,13 +44,17 @@ $(document).ready(function() {
     $('#timePeriod').change(function() 
     {
         let userId = $("#search").data('userId');
-        let propertyId = $("input#propertyId").val();
-        let subscriptionId = $("input#subscriptionId").val();
+        
+        // todo: zobacz czy nie będę musiał usuwać tych dwóch inputów
+//        let propertyId = $("input#propertyId").val();
+//        let subscriptionId = $("input#subscriptionId").val();
+
         let intervalId = $(this).children("option:selected").val();
+        let substartId = $(this).data("substart_id");
 
         if (userId == undefined)
         {
-            getUsersAppointmentsFromDatabase(propertyId, subscriptionId, intervalId);
+            getUsersAppointmentsFromDatabase(intervalId, substartId);
             
         } else {
             
@@ -89,6 +93,8 @@ $(document).ready(function() {
     // or doing download without it (with no intervalId existed (non activated subscription scenario)))
     function getUserAppointmentsFromDatabase(userId, propertyId, subscriptionId, intervalId)
     {
+        console.log('single user');
+        
         return fetch('http://localhost:8000/boss/get-user-appointments-from-database', {
             method: 'POST',
             headers: {
@@ -114,7 +120,7 @@ $(document).ready(function() {
                         <tr>                
                             <td>Data</td>
                             <td>Godzina</td>
-                            <td>Pracownik</td>
+                            <td>Imię i Nazwisko</td>
                             <td>Zabieg</td>
                             <td>Wykonawca</td>
                             <td>Status</td>
@@ -148,8 +154,10 @@ $(document).ready(function() {
     
     // function to display all boss workers based on only propertyId, subscriptionId and intervalId 
     // after selecting time period with empty search input
-    function getUsersAppointmentsFromDatabase(propertyId, subscriptionId, intervalId)
+    function getUsersAppointmentsFromDatabase(intervalId, substartId)
     {
+        console.log('all users');
+        
         return fetch('http://localhost:8000/boss/get-users-appointments-from-database', {
             method: 'POST',
             headers: {
@@ -158,9 +166,8 @@ $(document).ready(function() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             body: JSON.stringify({
-                propertyId: propertyId, 
-                subscriptionId: subscriptionId, 
-                intervalId: intervalId
+                intervalId: intervalId,
+                substartId: substartId
             })
         })
         .then((res) => res.json())
@@ -174,7 +181,7 @@ $(document).ready(function() {
                         <tr>                
                             <td>Data</td>
                             <td>Godzina</td>
-                            <td>Pracownik</td>
+                            <td>Imię i Nazwisko</td>
                             <td>Zabieg</td>
                             <td>Wykonawca</td>
                             <td>Status</td>

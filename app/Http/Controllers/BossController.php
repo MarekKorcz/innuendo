@@ -960,8 +960,7 @@ class BossController extends Controller
     /**
      * Shows a list of appointments assigned to passed property subscription.
      * 
-     * @param type $propertyId
-     * @param type $subscriptionId
+     * @param type $substartId
      * @param type $userId
      * 
      * @return type
@@ -995,7 +994,10 @@ class BossController extends Controller
             } else {
                 
                 $workers = User::where('boss_id', $boss->id)->with('chosenProperties')->get();
-            }
+            }   
+            
+            // add boss to workers collection
+            $workers->prepend($boss);
             
 //           todo:  ogarnij tutaj wyswietlanie wizyt na podstawie czasu trwania subskrypcji
 //            * jesli jest mozliwosc wyswietlenia perioodu zgodnego z czasem terazniejszym to wyswietl, 
@@ -1056,7 +1058,7 @@ class BossController extends Controller
                                                 $today = new \DateTime(date('Y-m-d'));
                                                 
                                                 $currentInterval = Interval::where('purchase_id', $purchase->id)->where('start_date', '<=', $today)->where('end_date', '>=', $today)->first();
-                                                         
+                                                                                                         
                                                 if ($currentInterval !== null)
                                                 {
                                                     $appointments = Appointment::where([
@@ -1099,6 +1101,7 @@ class BossController extends Controller
             $property = Property::where('id', $givenSubstart->property_id)->first();
             
             $substart = Substart::where([
+                'id' => $givenSubstart->id,
                 'boss_id' => $boss->id,
                 'property_id' => $givenSubstart->property_id,
                 'subscription_id' => $givenSubstart->subscription_id
@@ -1841,37 +1844,78 @@ class BossController extends Controller
     
     public function getUsersAppointmentsFromDatabase(Request $request)
     {        
-        if ($request->get('propertyId') && $request->get('subscriptionId') && $request->get('intervalId'))
+        if ($request->get('intervalId') && $request->get('substartId'))
         {
-            $boss = auth()->user();
-            
-            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
-            $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
             $intervalId = htmlentities((int)$request->get('intervalId'), ENT_QUOTES, "UTF-8");
+            $substartId = htmlentities((int)$request->get('substartId'), ENT_QUOTES, "UTF-8");
+            $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
 
+            $bossMainInterval = Interval::where('id', $intervalId)->first();
+            $substart = Substart::where('id', $substartId)->first();
             $workers = User::where('boss_id', $boss->id)->with('chosenProperties')->get();
-            $property = Property::where('id', $propertyId)->with('chosenProperties')->first();
-            $subscription = Subscription::where('id', $subscriptionId)->first();
-            $interval = Interval::where('id', $intervalId)->first();
 
-            if (count($workers) > 0 && $property !== null && $subscription !== null && $interval !== null)
-            {
+            if ($bossMainInterval !== null && $substart !== null && count($workers) > 0)
+            {           
                 $appointments = new Collection();
-                
-                $substart = Substart::where([
-                    'boss_id' => $boss->id,
-                    'property_id' => $property->id,
-                    'subscription_id' => $subscription->id,
-                    'isActive' => 1
-                ])->first();
+
+                if (count($boss->chosenProperties) > 0)
+                {
+                    foreach ($boss->chosenProperties as $chosenProperty)
+                    {
+                        if ($chosenProperty->property_id == $substart->property_id)
+                        {
+                            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+
+                            if (count($chosenProperty->purchases) > 0)
+                            {
+                                foreach ($chosenProperty->purchases as $purchase)
+                                {                                
+                                    if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
+                                    {
+                                        $bossIntervals = Interval::where('purchase_id', $purchase->id)->get();
+
+                                        if (count($bossIntervals) > 0)
+                                        {
+                                            foreach ($bossIntervals as $bossInterval)
+                                            {
+                                                if ($bossInterval->interval_id === null && 
+                                                    $bossInterval->substart_id == $substart->id && 
+                                                    $bossInterval->start_date == $bossMainInterval->start_date && 
+                                                    $bossInterval->end_date == $bossMainInterval->end_date
+                                                    )
+                                                {
+                                                    $bossAppointments = Appointment::where([
+                                                        'user_id' => $boss->id,
+                                                        'interval_id' => $bossInterval->id,
+                                                        'purchase_id' => $purchase->id
+                                                    ])->with('item')->get();
+
+                                                    if (count($bossAppointments) > 0)
+                                                    {
+                                                        foreach ($bossAppointments as $bossAppointment)
+                                                        {
+                                                            $bossAppointment['worker'] = $boss;
+
+                                                            $appointments->push($bossAppointment);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
                 foreach ($workers as $worker)
                 {
-                    if ($worker->chosenProperties)
+                    if (count($worker->chosenProperties) > 0)
                     {
                         foreach ($worker->chosenProperties as $chosenProperty)
                         {
-                            if ($chosenProperty->property_id == $property->id)
+                            if ($chosenProperty->property_id == $substart->property_id)
                             {
                                 $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
 
@@ -1879,7 +1923,7 @@ class BossController extends Controller
                                 {
                                     foreach ($chosenProperty->purchases as $purchase)
                                     {
-                                        if ($purchase->subscription_id == $subscription->id && $purchase->substart_id == $substart->id)
+                                        if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
                                         {
                                             $workerIntervals = Interval::where('purchase_id', $purchase->id)->get();
 
@@ -1887,7 +1931,11 @@ class BossController extends Controller
                                             {
                                                 foreach ($workerIntervals as $workerInterval)
                                                 {
-                                                    if ($workerInterval->start_date == $interval->start_date && $workerInterval->end_date == $interval->end_date)
+                                                    if ($workerInterval->interval_id !== null && 
+                                                        $workerInterval->interval_id == $bossMainInterval->id && 
+                                                        $workerInterval->start_date == $bossMainInterval->start_date && 
+                                                        $workerInterval->end_date == $bossMainInterval->end_date
+                                                        )
                                                     {
                                                         $workerAppointments = Appointment::where([
                                                             'user_id' => $worker->id,
@@ -1953,7 +2001,7 @@ class BossController extends Controller
         
         return new JsonResponse(array(
             'type'    => 'error',
-            'message' => 'Pusty request'            
+            'message' => 'Pusty request'         
         ));
     }
 }
