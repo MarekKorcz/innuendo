@@ -1098,7 +1098,6 @@ class BossController extends Controller
             }
             
             $subscription = Subscription::where('id', $givenSubstart->subscription_id)->first();
-            $property = Property::where('id', $givenSubstart->property_id)->first();
             
             $substart = Substart::where([
                 'id' => $givenSubstart->id,
@@ -1113,7 +1112,6 @@ class BossController extends Controller
                 'appointments' => $appointmentsCollection,
                 'worker' => (int)$userId !== 0 ? $worker : null,
                 'subscription' => $subscription,
-                'property' => $property,
                 'substart' => $substart,
                 'intervals' => $intervals,
                 'today' => new \DateTime(date('Y-m-d'))
@@ -1282,116 +1280,117 @@ class BossController extends Controller
     
     public function getPropertySubscriptions(Request $request)
     {   
+        
+        // todo: find out if it all works!!!!
         if ($request->request->all())
         {
             $boss = auth()->user();
         
-//        $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
-        $propertyId = 8;
-        $property = Property::where([
-            'id' => $propertyId,
-            'boss_id' => $boss->id
-        ])->with([
-            'subscriptions',
-            'chosenProperties'
-        ])->first();
+            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
+            $property = Property::where([
+                'id' => $propertyId,
+                'boss_id' => $boss->id
+            ])->with([
+                'subscriptions',
+                'chosenProperties'
+            ])->first();
 
-        $message = "Błąd zapytania";
-        $type = "error";
+            $message = "Błąd zapytania";
+            $type = "error";
 
-        if ($property !== null)
-        {
-            if (count($property->subscriptions) > 0)
+            if ($property !== null)
             {
-                // >> get all property subscriptions
-                $propertySubscriptions = [];
-
-                foreach ($property->subscriptions as $propertySubscription)
+                if (count($property->subscriptions) > 0)
                 {
-                    $propertySubscriptions[] = [
-                        'id' => $propertySubscription->id,
-                        'name' => $propertySubscription->name,
-                        'description' => $propertySubscription->name,
-                        'old_price' => $propertySubscription->old_price,
-                        'new_price' => $propertySubscription->new_price,
-                        'quantity' => $propertySubscription->quantity,
-                        'duration' => $propertySubscription->duration,
-                        'property_id' => $property->id,
-                        'isPurchased' => false
-                    ];
-                }
-                // <<
+                    // >> get all property subscriptions
+                    $propertySubscriptions = [];
 
-                // >> get purchased property subscriptions
-                $purchasedSubscriptions = [];
-
-                if (count($property->chosenProperties) > 0)
-                {
-                    foreach ($property->chosenProperties as $chosenProperty)
+                    foreach ($property->subscriptions as $propertySubscription)
                     {
-                        $chosenProperty = ChosenProperty::where([
-                            'id' => $chosenProperty->id,
-                            'user_id' => $boss->id
-                        ])->with('subscriptions')->first();
-
-                        if ($chosenProperty !== null && count($chosenProperty->subscriptions) > 0)
-                        {
-                            foreach ($chosenProperty->subscriptions as $subscription)
-                            {
-                                $purchasedSubscriptions[] = [
-                                    'id' => $subscription->id,
-                                    'name' => $subscription->name,
-                                    'description' => $subscription->name,
-                                    'old_price' => $subscription->old_price,
-                                    'new_price' => $subscription->new_price,
-                                    'quantity' => $subscription->quantity,
-                                    'duration' => $subscription->duration,
-                                ];
-                            }
-                        }
+                        $propertySubscriptions[] = [
+                            'id' => $propertySubscription->id,
+                            'name' => $propertySubscription->name,
+                            'description' => $propertySubscription->name,
+                            'old_price' => $propertySubscription->old_price,
+                            'new_price' => $propertySubscription->new_price,
+                            'quantity' => $propertySubscription->quantity,
+                            'duration' => $propertySubscription->duration,
+                            'property_id' => $property->id,
+                            'isPurchased' => false
+                        ];
                     }
-                }
-                // <<
-                
-                if (count($propertySubscriptions) > 0)
-                {
-                    if (count($purchasedSubscriptions) > 0)
+                    // <<
+
+                    // >> get purchased property subscriptions
+                    $purchasedSubscriptions = [];
+
+                    if (count($property->chosenProperties) > 0)
                     {
-                        foreach ($propertySubscriptions as $key => $propertySubscription)
-                        {                            
-                            foreach ($purchasedSubscriptions as $purchasedSubscription)
-                            {                                
-                                if ($propertySubscription['id'] == $purchasedSubscription['id'])
+                        foreach ($property->chosenProperties as $chosenProperty)
+                        {
+                            $chosenProperty = ChosenProperty::where([
+                                'id' => $chosenProperty->id,
+                                'user_id' => $boss->id
+                            ])->with('subscriptions')->first();
+
+                            if ($chosenProperty !== null && count($chosenProperty->subscriptions) > 0)
+                            {
+                                foreach ($chosenProperty->subscriptions as $subscription)
                                 {
-                                    $propertySubscriptions[$key]['isPurchased'] = true;
+                                    $purchasedSubscriptions[] = [
+                                        'id' => $subscription->id,
+                                        'name' => $subscription->name,
+                                        'description' => $subscription->name,
+                                        'old_price' => $subscription->old_price,
+                                        'new_price' => $subscription->new_price,
+                                        'quantity' => $subscription->quantity,
+                                        'duration' => $subscription->duration,
+                                    ];
                                 }
                             }
                         }
                     }
+                    // <<
 
-                    $message = "Subskrypcje danej lokalizacji zostały wczytane";
-                    $type = "success";
+                    if (count($propertySubscriptions) > 0)
+                    {
+                        if (count($purchasedSubscriptions) > 0)
+                        {
+                            foreach ($propertySubscriptions as $key => $propertySubscription)
+                            {                            
+                                foreach ($purchasedSubscriptions as $purchasedSubscription)
+                                {                                
+                                    if ($propertySubscription['id'] == $purchasedSubscription['id'])
+                                    {
+                                        $propertySubscriptions[$key]['isPurchased'] = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        $message = "Subskrypcje danej lokalizacji zostały wczytane";
+                        $type = "success";
+
+                        $data = [
+                            'type'    => $type,
+                            'message' => $message,
+                            'propertySubscriptions' => $propertySubscriptions
+                        ];
+                    }
+
+                } else {
+
+                    $message = "Dana lokalizacja nie posiada subskrypcji";
+                    $type = "error";
 
                     $data = [
                         'type'    => $type,
-                        'message' => $message,
-                        'propertySubscriptions' => $propertySubscriptions
+                        'message' => $message
                     ];
                 }
 
-            } else {
-
-                $message = "Dana lokalizacja nie posiada subskrypcji";
-                $type = "error";
-
-                $data = [
-                    'type'    => $type,
-                    'message' => $message
-                ];
+                return new JsonResponse($data, 200, array(), true);
             }
-
-            return new JsonResponse($data, 200, array(), true);
-        }
             
         } else {
             
@@ -1486,21 +1485,44 @@ class BossController extends Controller
     
     public function getSubscriptionUsersFromDatabase(Request $request)
     {        
-        if ($request->get('searchField') && $request->get('subscriptionId') && $request->get('propertyId'))
+        if ($request->get('searchField') && $request->get('substartId'))
         {
             $searchField = htmlentities($request->get('searchField'), ENT_QUOTES, "UTF-8");
-            $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
-            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
+            $substartId = htmlentities((int)$request->get('substartId'), ENT_QUOTES, "UTF-8");
                     
             $boss = auth()->user();
-            $subscription = Subscription::where('id', $subscriptionId)->first();
-            $property = Property::where('id', $propertyId)->first();
-            
-            if ($subscription !== null && $property !== null)
-            {
-                $users = User::where('name', 'like', $searchField . '%')->orWhere('surname', 'like', $searchField . '%')->where([
-                    'boss_id' => $boss->id
-                ])->with('chosenProperties')->get();
+            $substart = Substart::where('id', $substartId)->first();
+
+            if ($substart !== null && $substart->boss_id == $boss->id)
+            {       
+                // >> look for users within boss workers
+                $users = User::where([
+                                   ['name', 'like', $searchField . '%'],
+                                   ['boss_id', $boss->id]
+                               ])->orWhere([
+                                   ['surname', 'like', $searchField . '%'],
+                                   ['boss_id', $boss->id]
+                               ])->with('chosenProperties')->get();
+                // <<
+
+                // >> next, look for boss entity
+                $bossSearchedEntity = User::where([
+                                   ['id', $boss->id],
+                                   ['name', 'like', $searchField . '%'],
+                                   ['isBoss', 1]
+                               ])->orWhere([
+                                   ['id', $boss->id],
+                                   ['surname', 'like', $searchField . '%'],
+                                   ['isBoss', 1]
+                               ])->with('chosenProperties')->first();
+                // <<
+
+                // >> if searched boss entity exist, add it to users collection
+                if (count($bossSearchedEntity) > 0)
+                {            
+                    $users->push($bossSearchedEntity);
+                }
+                // <<
 
                 $usersWithPassedSubscription = new Collection();
 
@@ -1508,19 +1530,19 @@ class BossController extends Controller
                 {
                     foreach ($users as $user)
                     {
-                        if ($user->chosenProperties)
-                        {
+                        if (count($user->chosenProperties) > 0)
+                        {                        
                             foreach ($user->chosenProperties as $chosenProperty)
                             {
-                                if ($chosenProperty->property_id == $property->id)
+                                if ($chosenProperty->property_id == $substart->property_id)
                                 {
                                     $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-                                    
-                                    if ($chosenProperty->purchases)
-                                    {
+
+                                    if (count($chosenProperty->purchases) > 0)
+                                    {                                    
                                         foreach ($chosenProperty->purchases as $purchase)
                                         {
-                                            if ($purchase->subscription_id == $subscription->id)
+                                            if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
                                             {
                                                 $usersWithPassedSubscription->push($user);
                                             }
@@ -1531,7 +1553,7 @@ class BossController extends Controller
                         }
                     }
                 }
-                
+
                 $data = [
                     'type'    => 'success',
                     'users'  => count($usersWithPassedSubscription) > 0 ? $usersWithPassedSubscription : ""
@@ -1665,115 +1687,59 @@ class BossController extends Controller
     
     public function getUserAppointmentsFromDatabase(Request $request)
     {        
-        if ($request->get('userId') && $request->get('propertyId') && $request->get('subscriptionId'))
+        if ($request->get('userId') && $request->get('substartId') && $request->get('intervalId'))
         {
+            $boss = auth()->user();
+            
             $userId = htmlentities((int)$request->get('userId'), ENT_QUOTES, "UTF-8");
-            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
-            $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
-            
-            $intervalId = 0;
-            
-            if ($request->get('intervalId'))
+            $substartId = htmlentities((int)$request->get('substartId'), ENT_QUOTES, "UTF-8");
+            $intervalId = htmlentities((int)$request->get('intervalId'), ENT_QUOTES, "UTF-8");
+
+            // >> look for user within boss workers
+            $user = User::where([
+                'id' => $userId,
+                'boss_id' => $boss->id
+            ])->with('chosenProperties')->first();
+            // <<
+
+            // >> if user doeasn't exist, look for boss itself
+            if ($user === null)
             {
-                $intervalId = htmlentities((int)$request->get('intervalId'), ENT_QUOTES, "UTF-8");
+                $user = User::where([
+                    'id' => $boss->id,
+                    'isBoss' => 1
+                ])->with('chosenProperties')->first();
             }
+            // <<
 
-            $user = User::where('id', $userId)->with('chosenProperties')->first();
-            $property = Property::where('id', $propertyId)->with('chosenProperties')->first();
-            $subscription = Subscription::where('id', $subscriptionId)->first();
+            $substart = Substart::where('id', $substartId)->first();
+            $interval = Interval::where('id', $intervalId)->first();
 
-            if ($user !== null && $property !== null && $subscription !== null)
+            if ($user !== null && $substart !== null && $substart->boss_id == $boss->id && $interval !== null)
             {
-                $boss = auth()->user();
                 $appointments = new Collection();
-                $interval = Interval::where('id', $intervalId)->first();
 
-                if ($interval !== null)
+                if ($user->chosenProperties)
                 {
-                    $substart = Substart::where([
-                        'boss_id' => $boss->id,
-                        'property_id' => $property->id,
-                        'subscription_id' => $subscription->id,
-                        'isActive' => 1
-                    ])->first();
-
-                    if ($user->chosenProperties)
+                    foreach ($user->chosenProperties as $chosenProperty)
                     {
-                        foreach ($user->chosenProperties as $chosenProperty)
+                        if ($chosenProperty->property_id == $substart->property_id)
                         {
-                            if ($chosenProperty->property_id == $property->id)
+                            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+
+                            if (count($chosenProperty->purchases) > 0)
                             {
-                                $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-
-                                if (count($chosenProperty->purchases) > 0)
+                                foreach ($chosenProperty->purchases as $purchase)
                                 {
-                                    foreach ($chosenProperty->purchases as $purchase)
+                                    if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
                                     {
-                                        if ($purchase->subscription_id == $subscription->id && $purchase->substart_id == $substart->id)
+                                        $userIntervals = Interval::where('purchase_id', $purchase->id)->get();
+
+                                        if (count($userIntervals) > 0)
                                         {
-                                            $userIntervals = Interval::where('purchase_id', $purchase->id)->get();
-
-                                            if (count($userIntervals) > 0)
+                                            foreach ($userIntervals as $userInterval)
                                             {
-                                                foreach ($userIntervals as $userInterval)
-                                                {
-                                                    if ($userInterval->start_date == $interval->start_date && $userInterval->end_date == $interval->end_date)
-                                                    {
-                                                        $userAppointments = Appointment::where([
-                                                            'user_id' => $user->id,
-                                                            'interval_id' => $userInterval->id,
-                                                            'purchase_id' => $purchase->id
-                                                        ])->with('item')->get();
-
-                                                        if (count($userAppointments) > 0)
-                                                        {
-                                                            foreach ($userAppointments as $userAppointment)
-                                                            {
-                                                                $userAppointment['worker'] = $user;
-
-                                                                $appointments->push($userAppointment);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                } else {
-
-                    $substart = Substart::where([
-                        'boss_id' => $boss->id,
-                        'property_id' => $property->id,
-                        'subscription_id' => $subscription->id,
-                        'isActive' => 0
-                    ])->first();
-
-                    if ($user->chosenProperties)
-                    {
-                        foreach ($user->chosenProperties as $chosenProperty)
-                        {
-                            if ($chosenProperty->property_id == $property->id)
-                            {
-                                $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-
-                                if (count($chosenProperty->purchases) > 0)
-                                {
-                                    foreach ($chosenProperty->purchases as $purchase)
-                                    {
-                                        if ($purchase->subscription_id == $subscription->id && $purchase->substart_id == $substart->id)
-                                        {
-                                            $userInterval = Interval::where('purchase_id', $purchase->id)->get();
-
-                                            if (count($userInterval) == 1)
-                                            {
-                                                $userInterval = $userInterval->first();
-
-                                                if ($userInterval->start_date >= $substart->start_date && $userInterval->end_date <= $substart->end_date)
+                                                if ($userInterval->start_date == $interval->start_date && $userInterval->end_date == $interval->end_date)
                                                 {
                                                     $userAppointments = Appointment::where([
                                                         'user_id' => $user->id,
@@ -1854,7 +1820,7 @@ class BossController extends Controller
             $substart = Substart::where('id', $substartId)->first();
             $workers = User::where('boss_id', $boss->id)->with('chosenProperties')->get();
 
-            if ($bossMainInterval !== null && $substart !== null && count($workers) > 0)
+            if ($bossMainInterval !== null && $substart !== null && $substart->boss_id == $boss->id && count($workers) > 0)
             {           
                 $appointments = new Collection();
 

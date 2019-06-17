@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\Property;
-
-//// to tests
-//use App\Appointment;
-//use App\Interval;
-//use App\Substart;
-//use App\Purchase;
-//use App\ChosenProperty;
-//use App\Subscription;
-//use App\Property;
 //use App\User;
-//use App\Item;
-//use App\Graphic;
-//use App\Calendar;
-//use App\Day;
-//use App\Month;
-//use App\Year;
-//use App\TempUser;
-//use Illuminate\Support\Collection;
+//use App\Property;
+
+// to tests
+use App\Appointment;
+use App\Interval;
+use App\Substart;
+use App\Purchase;
+use App\ChosenProperty;
+use App\Subscription;
+use App\Property;
+use App\User;
+use App\Item;
+use App\Graphic;
+use App\Calendar;
+use App\Day;
+use App\Month;
+use App\Year;
+use App\TempUser;
+use Illuminate\Support\Collection;
 
 class HomeController extends Controller
 {
@@ -139,7 +139,7 @@ class HomeController extends Controller
     }
     
 //    public function test()
-//    {
-//    
+//    {            
+//        
 //    }
 }

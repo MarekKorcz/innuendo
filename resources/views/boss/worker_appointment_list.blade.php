@@ -17,8 +17,6 @@
             @else
                 <input id="search" class="form-control" type="text" value="" autocomplete="off">          
             @endif
-            <input id="subscriptionId" type="hidden" name="subscriptionId" value="{{$subscription->id}}">
-            <input id="propertyId" type="hidden" name="propertyId" value="{{$property->id}}">
             <ul id="result" class="list-group"></ul>
         </div>
         <div class="text-center">

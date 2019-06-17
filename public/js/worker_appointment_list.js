@@ -3,14 +3,13 @@ $(document).ready(function() {
     $("input#search").on('keyup', function(event) 
     {        
         let searchFieldValue = event.target.value;
-        let subscriptionId = $("input#subscriptionId").val();
-        let propertyId = $("input#propertyId").val();
+        let substartId = $("#timePeriod").data("substart_id");
         
         $("#result").html('');
         
-        if (searchFieldValue !== "" && subscriptionId !== 0 && propertyId !== 0) 
+        if (searchFieldValue !== "" && substartId !== 0) 
         {
-            getSubscriptionUsersFromDatabase(searchFieldValue, subscriptionId, propertyId);
+            getSubscriptionUsersFromDatabase(searchFieldValue, substartId);
         }
     });
     
@@ -24,8 +23,7 @@ $(document).ready(function() {
             let userId = element.val();
             $("#search").val(userName).data('userId', userId);
             
-            let propertyId = $("input#propertyId").val();
-            let subscriptionId = $("input#subscriptionId").val();
+            let substartId = $("#timePeriod").data("substart_id");
             
             let intervalId = 0;
             
@@ -35,7 +33,8 @@ $(document).ready(function() {
             }
             
             $("#appointments-table").html('');
-            getUserAppointmentsFromDatabase(userId, propertyId, subscriptionId, intervalId);
+            
+            getUserAppointmentsFromDatabase(userId, substartId, intervalId);
             
             $("#result").html('');
         }
@@ -45,10 +44,6 @@ $(document).ready(function() {
     {
         let userId = $("#search").data('userId');
         
-        // todo: zobacz czy nie będę musiał usuwać tych dwóch inputów
-//        let propertyId = $("input#propertyId").val();
-//        let subscriptionId = $("input#subscriptionId").val();
-
         let intervalId = $(this).children("option:selected").val();
         let substartId = $(this).data("substart_id");
 
@@ -58,11 +53,11 @@ $(document).ready(function() {
             
         } else {
             
-            getUserAppointmentsFromDatabase(userId, propertyId, subscriptionId, intervalId);
+            getUserAppointmentsFromDatabase(userId, substartId, intervalId);
         }
     });
     
-    function getSubscriptionUsersFromDatabase(searchField, subscriptionId, propertyId)
+    function getSubscriptionUsersFromDatabase(searchField, substartId)
     {
         return fetch('http://localhost:8000/boss/get-subscription-users-from-database', {
             method: 'POST',
@@ -73,8 +68,7 @@ $(document).ready(function() {
             },
             body: JSON.stringify({
                 searchField: searchField,
-                subscriptionId: subscriptionId,
-                propertyId: propertyId
+                substartId: substartId
             })
         })
         .then((res) => res.json())
@@ -91,10 +85,8 @@ $(document).ready(function() {
     // function to display all boss worker appointments after choosing one through search input 
     // (it grabs time period selected option value(intervalId) 
     // or doing download without it (with no intervalId existed (non activated subscription scenario)))
-    function getUserAppointmentsFromDatabase(userId, propertyId, subscriptionId, intervalId)
-    {
-        console.log('single user');
-        
+    function getUserAppointmentsFromDatabase(userId, substartId, intervalId)
+    {        
         return fetch('http://localhost:8000/boss/get-user-appointments-from-database', {
             method: 'POST',
             headers: {
@@ -103,9 +95,8 @@ $(document).ready(function() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             body: JSON.stringify({
-                userId: userId, 
-                propertyId: propertyId, 
-                subscriptionId: subscriptionId, 
+                userId: userId,
+                substartId: substartId, 
                 intervalId: intervalId
             })
         })
@@ -152,12 +143,10 @@ $(document).ready(function() {
         });
     }
     
-    // function to display all boss workers based on only propertyId, subscriptionId and intervalId 
+    // function to display all boss workers based on only intervalId and substartId
     // after selecting time period with empty search input
     function getUsersAppointmentsFromDatabase(intervalId, substartId)
     {
-        console.log('all users');
-        
         return fetch('http://localhost:8000/boss/get-users-appointments-from-database', {
             method: 'POST',
             headers: {
