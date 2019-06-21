@@ -1174,13 +1174,9 @@ class BossController extends Controller
             $substart = Substart::where('id', $interval->substart_id)->first();
             
             if ($substart !== null && $substart->boss_id === $boss->id)
-            {
-                dump('let the magic happen');die;
-                
-                return view('boss.subscription_invoices')->with([
-                    'subscription' => $subscription,
-                    'intervals' => $substartIntervals
-                ]);
+            {                
+                $pdf = \PDF::loadView('invoices.subscription_monthly_pay');
+                return $pdf->download('faktura_za_' . $interval->start_date->format("Y-m-d") . '-' . $interval->end_date->format("Y-m-d") . ' ' . config('app.name') . '.pdf');
             }
             
             return redirect()->route('welcome')->with('error', 'Faktura należy do kogoś innego');

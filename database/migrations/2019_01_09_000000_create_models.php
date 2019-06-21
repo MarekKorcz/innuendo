@@ -30,7 +30,7 @@ class CreateModels extends Migration
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
-//        Schema::create('billings', function (Blueprint $table) {
+//        Schema::create('invoice_data', function (Blueprint $table) {
 //            $table->increments('id');
 //            $table->string('website');
 //            $table->string('email');
@@ -256,7 +256,7 @@ class CreateModels extends Migration
     public function down()
     {
         Schema::dropIfExists('properties');
-//        Schema::dropIfExists('billings');
+        Schema::dropIfExists('invoice_data');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('items');
         Schema::dropIfExists('calendars');

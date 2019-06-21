@@ -13,7 +13,7 @@
             <ul id="invoices" class="list-group">
                 @foreach ($intervals as $interval)
                     @if ($interval->state == "existing")
-                        <a href="{{ URL::to('/boss/subscription/invoice/' . $interval->id) }}" target="_blank">
+                        <a href="{{ URL::to('/boss/subscription/invoice/' . $interval->id) }}">
                             <li class="list-group-item existing-invoice">
                                 {{$interval->start_date->format("Y-m-d")}} - {{$interval->end_date->format("Y-m-d")}}
                             </li>
