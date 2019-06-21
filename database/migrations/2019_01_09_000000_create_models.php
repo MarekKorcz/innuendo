@@ -30,20 +30,19 @@ class CreateModels extends Migration
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
-//        Schema::create('invoice_data', function (Blueprint $table) {
-//            $table->increments('id');
-//            $table->string('website');
-//            $table->string('email');
-//            $table->integer('nip');
-//            $table->integer('krs')->nullable();
-//            $table->string('bank_name');
-//            $table->integer('account_number');
-//            $table->integer('swift');
-//            $table->timestamps();
-//            $table->softDeletes();
-//            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
-//            $table->integer('boss_id')->unsigned()->index()->foreign()->references("id")->on("users");
-//        });
+        Schema::create('invoice_data', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('website');
+            $table->string('email');
+            $table->integer('nip');
+            $table->integer('krs')->nullable();
+            $table->string('bank_name');
+            $table->integer('account_number');
+            $table->integer('swift');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('owner_id')->unsigned()->index()->foreign()->references("id")->on("users");
+        });
         
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');

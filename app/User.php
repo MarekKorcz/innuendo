@@ -28,6 +28,18 @@ class User extends Authenticatable
     ];
     
     /**
+     *      BOSS & ADMIN
+     */
+    
+    /**
+     * Get invoiceData which belongs to boss or admin.
+     */
+    public function invoiceDatas()
+    {
+        return $this->hasMany('App\InvoiceData');
+    }
+    
+    /**
      *      BOSS
      */
     
