@@ -1,0 +1,27 @@
+.existing-invoice {
+    color: white;
+    background-color: #33ff33;
+    border-color: green;
+}
+
+.nonexistent-invoice {
+    color: #33ff33;
+    background-color: white;
+    border-color: #33ff33;
+}
+
+.existing-invoice:hover {
+    color: white;
+    background-color: #55cc55;
+    border-color: green;
+}
+
+.clicked {
+    color: white;
+    background-color: #55cc55;
+    border-color: green;
+}
+
+a:hover { 
+    text-decoration: none; 
+}

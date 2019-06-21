@@ -102,6 +102,11 @@
                                             <p>Czas trwania dobiegł końca</p>
                                         @endif
                                     </div>
+                                    @if ($purchase->substart->isActive == 1)
+                                        <a class="btn btn-primary" href="{{ URL::to('/boss/subscription/invoices/' . $purchase->substart->id) }}">
+                                            Rozliczenia
+                                        </a>
+                                    @endif
                                 </div>
                             @endif
                         @endforeach
@@ -121,9 +126,9 @@
                                 @if ($purchase->substart->isCurrent)
                                     @if (count($purchase->substart->workers) > 0)
                                         <div class="text-center">
-                                            <h2>Pracownicy przypisani do danej subskrypcji:</h2>
+                                            <h2>Osoby przypisane do danej subskrypcji:</h2>
                                             <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/0') }}">
-                                                Wszystkie wizyty pracowników
+                                                Wszystkie wizyty
                                             </a>
                                             <table class="table table-striped table-bordered">
                                                 <thead>

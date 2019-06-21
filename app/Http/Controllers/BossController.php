@@ -996,8 +996,11 @@ class BossController extends Controller
                 $workers = User::where('boss_id', $boss->id)->with('chosenProperties')->get();
             }   
             
-            // add boss to workers collection
-            $workers->prepend($boss);
+            // if chosen to see all workers, add boss to workers collection
+            if ($userId == 0)
+            {
+                $workers->prepend($boss);
+            }
             
 //           todo:  ogarnij tutaj wyswietlanie wizyt na podstawie czasu trwania subskrypcji
 //            * jesli jest mozliwosc wyswietlenia perioodu zgodnego z czasem terazniejszym to wyswietl, 
@@ -1119,6 +1122,71 @@ class BossController extends Controller
         }
         
         return redirect()->route('welcome');
+    }
+    
+    public function subscriptionInvoices($substartId)
+    {
+        $substart = Substart::where('id', $substartId)->first();
+        
+        if ($substart !== null)
+        {
+            $boss = auth()->user();
+            
+            if ($substart->boss_id === $boss->id)
+            {
+                $subscription = Subscription::where('id', $substart->subscription_id)->first();
+                $substartIntervals = Interval::where('substart_id', $substart->id)->get();      
+                
+                $today = new \DateTime(date('Y-m-d'));
+                $today = date('Y-m-d', strtotime("+6 month", strtotime($today->format("Y-m-d"))));
+                
+                foreach ($substartIntervals as $interval)
+                {
+                    if ($interval->start_date < $today && $interval->end_date <= $today) {
+                        
+                        $interval['state'] = 'existing';
+                        
+                    } elseif ($interval->start_date > $today || $interval->end_date > $today) {
+                        
+                        $interval['state'] = 'nonexistent';
+                    }
+                }
+                                
+                return view('boss.subscription_invoices')->with([
+                    'subscription' => $subscription,
+                    'intervals' => $substartIntervals
+                ]);
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Wykupiona subskrypcja ma innego właściciela');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Wykupiona subskrypcja o podanym id, nie istnieje');
+    }
+    
+    public function subscriptionInvoice($intervalId) 
+    {
+        $interval = Interval::where('id', $intervalId)->first();
+        
+        if ($interval !== null)
+        {
+            $boss = auth()->user();
+            $substart = Substart::where('id', $interval->substart_id)->first();
+            
+            if ($substart !== null && $substart->boss_id === $boss->id)
+            {
+                dump('let the magic happen');die;
+                
+                return view('boss.subscription_invoices')->with([
+                    'subscription' => $subscription,
+                    'intervals' => $substartIntervals
+                ]);
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Faktura należy do kogoś innego');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Faktura nie istnieje');
     }
 
     public function setSubscriptionToChosenPropertySubscription(Request $request)
@@ -1438,7 +1506,12 @@ class BossController extends Controller
 
         if ($substart !== null)
         {
-            $workers = User::where('boss_id', auth()->user()->id)->with('chosenProperties')->get();
+            $boss = User::where([
+                'id' => auth()->user()->id,
+                'isBoss' => 1
+            ])->with('chosenProperties')->first();;
+            
+            $workers = User::where('boss_id', $boss->id)->with('chosenProperties')->get();
             $workersCollection = new Collection();
 
             foreach ($workers as $worker)
@@ -1459,6 +1532,28 @@ class BossController extends Controller
                                     {
                                         $workersCollection->push($worker);
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (count($boss->chosenProperties) > 0)
+            {
+                foreach ($boss->chosenProperties as $chosenProperty)
+                {
+                    if ($chosenProperty->property_id == $substart->property_id)
+                    {
+                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+
+                        if (count($chosenProperty->purchases) > 0)
+                        {
+                            foreach($chosenProperty->purchases as $purchase)
+                            {
+                                if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
+                                {
+                                    $workersCollection->push($boss);
                                 }
                             }
                         }

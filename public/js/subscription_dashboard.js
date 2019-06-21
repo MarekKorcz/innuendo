@@ -206,9 +206,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     let workersTab = `
                         <div class="text-center">                        
                             <p>
-                                <h2>Pracownicy przypisani do danej subskrypcji:</h2>
+                                <h2>Osoby przypisane do danej subskrypcji:</h2>
                                 <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.lastSubstartId + `/0">
-                                    Wszystkie wizyty pracowników
+                                    Wszystkie wizyty
                                 </a>
                             </p>
                         </div>
@@ -254,7 +254,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     let workersTab = `
                         <div class="text-center">                        
                             <p>
-                                <h2>Brak pracowników przypisanych do danej subskrypcji</h2>
+                                <h2>Brak osób przypisanych do danej subskrypcji</h2>
                             </p>
                         </div>
                     `;
@@ -289,9 +289,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 let workersTab = `
                     <div class="text-center">                        
                         <p>
-                            <h2>Pracownicy przypisani do danej subskrypcji:</h2>
+                            <h2>Osoby przypisane do danej subskrypcji:</h2>
                             <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.substartId + `/0">
-                                Wszystkie wizyty pracowników
+                                Wszystkie wizyty
                             </a>
                         </p>
                     </div>
@@ -337,7 +337,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 let workersTab = `
                     <div class="text-center">                        
                         <p>
-                            <h2>Brak pracowników przypisanych do danej subskrypcji</h2>
+                            <h2>Brak osób przypisanych do danej subskrypcji</h2>
                         </p>
                     </div>
                 `;
