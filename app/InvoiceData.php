@@ -19,7 +19,7 @@ class InvoiceData extends Model
      * @var array
      */
     protected $fillable = [
-        'website', 'email', 'nip', 'krs', 'bank_name', 'account_number', 'swift', 'owner_id' 
+        'website', 'email', 'nip', 'bank_name', 'account_number', 'property_id', 'owner_id' 
     ];
     
     /**
@@ -28,6 +28,7 @@ class InvoiceData extends Model
      * @var array
      */
     protected $casts = [
+        'property_id' => 'integer',
         'owner_id' => 'integer'
     ];
     
@@ -37,5 +38,13 @@ class InvoiceData extends Model
     public function owner()
     {
         return $this->belongsTo('App\User');
+    }
+    
+    /**
+     * Get property associated to invoiceData.
+     */
+    public function property()
+    {
+        return $this->belongsTo('App\Property');
     }
 }

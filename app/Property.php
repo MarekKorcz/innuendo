@@ -74,4 +74,12 @@ class Property extends Model
     {
         return $this->hasMany('App\ChosenProperty');
     }
+    
+    /**
+     * Get invoiceData which belongs to property.
+     */
+    public function invoiceData()
+    {
+        return $this->hasOne('App\InvoiceData');
+    }
 }

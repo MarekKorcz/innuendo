@@ -6,6 +6,11 @@
 
 <div class="container">
     <h1 class="text-center">Subskrypcja - {{$subscription->name}}</h1>
+    <div class="text-center" style="margin: 1rem;">
+        <a href="{{ URL::to('/boss/subscription/invoice/edit/' . $invoiceData->id . '/' . $substart->id) }}" class="btn btn-success">
+            Edytuj dane do faktury
+        </a> 
+    </div>
     <h3 class="text-center">Faktury za okres:</h3>
     <div class="row">
         <div class="col"></div>

@@ -30,17 +30,16 @@ class CreateModels extends Migration
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
-        Schema::create('invoice_data', function (Blueprint $table) {
+        Schema::create('invoice_datas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('website');
-            $table->string('email');
-            $table->integer('nip');
-            $table->integer('krs')->nullable();
-            $table->string('bank_name');
-            $table->integer('account_number');
-            $table->integer('swift');
+            $table->text('website');
+            $table->text('email');
+            $table->text('nip');
+            $table->text('bank_name');
+            $table->text('account_number');
             $table->timestamps();
             $table->softDeletes();
+            $table->integer('property_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("properties");
             $table->integer('owner_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         

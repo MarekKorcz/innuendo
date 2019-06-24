@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Code;
 use App\Property;
+use App\InvoiceData;
 use App\Subscription;
 use App\ChosenProperty;
 use App\User;
@@ -1134,6 +1135,20 @@ class BossController extends Controller
             
             if ($substart->boss_id === $boss->id)
             {
+                $invoiceData = InvoiceData::where([
+                    'property_id' => $substart->property_id,
+                    'owner_id' => $boss->id
+                ])->first();
+                
+                if ($invoiceData === null)
+                {
+                    return redirect()->action(
+                        'BossController@invoiceDataCreate', [
+                            'substartId' => $substart->id
+                        ]
+                    );
+                }
+        
                 $subscription = Subscription::where('id', $substart->subscription_id)->first();
                 $substartIntervals = Interval::where('substart_id', $substart->id)->get();      
                 
@@ -1153,6 +1168,8 @@ class BossController extends Controller
                 }
                                 
                 return view('boss.subscription_invoices')->with([
+                    'invoiceData' => $invoiceData,
+                    'substart' => $substart,
                     'subscription' => $subscription,
                     'intervals' => $substartIntervals
                 ]);
@@ -1162,6 +1179,160 @@ class BossController extends Controller
         }
         
         return redirect()->route('welcome')->with('error', 'Wykupiona subskrypcja o podanym id, nie istnieje');
+    }
+    
+    public function invoiceDataCreate($substartId) 
+    {
+        $substart = Substart::where([
+            'id' => $substartId,
+            'boss_id' => auth()->user()->id
+        ])->first();
+        
+        if ($substart !== null)
+        { 
+            $property = Property::where('id', $substart->property_id)->first();
+            
+            return view('boss.property_invoice_data')->with([
+                'property' => $property,
+                'substart' => $substart
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Podana subskrypcja nie istnieje lub ma innego właściciela');
+    }
+    
+    public function invoiceDataStore() 
+    {
+        $rules = array(
+            'website'        => 'required',
+            'email'          => 'required',
+            'nip'            => 'required',
+            'bank_name'      => 'required',
+            'account_number' => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('boss/subscription/invoice/create/' . Input::get('substart_id'))
+                ->withErrors($validator);
+        } else {
+            
+            $boss = auth()->user();
+            
+            $substart = Substart::where([
+                'id' => Input::get('substart_id'),
+                'boss_id' => $boss->id
+            ])->first();
+            
+            if ($substart !== null)
+            {
+                $property = Property::where([
+                    'id' => $substart->property_id,
+                    'boss_id' => $boss->id
+                ])->first();
+                
+                if ($property !== null)
+                {
+                    $invoiceData = new InvoiceData();
+                    $invoiceData->website         = Input::get('website');
+                    $invoiceData->email           = Input::get('email');
+                    $invoiceData->nip             = Input::get('nip');
+                    $invoiceData->bank_name       = Input::get('bank_name');
+                    $invoiceData->account_number  = Input::get('account_number');
+                    $invoiceData->owner_id        = $boss->id;           
+                    $invoiceData->property_id     = $property->id;           
+                    $invoiceData->save();
+
+                    return redirect('boss/subscription/invoices/' . $substart->id)->with('success', 'Dane do faktury zostały uzupełnione!');
+                }
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Niepoprawne dane');
+        }
+    }
+    
+    /**
+     * Show the form for editing the specified resource.
+     * 
+     * @param type $invoiceDataId
+     * @param type $substartId
+     * 
+     * @return type
+     */
+    public function invoiceDataEdit($invoiceDataId, $substartId)
+    {
+        $boss = auth()->user();
+        
+        $invoiceData = InvoiceData::where('id', $invoiceDataId)->first();
+        $substart = Substart::where([
+            'id' => $substartId,
+            'boss_id' => $boss->id
+        ])->first();
+        
+        if ($invoiceData !== null && $substart !== null && 
+            $invoiceData->property_id == $substart->property_id && $invoiceData->owner_id == $substart->boss_id)
+        {
+            return view('boss.property_invoice_data_edit')->with([
+                'invoiceData' => $invoiceData,
+                'substart' => $substart
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Dane do faktury nie istnieją');
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @return Response
+     */
+    public function invoiceDataUpdate(Request $request)
+    {
+        $invoiceDataId = htmlentities($request->get('invoice_data_id'), ENT_QUOTES, "UTF-8");
+        $substartId = htmlentities($request->get('substart_id'), ENT_QUOTES, "UTF-8");
+        $website = htmlentities($request->get('website'), ENT_QUOTES, "UTF-8");
+        $email = htmlentities($request->get('email'), ENT_QUOTES, "UTF-8");
+        $nip = htmlentities($request->get('nip'), ENT_QUOTES, "UTF-8");
+        $bank_name = htmlentities($request->get('bank_name'), ENT_QUOTES, "UTF-8");
+        $account_number = htmlentities($request->get('account_number'), ENT_QUOTES, "UTF-8");
+        
+        if ($invoiceDataId !== null && 
+            $website !== null &&
+            $email !== null &&
+            $nip !== null &&
+            $bank_name !== null &&
+            $account_number !== null)
+        {
+            $boss = auth()->user();
+            
+            $substart = Substart::where([
+                'id' => $substartId,
+                'boss_id' => $boss->id
+            ])->first();
+            
+            if ($substart !== null)
+            {
+                $invoiceData = InvoiceData::where([
+                    'id' => $invoiceDataId,
+                    'owner_id' => $boss->id,
+                    'property_id' => $substart->property_id
+                ])->first();
+                
+                if ($invoiceData !== null)
+                {
+                    $invoiceData->website         = $website;
+                    $invoiceData->email           = $email;
+                    $invoiceData->nip             = $nip;
+                    $invoiceData->bank_name       = $bank_name;
+                    $invoiceData->account_number  = $account_number;       
+                    $invoiceData->save();
+
+                    return redirect('boss/subscription/invoices/' . $substart->id)->with('success', 'Dane do faktury zostały zmienione!');
+                }
+            }
+        }
+            
+        return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane do faktury');
     }
     
     public function subscriptionInvoice($intervalId) 

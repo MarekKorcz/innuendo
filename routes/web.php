@@ -137,6 +137,10 @@ Route::get('/boss/subscription/purchase/{propertyId}/{subscriptionId}', 'BossCon
 Route::post('/boss/subscription/purchased', 'BossController@subscriptionPurchased');
 Route::get('/boss/worker/appointment/list/{substartId}/{userId}', 'BossController@workerAppointmentList');
 Route::get('/boss/subscription/invoices/{substartId}', 'BossController@subscriptionInvoices');
+Route::get('/boss/subscription/invoice/create/{substartId}', 'BossController@invoiceDataCreate');
+Route::post('/boss/subscription/invoice/store', 'BossController@invoiceDataStore');
+Route::get('/boss/subscription/invoice/edit/{invoiceDataId}/{substartId}', 'BossController@invoiceDataEdit');
+Route::put('/boss/subscription/invoice/update', 'BossController@invoiceDataUpdate');
 Route::get('/boss/subscription/invoice/{intervalId}', 'BossController@subscriptionInvoice');
 Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
 Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
