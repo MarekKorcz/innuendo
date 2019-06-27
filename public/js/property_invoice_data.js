@@ -1,28 +1,28 @@
 $(document).ready(function()
 {    
     $("#property-invoice-data").submit(function(event) 
-    {        
-        let websiteInput = $("input#website");
+    {       
+        let companyNameInput = $("input#company_name");
         
-        if (websiteInput.length == 1)
+        if (companyNameInput.length == 1)
         {
-            if (websiteInput.val() !== "") 
+            if (companyNameInput.val() !== "") 
             {
-                $("input#website + div.warning > p.field-warning").remove();
+                $("input#company_name + div.warning > p.field-warning").remove();
                 
-                if (!validateWebsite(websiteInput.val()))
-                {                    
+                if (companyNameInput.val().length == 1)
+                {
                     event.preventDefault();
-                    $("input#website + div.warning").append('<p class="field-warning">Podany adres strony internetowej jest niepoprawny</p>');
+                    $("input#company_name + div.warning").append('<p class="field-warning">Nazwa firmy jest za krótka</p>');
                 }
 
-            } else if (websiteInput.val() === "") {
+            } else if (companyNameInput.val() === "") {
 
                 event.preventDefault();
                 
-                if ($("input#website + div.warning > p.field-warning").length == 0)
+                if ($("input#company_name + div.warning > p.field-warning").length == 0)
                 {
-                    $("input#website + div.warning").append('<p class="field-warning">Wpisz adres strony internetowej</p>');
+                    $("input#company_name + div.warning").append('<p class="field-warning">Wpisz nazwę firmy</p>');
                 }
             }
         }
@@ -52,6 +52,23 @@ $(document).ready(function()
             }
         }
         
+        let phoneNumberInput = $("input#phone_number");
+        
+        if (phoneNumberInput.length == 1)
+        {
+            if (phoneNumberInput.val() !== "") 
+            {
+                $("input#phone_number + div.warning > p.field-warning").remove();
+                
+                if (!validatePhoneNumber(phoneNumberInput.val()) || phoneNumberInput.val().length < 7)
+                {
+                    event.preventDefault();
+                    $("input#phone_number + div.warning").append('<p class="field-warning">Podany numer telefonu jest niepoprawny</p>');
+                }
+
+            }
+        }
+        
         let nipInput = $("input#nip");
         
         if (nipInput.length == 1)
@@ -77,64 +94,64 @@ $(document).ready(function()
             }
         }
         
-        let bankNameInput = $("input#bank_name");
-        
-        if (bankNameInput.length == 1)
-        {
-            if (bankNameInput.val() !== "") 
-            {
-                $("input#bank_name + div.warning > p.field-warning").remove();
-                
-                if (bankNameInput.val().length < 2)
-                {
-                    event.preventDefault();
-                    $("input#bank_name + div.warning").append('<p class="field-warning">Nazwa banku jest za krótka</p>');
-                }
-
-            } else if (bankNameInput.val() === "") {
-
-                event.preventDefault();
-                
-                if ($("input#bank_name + div.warning > p.field-warning").length == 0)
-                {
-                    $("input#bank_name + div.warning").append('<p class="field-warning">Wpisz nazwe banku</p>');
-                }
-            }
-        }
-        
-        let accountNumberInput = $("input#account_number");
-        
-        if (accountNumberInput.length == 1)
-        {
-            let accountNumber = accountNumberInput.val().replace(/\s/g, "");
-            
-            if (accountNumber !== "")
-            {
-                $("input#account_number + div.warning > p.field-warning").remove();
-                
-                if (!validateBankAccountNumber(accountNumber))
-                {
-                    event.preventDefault();
-                    $("input#account_number + div.warning").append('<p class="field-warning">Numer rachunku bankowego jest niepoprawny</p>');
-                }
-
-            } else if (accountNumber === "") {
-
-                event.preventDefault();
-                
-                if ($("input#account_number + div.warning > p.field-warning").length == 0)
-                {
-                    $("input#account_number + div.warning").append('<p class="field-warning">Wpisz numer rachunku bankowego</p>');
-                }
-            }
-        }
+//        let bankNameInput = $("input#bank_name");
+//        
+//        if (bankNameInput.length == 1)
+//        {
+//            if (bankNameInput.val() !== "") 
+//            {
+//                $("input#bank_name + div.warning > p.field-warning").remove();
+//                
+//                if (bankNameInput.val().length < 2)
+//                {
+//                    event.preventDefault();
+//                    $("input#bank_name + div.warning").append('<p class="field-warning">Nazwa banku jest za krótka</p>');
+//                }
+//
+//            } else if (bankNameInput.val() === "") {
+//
+//                event.preventDefault();
+//                
+//                if ($("input#bank_name + div.warning > p.field-warning").length == 0)
+//                {
+//                    $("input#bank_name + div.warning").append('<p class="field-warning">Wpisz nazwe banku</p>');
+//                }
+//            }
+//        }
+//        
+//        let accountNumberInput = $("input#account_number");
+//        
+//        if (accountNumberInput.length == 1)
+//        {
+//            let accountNumber = accountNumberInput.val().replace(/\s/g, "");
+//            
+//            if (accountNumber !== "")
+//            {
+//                $("input#account_number + div.warning > p.field-warning").remove();
+//                
+//                if (!validateBankAccountNumber(accountNumber))
+//                {
+//                    event.preventDefault();
+//                    $("input#account_number + div.warning").append('<p class="field-warning">Numer rachunku bankowego jest niepoprawny</p>');
+//                }
+//
+//            } else if (accountNumber === "") {
+//
+//                event.preventDefault();
+//                
+//                if ($("input#account_number + div.warning > p.field-warning").length == 0)
+//                {
+//                    $("input#account_number + div.warning").append('<p class="field-warning">Wpisz numer rachunku bankowego</p>');
+//                }
+//            }
+//        }
     });
     
-    function validateWebsite(website) 
+    function validatePhoneNumber(phone_number) 
     {
-        var re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+        var re = /^\d+$/;
         
-        return re.test(String(website).toLowerCase());
+        return re.test(String(phone_number).toLowerCase());
     }
     
     function validateNip(nip) 
@@ -144,12 +161,12 @@ $(document).ready(function()
         return re.test(String(nip).toLowerCase());
     }
     
-    function validateBankAccountNumber(number) 
-    {
-        var re = /^\d{26}$/;
-        
-        return re.test(String(number).toLowerCase());
-    }
+//    function validateBankAccountNumber(number) 
+//    {
+//        var re = /^\d{26}$/;
+//        
+//        return re.test(String(number).toLowerCase());
+//    }
     
     function validateEmail(email) 
     {

@@ -18,12 +18,9 @@ class CreateModels extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->text('email');
-            $table->integer('phone_number')->nullable();
             $table->string('street');
             $table->string('street_number')->nullable();
             $table->string('house_number')->nullable();
-            $table->string('post_code')->nullable();
             $table->string('city');
             $table->timestamps();
             $table->softDeletes();
@@ -32,11 +29,12 @@ class CreateModels extends Migration
         
         Schema::create('invoice_datas', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('website');
+            $table->text('company_name');
             $table->text('email');
+            $table->text('phone_number')->nullable();
             $table->text('nip');
-            $table->text('bank_name');
-            $table->text('account_number');
+            $table->text('bank_name')->nullable();
+            $table->text('account_number')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->integer('property_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("properties");
@@ -145,12 +143,9 @@ class CreateModels extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('slug');
-            $table->text('email');
-            $table->integer('phone_number')->nullable();
             $table->string('street');
             $table->string('street_number')->nullable();
             $table->string('house_number')->nullable();
-            $table->string('post_code')->nullable();
             $table->string('city');
             $table->integer('temp_user_id')->unsigned()->index()->foreign()->references("id")->on("temp_users");
             $table->timestamps();

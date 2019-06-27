@@ -29,8 +29,8 @@ class TempProperty extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'email', 'phone_number', 'street', 'street_number', 
-        'house_number', 'post_code', 'city', 'boss_id'
+        'name', 'slug', 'street', 'street_number', 
+        'house_number', 'city', 'boss_id'
     ];
     
     /**

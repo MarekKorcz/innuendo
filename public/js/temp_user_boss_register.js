@@ -182,55 +182,55 @@ $(document).ready(function()
             }
         }
         
-        let propertyEmailInput = $("input#property_email");
-        
-        if (propertyEmailInput.length == 1)
-        {
-            if (propertyEmailInput.val() !== "") 
-            {
-                $("input#property_email + div.warning > p.field-warning").remove();
-                
-                if (!validateEmail(propertyEmailInput.val()))
-                {
-                    event.preventDefault();
-                    $("input#property_email + div.warning").append('<p class="field-warning">Niepoprawny email</p>');
-                }
-
-            } else if (propertyEmailInput.val() === "") {
-
-                event.preventDefault();
-                
-                if ($("input#property_email + div.warning > p.field-warning").length == 0)
-                {
-                    $("input#property_email + div.warning").append('<p class="field-warning">Wpisz email lokalizacji</p>');
-                }
-            }
-        }
-        
-        let propertyPhoneNumberInput = $("input#property_phone_number");
-        
-        if (propertyPhoneNumberInput.length == 1)
-        {
-            if (propertyPhoneNumberInput.val() !== "") 
-            {
-                $("input#property_phone_number + div.warning > p.field-warning").remove();
-                
-                if (propertyPhoneNumberInput.val().length < 7)
-                {
-                    event.preventDefault();
-                    $("input#property_phone_number + div.warning").append('<p class="field-warning">Podany numer telefonu jest za krótki</p>');
-                }
-
-            } else if (propertyPhoneNumberInput.val() === "") {
-
-                event.preventDefault();
-                
-                if ($("input#property_phone_number + div.warning > p.field-warning").length == 0)
-                {
-                    $("input#property_phone_number + div.warning").append('<p class="field-warning">Wpisz numer telefonu lokalizacji</p>');
-                }
-            }
-        }
+//        let propertyEmailInput = $("input#property_email");
+//        
+//        if (propertyEmailInput.length == 1)
+//        {
+//            if (propertyEmailInput.val() !== "") 
+//            {
+//                $("input#property_email + div.warning > p.field-warning").remove();
+//                
+//                if (!validateEmail(propertyEmailInput.val()))
+//                {
+//                    event.preventDefault();
+//                    $("input#property_email + div.warning").append('<p class="field-warning">Niepoprawny email</p>');
+//                }
+//
+//            } else if (propertyEmailInput.val() === "") {
+//
+//                event.preventDefault();
+//                
+//                if ($("input#property_email + div.warning > p.field-warning").length == 0)
+//                {
+//                    $("input#property_email + div.warning").append('<p class="field-warning">Wpisz email lokalizacji</p>');
+//                }
+//            }
+//        }
+//        
+//        let propertyPhoneNumberInput = $("input#property_phone_number");
+//        
+//        if (propertyPhoneNumberInput.length == 1)
+//        {
+//            if (propertyPhoneNumberInput.val() !== "") 
+//            {
+//                $("input#property_phone_number + div.warning > p.field-warning").remove();
+//                
+//                if (propertyPhoneNumberInput.val().length < 7)
+//                {
+//                    event.preventDefault();
+//                    $("input#property_phone_number + div.warning").append('<p class="field-warning">Podany numer telefonu jest za krótki</p>');
+//                }
+//
+//            } else if (propertyPhoneNumberInput.val() === "") {
+//
+//                event.preventDefault();
+//                
+//                if ($("input#property_phone_number + div.warning > p.field-warning").length == 0)
+//                {
+//                    $("input#property_phone_number + div.warning").append('<p class="field-warning">Wpisz numer telefonu lokalizacji</p>');
+//                }
+//            }
+//        }
         
         let streetInput = $("input#street");
         

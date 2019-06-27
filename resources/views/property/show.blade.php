@@ -25,13 +25,10 @@
                 <th>Name:</th>
                 <th>Owner:</th>
                 <th>Description:</th>
-                <th>Email:</th>
-                <th>Phone number:</th>
                 <th>Street:</th>
                 <th>Street number:</th>
                 <th>House number:</th>
                 <th>City:</th>
-                <th>Post code:</th>
             </tr>
             <tr>
                 <td>{{ $property->name }}</td>
@@ -41,13 +38,10 @@
                     <td>Public</td>
                 @endif
                 <td>{!! $property->description !!}</td>
-                <td>{{ $property->email }}</td>
-                <td>{{ $property->phone_number }}</td>
                 <td>{{ $property->street }}</td>
                 <td>{{ $property->street_number }}</td>
                 <td>{{ $property->house_number }}</td>
                 <td>{{ $property->city }}</td>
-                <td>{{ $property->post_code }}</td>
             </tr>
         </table>
         

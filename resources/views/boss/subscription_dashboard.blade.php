@@ -27,7 +27,6 @@
                                 {{$propertyWithSubscriptions['property']->street_number}} / 
                                 {{$propertyWithSubscriptions['property']->house_number}} 
                                 {{$propertyWithSubscriptions['property']->city}}
-                                {{$propertyWithSubscriptions['property']->post_code}}
                             </strong>
                         </p>
                     </div>

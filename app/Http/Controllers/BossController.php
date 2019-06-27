@@ -306,13 +306,10 @@ class BossController extends Controller
         $rules = array(
             'property_id'   => 'required|numeric',
             'name'          => 'required|min:3',
-            'email'         => 'required|email',
-            'phone_number'  => 'required|numeric|regex:/[0-9]/|min:7',
             'street'        => 'required|min:3',
             'street_number' => 'required',
             'house_number'  => 'required',
-            'city'          => 'required',
-            'post_code'     => 'required'
+            'city'          => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -333,12 +330,9 @@ class BossController extends Controller
             $property = Property::where('id', Input::get('property_id'))->first();
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
-            $property->email         = Input::get('email');
-            $property->phone_number  = Input::get('phone_number');
             $property->street        = Input::get('street');
             $property->street_number = Input::get('street_number');
             $property->house_number  = Input::get('house_number');
-            $property->post_code     = Input::get('post_code');
             $property->city          = Input::get('city');
             $property->boss_id       = $boss->id;
             $property->save();
@@ -1153,7 +1147,7 @@ class BossController extends Controller
                 $substartIntervals = Interval::where('substart_id', $substart->id)->get();      
                 
                 $today = new \DateTime(date('Y-m-d'));
-                $today = date('Y-m-d', strtotime("+6 month", strtotime($today->format("Y-m-d"))));
+//                $today = date('Y-m-d', strtotime("+6 month", strtotime($today->format("Y-m-d"))));
                 
                 foreach ($substartIntervals as $interval)
                 {
@@ -1204,11 +1198,12 @@ class BossController extends Controller
     public function invoiceDataStore() 
     {
         $rules = array(
-            'website'        => 'required',
-            'email'          => 'required',
-            'nip'            => 'required',
-            'bank_name'      => 'required',
-            'account_number' => 'required'
+            'company_name'   => 'required|string|min:2|max:45',
+            'email'          => 'required|email|unique:invoice_datas|max:33',
+            'phone_number'   => 'numeric|regex:/[0-9]/|min:7',
+            'nip'            => 'required|min:10',
+//            'bank_name'      => 'required|string',
+//            'account_number' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -1234,11 +1229,12 @@ class BossController extends Controller
                 if ($property !== null)
                 {
                     $invoiceData = new InvoiceData();
-                    $invoiceData->website         = Input::get('website');
+                    $invoiceData->company_name    = Input::get('company_name');
                     $invoiceData->email           = Input::get('email');
+                    $invoiceData->phone_number    = Input::get('phone_number');
                     $invoiceData->nip             = Input::get('nip');
-                    $invoiceData->bank_name       = Input::get('bank_name');
-                    $invoiceData->account_number  = Input::get('account_number');
+//                    $invoiceData->bank_name       = Input::get('bank_name');
+//                    $invoiceData->account_number  = Input::get('account_number');
                     $invoiceData->owner_id        = $boss->id;           
                     $invoiceData->property_id     = $property->id;           
                     $invoiceData->save();
@@ -1290,18 +1286,22 @@ class BossController extends Controller
     {
         $invoiceDataId = htmlentities($request->get('invoice_data_id'), ENT_QUOTES, "UTF-8");
         $substartId = htmlentities($request->get('substart_id'), ENT_QUOTES, "UTF-8");
-        $website = htmlentities($request->get('website'), ENT_QUOTES, "UTF-8");
+        $companyName = htmlentities($request->get('company_name'), ENT_QUOTES, "UTF-8");
         $email = htmlentities($request->get('email'), ENT_QUOTES, "UTF-8");
+        $phoneNumber = htmlentities($request->get('phone_number'), ENT_QUOTES, "UTF-8");
         $nip = htmlentities($request->get('nip'), ENT_QUOTES, "UTF-8");
-        $bank_name = htmlentities($request->get('bank_name'), ENT_QUOTES, "UTF-8");
-        $account_number = htmlentities($request->get('account_number'), ENT_QUOTES, "UTF-8");
+//        $bankName = htmlentities($request->get('bank_name'), ENT_QUOTES, "UTF-8");
+//        $accountNumber = htmlentities($request->get('account_number'), ENT_QUOTES, "UTF-8");
         
         if ($invoiceDataId !== null && 
-            $website !== null &&
+            $companyName !== null &&
             $email !== null &&
-            $nip !== null &&
-            $bank_name !== null &&
-            $account_number !== null)
+            $phoneNumber !== null &&
+            $nip !== null)
+                
+//            $bankName !== null &&
+//            $accountNumber !== null)
+            
         {
             $boss = auth()->user();
             
@@ -1320,11 +1320,12 @@ class BossController extends Controller
                 
                 if ($invoiceData !== null)
                 {
-                    $invoiceData->website         = $website;
+                    $invoiceData->company_name    = $companyName;
                     $invoiceData->email           = $email;
+                    $invoiceData->phone_number     = $phoneNumber;
                     $invoiceData->nip             = $nip;
-                    $invoiceData->bank_name       = $bank_name;
-                    $invoiceData->account_number  = $account_number;       
+//                    $invoiceData->bank_name       = $bankName;
+//                    $invoiceData->account_number  = $accountNumber;       
                     $invoiceData->save();
 
                     return redirect('boss/subscription/invoices/' . $substart->id)->with('success', 'Dane do faktury zostały zmienione!');
@@ -1345,9 +1346,64 @@ class BossController extends Controller
             $substart = Substart::where('id', $interval->substart_id)->first();
             
             if ($substart !== null && $substart->boss_id === $boss->id)
-            {                
-                $pdf = \PDF::loadView('invoices.subscription_monthly_pay');
-                return $pdf->download('faktura_za_' . $interval->start_date->format("Y-m-d") . '-' . $interval->end_date->format("Y-m-d") . ' ' . config('app.name') . '.pdf');
+            {            
+                $admin = User::where([
+                    'isAdmin' => 1
+                ])->first();
+                
+                if ($admin !== null)
+                {
+                    $adminInvoiceData = InvoiceData::where([
+                        'owner_id' => $admin->id,
+                        'property_id' => null
+                    ])->first();
+                    
+                    $bossInvoiceData = InvoiceData::where([
+                        'owner_id' => $boss->id,
+                        'property_id' => $substart->property_id
+                    ])->first();
+                    
+                    $bossProperty = Property::where('id', $substart->property_id)->first();
+                    
+                    $workersIntervals = Interval::where('interval_id', $interval->id)->get();
+                    $workersIntervals->push($boss);
+                    $intervalWorkersCount = count($workersIntervals);
+                    
+                    $VAT = 23;
+                    $VATMultiplier = (1  - ($VAT / 100));
+                    
+                    $subscription = Subscription::where('id', $substart->subscription_id)->first();
+                    $subscriptionSingleNetPrice = $subscription->old_price * $VATMultiplier;
+                    $subscriptionSingleNetPriceAfterDiscount = $subscription->new_price * $VATMultiplier;
+                    $subscriptionSingleDiscount = 100 - (($subscriptionSingleNetPriceAfterDiscount * 100) / $subscriptionSingleNetPrice);
+                    
+                    $subscriptionAllNetPrice = $subscriptionSingleNetPriceAfterDiscount * $intervalWorkersCount;
+                    $subscriptionAllGrossPrice = $subscription->new_price * $intervalWorkersCount;
+                    $theAmountOfVAT = $subscriptionAllGrossPrice - $subscriptionAllNetPrice;
+                            
+                    if ($adminInvoiceData !== null && $bossInvoiceData !== null)
+                    {
+                        $pdf = \PDF::loadView('invoices.subscription_monthly_pay', [
+                            'adminInvoiceData' => $adminInvoiceData,
+                            'bossInvoiceData' => $bossInvoiceData,
+                            'bossProperty' => $bossProperty,
+                            'subscription' => $subscription,
+                            'intervalWorkersCount' => $intervalWorkersCount,
+                            'subscriptionSingleNetPrice' => $subscriptionSingleNetPrice,
+                            'subscriptionSingleDiscount' => $subscriptionSingleDiscount,
+                            'subscriptionSingleNetPriceAfterDiscount' => $subscriptionSingleNetPriceAfterDiscount,
+                            'VAT' => $VAT,
+                            'subscriptionAllNetPrice' => $subscriptionAllNetPrice,
+                            'theAmountOfVAT' => $theAmountOfVAT,
+                            'subscriptionAllGrossPrice' => $subscriptionAllGrossPrice,
+                            'substart' => $substart,
+                            'interval' => $interval,
+                            'intervalWorkersCount' => $intervalWorkersCount
+                        ]);
+                        
+                        return $pdf->download('faktura_za_' . $interval->start_date->format("Y-m-d") . '-' . $interval->end_date->format("Y-m-d") . ' ' . config('app.name') . '.pdf');
+                    }
+                }
             }
             
             return redirect()->route('welcome')->with('error', 'Faktura należy do kogoś innego');

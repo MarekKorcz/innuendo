@@ -178,6 +178,9 @@ window.addEventListener('DOMContentLoaded', () => {
                                     </p>                    
                                     <p>` + substart.isActiveMessage + `</p>
                                 </div>
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/invoices/` + substart.id + `">
+                                    Rozliczenia
+                                </a>
                             </div>
                         `;
                         
@@ -192,6 +195,9 @@ window.addEventListener('DOMContentLoaded', () => {
                                     </p>                    
                                     <p>` + substart.isActiveMessage + `</p>
                                 </div>
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/invoices/` + substart.id + `">
+                                    Rozliczenia
+                                </a>
                             </div>
                         `;
                     }

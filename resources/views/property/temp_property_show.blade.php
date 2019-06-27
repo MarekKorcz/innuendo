@@ -23,24 +23,18 @@
         <table class="table table-striped">
             <tr>
                 <th>Name:</th>
-                <th>Email:</th>
-                <th>Phone number:</th>
                 <th>Street:</th>
                 <th>Street number:</th>
                 <th>House number:</th>
                 <th>City:</th>
-                <th>Post code:</th>
                 <th>Owner:</th>
             </tr>
             <tr>
                 <td>{{ $tempProperty->name }}</td>
-                <td>{{ $tempProperty->email }}</td>
-                <td>{{ $tempProperty->phone_number }}</td>
                 <td>{{ $tempProperty->street }}</td>
                 <td>{{ $tempProperty->street_number }}</td>
                 <td>{{ $tempProperty->house_number }}</td>
                 <td>{{ $tempProperty->city }}</td>
-                <td>{{ $tempProperty->post_code }}</td>
                 @if ($tempProperty->temp_user_id > 0)
                     <td>{{ $tempProperty->owner->name }} {{ $tempProperty->owner->surname }}</td>
                 @else

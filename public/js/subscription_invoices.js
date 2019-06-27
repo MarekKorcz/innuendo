@@ -6,7 +6,7 @@ $(document).ready(function()
         
         if (element.hasClass('list-group-item'))
         {            
-            if (!element.hasClass('clicked'))
+            if (!element.hasClass('clicked') && element.hasClass('existing-invoice'))
             {
                 
                 $("ul.list-group").children().each(function() 

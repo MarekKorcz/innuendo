@@ -235,8 +235,8 @@ class RegisterController extends Controller
             'boss_phone_number'     => 'required|numeric|regex:/[0-9]/|min:7',
             'password'              => 'required|min:7|confirmed',
             'property_name'         => 'required|min:3',
-            'property_email'        => 'required|email|unique:properties,email',
-            'property_phone_number' => 'required|numeric|regex:/[0-9]/|min:7',
+//            'property_email'        => 'required|email|unique:properties,email',
+//            'property_phone_number' => 'required|numeric|regex:/[0-9]/|min:7',
             'street'                => 'required|min:3',
             'street_number'         => 'required',
             'house_number'          => 'required'
@@ -267,12 +267,9 @@ class RegisterController extends Controller
                     $property = Property::create([
                         'name' => Input::get('property_name'),
                         'slug' => str_slug(Input::get('property_name')),
-                        'email' => Input::get('property_email'),
-                        'phone_number' => Input::get('property_phone_number'),
                         'street' => Input::get('street'),
                         'street_number' => Input::get('street_number'),
                         'house_number' => Input::get('house_number'),
-                        'post_code' => Input::get('post_code'),
                         'city' => "Warszawa",
                         'boss_id' => $boss->id
                     ]);

@@ -55,16 +55,6 @@
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('property_email', 'Email') }}
-                            {{ Form::text('property_email', $tempProperty->email, array('class' => 'form-control')) }}
-                            <div class="warning"></div>
-                        </div>
-                        <div class="form-group">
-                            {{ Form::label('property_phone_number', 'Numer telefonu') }}
-                            {{ Form::number('property_phone_number', $tempProperty->phone_number, array('class' => 'form-control')) }}
-                            <div class="warning"></div>
-                        </div>
-                        <div class="form-group">
                             {{ Form::label('street', 'Ulica') }}
                             {{ Form::text('street', $tempProperty->street, array('class' => 'form-control')) }}
                             <div class="warning"></div>
@@ -78,10 +68,6 @@
                             {{ Form::label('house_number', 'Numer budynku') }}
                             {{ Form::text('house_number', $tempProperty->house_number, array('class' => 'form-control')) }}
                             <div class="warning"></div>
-                        </div>
-                        <div class="form-group">
-                            {{ Form::label('post_code', 'Kod pocztowy') }}
-                            {{ Form::text('post_code', $tempProperty->post_code, array('class' => 'form-control')) }}
                         </div>
                         
                         <input type="hidden" id="register_code" name="register_code" value="{{$registerCode}}">

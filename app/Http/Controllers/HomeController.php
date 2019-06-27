@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 // to tests
 use App\Appointment;
 use App\Interval;
+use App\InvoiceData;
 use App\Substart;
 use App\Purchase;
 use App\ChosenProperty;

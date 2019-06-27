@@ -26,14 +26,6 @@
             {{ Form::textarea('description', $property->description, array('id' => 'article-ckeditor', 'class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('email', 'Email') }}
-            {{ Form::text('email', $property->email, array('class' => 'form-control')) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('phone_number', 'Phone number') }}
-            {{ Form::number('phone_number', $property->phone_number, array('class' => 'form-control')) }}
-        </div>
-        <div class="form-group">
             {{ Form::label('street', 'Street') }}
             {{ Form::text('street', $property->street, array('class' => 'form-control')) }}
         </div>
@@ -44,10 +36,6 @@
         <div class="form-group">
             {{ Form::label('house_number', 'House number') }}
             {{ Form::text('house_number', $property->house_number, array('class' => 'form-control')) }}
-        </div>
-        <div class="form-group">
-            {{ Form::label('post_code', 'Post Code') }}
-            {{ Form::text('post_code', $property->post_code, array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
             {{ Form::label('city', 'City') }}

@@ -122,12 +122,9 @@ class PropertyController extends Controller
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
             $property->description   = Input::get('description');
-            $property->email         = Input::get('email');
-            $property->phone_number  = Input::get('phone_number');
             $property->street        = Input::get('street');
             $property->street_number = Input::get('street_number');
             $property->house_number  = Input::get('house_number');
-            $property->post_code     = Input::get('post_code');
             $property->city          = Input::get('city');
             $property->boss_id       = $bossId !== null ? $bossId : auth()->user()->id;           
             $property->save();
@@ -303,12 +300,9 @@ class PropertyController extends Controller
             $property = Property::where('id', $id)->first();
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
-            $property->email         = Input::get('email');
-            $property->phone_number  = Input::get('phone_number');
             $property->street        = Input::get('street');
             $property->street_number = Input::get('street_number');
             $property->house_number  = Input::get('house_number');
-            $property->post_code     = Input::get('post_code');
             $property->city          = Input::get('city');
             
             if ($boss !== null)
@@ -350,12 +344,9 @@ class PropertyController extends Controller
             $tempProperty->name          = Input::get('name');
             $tempProperty->slug          = str_slug(Input::get('name'));
             $tempProperty->description   = Input::get('description');
-            $tempProperty->email         = Input::get('email');
-            $tempProperty->phone_number  = Input::get('phone_number');
             $tempProperty->street        = Input::get('street');
             $tempProperty->street_number = Input::get('street_number');
             $tempProperty->house_number  = Input::get('house_number');
-            $tempProperty->post_code     = Input::get('post_code');
             $tempProperty->city          = Input::get('city');            
             $tempProperty->save();
 

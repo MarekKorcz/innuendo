@@ -271,8 +271,7 @@ class AdminController extends Controller
             'name'           => 'required',
             'surname'        => 'required',
             'boss_email'     => 'required',
-            'street'         => 'required',
-            'property_email' => 'required'
+            'street'         => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -305,12 +304,9 @@ class AdminController extends Controller
                 $property = new TempProperty();
                 $property->name          = Input::get('property_name');
                 $property->slug          = str_slug(Input::get('property_name'));
-                $property->email         = Input::get('property_email');
-                $property->phone_number  = Input::get('property_phone_number');
                 $property->street        = Input::get('street');
                 $property->street_number = Input::get('street_number');
                 $property->house_number  = Input::get('house_number');
-                $property->post_code     = Input::get('post_code');
                 $property->city          = "Warszawa";
                 $property->temp_user_id  = $boss->id;
                 $property->save();

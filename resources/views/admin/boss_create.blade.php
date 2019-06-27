@@ -30,14 +30,6 @@
                 {{ Form::text('property_name', Input::old('property_name'), array('class' => 'form-control')) }}
             </div>
             <div class="form-group">
-                {{ Form::label('property_email', 'Email') }}
-                {{ Form::text('property_email', Input::old('property_email'), array('class' => 'form-control')) }}
-            </div>
-            <div class="form-group">
-                {{ Form::label('property_phone_number', 'Phone number') }}
-                {{ Form::number('property_phone_number', Input::old('property_phone_number'), array('class' => 'form-control')) }}
-            </div>
-            <div class="form-group">
                 {{ Form::label('street', 'Street') }}
                 {{ Form::text('street', Input::old('street'), array('class' => 'form-control')) }}
             </div>
@@ -48,10 +40,6 @@
             <div class="form-group">
                 {{ Form::label('house_number', 'House number') }}
                 {{ Form::text('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
-            </div>
-            <div class="form-group">
-                {{ Form::label('post_code', 'Post Code') }}
-                {{ Form::text('post_code', Input::old('post_code'), array('class' => 'form-control')) }}
             </div>
 
             {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}

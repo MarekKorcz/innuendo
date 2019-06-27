@@ -37,7 +37,7 @@
         <tbody>
             <tr>
                 <td>{{$tempProperty->name}}</td>
-                <td>{{$tempProperty->street}}</td>
+                <td>{{$tempProperty->street}} {{$tempProperty->street_number}} / {{$tempProperty->house_number}}</td>
                 <td>{{$tempProperty->created_at}}</td>
                 <td>
                     <a class="btn btn-success" href="{{ URL::to('/temp-property/' . $tempProperty->id) }}">

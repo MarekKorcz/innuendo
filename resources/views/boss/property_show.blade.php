@@ -28,9 +28,6 @@
                 @if ($property->city)
                     <p>Miasto: <strong>{{$property->city}}</strong></p>
                 @endif
-                @if ($property->post_code)
-                    <p>Kod pocztowy: <strong>{{$property->post_code}}</strong></p>
-                @endif
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <img class="img-fluid" src="/img/column2.jpg">

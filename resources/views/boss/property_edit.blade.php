@@ -15,16 +15,6 @@
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('email', 'Email') }}
-                {{ Form::text('email', $property->email, array('class' => 'form-control')) }}
-                <div class="warning"></div>
-            </div>
-            <div class="form-group">
-                {{ Form::label('phone_number', 'Numer telefonu') }}
-                {{ Form::number('phone_number', $property->phone_number, array('class' => 'form-control')) }}
-                <div class="warning"></div>
-            </div>
-            <div class="form-group">
                 {{ Form::label('street', 'Ulica') }}
                 {{ Form::text('street', $property->street, array('class' => 'form-control')) }}
                 <div class="warning"></div>
@@ -43,10 +33,6 @@
                 {{ Form::label('city', 'Miasto') }}
                 {{ Form::text('city', $property->city, array('class' => 'form-control')) }}
                 <div class="warning"></div>
-            </div>
-            <div class="form-group">
-                {{ Form::label('post_code', 'Kod pocztowy') }}
-                {{ Form::text('post_code', $property->post_code, array('class' => 'form-control')) }}
             </div>
         
             {{ Form::hidden('property_id', $property->id) }}
