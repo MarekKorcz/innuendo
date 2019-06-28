@@ -1411,6 +1411,48 @@ class BossController extends Controller
         
         return redirect()->route('welcome')->with('error', 'Faktura nie istnieje');
     }
+    
+    /**
+     * Method to send graphic request to admin.
+     * 
+     * @param Request $request
+     * 
+     * @return type
+     */
+    public function makeAGraphicRequest(Request $request)
+    {
+        dump($request->request->all());die;
+        
+//        if ($request->appointmentTerm && 
+//            $request->graphicId && 
+//            $request->calendarId && 
+//            $request->year && 
+//            $request->month && 
+//            $request->day)
+//        {
+//            session([
+//                'appointmentTerm' => $request->appointmentTerm,
+//                'graphicId' => $request->graphicId,
+//                'calendarId' => $request->calendarId,
+//                'year' => $request->year,
+//                'month' =>  $request->month,
+//                'day' => $request->day
+//            ]);
+//            
+//            if (auth()->user() !== null)
+//            {
+//                return redirect()->action(
+//                    'AppointmentController@create'
+//                );
+//                
+//            } else {
+//                
+//                return redirect()->route('login');
+//            }
+//        }
+//        
+//        return redirect()->route('welcome');
+    }
 
     public function setSubscriptionToChosenPropertySubscription(Request $request)
     {        

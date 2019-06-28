@@ -341,11 +341,56 @@ class UserController extends Controller
                             $availableNextMonth = true;
                         }
                         
+                        $property = Property::where('id', $calendar->property_id)->first();
+                        
+                        $employees = User::where('isEmployee', 1)->get();
+                        
+                        // >> if I would only let to choose from workers that are signed to chosen property already...
+                        
+//                        
+//                        $graphicEmployees = new Collection();
+//                        
+//                        if ($property->boss_id == auth()->user()->id)
+//                        {
+//                            $propertyCalendarEntites = Calendar::where('property_id', $property->id)->get();
+//                            
+//                            if (count($propertyCalendarEntites) > 0)
+//                            {
+//                                foreach ($propertyCalendarEntites as $calendarEntity)
+//                                {
+//                                    $calendarYear = Year::where([
+//                                        'year' => $year->year,
+//                                        'calendar_id' => $calendarEntity->id
+//                                    ])->first();
+//                                    
+//                                    if ($calendarYear !== null)
+//                                    {
+//                                        $calendarMonth = Month::where([
+//                                            'month_number' => $month->month_number,
+//                                            'year_id' => $calendarYear->id
+//                                        ])->first();
+//
+//                                        if ($calendarMonth !== null)
+//                                        {                                            
+//                                            $employee = User::where('id', $calendarEntity->employee_id)->first();
+//
+//                                            if ($employee !== null && $employee->isEmployee == 1)
+//                                            {
+//                                                $graphicEmployees->push($employee);
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+
+                        // <<
+                        
                         $employee = User::where([
                             'isEmployee' => 1,
                             'id' => $calendar->employee_id
                         ])->first();
-
+                        
                         return view('employee.calendar')->with([
                             'calendar_id' => $calendar->id,
                             'employee_slug' => $employee->slug,
@@ -356,7 +401,9 @@ class UserController extends Controller
                             'days' => $days,
                             'current_day' => $currentDay,
                             'graphic' => $graphic,
-                            'graphic_id' => $graphicTime ? $graphicTime->id : null
+                            'graphic_id' => $graphicTime ? $graphicTime->id : null,
+                            'canSendRequest' => $property->boss_id == auth()->user()->id ? true : false,
+                            'employees' => $employees
                         ]);
                     }
                     else

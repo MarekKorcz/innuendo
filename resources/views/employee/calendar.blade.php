@@ -209,7 +209,21 @@
                             @endif
                         @endfor
                     @else
-                        <h3 style="padding: 40px; color: coral;">Ten dzień nie posiada otwartego grafiku</h3>
+                        @if ($canSendRequest)
+                            <p style="padding-top: 40px; font-size: 24px;">
+                                Wyślij zapytanie o otwarcie tego dnia grafiku
+                            </p>
+                            <a href="#makeAGraphicRequest" 
+                               id="request-btn" 
+                               class="btn btn-success" 
+                               style="color: white;"
+                               data-toggle="modal"
+                            >
+                                Wyślij
+                            </a>
+                        @else
+                            <h3 style="padding: 40px; color: coral;">Ten dzień nie posiada otwartego grafiku</h3>
+                        @endif
                     @endif
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
@@ -223,8 +237,7 @@
                 <h3>Rezerwacja wizyty</h3>
                 <button class="close" data-dismiss="modal">×</button>
             </div>
-            <div class="modal-body">                
-                
+            <div class="modal-body">         
                 {{ Form::open(['action' => 'AppointmentController@beforeShowCreatePage', 'method' => 'POST']) }}
 
                     <div class="form-group">
@@ -242,7 +255,55 @@
                     {{ Form::submit('Przejdz do rezerwacji', array('class' => 'btn btn-primary')) }}
 
                 {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal hide" id="makeAGraphicRequest">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Wyślij zapytanie o otwarcie grafiku</h3>
+                <button class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                {{ Form::open(['id' => 'request-form', 'action' => 'BossController@makeAGraphicRequest', 'method' => 'POST']) }}
+
+                        <div class="form-group">
+                            {{ Form::label('start_time', 'Od której godziny') }}
+                            {{ Form::time('start_time', Input::old('start_time'), array('class' => 'form-control')) }}
+                        </div>
+                        <div class="form-group">
+                            {{ Form::label('end_time', 'Do której godziny') }}
+                            {{ Form::time('end_time', Input::old('end_time'), array('class' => 'form-control')) }}
+                        </div>
+                                                
+                        @if (count($employees) > 0)
+                            <p class="text-center">Wybierz spośród naszych pracowników</p>
+                            <ul id="employees" style="padding: 12px;">
+                                @foreach($employees as $employee)
+                                    <li class="form-control" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        <div class="form-group">
+                            {{ Form::label('message', 'Komentarz do zapytania') }}
+                            {{ Form::textarea('message', Input::old('message'), array('class' => 'form-control')) }}
+                        </div>
+                        
+                        @if($graphic_id !== null)
+                            <input type="hidden" name="graphicId" value="{{$graphic_id}}"/>
+                        @endif
+                        <input type="hidden" name="calendarId" value="{{$calendar_id}}"/>
+                        <input type="hidden" name="year" value="{{$year->year}}"/>
+                        <input type="hidden" name="month" value="{{$month->month_number}}"/>
+                        <input type="hidden" name="day" value="{{$current_day}}"/>
                  
+                        <div class="text-center">
+                            {{ Form::submit('Przejdz do rezerwacji', array('class' => 'btn btn-success')) }}
+                        </div>
+
+                {{ Form::close() }}
             </div>
         </div>
     </div>

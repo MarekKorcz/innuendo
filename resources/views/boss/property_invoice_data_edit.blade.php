@@ -5,7 +5,7 @@
 
 <div class="container">
     <div class="jumbotron" style="margin: 15px;">
-        <h1 class="text-center">Edytuj fakture</h1>
+        <h1 class="text-center">Edytuj dane do faktury</h1>
 
         {{ Form::open(['id' => 'property-invoice-data', 'action' => ['BossController@invoiceDataUpdate'], 'method' => 'POST']) }}
                 
