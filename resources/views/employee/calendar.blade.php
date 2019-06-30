@@ -266,16 +266,20 @@
                 <button class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
-                {{ Form::open(['id' => 'request-form', 'action' => 'BossController@makeAGraphicRequest', 'method' => 'POST']) }}
+                {{ Form::open(['id' => 'request-form', 'action' => 'BossController@makeAGraphicRequest', 'method' => 'POST', 'novalidate' => true]) }}
 
                         <div class="form-group">
                             {{ Form::label('start_time', 'Od której godziny') }}
                             {{ Form::time('start_time', Input::old('start_time'), array('class' => 'form-control')) }}
+                            <div class="warning"></div>
                         </div>
                         <div class="form-group">
                             {{ Form::label('end_time', 'Do której godziny') }}
                             {{ Form::time('end_time', Input::old('end_time'), array('class' => 'form-control')) }}
+                            <div class="warning"></div>
                         </div>
+                
+                        <div id="appointment-quantity-counter"></div>
                                                 
                         @if (count($employees) > 0)
                             <p class="text-center">Wybierz spośród naszych pracowników</p>
@@ -284,6 +288,7 @@
                                     <li class="form-control" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
                                 @endforeach
                             </ul>
+                            <div id="employees-warning" class="warning"></div>
                         @endif
 
                         <div class="form-group">
