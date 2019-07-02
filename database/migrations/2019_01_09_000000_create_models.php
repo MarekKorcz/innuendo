@@ -110,6 +110,26 @@ class CreateModels extends Migration
             $table->integer('day_id')->unsigned()->index()->foreign()->references("id")->on("days");
         });
         
+        Schema::create('graphic_requests', function (Blueprint $table) {
+            $table->increments('id');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->string('comment')->nullable();
+            $table->integer('property_id');
+            $table->integer('year_id');
+            $table->integer('month_id');
+            $table->integer('day_id');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('boss_id')->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
+        Schema::create('graphic_request_employee', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('graphic_request_id')->unsigned()->index()->foreign()->references("id")->on("graphic_requests");
+            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
         Schema::create('appointments', function (Blueprint $table) {
             $table->increments('id');
             $table->time('start_time');
@@ -257,6 +277,8 @@ class CreateModels extends Migration
         Schema::dropIfExists('months');
         Schema::dropIfExists('days');
         Schema::dropIfExists('graphics');
+        Schema::dropIfExists('graphic_requests');
+        Schema::dropIfExists('graphic_request_employee');
         Schema::dropIfExists('appointments');
         Schema::dropIfExists('temp_users');
         Schema::dropIfExists('temp_properties');

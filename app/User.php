@@ -67,6 +67,14 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Code');
     }
+    
+    /**
+     * Get GraphicRequests which has signed up employees to.
+     */
+    public function graphicRequests()
+    {
+        return $this->belongsToMany('App\GraphicRequest', 'graphic_request_employee', 'employee_id', 'graphic_request_id');
+    }
 
     /**
      *      USER

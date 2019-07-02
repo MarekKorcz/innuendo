@@ -19,7 +19,7 @@ class ChosenProperty extends Model
      * @var array
      */
     protected $fillable = [
-        'code_id', 'user_id', 'property_id', 
+        'code_id', 'user_id', 'property_id'
     ];
     
     /**

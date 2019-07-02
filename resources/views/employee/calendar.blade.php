@@ -242,7 +242,7 @@
 
                     <div class="form-group">
                         <label name="appointmentTerm" for="appointmentTerm"></label>
-                        <input type="hidden" name="appointmentTerm" id="appointmentTerm" value=""/>
+                        <input id="appointmentTerm" type="hidden" name="appointmentTerm" value=""/>
                         @if($graphic_id !== null)
                             <input type="hidden" name="graphicId" value="{{$graphic_id}}"/>
                         @endif
@@ -259,7 +259,7 @@
         </div>
     </div>
     
-    <div class="modal hide" id="makeAGraphicRequest">
+    <div id="makeAGraphicRequest" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Wyślij zapytanie o otwarcie grafiku</h3>
@@ -285,24 +285,30 @@
                             <p class="text-center">Wybierz spośród naszych pracowników</p>
                             <ul id="employees" style="padding: 12px;">
                                 @foreach($employees as $employee)
-                                    <li class="form-control" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                    @if(count($employees) == 1)
+                                        <li class="form-control" style="background-color: lightgreen;" data-active="true" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                    @else
+                                        <li class="form-control" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                    @endif
                                 @endforeach
                             </ul>
                             <div id="employees-warning" class="warning"></div>
                         @endif
 
                         <div class="form-group">
-                            {{ Form::label('message', 'Komentarz do zapytania') }}
-                            {{ Form::textarea('message', Input::old('message'), array('class' => 'form-control')) }}
+                            {{ Form::label('comment', 'Komentarz do zapytania') }}
+                            {{ Form::textarea('comment', Input::old('comment'), array('class' => 'form-control')) }}
                         </div>
                         
-                        @if($graphic_id !== null)
-                            <input type="hidden" name="graphicId" value="{{$graphic_id}}"/>
-                        @endif
-                        <input type="hidden" name="calendarId" value="{{$calendar_id}}"/>
-                        <input type="hidden" name="year" value="{{$year->year}}"/>
-                        <input type="hidden" name="month" value="{{$month->month_number}}"/>
+                        <input type="hidden" name="calendar" value="{{$calendar_id}}"/>
+                        <input type="hidden" name="year" value="{{$year->id}}"/>
+                        <input type="hidden" name="month" value="{{$month->id}}"/>
                         <input type="hidden" name="day" value="{{$current_day}}"/>
+                        @if(count($employees) == 1)
+                            @foreach($employees as $employee)
+                                <input type="hidden" name="employees[]" value="{{$employee->id}}"/>
+                            @endforeach
+                        @endif
                  
                         <div class="text-center">
                             {{ Form::submit('Przejdz do rezerwacji', array('class' => 'btn btn-success')) }}

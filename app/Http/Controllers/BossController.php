@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Code;
 use App\Property;
 use App\InvoiceData;
+use App\GraphicRequest;
 use App\Subscription;
 use App\ChosenProperty;
 use App\User;
@@ -1419,39 +1420,95 @@ class BossController extends Controller
      * 
      * @return type
      */
-    public function makeAGraphicRequest(Request $request)
+    public function makeAGraphicRequest()
     {
-        dump($request->request->all());die;
-        
-//        if ($request->appointmentTerm && 
-//            $request->graphicId && 
-//            $request->calendarId && 
-//            $request->year && 
-//            $request->month && 
-//            $request->day)
-//        {
-//            session([
-//                'appointmentTerm' => $request->appointmentTerm,
-//                'graphicId' => $request->graphicId,
-//                'calendarId' => $request->calendarId,
-//                'year' => $request->year,
-//                'month' =>  $request->month,
-//                'day' => $request->day
-//            ]);
-//            
-//            if (auth()->user() !== null)
-//            {
-//                return redirect()->action(
-//                    'AppointmentController@create'
-//                );
-//                
-//            } else {
-//                
-//                return redirect()->route('login');
-//            }
-//        }
-//        
-//        return redirect()->route('welcome');
+        $rules = array(
+            'start_time' => 'required',
+            'end_time'   => 'required',
+            'employees'  => 'required',
+            'calendar'   => 'required|numeric',
+            'year'       => 'required|numeric',
+            'month'      => 'required|numeric',
+            'day'        => 'required|numeric'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::to('/')->withErrors($validator);
+            
+        } else {
+            
+            $boss = auth()->user();
+            
+            if ($boss !== null && $boss->isBoss == 1)
+            {
+                $calendar = Calendar::where('id', Input::get('calendar'))->first();
+                
+                if ($calendar !== null)
+                {
+                    $bossProperty = Property::where([
+                        'id' => $calendar->property_id,
+                        'boss_id' => $boss->id
+                    ])->first();
+            
+                    if ($bossProperty !== null)
+                    {
+                        $year = Year::where('id', Input::get('year'))->first();
+                        
+                        if ($year !== null)
+                        {
+                            $month = Month::where([
+                                'id' => Input::get('month'),
+                                'year_id' => $year->id
+                            ])->first();
+                            
+                            if ($month !== null)
+                            {
+                                $day = Day::where([
+                                    'day_number' => Input::get('day'),
+                                    'month_id' => $month->id
+                                ])->first();
+                                
+                                if ($day !== null)
+                                {
+                                    $graphicRequest = new GraphicRequest();
+                                    $graphicRequest->start_time = Input::get('start_time');
+                                    $graphicRequest->end_time = Input::get('end_time');
+                                    $graphicRequest->comment = Input::get('comment');
+                                    $graphicRequest->property_id = $bossProperty->id;
+                                    $graphicRequest->year_id = $year->id;
+                                    $graphicRequest->month_id = $month->id;
+                                    $graphicRequest->day_id = $day->id;
+                                    $graphicRequest->boss_id = $boss->id;
+                                    $graphicRequest->save();
+                                    
+                                    if ($graphicRequest !== null)
+                                    {
+                                        foreach (Input::get('employees') as $employee_id)
+                                        {
+                                            $employee = User::where([
+                                                'id' => $employee_id,
+                                                'isEmployee' => 1
+                                            ])->first();
+                                            
+                                            if ($employee !== null)
+                                            {
+                                                $graphicRequest->employees()->attach($employee->id);
+                                                $graphicRequest->save();
+                                            }
+                                        }
+                                        
+                                        return redirect()->route('welcome')->with('success', 'Zapytanie o otwarcie grafiku zostało wysłane');
+//                                        return redirect('boss/property/' . $property->id)->with('success', 'Lokalizacja została zaktualizowana');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function setSubscriptionToChosenPropertySubscription(Request $request)

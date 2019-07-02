@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use App\Appointment;
 use App\Interval;
 use App\InvoiceData;
+use App\GraphicRequest;
 use App\Substart;
 use App\Purchase;
 use App\ChosenProperty;
