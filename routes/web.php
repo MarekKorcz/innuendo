@@ -143,6 +143,10 @@ Route::get('/boss/subscription/invoice/edit/{invoiceDataId}/{substartId}', 'Boss
 Route::put('/boss/subscription/invoice/update', 'BossController@invoiceDataUpdate');
 Route::get('/boss/subscription/invoice/{intervalId}', 'BossController@subscriptionInvoice');
 Route::post('/boss/make-a-graphic-request', 'BossController@makeAGraphicRequest');
+Route::get('/boss/graphic-requests', 'BossController@graphicRequests');
+Route::get('/boss/graphic-request/{graphicRequestId}', 'BossController@graphicRequestShow');
+Route::get('/boss/graphic-request/edit/{graphicRequestId}', 'BossController@graphicRequestEdit');
+Route::put('/boss/graphic-request/update', 'BossController@graphicRequestUpdate');
 Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
 Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
 Route::post('/boss/get/property/subscription', 'BossController@getPropertySubscriptions');

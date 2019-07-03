@@ -59,4 +59,18 @@ class Day extends Model
     {
         return $this->hasOne('App\Graphic');
     }
+    
+    /**
+     * 
+     * BOSS
+     * 
+     */
+    
+    /**
+     * Get graphicRequests which belongs to day.
+     */
+    public function graphicRequests()
+    {
+        return $this->hasMany('App\GraphicRequest');
+    }
 }

@@ -80,6 +80,20 @@
 
         <div class="card">
             <div class="card-body">
+                <h4 class="card-title text-center">Panel z zapytaniami o otwarcie grafików</h4>
+                <p class="card-text text-center">
+                    Widok z listą zapytań o otwarcie w danych dniach grafików
+                </p>
+                <div class="text-center">
+                    <a class="btn btn-success btn-lg" href="{{ URL::to('boss/graphic-requests') }}">
+                        Pokaż
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
                 <h4 class="card-title text-center">Generacja kodów rejestracji</h4>
                 <p class="card-text text-center">
                     Widok generacji kodów do rejestracji dla praconików w celu przydzielenia ich do odpowiednich pakietów

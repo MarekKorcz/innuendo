@@ -82,4 +82,12 @@ class Property extends Model
     {
         return $this->hasOne('App\InvoiceData');
     }
+    
+    /**
+     * Get graphicRequests which belongs to property.
+     */
+    public function graphicRequests()
+    {
+        return $this->hasMany('App\GraphicRequest');
+    }
 }

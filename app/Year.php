@@ -50,4 +50,18 @@ class Year extends Model
     {
         return $this->hasMany('App\Month');
     }
+    
+    /**
+     * 
+     * BOSS
+     * 
+     */
+    
+    /**
+     * Get graphicRequests which belongs to year.
+     */
+    public function graphicRequests()
+    {
+        return $this->hasMany('App\GraphicRequest');
+    }
 }

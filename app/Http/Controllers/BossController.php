@@ -1508,7 +1508,180 @@ class BossController extends Controller
                     }
                 }
             }
+            
+            return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
+    }
+    
+    public function graphicRequests()
+    {  
+        $boss = auth()->user();
+        
+        $graphicRequests = GraphicRequest::where('boss_id', $boss->id)->with([
+            'property',
+            'year',
+            'month',
+            'day',
+            'employees'
+        ])->get();
+
+        foreach ($graphicRequests as $graphicRequest)
+        {                
+            if ($graphicRequest->comment !== null && strlen($graphicRequest->comment) > 24)
+            {
+                $graphicRequest->comment = substr($graphicRequest->comment, 0, 24).'...';
+            }
+        }
+        
+        return view('boss.graphic_requests')->with([
+            'graphicRequests' => $graphicRequests
+        ]);
+    }
+    
+    public function graphicRequestShow($graphicRequestId)
+    {
+        $boss = auth()->user();
+        
+        $graphicRequest = GraphicRequest::where([
+            'id' => $graphicRequestId,
+            'boss_id' => $boss->id
+        ])->with([
+            'property',
+            'year',
+            'month',
+            'day',
+            'employees'
+        ])->first();
+        
+        if ($graphicRequest !== null)
+        {
+            $allEmployees = User::where('isEmployee', 1)->get();
+            
+            foreach ($allEmployees as $employee)
+            {
+                foreach ($graphicRequest->employees as $chosenEmployee)
+                {
+                    if ($employee->id == $chosenEmployee->id)
+                    {
+                        $employee['isChosen'] = true;
+                    }
+                }
+            }
+            
+            $graphicRequest['allEmployees'] = $allEmployees;
+            
+            return view('boss.graphic_request')->with([
+                'graphicRequest' => $graphicRequest
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Podane zapytanie o grafik nie istnieję lub ma innego właściciela');
+    }
+    
+    public function graphicRequestEdit($graphicRequestId)
+    {
+        $boss = auth()->user();
+        
+        $graphicRequest = GraphicRequest::where([
+            'id' => $graphicRequestId,
+            'boss_id' => $boss->id
+        ])->with('employees')->first();
+        
+        if ($graphicRequest !== null)
+        {
+            $allEmployees = User::where('isEmployee', 1)->get();
+            
+            foreach ($allEmployees as $employee)
+            {
+                foreach ($graphicRequest->employees as $chosenEmployee)
+                {
+                    if ($employee->id == $chosenEmployee->id)
+                    {
+                        $employee['isChosen'] = true;
+                    }
+                }
+            }
+            
+            $graphicRequest['allEmployees'] = $allEmployees;
+            
+            return view('boss.graphic_request_edit')->with([
+                'graphicRequest' => $graphicRequest
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Podane zapytanie o grafik nie istnieję lub ma innego właściciela');
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @return Response
+     */
+    public function graphicRequestUpdate(Request $request)
+    {        
+        $graphicRequestId = htmlentities($request->get('graphic_request_id'), ENT_QUOTES, "UTF-8");
+        $startTime= htmlentities($request->get('start_time'), ENT_QUOTES, "UTF-8");
+        $endTime = htmlentities($request->get('end_time'), ENT_QUOTES, "UTF-8");
+        $comment = htmlentities($request->get('comment'), ENT_QUOTES, "UTF-8");
+        
+        $employees = [];
+        $isEmployeesArrayValid = true;
+        
+        foreach ($request->get('employees') as $employee)
+        {
+            $employee = User::where([
+                'id' => htmlentities((int)$employee, ENT_QUOTES, "UTF-8"),
+                'isEmployee' => 1
+            ])->first();
+            
+            if ($employee !== null)
+            {
+                $employees[] = $employee;
+            }
+            
+            if (!($employee instanceof \App\User)) 
+            {
+                $isEmployeesArrayValid = false;
+            }
+        }
+        
+        if ($graphicRequestId !== null &&
+            $startTime !== null &&
+            $endTime !== null &&
+            $comment !== null &&
+            is_array($employees) &&
+            $isEmployeesArrayValid)
+        {
+            $boss = auth()->user();
+            
+            $graphicRequest = GraphicRequest::where([
+                'id' => $graphicRequestId,
+                'boss_id' => $boss->id
+            ])->first();
+            
+            if ($graphicRequest !== null)
+            {
+                $graphicRequest->start_time  = $startTime;
+                $graphicRequest->end_time    = $endTime;
+                $graphicRequest->comment     = $comment;
+                
+                $graphicRequest->employees()->detach();
+                
+                foreach ($employees as $employee)
+                {
+                    $graphicRequest->employees()->attach($employee->id);
+                }
+                    
+                $graphicRequest->updated_at = new \DateTime();
+                $graphicRequest->save();
+                
+                // todo: add message about this change
+
+                return redirect('/boss/graphic-request/' . $graphicRequest->id)->with('success', 'Zapytanie o otworzenie grafiku zostało zmienione!');
+            }
+        }
+            
+        return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane do faktury');
     }
 
     public function setSubscriptionToChosenPropertySubscription(Request $request)

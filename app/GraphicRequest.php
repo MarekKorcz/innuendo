@@ -35,6 +35,38 @@ class GraphicRequest extends Model
     ];
     
     /**
+     * Get property that owns GraphicRequest.
+     */
+    public function property()
+    {
+        return $this->belongsTo('App\Property');
+    }
+    
+    /**
+     * Get year that owns GraphicRequest.
+     */
+    public function year()
+    {
+        return $this->belongsTo('App\Year');
+    }
+    
+    /**
+     * Get month that owns GraphicRequest.
+     */
+    public function month()
+    {
+        return $this->belongsTo('App\Month');
+    }
+    
+    /**
+     * Get day that owns GraphicRequest.
+     */
+    public function day()
+    {
+        return $this->belongsTo('App\Day');
+    }
+    
+    /**
      * Get employees which belongs to GraphicRequest.
      */
     public function employees()

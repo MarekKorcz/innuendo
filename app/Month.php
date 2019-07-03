@@ -51,4 +51,18 @@ class Month extends Model
     {
         return $this->hasMany('App\Day');
     }
+    
+    /**
+     * 
+     * BOSS
+     * 
+     */
+    
+    /**
+     * Get graphicRequests which belongs to month.
+     */
+    public function graphicRequests()
+    {
+        return $this->hasMany('App\GraphicRequest');
+    }
 }

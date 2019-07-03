@@ -114,7 +114,7 @@ class CreateModels extends Migration
             $table->increments('id');
             $table->time('start_time');
             $table->time('end_time');
-            $table->string('comment')->nullable();
+            $table->text('comment')->nullable();
             $table->integer('property_id');
             $table->integer('year_id');
             $table->integer('month_id');

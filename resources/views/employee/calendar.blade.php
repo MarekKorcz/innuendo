@@ -3,6 +3,7 @@
 @section('content')
 
 {!! Html::script('js/calendar.js') !!}
+{!! Html::script('js/graphic_request.js') !!}
 {!! Html::style('css/calendar.css') !!}
 
 <div class="container">
