@@ -6,6 +6,7 @@ use App\Code;
 use App\Property;
 use App\InvoiceData;
 use App\GraphicRequest;
+use App\Message;
 use App\Subscription;
 use App\ChosenProperty;
 use App\User;
@@ -1441,7 +1442,7 @@ class BossController extends Controller
             
             $boss = auth()->user();
             
-            if ($boss !== null && $boss->isBoss == 1)
+            if ($boss->isBoss == 1)
             {
                 $calendar = Calendar::where('id', Input::get('calendar'))->first();
                 
@@ -1570,8 +1571,11 @@ class BossController extends Controller
             
             $graphicRequest['allEmployees'] = $allEmployees;
             
+            $graphicRequestMessages = Message::where('graphic_request_id', $graphicRequest->id)->get();
+            
             return view('boss.graphic_request')->with([
-                'graphicRequest' => $graphicRequest
+                'graphicRequest' => $graphicRequest,
+                'graphicRequestMessages' => $graphicRequestMessages
             ]);
         }
         
@@ -1682,6 +1686,46 @@ class BossController extends Controller
         }
             
         return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane do faktury');
+    }
+    
+    public function makeAMessage()
+    {
+        $rules = array(
+            'text'               => 'required|string',
+            'graphic_request_id' => 'required|numeric'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::to('boss/graphic-request/' . Input::get('graphic_request_id'));
+            
+        } else {
+            
+            $boss = auth()->user();
+            
+            if ($boss->isBoss == 1)
+            {
+                $graphicRequest = GraphicRequest::where([
+                    'id' => Input::get('graphic_request_id'),
+                    'boss_id' => $boss->id
+                ])->first();
+
+                if ($graphicRequest !== null)
+                {
+                    $message = new Message();
+                    $message->text = Input::get('text');
+                    $message->status = 0;
+                    $message->owner_id = $graphicRequest->boss_id;
+                    $message->graphic_request_id = $graphicRequest->id;
+                    $message->save();
+                    
+                    return redirect('/boss/graphic-request/' . $graphicRequest->id)->with('success', 'Wiadomość została wysłana!');
+                }
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
+        }
     }
 
     public function setSubscriptionToChosenPropertySubscription(Request $request)

@@ -73,4 +73,12 @@ class GraphicRequest extends Model
     {
         return $this->belongsToMany('App\User', 'graphic_request_employee', 'graphic_request_id', 'employee_id');
     }
+    
+    /**
+     * Get messages which belongs to GraphicRequest.
+     */
+    public function messages()
+    {
+        return $this->hasMany('App\Message');
+    }
 }

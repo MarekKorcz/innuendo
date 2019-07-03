@@ -147,6 +147,7 @@ Route::get('/boss/graphic-requests', 'BossController@graphicRequests');
 Route::get('/boss/graphic-request/{graphicRequestId}', 'BossController@graphicRequestShow');
 Route::get('/boss/graphic-request/edit/{graphicRequestId}', 'BossController@graphicRequestEdit');
 Route::put('/boss/graphic-request/update', 'BossController@graphicRequestUpdate');
+Route::post('/boss/make-a-message', 'BossController@makeAMessage');
 Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
 Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
 Route::post('/boss/get/property/subscription', 'BossController@getPropertySubscriptions');

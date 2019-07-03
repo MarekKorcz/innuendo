@@ -1,0 +1,17 @@
+.boss-message {
+    width: 100%;
+    min-height: 150px;
+    border: 2px lightyellow solid;
+    background: lightyellow;
+    border-radius: 20px;
+    padding: 1rem;
+}
+
+.admin-message {
+    width: 100%;
+    min-height: 150px;
+    border: 2px lightgreen solid;
+    background: lightgreen;
+    border-radius: 20px;
+    padding: 1rem;
+}

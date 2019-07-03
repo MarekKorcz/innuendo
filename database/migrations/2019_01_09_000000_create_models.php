@@ -130,6 +130,16 @@ class CreateModels extends Migration
             $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
+        Schema::create('messages', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('text');
+            $table->integer('status');
+            $table->integer('owner_id');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('graphic_request_id')->unsigned()->index()->foreign()->references("id")->on("graphic_requests");
+        });
+        
         Schema::create('appointments', function (Blueprint $table) {
             $table->increments('id');
             $table->time('start_time');
@@ -279,6 +289,7 @@ class CreateModels extends Migration
         Schema::dropIfExists('graphics');
         Schema::dropIfExists('graphic_requests');
         Schema::dropIfExists('graphic_request_employee');
+        Schema::dropIfExists('messages');
         Schema::dropIfExists('appointments');
         Schema::dropIfExists('temp_users');
         Schema::dropIfExists('temp_properties');

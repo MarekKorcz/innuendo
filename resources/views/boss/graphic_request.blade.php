@@ -1,4 +1,7 @@
 @extends('layouts.app')
+
+{!! Html::style('css/graphic_request.css') !!}
+
 @section('content')
     <div class="container">
         <h2 class="text-center" style="padding-top: 2rem;">Zapytanie o grafik z dnia: {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
@@ -35,6 +38,61 @@
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h1 class="text-center">Miejsce na coś?</h1>
             </div>
+        </div>
+    </div>
+
+    <div class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
+        <h3 class="text-center">Wiadomości:</h3>
+        <hr style="margin-bottom: 2rem;">
+        @if (count($graphicRequestMessages) > 0)
+            @foreach ($graphicRequestMessages as $message)
+                @if ($message->owner_id == $graphicRequest->boss_id)
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                            <div class="boss-message">
+                                <div class="text-center">
+                                    <p>{{$message->created_at}}</p>
+                                </div>
+                                <p>{{$message->text}}</p>
+                                <div class="text-right" style="padding-right: 3rem;">
+                                    {{config('message-status.' . $message->status)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
+                    </div>
+                @else
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
+                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                            <div class="admin-message">
+                                <div class="text-center">
+                                    <p>{{$message->created_at}}</p>
+                                </div>
+                                <p>{{$message->text}}</p>
+                                <div class="text-right" style="padding-right: 3rem;">
+                                    {{config('message-status.' . $message->status)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+        @endif
+        <div class="row" style="margin-top: 2rem;">
+            {{ Form::open(['id' => 'send-message', 'action' => ['BossController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}
+                
+                <div class="form-group text-center">
+                    {{ Form::text('text', Input::old('text'), array('style' => 'width: 60%;', 'placeholder' => 'Napisz do nas wiadomość')) }}
+                </div>
+            
+                {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}
+            
+                <div class="text-center">
+                    {{ Form::submit('Wyślij', array('class' => 'btn btn-primary')) }}
+                </div>
+
+            {{ Form::close() }}
         </div>
     </div>
 @endsection
