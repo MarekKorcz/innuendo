@@ -211,17 +211,26 @@
                         @endfor
                     @else
                         @if ($canSendRequest)
-                            <p style="padding-top: 40px; font-size: 24px;">
-                                Wyślij zapytanie o otwarcie tego dnia grafiku
-                            </p>
-                            <a href="#makeAGraphicRequest" 
-                               id="request-btn" 
-                               class="btn btn-success" 
-                               style="color: white;"
-                               data-toggle="modal"
-                            >
-                                Wyślij
-                            </a>
+                            @if ($graphicRequest !== null)
+                                <p style="padding-top: 40px; font-size: 24px;">
+                                    Wysłałeś już zapytanie o otwarcie grafiku w tym dniu
+                                </p>
+                                <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id) }}" class="btn btn-success" style="color: white;">
+                                    Zobacz
+                                </a>
+                            @else
+                                <p style="padding-top: 40px; font-size: 24px;">
+                                    Wyślij zapytanie o otwarcie tego dnia grafiku
+                                </p>
+                                <a href="#makeAGraphicRequest" 
+                                   id="request-btn" 
+                                   class="btn btn-success" 
+                                   style="color: white;"
+                                   data-toggle="modal"
+                                >
+                                    Wyślij
+                                </a>
+                            @endif
                         @else
                             <h3 style="padding: 40px; color: coral;">Ten dzień nie posiada otwartego grafiku</h3>
                         @endif

@@ -19,7 +19,10 @@ class GraphicRequest extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'end_time', 'comment', 'property_id', 'year_id', 'month_id', 'day_id', 'boss_id'
+        'start_time', 'end_time', 'comment', 
+        'property_id', 'year_id', 'year_number', 
+        'month_id', 'month_number', 'day_id', 
+        'day_number', 'boss_id'
     ];
     
     /**
@@ -30,7 +33,11 @@ class GraphicRequest extends Model
     protected $casts = [
         'property_id' => 'integer',
         'year_id' => 'integer',
+        'year_number' => 'integer',
+        'month_id' => 'integer',
+        'month_number' => 'integer',
         'day_id' => 'integer',
+        'day_number' => 'integer',
         'boss_id' => 'integer'
     ];
     

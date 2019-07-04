@@ -1479,8 +1479,11 @@ class BossController extends Controller
                                     $graphicRequest->comment = Input::get('comment');
                                     $graphicRequest->property_id = $bossProperty->id;
                                     $graphicRequest->year_id = $year->id;
+                                    $graphicRequest->year_number = $year->year;
                                     $graphicRequest->month_id = $month->id;
+                                    $graphicRequest->month_number= $month->month_number;
                                     $graphicRequest->day_id = $day->id;
+                                    $graphicRequest->day_number = $day->day_number;
                                     $graphicRequest->boss_id = $boss->id;
                                     $graphicRequest->save();
                                     

@@ -117,8 +117,11 @@ class CreateModels extends Migration
             $table->text('comment')->nullable();
             $table->integer('property_id');
             $table->integer('year_id');
+            $table->integer('year_number');
             $table->integer('month_id');
+            $table->integer('month_number');
             $table->integer('day_id');
+            $table->integer('day_number');
             $table->timestamps();
             $table->softDeletes();
             $table->integer('boss_id')->unsigned()->index()->foreign()->references("id")->on("users");

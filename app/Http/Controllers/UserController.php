@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Calendar;
 use App\Graphic;
+use App\GraphicRequest;
 use App\Property;
 use App\User;
 use App\Year;
@@ -317,12 +318,9 @@ class UserController extends Controller
                             $chosenDay = $currentDay;
                             $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
                             $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
-
-                            $currentDay = $currentDay->day_number;
                         }
                         else
                         {
-                            $currentDay = 0;
                             $graphic = [];
                             $graphicTime = [];
                         }
@@ -343,48 +341,21 @@ class UserController extends Controller
                         
                         $property = Property::where('id', $calendar->property_id)->first();
                         
+                        $canSendRequest = $property->boss_id == auth()->user()->id ? true : false;
+                        $graphicRequest = null;
+                        
+                        if ($canSendRequest)
+                        {
+                            $graphicRequest = GraphicRequest::where([
+                                'property_id' => $property->id,
+                                'year_number' => $year->year,
+                                'month_number' => $month->month_number,
+                                'day_number' => $currentDay->day_number,
+                                'boss_id' => auth()->user()->id
+                            ])->first();
+                        }
+                        
                         $employees = User::where('isEmployee', 1)->get();
-                        
-                        // >> if I would only let to choose from workers that are signed to chosen property already...
-                        
-//                        
-//                        $graphicEmployees = new Collection();
-//                        
-//                        if ($property->boss_id == auth()->user()->id)
-//                        {
-//                            $propertyCalendarEntites = Calendar::where('property_id', $property->id)->get();
-//                            
-//                            if (count($propertyCalendarEntites) > 0)
-//                            {
-//                                foreach ($propertyCalendarEntites as $calendarEntity)
-//                                {
-//                                    $calendarYear = Year::where([
-//                                        'year' => $year->year,
-//                                        'calendar_id' => $calendarEntity->id
-//                                    ])->first();
-//                                    
-//                                    if ($calendarYear !== null)
-//                                    {
-//                                        $calendarMonth = Month::where([
-//                                            'month_number' => $month->month_number,
-//                                            'year_id' => $calendarYear->id
-//                                        ])->first();
-//
-//                                        if ($calendarMonth !== null)
-//                                        {                                            
-//                                            $employee = User::where('id', $calendarEntity->employee_id)->first();
-//
-//                                            if ($employee !== null && $employee->isEmployee == 1)
-//                                            {
-//                                                $graphicEmployees->push($employee);
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-
-                        // <<
                         
                         $employee = User::where([
                             'isEmployee' => 1,
@@ -399,10 +370,11 @@ class UserController extends Controller
                             'year' => $year,
                             'month' => $month,
                             'days' => $days,
-                            'current_day' => $currentDay,
+                            'current_day' => is_object($currentDay) ? $currentDay->day_number : 0,
                             'graphic' => $graphic,
                             'graphic_id' => $graphicTime ? $graphicTime->id : null,
-                            'canSendRequest' => $property->boss_id == auth()->user()->id ? true : false,
+                            'canSendRequest' => $canSendRequest,
+                            'graphicRequest' => $graphicRequest,
                             'employees' => $employees
                         ]);
                     }
