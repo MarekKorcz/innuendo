@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\TempUser;
 use App\TempProperty;
+use App\GraphicRequest;
+use App\Message;
 use App\Mail\AdminTempBossCreate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -316,5 +318,128 @@ class AdminController extends Controller
                 return redirect('/admin/boss/list')->with('success', 'Boss and property successfully created!');
             }
         }
+    }
+    
+    public function graphicRequests()
+    {  
+        $boss = auth()->user();
+        
+        $graphicRequests = GraphicRequest::where('id', '!=', null)->with([
+            'property',
+            'year',
+            'month',
+            'day',
+            'employees'
+        ])->get();
+
+        foreach ($graphicRequests as $graphicRequest)
+        {                
+            if ($graphicRequest->comment !== null && strlen($graphicRequest->comment) > 24)
+            {
+                $graphicRequest->comment = substr($graphicRequest->comment, 0, 24).'...';
+                
+                $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
+            }
+        }
+        
+        return view('admin.graphic_requests')->with([
+            'graphicRequests' => $graphicRequests
+        ]);
+    }
+    
+    public function graphicRequestShow($graphicRequestId)
+    {
+        $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->with([
+            'property',
+            'year',
+            'month',
+            'day',
+            'employees'
+        ])->first();
+        
+        if ($graphicRequest !== null)
+        {
+            $allEmployees = User::where('isEmployee', 1)->get();
+            
+            foreach ($allEmployees as $employee)
+            {
+                foreach ($graphicRequest->employees as $chosenEmployee)
+                {
+                    if ($employee->id == $chosenEmployee->id)
+                    {
+                        $employee['isChosen'] = true;
+                    }
+                }
+            }
+            
+            $graphicRequest['allEmployees'] = $allEmployees;
+            $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
+            $graphicRequestMessages = Message::where('graphic_request_id', $graphicRequest->id)->get();
+            
+            return view('admin.graphic_request')->with([
+                'graphicRequest' => $graphicRequest,
+                'graphicRequestMessages' => $graphicRequestMessages
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Podane zapytanie o grafik nie istnieję lub ma innego właściciela');
+    }
+    
+    public function makeAMessage()
+    {
+        $rules = array(
+            'text'               => 'required|string',
+            'graphic_request_id' => 'required|numeric'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::to('admin/graphic-request/' . Input::get('graphic_request_id'));
+            
+        } else {
+            
+            $graphicRequest = GraphicRequest::where('id', Input::get('graphic_request_id'))->first();
+
+            if ($graphicRequest !== null)
+            {
+                $message = new Message();
+                $message->text = Input::get('text');
+                $message->status = 0;
+                $message->owner_id = auth()->user()->id;
+                $message->graphic_request_id = $graphicRequest->id;
+                $message->save();
+
+                return redirect('/admin/graphic-request/' . $graphicRequest->id)->with('success', 'Message has been sended!');
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Something went wrong');
+        }
+    }
+    
+    public function graphicRequestMessageChangeStatus($graphicRequestId, $messageId)
+    {
+        
+        
+        $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->first();
+        $message = Message::where('id', $messageId)->first();
+        
+        if ($graphicRequest !== null && $message !== null && $message->graphic_request_id == $graphicRequest->id)
+        {
+            if ($message->status == 0)
+            {
+                $message->status = 1;
+                
+            } else if ($message->status = 1) {
+                
+                $message->status = 0;
+            }
+            
+            $message->save();
+            
+            return redirect('/admin/graphic-request/' . $graphicRequest->id)->with('success', 'Message status has been changed!');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Something went wrong');
     }
 }

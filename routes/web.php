@@ -34,6 +34,10 @@ Route::get('/admin/employee/show/{id}', 'AdminController@employeeShow');
 Route::put('/admin/user/edit', 'AdminController@userEdit');
 Route::get('/admin/boss/create', 'AdminController@bossCreate');
 Route::post('/admin/boss/store', 'AdminController@bossStore');
+Route::get('/admin/graphic-requests', 'AdminController@graphicRequests');
+Route::get('/admin/graphic-request/{graphicRequestId}', 'AdminController@graphicRequestShow');
+Route::post('/admin/make-a-message', 'AdminController@makeAMessage');
+Route::get('/admin/graphic-request/message/change-status/{graphicRequestId}/{messageId}', 'AdminController@graphicRequestMessageChangeStatus');
 
 Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');
 Route::post('/employee/assign/store', 'EmployeeController@store');

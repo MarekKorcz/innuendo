@@ -86,6 +86,19 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">Graphic requests</h4>
+                <p class="card-text text-center">
+                    View with all graphic requests made by bosses
+                </p>
+                <div class="text-center">
+                    <a class="btn btn-success" href="{{ URL::to('admin/graphic-requests') }}">
+                        Show
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
