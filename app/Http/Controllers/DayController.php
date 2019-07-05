@@ -105,7 +105,7 @@ class DayController extends Controller
         
         if ($graphicTime !== null)
         {
-            $workUnits = ($graphicTime->total_time / 60) * 2;
+            $workUnits = ($graphicTime->total_time / 60) * 4;
             $startTime = date('G:i', strtotime($graphicTime->start_time));
             
             $startTimePart = explode(":", $startTime);
@@ -118,8 +118,8 @@ class DayController extends Controller
                     'place to show asigned employee'
                 ];
                 
-                $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));
-                $startTime = date('G:i', $timeIncrementedBy30Minutes);
+                $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
+                $startTime = date('G:i', $timeIncrementedBy15Minutes);
             }
         }
         

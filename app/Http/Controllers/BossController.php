@@ -820,7 +820,8 @@ class BossController extends Controller
 
                         $substart = new Substart();
                         $substart->start_date = $startDate;
-                        $endDate = date('Y-m-d', strtotime("+" . ($subscription->duration - 1) . " month", strtotime($startDate)));
+                        $endDate = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate)));
+                        $endDate = date('Y-m-d', strtotime("-1 day", strtotime($endDate)));
                         $substart->end_date = $endDate;
                         $substart->boss_id = auth()->user()->id;
                         $substart->property_id = $property->id;

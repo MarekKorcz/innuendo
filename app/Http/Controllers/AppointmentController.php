@@ -123,9 +123,9 @@ class AppointmentController extends Controller
                             $appointmentLength = 1;
                             $appointmentTermIncremented = $appointmentTerm;
 
-                            for ($i = 0; $i < 2; $i++)
+                            for ($i = 0; $i < 5; $i++)
                             {
-                                $appointmentTermIncremented = date('G:i', strtotime("+30 minutes", strtotime($appointmentTermIncremented)));
+                                $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
 
                                 if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                                 {
@@ -157,7 +157,7 @@ class AppointmentController extends Controller
 
                                 if (count($categories) > 0)
                                 {                                    
-                                    $appointmentLengthInMinutes = $appointmentLength * 30;
+                                    $appointmentLengthInMinutes = $appointmentLength * 15;
                                     
                                     $items = new Collection();
                                     
@@ -248,15 +248,17 @@ class AppointmentController extends Controller
                                         $items = $items->merge($userSubscriptionItems);
                                     }
                                     
-                                    foreach ($categories as $category)
-                                    {                                    
-                                        $categoryItems = Item::where('category_id', $category->id)->where('minutes', '<=', $appointmentLengthInMinutes)->get();
-                                        
-                                        if ($categoryItems !== null)
-                                        {
-                                            $items = $items->merge($categoryItems);
-                                        }
-                                    }
+//                                    >> uncomment if want to turn on default items
+//                                    foreach ($categories as $category)
+//                                    {                                    
+//                                        $categoryItems = Item::where('category_id', $category->id)->where('minutes', '<=', $appointmentLengthInMinutes)->get();
+//                                        
+//                                        if ($categoryItems !== null)
+//                                        {
+//                                            $items = $items->merge($categoryItems);
+//                                        }
+//                                    }
+//                                    <<
                                 }
                             }
                             
@@ -267,7 +269,7 @@ class AppointmentController extends Controller
                                 'year' => $year,
                                 'month' => $month,
                                 'day' => $day,
-                                'items' => count($items) > 0 ? $items : []
+                                'items' => count($items) > 0 ? $items->sortBy('minutes') : []
                             ]);
                         }
                         else
@@ -574,9 +576,9 @@ class AppointmentController extends Controller
                     ];
                     $appointmentTermIncremented = $appointmentTerm;
 
-                    for ($i = 0; $i < 2; $i++)
+                    for ($i = 0; $i < 5; $i++)
                     {
-                        $appointmentTermIncremented = date('G:i', strtotime("+30 minutes", strtotime($appointmentTermIncremented)));
+                        $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
 
                         if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                         {
@@ -600,7 +602,7 @@ class AppointmentController extends Controller
                         }
                     }
                     
-                    $itemLength = $itemLength / 30;
+                    $itemLength = $itemLength / 15;
                     
                     for ($i = 0; $i < $itemLength; $i++)
                     {

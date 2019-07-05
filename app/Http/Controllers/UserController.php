@@ -350,7 +350,7 @@ class UserController extends Controller
                                 'property_id' => $property->id,
                                 'year_number' => $year->year,
                                 'month_number' => $month->month_number,
-                                'day_number' => $currentDay->day_number,
+                                'day_number' => $currentDay !== null ? $currentDay->day_number : $day_number,
                                 'boss_id' => auth()->user()->id
                             ])->first();
                         }
@@ -373,7 +373,7 @@ class UserController extends Controller
                             'current_day' => is_object($currentDay) ? $currentDay->day_number : 0,
                             'graphic' => $graphic,
                             'graphic_id' => $graphicTime ? $graphicTime->id : null,
-                            'canSendRequest' => $canSendRequest,
+                            'canSendRequest' => $currentDay !== null ? $canSendRequest : false,
                             'graphicRequest' => $graphicRequest,
                             'employees' => $employees
                         ]);
@@ -609,7 +609,7 @@ class UserController extends Controller
             $timeZone = new \DateTimeZone("Europe/Warsaw");
             $now = new \DateTime(null, $timeZone);
             
-            $workUnits = ($graphicTime->total_time / 30);
+            $workUnits = ($graphicTime->total_time / 15);
             $startTime = date('G:i', strtotime($graphicTime->start_time));
             
             for ($i = 0; $i < $workUnits; $i++) 
@@ -631,7 +631,7 @@ class UserController extends Controller
                 
                 if ($appointment !== null)
                 {
-                    $limit = $appointment->minutes / 30;
+                    $limit = $appointment->minutes / 15;
                     
                     if ($limit > 1)
                     {
@@ -639,7 +639,7 @@ class UserController extends Controller
 
                         for ($j = 1; $j < $limit; $j++)
                         {
-                            $time[] = date('G:i', strtotime("+30 minutes", strtotime($time[count($time) - 1])));
+                            $time[] = date('G:i', strtotime("+15 minutes", strtotime($time[count($time) - 1])));
                             $workUnits -= 1;
                         }
                     }
@@ -667,8 +667,8 @@ class UserController extends Controller
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
                     
-                    $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));
-                    $startTime = date('G:i', $timeIncrementedBy30Minutes);
+                    $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
+                    $startTime = date('G:i', $timeIncrementedBy15Minutes);
                 }
             }            
         }

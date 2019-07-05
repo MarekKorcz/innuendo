@@ -566,7 +566,7 @@ class WorkerController extends Controller
 
                             for ($i = 0; $i < 2; $i++)
                             {
-                                $appointmentTermIncremented = date('G:i', strtotime("+30 minutes", strtotime($appointmentTermIncremented)));
+                                $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
 
                                 if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                                 {
@@ -592,7 +592,7 @@ class WorkerController extends Controller
 
                             $calendar = Calendar::where('id', $calendarId)->first();
                             
-                            $possibleAppointmentLengthInMinutes = $appointmentLength * 30;
+                            $possibleAppointmentLengthInMinutes = $appointmentLength * 15;
                             
                             $users = User::where([
                                 'isAdmin' => null,
@@ -1555,9 +1555,9 @@ class WorkerController extends Controller
                     ];
                     $appointmentTermIncremented = $appointmentTerm;
 
-                    for ($i = 0; $i < 2; $i++)
+                    for ($i = 0; $i < 5; $i++)
                     {
-                        $appointmentTermIncremented = date('G:i', strtotime("+30 minutes", strtotime($appointmentTermIncremented)));
+                        $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
 
                         if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                         {
@@ -1581,7 +1581,7 @@ class WorkerController extends Controller
                         }
                     }
                     
-                    $itemLength = $itemLength / 30;
+                    $itemLength = $itemLength / 15;
                     
                     for ($i = 0; $i < $itemLength; $i++)
                     {
@@ -1630,7 +1630,7 @@ class WorkerController extends Controller
         
         if ($graphicTime !== null)
         {            
-            $workUnits = ($graphicTime->total_time / 30);
+            $workUnits = ($graphicTime->total_time / 15);
             $startTime = date('G:i', strtotime($graphicTime->start_time));
             
             for ($i = 0; $i < $workUnits; $i++) 
@@ -1663,7 +1663,7 @@ class WorkerController extends Controller
                         ])->first();
                     }
                     
-                    $limit = $appointment->minutes / 30;
+                    $limit = $appointment->minutes / 15;
                     
                     if ($limit > 1)
                     {
@@ -1671,7 +1671,7 @@ class WorkerController extends Controller
 
                         for ($j = 1; $j < $limit; $j++)
                         {
-                            $time[] = date('G:i', strtotime("+30 minutes", strtotime($time[count($time) - 1])));
+                            $time[] = date('G:i', strtotime("+15 minutes", strtotime($time[count($time) - 1])));
                             $workUnits -= 1;
                         }
                     }
@@ -1695,8 +1695,8 @@ class WorkerController extends Controller
                         'appointment' => null
                     ];
                     
-                    $timeIncrementedBy30Minutes = strtotime("+30 minutes", strtotime($startTime));
-                    $startTime = date('G:i', $timeIncrementedBy30Minutes);
+                    $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
+                    $startTime = date('G:i', $timeIncrementedBy15Minutes);
                 }
             }            
         }

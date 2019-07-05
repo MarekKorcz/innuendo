@@ -53,7 +53,7 @@ class SubscriptionController extends Controller
             
                 return view('subscription.create')->with([
                     'property_id' => $property->id,
-                    'items' => $items
+                    'items' => $items->sortBy('minutes')
                 ]);
                 
             } else {

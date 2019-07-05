@@ -167,39 +167,75 @@ window.addEventListener('DOMContentLoaded', () => {
                 {
                     let substartNode = ``;
                     
+                    console.log(substart);
+                    
                     if (substart.id == data.newestSubstart[0].id)
                     {
-                        substartNode = `
-                            <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id +`">
-                                <div class="data">
-                                    <p>
-                                        Od: <strong>` + substart.start_date + `</strong> 
-                                        do: <strong>` + substart.end_date + `</strong>
-                                    </p>                    
-                                    <p>` + substart.isActiveMessage + `</p>
+                        if (substart.isActiveMessage !== "Nieaktywowana")
+                        {
+                            substartNode = `
+                                <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id +`">
+                                    <div class="data">
+                                        <p>
+                                            Od: <strong>` + substart.start_date + `</strong> 
+                                            do: <strong>` + substart.end_date + `</strong>
+                                        </p>                    
+                                        <p>` + substart.isActiveMessage + `</p>
+                                    </div>
+                                    <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/invoices/` + substart.id + `">
+                                        Rozliczenia
+                                    </a>
                                 </div>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/invoices/` + substart.id + `">
-                                    Rozliczenia
-                                </a>
-                            </div>
-                        `;
+                            `;
+                            
+                        } else {
+                            
+                            substartNode = `
+                                <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id +`">
+                                    <div class="data">
+                                        <p>
+                                            Od: <strong>` + substart.start_date + `</strong> 
+                                            do: <strong>` + substart.end_date + `</strong>
+                                        </p>                    
+                                        <p>` + substart.isActiveMessage + `</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
                         
                     } else {
                         
-                        substartNode = `
-                            <div class="substart text-center" data-substart_id="` + substart.id +`">
-                                <div class="data">
-                                    <p>
-                                        Od: <strong>` + substart.start_date + `</strong> 
-                                        do: <strong>` + substart.end_date + `</strong>
-                                    </p>                    
-                                    <p>` + substart.isActiveMessage + `</p>
+                        if (substart.isActiveMessage !== "Nieaktywowana")
+                        {
+                            substartNode = `
+                                <div class="substart text-center" data-substart_id="` + substart.id +`">
+                                    <div class="data">
+                                        <p>
+                                            Od: <strong>` + substart.start_date + `</strong> 
+                                            do: <strong>` + substart.end_date + `</strong>
+                                        </p>                    
+                                        <p>` + substart.isActiveMessage + `</p>
+                                    </div>
+                                    <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/invoices/` + substart.id + `">
+                                        Rozliczenia
+                                    </a>
                                 </div>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/invoices/` + substart.id + `">
-                                    Rozliczenia
-                                </a>
-                            </div>
-                        `;
+                            `;
+                            
+                        } else {
+                            
+                            substartNode = `
+                                <div class="substart text-center" data-substart_id="` + substart.id +`">
+                                    <div class="data">
+                                        <p>
+                                            Od: <strong>` + substart.start_date + `</strong> 
+                                            do: <strong>` + substart.end_date + `</strong>
+                                        </p>                    
+                                        <p>` + substart.isActiveMessage + `</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
                     }
                     
                     substarts.append(substartNode);
