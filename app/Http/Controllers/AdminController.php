@@ -347,7 +347,7 @@ class AdminController extends Controller
         ]);
     }
     
-    public function graphicRequestShow($graphicRequestId)
+    public function graphicRequestShow($graphicRequestId, $chosenMessageId = 0)
     {
         $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->with([
             'property',
@@ -374,11 +374,21 @@ class AdminController extends Controller
             
             $graphicRequest['allEmployees'] = $allEmployees;
             $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
+            
+            $chosenMessage = Message::where('id', $chosenMessageId)->first();
+            
+            if ($chosenMessage !== null && $chosenMessage->owner_id !== auth()->user()->id)
+            {
+                $chosenMessage->status = 1;
+                $chosenMessage->save();
+            }
+            
             $graphicRequestMessages = Message::where('graphic_request_id', $graphicRequest->id)->get();
             
             return view('admin.graphic_request')->with([
                 'graphicRequest' => $graphicRequest,
-                'graphicRequestMessages' => $graphicRequestMessages
+                'graphicRequestMessages' => $graphicRequestMessages,
+                'chosenMessage' => $chosenMessage !== null ? $chosenMessage : null
             ]);
         }
         
@@ -410,7 +420,7 @@ class AdminController extends Controller
                 $message->graphic_request_id = $graphicRequest->id;
                 $message->save();
 
-                return redirect('/admin/graphic-request/' . $graphicRequest->id)->with('success', 'Message has been sended!');
+                return redirect('/admin/graphic-request/' . $graphicRequest->id . '/' . $message->id)->with('success', 'Message has been sended!');
             }
             
             return redirect()->route('welcome')->with('error', 'Something went wrong');
@@ -419,8 +429,6 @@ class AdminController extends Controller
     
     public function graphicRequestMessageChangeStatus($graphicRequestId, $messageId)
     {
-        
-        
         $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->first();
         $message = Message::where('id', $messageId)->first();
         
@@ -437,7 +445,7 @@ class AdminController extends Controller
             
             $message->save();
             
-            return redirect('/admin/graphic-request/' . $graphicRequest->id)->with('success', 'Message status has been changed!');
+            return redirect('/admin/graphic-request/' . $graphicRequest->id . '/' . $message->id)->with('success', 'Message status has been changed!');
         }
         
         return redirect()->route('welcome')->with('error', 'Something went wrong');

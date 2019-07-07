@@ -1,9 +1,10 @@
 @extends('layouts.app')
+@section('content')
 
 {!! Html::style('css/graphic_request.css') !!}
+{!! Html::script('js/graphic_request_show.js') !!}
 
-@section('content')
-    <div class="container">
+    <div id="title" class="container">
         <h2 class="text-center" style="padding-top: 2rem;">Zapytanie o grafik z dnia: {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
         <p class="text-center">Dotyczące: {{$graphicRequest->property->name}}</p>
         <div class="text-center" style="padding-bottom: 1rem;">
@@ -13,7 +14,7 @@
         </div>
     </div>
 
-    <div class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
+    <div id="info" class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <p>Od: <strong>{{$graphicRequest->start_time}}</strong></p>
@@ -41,43 +42,40 @@
         </div>
     </div>
 
-    <div class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
-        <h3 class="text-center">Wiadomości:</h3>
-        <hr style="margin-bottom: 2rem;">
+    <div id="messages" class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
+        <div id="messages-head">
+            <h3 class="text-center">Wiadomości:</h3>
+            <hr style="margin-bottom: 2rem;">
+        </div>
         @if (count($graphicRequestMessages) > 0)
             @foreach ($graphicRequestMessages as $message)
-                @if ($message->owner_id == $graphicRequest->boss_id)
-                    <div class="row">
+                <div class="row" style="padding: 2px;">
+                    @if ($message->owner_id == $graphicRequest->boss_id)
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                            <div class="boss-message">
+                            <div class="boss-message" data-message_id="{{$message->id}}">
                                 <div class="text-center">
                                     <p>{{$message->created_at}}</p>
                                 </div>
                                 <p>{{$message->text}}</p>
-                                <div class="text-right" style="padding-right: 3rem;">
-                                    {{config('message-status.' . $message->status)}}
-                                </div>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
-                    </div>
-                @else
-                    <div class="row">
+                    @else
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                            <div class="admin-message">
+                            <div class="admin-message" data-message_id="{{$message->id}}" data-status="{{$message->status}}">
                                 <div class="text-center">
                                     <p>{{$message->created_at}}</p>
                                 </div>
                                 <p>{{$message->text}}</p>
-                                <div class="text-right" style="padding-right: 3rem;">
-                                    {{config('message-status.' . $message->status)}}
-                                </div>
                             </div>
                         </div>
-                    </div>
-                @endif
+                    @endif
+                </div>
             @endforeach
+            @if ($chosenMessage !== null)
+                <div id="chosenMessageId" data-chosen_message_id="{{$chosenMessage->id}}"></div>
+            @endif
         @endif
         <div class="row" style="margin-top: 2rem;">
             {{ Form::open(['id' => 'send-message', 'action' => ['BossController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}

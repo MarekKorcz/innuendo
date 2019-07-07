@@ -1,8 +1,9 @@
 @extends('layouts.app')
+@section('content')
 
 {!! Html::style('css/graphic_request.css') !!}
+{!! Html::script('js/graphic_request_show.js') !!}
 
-@section('content')
     <div class="container">
         <h2 class="text-center" style="padding-top: 2rem;">Grafik request from: {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
         <p class="text-center">{{$graphicRequest->property->name}} - {{$graphicRequest->boss->name}} {{$graphicRequest->boss->surname}}</p>
@@ -41,10 +42,24 @@
         <hr style="margin-bottom: 2rem;">
         @if (count($graphicRequestMessages) > 0)
             @foreach ($graphicRequestMessages as $message)
-                @if ($message->owner_id == auth()->user()->id)
-                    <div class="row">
+                <div class="row">
+                    @if ($message->owner_id == auth()->user()->id)
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                            <div class="boss-message">
+                            <div class="boss-message" data-message_id="{{$message->id}}">
+                                <div class="text-center">
+                                    <p>{{$message->created_at}}</p>
+                                </div>
+                                <p>{{$message->text}}</p>
+                                <div class="text-right" style="padding-right: 3rem;">
+                                    {{config('message-status.' . $message->status)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
+                    @else
+                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
+                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                            <div class="admin-message" data-message_id="{{$message->id}}">
                                 <div class="text-center">
                                     <p>{{$message->created_at}}</p>
                                 </div>
@@ -61,25 +76,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
-                    </div>
-                @else
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
-                        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                            <div class="admin-message">
-                                <div class="text-center">
-                                    <p>{{$message->created_at}}</p>
-                                </div>
-                                <p>{{$message->text}}</p>
-                                <div class="text-right" style="padding-right: 3rem;">
-                                    {{config('message-status.' . $message->status)}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                    @endif
+                </div>
             @endforeach
+            @if ($chosenMessage !== null)
+                <div id="chosenMessageId" data-chosen_message_id="{{$chosenMessage->id}}"></div>
+            @endif
         @endif
         <div class="row" style="margin-top: 2rem;">
             {{ Form::open(['id' => 'send-message', 'action' => ['AdminController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}

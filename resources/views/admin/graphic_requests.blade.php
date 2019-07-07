@@ -24,7 +24,7 @@
                     <td>{{$graphicRequest->comment}}</td>
                     <td>{{count($graphicRequest->employees)}}</td>
                     <td>
-                        <a class="btn btn-success" href="{{ URL::to('/admin/graphic-request/' . $graphicRequest->id) }}">
+                        <a class="btn btn-success" href="{{ URL::to('/admin/graphic-request/' . $graphicRequest->id . '/0') }}">
                             Show
                         </a>
                     </td>

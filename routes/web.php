@@ -35,7 +35,7 @@ Route::put('/admin/user/edit', 'AdminController@userEdit');
 Route::get('/admin/boss/create', 'AdminController@bossCreate');
 Route::post('/admin/boss/store', 'AdminController@bossStore');
 Route::get('/admin/graphic-requests', 'AdminController@graphicRequests');
-Route::get('/admin/graphic-request/{graphicRequestId}', 'AdminController@graphicRequestShow');
+Route::get('/admin/graphic-request/{graphicRequestId}/{chosenMessageId}', 'AdminController@graphicRequestShow');
 Route::post('/admin/make-a-message', 'AdminController@makeAMessage');
 Route::get('/admin/graphic-request/message/change-status/{graphicRequestId}/{messageId}', 'AdminController@graphicRequestMessageChangeStatus');
 
@@ -148,7 +148,7 @@ Route::put('/boss/subscription/invoice/update', 'BossController@invoiceDataUpdat
 Route::get('/boss/subscription/invoice/{intervalId}', 'BossController@subscriptionInvoice');
 Route::post('/boss/make-a-graphic-request', 'BossController@makeAGraphicRequest');
 Route::get('/boss/graphic-requests', 'BossController@graphicRequests');
-Route::get('/boss/graphic-request/{graphicRequestId}', 'BossController@graphicRequestShow');
+Route::get('/boss/graphic-request/{graphicRequestId}/{chosenMessageId}', 'BossController@graphicRequestShow');
 Route::get('/boss/graphic-request/edit/{graphicRequestId}', 'BossController@graphicRequestEdit');
 Route::put('/boss/graphic-request/update', 'BossController@graphicRequestUpdate');
 Route::post('/boss/make-a-message', 'BossController@makeAMessage');
@@ -161,5 +161,6 @@ Route::post('/subscription/delete-chosen-property', 'BossController@deleteChosen
 Route::post('/boss/get-subscription-users-from-database', 'BossController@getSubscriptionUsersFromDatabase');
 Route::post('/boss/get-user-appointments-from-database', 'BossController@getUserAppointmentsFromDatabase');
 Route::post('/boss/get-users-appointments-from-database', 'BossController@getUsersAppointmentsFromDatabase');
+Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisplayed');
 
 //Route::get('/test', 'HomeController@test');

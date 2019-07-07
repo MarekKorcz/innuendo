@@ -1505,7 +1505,6 @@ class BossController extends Controller
                                         }
                                         
                                         return redirect()->route('welcome')->with('success', 'Zapytanie o otwarcie grafiku zostało wysłane');
-//                                        return redirect('boss/property/' . $property->id)->with('success', 'Lokalizacja została zaktualizowana');
                                     }
                                 }
                             }
@@ -1543,7 +1542,7 @@ class BossController extends Controller
         ]);
     }
     
-    public function graphicRequestShow($graphicRequestId)
+    public function graphicRequestShow($graphicRequestId, $chosenMessageId = 0)
     {
         $boss = auth()->user();
         
@@ -1575,11 +1574,21 @@ class BossController extends Controller
             
             $graphicRequest['allEmployees'] = $allEmployees;
             
+            $chosenMessage = Message::where('id', $chosenMessageId)->first();
+            
+            if ($chosenMessage !== null && $chosenMessage->owner_id !== $boss->id)
+            {
+                $chosenMessage->status = 1;
+                $chosenMessage->save();
+            }
+            
             $graphicRequestMessages = Message::where('graphic_request_id', $graphicRequest->id)->get();
             
             return view('boss.graphic_request')->with([
                 'graphicRequest' => $graphicRequest,
-                'graphicRequestMessages' => $graphicRequestMessages
+                'graphicRequestMessages' => $graphicRequestMessages,
+                'chosenMessage' => $chosenMessage !== null ? $chosenMessage : null,
+                'boss' => $boss
             ]);
         }
         
@@ -1724,7 +1733,7 @@ class BossController extends Controller
                     $message->graphic_request_id = $graphicRequest->id;
                     $message->save();
                     
-                    return redirect('/boss/graphic-request/' . $graphicRequest->id)->with('success', 'Wiadomość została wysłana!');
+                    return redirect('/boss/graphic-request/' . $graphicRequest->id . '/' . $message->id)->with('success', 'Wiadomość została wysłana!');
                 }
             }
             
@@ -2606,6 +2615,29 @@ class BossController extends Controller
         return new JsonResponse(array(
             'type'    => 'error',
             'message' => 'Pusty request'         
+        ));
+    }
+    
+    public function markMessageAsDisplayed(Request $request)
+    {        
+        if ($request->get('messageId'))
+        {
+            $messageId = htmlentities((int)$request->get('messageId'), ENT_QUOTES, "UTF-8");
+            $message = Message::where('id', $messageId)->first();
+            
+            if ($message !== null)
+            {
+                $message->status = 1;
+                $message->save();
+
+                return new JsonResponse([
+                    'type' => 'success'
+                ], 200, array(), true);
+            }
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error'        
         ));
     }
 }
