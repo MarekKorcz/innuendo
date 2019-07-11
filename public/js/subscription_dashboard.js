@@ -249,6 +249,9 @@ window.addEventListener('DOMContentLoaded', () => {
                         <div class="text-center">                        
                             <p>
                                 <h2>Osoby przypisane do danej subskrypcji:</h2>
+                                <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/workers/edit/` + data.lastSubstartId + `/0">
+                                    Edycja
+                                </a>
                                 <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.lastSubstartId + `/0">
                                     Wszystkie wizyty
                                 </a>
@@ -332,6 +335,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     <div class="text-center">                        
                         <p>
                             <h2>Osoby przypisane do danej subskrypcji:</h2>
+                            <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/workers/edit/` + data.substartId + `/0">
+                                Edycja
+                            </a>
                             <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.substartId + `/0">
                                 Wszystkie wizyty
                             </a>

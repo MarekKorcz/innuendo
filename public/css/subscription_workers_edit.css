@@ -1,0 +1,14 @@
+.clicked {
+    color: white;
+    background-color: #55cc55;
+    border-color: green;
+}
+
+a:hover > li {
+    background-color: #88dd88;
+}
+
+input[type="checkbox"]{
+  width: 24px;
+  height: 24px;
+}

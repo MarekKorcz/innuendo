@@ -126,6 +126,9 @@
                                     @if (count($purchase->substart->workers) > 0)
                                         <div class="text-center">
                                             <h2>Osoby przypisane do danej subskrypcji:</h2>
+                                            <a class="btn btn-primary" href="{{ URL::to('boss/subscription/workers/edit/' . $substart->id . '/0') }}">
+                                                Edycja
+                                            </a>
                                             <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/0') }}">
                                                 Wszystkie wizyty
                                             </a>
