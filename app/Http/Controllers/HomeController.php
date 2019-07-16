@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 
 // to tests
 use App\Appointment;
+use App\PromoCode;
 use App\Interval;
 use App\InvoiceData;
 use App\GraphicRequest;
@@ -24,6 +25,7 @@ use App\Month;
 use App\Year;
 use App\TempUser;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
@@ -141,7 +143,6 @@ class HomeController extends Controller
     }
     
 //    public function test()
-//    {            
-//        
+//    {    
 //    }
 }

@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+
+{!! Html::script('js/register.js') !!}
+{!! Html::style('css/register.css') !!}
+
 <div class="container" style="padding: 2rem;">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -10,7 +14,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form id="register" method="POST" action="{{ route('register') }}" novalidate>
                         @csrf
 
                         <div class="form-group row">
@@ -24,6 +28,8 @@
                                         <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                 @endif
+                                
+                                <div id="name-error"></div>
                             </div>
                         </div>
                         
@@ -38,6 +44,8 @@
                                         <strong>{{ $errors->first('surname') }}</strong>
                                     </span>
                                 @endif
+                                
+                                <div id="surname-error"></div>
                             </div>
                         </div>
                         
@@ -52,6 +60,8 @@
                                         <strong>{{ $errors->first('phone_number') }}</strong>
                                     </span>
                                 @endif
+                                
+                                <div id="phone_number-error"></div>
                             </div>
                         </div>
 
@@ -66,14 +76,25 @@
                                         <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
+                                
+                                <div id="email-error"></div>
                             </div>
                         </div>
                         
                         <div class="form-group row">
-                            <label for="code" class="col-md-4 col-form-label text-md-right">Kod (dla pracowników firm):</label>
+                            <label for="code" class="col-md-4 col-form-label text-md-right">Kod rejestracyjny:</label>
 
                             <div class="col-md-6">
-                                <input id="code" type="text" class="form-control" name="code">
+                                <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" required>
+                                
+                                @if ($errors->has('code'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('code') }}</strong>
+                                    </span>
+                                @endif
+                                
+                                <div id="code-error"></div>
+                                <div id="code-data"></div>
                             </div>
                         </div>
 
@@ -88,6 +109,8 @@
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
+                                
+                                <div id="password-error"></div>
                             </div>
                         </div>
 
@@ -95,19 +118,63 @@
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">Powtórz hasło:</label>
 
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                <input id="password_confirm" type="password" class="form-control" name="password_confirm" required>
+                                
+                                <div id="password_confirm-error"></div>
                             </div>
                         </div>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button id="register-worker" type="submit" class="btn btn-primary">
                                     Zarejestruj
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal hide" id="registerNewBoss">
+        <div class="modal-content">
+            <div class="modal-body">         
+                {{ Form::open(['id' => 'register-boss', 'action' => 'Auth\RegisterController@registerNewBoss', 'method' => 'POST']) }}
+
+                    <h3 class="text-center">Zgłoś swoją firmę</h3>
+
+                    <div class="form-group">
+                        {{ Form::label('property_name', 'Nazwa firmy') }}
+                        {{ Form::text('property_name', Input::old('property_name'), array('class' => 'form-control')) }}
+                        <div class="warning"></div>
+                    </div>
+                    <div class="form-group">
+                        {{ Form::label('street', 'Ulica') }}
+                        {{ Form::text('street', Input::old('street'), array('class' => 'form-control')) }}
+                        <div class="warning"></div>
+                    </div>
+                    <div class="form-group">
+                        {{ Form::label('street_number', 'Numer ulicy') }}
+                        {{ Form::text('street_number', Input::old('street_number'), array('class' => 'form-control')) }}
+                        <div class="warning"></div>
+                    </div>
+                    <div class="form-group">
+                        {{ Form::label('house_number', 'Numer budynku') }}
+                        {{ Form::text('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
+                        <div class="warning"></div>
+                    </div>
+                    <div class="form-group">
+                        {{ Form::label('city', 'Miasto') }}
+                        {{ Form::text('city', Input::old('city'), array('class' => 'form-control')) }}
+                        <div class="warning"></div>
+                    </div>
+
+                    <div class="text-center">
+                        {{ Form::submit('Zgłoś', array('class' => 'btn btn-primary')) }}
+                    </div>
+
+                {{ Form::close() }}
             </div>
         </div>
     </div>

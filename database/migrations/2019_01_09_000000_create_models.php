@@ -259,6 +259,35 @@ class CreateModels extends Migration
             $table->integer('boss_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
+        Schema::create('promos', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->string('description')->nullable();
+            $table->integer('available_code_count')->nullable();
+            $table->integer('used_code_count')->nullable();
+            $table->integer('total_code_count')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('admin_id')->unsigned()->index()->foreign()->references("id")->on("users");
+        });
+        
+        Schema::create('promo_codes', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('code');
+            $table->timestamp('activation_date')->nullable();
+            $table->boolean('isActive')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->integer('promo_id')->unsigned()->index()->foreign()->references("id")->on("promos");
+        });
+        
+        Schema::create('promo_code_subscription', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('promo_code_id')->unsigned()->index()->foreign()->references("id")->on("promo_codes");
+            $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
+        });
+        
         Schema::create('chosen_properties', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -304,6 +333,9 @@ class CreateModels extends Migration
         Schema::dropIfExists('purchases');
         Schema::dropIfExists('intervals');
         Schema::dropIfExists('codes');
+        Schema::dropIfExists('promos');
+        Schema::dropIfExists('promo_codes');
+        Schema::dropIfExists('promo_code_subscription');
         Schema::dropIfExists('chosen_properties');
         Schema::dropIfExists('chosen_property_subscription');
     }

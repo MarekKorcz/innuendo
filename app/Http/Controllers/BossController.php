@@ -364,7 +364,7 @@ class BossController extends Controller
                 'id' => $propertyId,
                 'boss_id' => $boss->id
             ])->with('subscriptions')->first();
-        }        
+        }     
 
         $chosenSubscription = null;
         

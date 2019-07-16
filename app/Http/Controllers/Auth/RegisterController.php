@@ -11,6 +11,7 @@ use App\ChosenProperty;
 use App\Purchase;
 use App\Interval;
 use App\Substart;
+use App\PromoCode;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Redirect;
 
 class RegisterController extends Controller
@@ -64,8 +66,9 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'min:4', 'max:255'],
             'surname' => ['required', 'string', 'min:3', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'code' => ['required', 'string', 'max:255'],
             'phone_number' => ['required', 'numeric', 'regex:/[0-9]/', 'min:7'],
-            'password' => ['required', 'string', 'min:7', 'confirmed'],
+            'password' => ['required', 'string', 'min:7', 'confirmed']
         ]);
     }
 
@@ -91,10 +94,11 @@ class RegisterController extends Controller
                         
             if ($code !== null)
             {
+                // register boss workers scenario
                 $user->boss_id = $code->boss_id;
-                
+
                 $bossCodeChosenProperties = new Collection();
-                        
+
                 if ($code->chosenProperties !== null)
                 {
                     foreach ($code->chosenProperties as $chosenProperty)
@@ -103,7 +107,7 @@ class RegisterController extends Controller
                         $bossCodeChosenProperties->push($chosenProperty);
                     }
                 }
-                        
+
                 if (count($bossCodeChosenProperties))
                 {
                     foreach ($bossCodeChosenProperties as $bossChosenProperty)
@@ -112,7 +116,7 @@ class RegisterController extends Controller
                         $userChosenProperty->user_id = $user->id;
                         $userChosenProperty->property_id = $bossChosenProperty->property_id;
                         $userChosenProperty->save();
-                        
+
                         foreach ($bossChosenProperty->subscriptions as $subscription)
                         {
                             $substarts = Substart::where([
@@ -120,7 +124,7 @@ class RegisterController extends Controller
                                 'subscription_id' => $subscription->id,
                                 'property_id' => $bossChosenProperty->property_id
                             ])->get();
-                            
+
                             if (count($substarts) > 0)
                             {                                
                                 $today = new \DateTime(date('Y-m-d'));
@@ -134,7 +138,7 @@ class RegisterController extends Controller
                                         $purchase->chosen_property_id = $userChosenProperty->id;                       
                                         $purchase->substart_id = $substart->id;                       
                                         $purchase->save();
-                                        
+
                                         $startDate = $substart->start_date;
 
                                         if ($substart->isActive)
@@ -147,7 +151,7 @@ class RegisterController extends Controller
                                                     'start_date' => $startDate,
                                                     'substart_id' => $substart->id
                                                 ])->first();
-                                                
+
                                                 $interval = new Interval();
                                                 $interval->available_units = $subscription->quantity;
 
@@ -161,7 +165,7 @@ class RegisterController extends Controller
                                                 $interval->purchase_id = $purchase->id;
                                                 $interval->save();
                                             }
-                                            
+
                                             // << todo
 
                                         } else {
@@ -171,7 +175,7 @@ class RegisterController extends Controller
                                                 'end_date' => $substart->end_date,
                                                 'substart_id' => $substart->id
                                             ])->first();
-                                            
+
                                             $interval = new Interval();
                                             $interval->available_units = $subscription->quantity * $subscription->duration;
 
@@ -226,7 +230,7 @@ class RegisterController extends Controller
     /**
      * Handle storing boss made from TempUser
      */
-    public function tempUserBossRegistrationStore(Request $request)
+    public function tempUserBossRegistrationStore()
     {
         $rules = array(
             'name'                  => 'required|string|min:4|max:24',
@@ -293,8 +297,6 @@ class RegisterController extends Controller
                         // todo: zrób maila z potwierdzeniem rejestracji!!!
 //                        \Mail::to($boss)->send(new AdminTempBossCreate($boss));
                         
-                        // todo: ogarnij co się dzieje w panelu Moje konto po zalogowaniu!!
-                        
                         auth()->login($boss);
 
                         return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją zostały stworzone!');
@@ -313,5 +315,171 @@ class RegisterController extends Controller
             
             return redirect()->route('welcome');
         }
+    }
+    
+    /**
+     * Handle storing new boss
+     */
+    public function registerNewBoss()
+    {
+        $rules = array(
+            'name'           => 'required|string|min:4|max:255',
+            'surname'        => 'required|string|min:3|max:255',
+            'email'          => 'required|string|email|max:255|unique:users',
+            'code'           => 'required|string|max:255',
+            'phone_number'   => 'required|numeric|regex:/[0-9]/|min:7',
+            'password'       => 'required|string|min:7',
+            'property_name'  => 'required|string|min:3',
+            'street'         => 'required|string|min:3',
+            'street_number'  => 'required',
+            'house_number'   => 'required',
+            'city'           => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('/register')
+                ->withErrors($validator);
+        } else {
+            
+            $promoCode = PromoCode::where([
+                'code' => Input::get('code'),
+                'isActive' => 0
+            ])->with('subscriptions')->first();
+
+            if ($promoCode !== null)
+            {
+                $boss = User::create([
+                    'name' => Input::get('name'),
+                    'surname' => Input::get('surname'),
+                    'phone_number' => Input::get('phone_number'),
+                    'email' => Input::get('email'),
+                    'password' => Hash::make(Input::get('password')),
+                    'isBoss' => 1
+                ]);
+
+                if ($boss !== null)
+                {     
+                    $bossProperty = Property::create([
+                        'name' => Input::get('property_name'),
+                        'slug' => str_slug(Input::get('property_name')),
+                        'street' => Input::get('street'),
+                        'street_number' => Input::get('street_number'),
+                        'house_number' => Input::get('house_number'),
+                        'city' => Input::get('city'),
+                        'boss_id' => $boss->id
+                    ]);
+
+                    if ($bossProperty !== null)
+                    {
+                        $bossChosenProperty = ChosenProperty::create([
+                            'user_id' => $boss->id,
+                            'property_id' => $bossProperty->id
+                        ]);
+
+                        if (count($promoCode->subscriptions) > 0)
+                        {
+                            foreach ($promoCode->subscriptions as $subscription)
+                            {
+                                $bossProperty->subscriptions()->attach($subscription->id);
+                                $bossChosenProperty->subscriptions()->attach($subscription->id);
+                                        
+                                $bossPurchase = Purchase::create([
+                                    'subscription_id' => $subscription->id,
+                                    'chosen_property_id' => $bossChosenProperty->id
+                                ]);
+
+                                $startDate = new \DateTime(date('Y-m-d'));
+
+                                $substart = new Substart();
+                                $substart->start_date = $startDate;
+
+                                $startDateIncrementedBySubscriptionDuration = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate->format("Y-m-d"))));
+                                $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDateIncrementedBySubscriptionDuration)));
+
+                                $substart->end_date = $endDate;
+                                $substart->boss_id = $boss->id;
+                                $substart->property_id = $bossProperty->id;
+                                $substart->subscription_id = $subscription->id;
+                                $substart->purchase_id = $bossPurchase->id;
+                                $substart->save();
+                                
+                                $bossPurchase->substart_id = $substart->id;
+                                $bossPurchase->save();
+
+                                $interval = Interval::create([
+                                    'available_units' => $subscription->quantity * $subscription->duration,
+                                    'start_date' => $substart->start_date,
+                                    'end_date' => $substart->end_date,
+                                    'substart_id' => $substart->id,
+                                    'purchase_id' => $bossPurchase->id
+                                ]);
+                            }
+                        }
+
+    //                  // todo: zrób maila z potwierdzeniem rejestracji!!!
+    ////                \Mail::to($boss)->send(new AdminTempBossCreate($boss));
+
+                        auth()->login($boss);
+
+                        $promoCode->activation_date = date('Y-m-d H:i:s');
+                        $promoCode->isActive = 1;
+                        $promoCode->boss_id = $boss->id;
+                        $promoCode->save();
+
+                        return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją oraz pakietem promocyjnych masaży, zostało stworzone!');
+
+                    } else {
+
+                        $boss->delete();
+                    }
+                }
+
+                return redirect('/register')->with([
+                    'error' => 'Istnieje już użytkownik o podanym adresie email'
+                ]);
+            }
+
+            return redirect('/register')->with([
+                'error' => 'Przepraszamy, wszystkie kody promocyjne zostały już wykorzystane!'
+            ]);
+        }
+    }
+    
+    public function checkIfCodeExists(Request $request)
+    {        
+        if ($request->get('code'))
+        {
+            $codeEntity = Code::where('code', $request->get('code'))->first();
+            $promoCodeEntity = PromoCode::where('code', $request->get('code'))->first();
+            
+            if ($codeEntity !== null)
+            {                       
+                $data = [
+                    'status' => 'existing',
+                    'for' => 'worker'
+                ];
+                
+            } else if ($promoCodeEntity !== null) {
+                
+                $data = [
+                    'status' => 'existing',
+                    'for' => 'boss'
+                ];
+            
+            } else {
+                
+                $data = [
+                    'status' => 'notExisting'
+                ];
+            }
+            
+            return new JsonResponse($data, 200, array(), true);
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error',
+            'message' => 'Pusty request'            
+        ));
     }
 }

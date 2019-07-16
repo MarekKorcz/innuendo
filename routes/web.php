@@ -22,8 +22,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/temp-boss/register/{code}', 'Auth\RegisterController@tempUserBossRegistrationCreate')->name('tempBossRegisterAddress');
 Route::post('/temp-boss/register/store', 'Auth\RegisterController@tempUserBossRegistrationStore');
+Route::post('/register/check-if-code-exists', 'Auth\RegisterController@checkIfCodeExists');
+Route::post('/register/new-boss', 'Auth\RegisterController@registerNewBoss');
 
-Route::get('/admin/user/list', 'AdminController@userList');
+Route::get('/admin/user/list', 'AdminController@userLisAuth\t');
 Route::get('/admin/boss/list', 'AdminController@bossList');
 Route::get('/admin/employee/list', 'AdminController@employeeList');
 Route::get('/admin/user/show/{id}', 'AdminController@userShow');

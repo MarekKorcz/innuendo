@@ -64,4 +64,12 @@ class Subscription extends Model
     {
         return $this->belongsToMany('App\ChosenProperty', 'chosen_property_subscription');
     }
+    
+    /**
+     * Get promo codes which belongs to subscription.
+     */
+    public function promoCodes()
+    {
+        return $this->belongsToMany('App\PromoCode', 'promo_code_subscription');
+    }
 }
