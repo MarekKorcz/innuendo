@@ -2088,8 +2088,6 @@ class BossController extends Controller
             'promo'
         ])->first();
         
-//        dump($promoCode);die;
-        
         if ($promoCode !== null)
         {
             return view('boss.approve_messages')->with([

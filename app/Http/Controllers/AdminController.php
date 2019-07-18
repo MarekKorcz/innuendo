@@ -7,6 +7,7 @@ use App\TempUser;
 use App\TempProperty;
 use App\GraphicRequest;
 use App\Message;
+use App\PromoCode;
 use App\Mail\AdminTempBossCreate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -449,5 +450,76 @@ class AdminController extends Controller
         }
         
         return redirect()->route('welcome')->with('error', 'Something went wrong');
+    }
+    
+    public function approveMessages($bossId)
+    {
+        $boss = User::where([
+            'id' => $bossId,
+            'isBoss' => 1
+        ])->first();
+        
+        if ($boss !== null)
+        {
+            $promoCode = PromoCode::where('boss_id', $boss->id)->with([
+                'messages',
+                'promo'
+            ])->first();
+
+            if ($promoCode !== null)
+            {
+                return view('admin.approve_messages')->with([
+                    'promoCode' => $promoCode,
+                    'boss' => $boss,
+                    'admin' => auth()->user()
+                ]);
+            }
+        }
+        
+        return redirect()->route('welcome')->with('error');
+    }
+    
+    public function makeAnApproveMessage()
+    {
+        $rules = array(
+            'text'          => 'required|string',
+            'promo_code_id' => 'required|numeric',
+            'boss_id'       => 'required|numeric'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::to('admin/approve/messages/' . Input::get('boss_id'));
+            
+        } else {
+            
+            $boss = User::where([
+                'id' => Input::get('boss_id'),
+                'isBoss' => 1
+            ])->first();
+
+            if ($boss !== null)
+            {
+                $promoCode = PromoCode::where([
+                    'id' => Input::get('promo_code_id'),
+                    'boss_id' => $boss->id
+                ])->first();
+
+                if ($promoCode !== null)
+                {
+                    $message = new Message();
+                    $message->text = Input::get('text');
+                    $message->status = 0;
+                    $message->owner_id = auth()->user()->id;
+                    $message->promo_code_id = $promoCode->id;
+                    $message->save();
+                    
+                    return redirect('/admin/approve/messages/' . Input::get('boss_id'))->with('success', 'Message has been sended!');
+                }
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
+        }
     }
 }

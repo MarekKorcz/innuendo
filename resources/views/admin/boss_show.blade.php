@@ -10,6 +10,7 @@
                 <td>Email</td>
                 <td>Phone</td>
                 <td>Created At</td>
+                <td>Approve Messages</td>
             </tr>
         </thead>
         <tbody>
@@ -18,6 +19,11 @@
                 <td>{{$boss->email}}</td>
                 <td>{{$boss->phone_number}}</td>
                 <td>{{$boss->created_at}}</td>
+                <td>
+                    <a class="btn btn-success" href="{{ URL::to('/admin/approve/messages/' . $boss->id) }}">
+                        Show
+                    </a>
+                </td>
             </tr>
         </tbody>
     </table>

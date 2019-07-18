@@ -32,6 +32,7 @@
         <thead>
             <tr>                
                 <td>Name</td>
+                <td>Is Approved</td>
                 <td>Created At</td>
                 <td>Action</td>
             </tr>
@@ -40,6 +41,13 @@
             @foreach($bosses as $boss)
                 <tr>
                     <td>{{$boss->name}} {{$boss->surname}}</td>
+                    <td>
+                        @if ($boss->isApproved == 1)
+                            Tak
+                        @else
+                            Nie
+                        @endif
+                    </td>
                     <td>{{$boss->created_at}}</td>
                     <td>
                         <a class="btn btn-primary" href="{{ URL::to('/admin/boss/show/' . $boss->id) }}">
