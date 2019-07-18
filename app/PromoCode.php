@@ -56,4 +56,12 @@ class PromoCode extends Model
     {
         return $this->belongsToMany('App\Subscription', 'promo_code_subscription');
     }
+    
+    /**
+     * Get messages which belongs to promoCode.
+     */
+    public function messages()
+    {
+        return $this->hasMany('App\Message');
+    }
 }

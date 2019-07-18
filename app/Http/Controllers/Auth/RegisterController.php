@@ -355,7 +355,8 @@ class RegisterController extends Controller
                     'phone_number' => Input::get('phone_number'),
                     'email' => Input::get('email'),
                     'password' => Hash::make(Input::get('password')),
-                    'isBoss' => 1
+                    'isBoss' => 1,
+                    'isApproved' => 0
                 ]);
 
                 if ($boss !== null)

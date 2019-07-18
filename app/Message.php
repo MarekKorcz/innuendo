@@ -19,7 +19,7 @@ class Message extends Model
      * @var array
      */
     protected $fillable = [
-        'text', 'status', 'owner_id', 'graphic_request_id'
+        'text', 'status', 'owner_id', 'graphic_request_id', 'promo_code_id'
     ];
     
     /**
@@ -29,7 +29,8 @@ class Message extends Model
      */
     protected $casts = [
         'owner_id' => 'integer',
-        'graphic_request_id' => 'integer'
+        'graphic_request_id' => 'integer',
+        'promo_code_id' => 'integer'
     ];
     
     /**
@@ -38,5 +39,13 @@ class Message extends Model
     public function graphicRequest()
     {
         return $this->belongsTo('App\GraphicRequest');
+    }
+    
+    /**
+     * Get promoCode that owns message.
+     */
+    public function promoCode()
+    {
+        return $this->belongsTo('App\PromoCode');
     }
 }

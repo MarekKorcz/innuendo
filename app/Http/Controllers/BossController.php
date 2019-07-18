@@ -18,6 +18,7 @@ use App\Calendar;
 use App\Substart;
 use App\Purchase;
 use App\Interval;
+use App\PromoCode;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -2079,6 +2080,27 @@ class BossController extends Controller
         return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane do faktury');
     }
     
+    public function approveMessages()
+    {
+        $boss = auth()->user();
+        $promoCode = PromoCode::where('boss_id', $boss->id)->with([
+            'messages',
+            'promo'
+        ])->first();
+        
+//        dump($promoCode);die;
+        
+        if ($promoCode !== null)
+        {
+            return view('boss.approve_messages')->with([
+                'promoCode' => $promoCode,
+                'boss' => $boss
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error');
+    }
+    
     public function makeAMessage()
     {
         $rules = array(
@@ -2112,6 +2134,46 @@ class BossController extends Controller
                     $message->save();
                     
                     return redirect('/boss/graphic-request/' . $graphicRequest->id . '/' . $message->id)->with('success', 'Wiadomość została wysłana!');
+                }
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
+        }
+    }
+    
+    public function makeAnApproveMessage()
+    {
+        $rules = array(
+            'text'          => 'required|string',
+            'promo_code_id' => 'required|numeric'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::to('boss/approve/messages');
+            
+        } else {
+            
+            $boss = auth()->user();
+            
+            if ($boss->isBoss == 1 && $boss->isApproved == 0)
+            {
+                $promoCode = PromoCode::where([
+                    'id' => Input::get('promo_code_id'),
+                    'boss_id' => $boss->id
+                ])->first();
+
+                if ($promoCode !== null)
+                {
+                    $message = new Message();
+                    $message->text = Input::get('text');
+                    $message->status = 0;
+                    $message->owner_id = $promoCode->boss_id;
+                    $message->promo_code_id = $promoCode->id;
+                    $message->save();
+                    
+                    return redirect('/boss/approve/messages')->with('success', 'Wiadomość została wysłana!');
                 }
             }
             

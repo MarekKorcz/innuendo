@@ -140,7 +140,8 @@ class CreateModels extends Migration
             $table->integer('owner_id');
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('graphic_request_id')->unsigned()->index()->foreign()->references("id")->on("graphic_requests");
+            $table->integer('graphic_request_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("graphic_requests");
+            $table->integer('promo_code_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("promo_codes");
         });
         
         Schema::create('appointments', function (Blueprint $table) {

@@ -81,7 +81,7 @@
             {{ Form::open(['id' => 'send-message', 'action' => ['BossController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}
                 
                 <div class="form-group text-center">
-                    {{ Form::text('text', Input::old('text'), array('style' => 'width: 60%;', 'placeholder' => 'Napisz do nas wiadomość')) }}
+                    {{ Form::text('text', Input::old('text'), array('style' => 'width: 60%;', 'placeholder' => 'Napisz do nas wiadomość', 'autocomplete' => 'off')) }}
                 </div>
             
                 {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}

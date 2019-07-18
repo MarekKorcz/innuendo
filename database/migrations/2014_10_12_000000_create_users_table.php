@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->boolean('isEmployee')->nullable();
             $table->boolean('isBoss')->nullable();
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
+            $table->boolean('isApproved')->default(1);
             $table->timestamps();
         });
     }
