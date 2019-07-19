@@ -176,6 +176,33 @@ class PropertyController extends Controller
         return redirect()->route('welcome')->with('error', 'There is no such property');
     }
     
+    public function canShowChange($id)
+    {
+        $property = Property::where('id', $id)->first();
+ 
+        if ($property !== null)
+        {
+            if ($property->canShow == 0)
+            {
+                $property->canShow = 1;
+
+            } else if ($property->canShow == 1) {
+
+                $property->canShow = 0;
+            }
+
+            $property->save();
+            
+            return redirect()->action(
+                'PropertyController@show', [
+                    'id' => $property->id
+                ]
+            );
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
     /**
      * Display the specified resource.
      *

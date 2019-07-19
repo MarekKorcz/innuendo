@@ -29,6 +29,7 @@
                 <th>Street number:</th>
                 <th>House number:</th>
                 <th>City:</th>
+                <th>canShow:</th>
             </tr>
             <tr>
                 <td>{{ $property->name }}</td>
@@ -42,6 +43,17 @@
                 <td>{{ $property->street_number }}</td>
                 <td>{{ $property->house_number }}</td>
                 <td>{{ $property->city }}</td>
+                <td>
+                    @if ($property->canShow == 0)
+                        <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
+                            Show
+                        </a>
+                    @else
+                        <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
+                            Don't Show
+                        </a>
+                    @endif
+                </td>
             </tr>
         </table>
         

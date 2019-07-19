@@ -30,7 +30,7 @@ class Property extends Model
      */
     protected $fillable = [
         'name', 'slug', 'description', 'street', 'street_number', 
-        'house_number', 'city', 'boss_id'
+        'house_number', 'city', 'canShow', 'boss_id'
     ];
     
     /**

@@ -11,13 +11,9 @@
 |
 */
 
-Route::get('/', function () 
-{
-    return view('welcome');
-})->name('welcome');
-
 Auth::routes();
 
+Route::get('/', 'HomeController@welcome')->name('welcome');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/temp-boss/register/{code}', 'Auth\RegisterController@tempUserBossRegistrationCreate')->name('tempBossRegisterAddress');
@@ -75,6 +71,7 @@ Route::get('/temp-property/{id}', 'PropertyController@tempPropertyShow');
 Route::get('/property/{id}/edit', 'PropertyController@edit');
 Route::get('/temp-property/{id}/edit', 'PropertyController@tempPropertyEdit');
 Route::put('/property/{id}', 'PropertyController@update');
+Route::get('/property/can-show/change/{id}', 'PropertyController@canShowChange');
 Route::put('/temp-property/{id}', 'PropertyController@tempPropertyUpdate');
 Route::delete('/property/{id}', 'PropertyController@destroy');
 Route::delete('/temp-property/{id}', 'PropertyController@tempPropertyDestroy');

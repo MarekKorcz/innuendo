@@ -81,6 +81,15 @@
         </div>
     </div>
     
+    @if (count($canShowProperties) > 0)
+        <div>
+            <h1>Niektóre z firm z którymi nawiązaliśmy współprace:</h1>
+            @foreach ($canShowProperties as $property)
+                <p>{{$property->name}}</p>
+            @endforeach
+        </div>
+    @endif
+    
     <!--Welcome section-->
     <div class="container-fluid padding">
         <div class="row welcome text-center">

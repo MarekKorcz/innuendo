@@ -22,6 +22,7 @@ class CreateModels extends Migration
             $table->string('street_number')->nullable();
             $table->string('house_number')->nullable();
             $table->string('city');
+            $table->boolean('canShow')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");

@@ -23,6 +23,7 @@
                 <td>Phone</td>
                 <td>Street</td>
                 <td>City</td>
+                <td>canShow</td>
                 <td>Owner</td>
                 <td>Actions</td>
             </tr>
@@ -35,6 +36,13 @@
                 <td>{{ $value->phone_number }}</td>
                 <td>{{ $value->street }}</td>
                 <td>{{ $value->city }}</td>
+                <td>
+                    @if ($value->canShow == 0)
+                        No
+                    @else
+                        Yes
+                    @endif
+                </td>
                 @if ($value->boss_id > 0)
                     <td>{{ $value->boss->name }} {{ $value->boss->surname }}</td>
                 @else

@@ -38,6 +38,20 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
+    
+    /**
+     * Show the application main page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function welcome()
+    {
+        $canShowProperties = Property::where('canShow', 1)->get();
+        
+        return view('welcome')->with([
+            'canShowProperties' => $canShowProperties
+        ]);
+    }
 
     /**
      * Show the application dashboard.
@@ -46,10 +60,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // todo: zanim dokończysz odpowiednie wyświetlanie danych dla różncyh poziomów rejestracji w zależności od posiadanych 
-        // praw dostępu czy po prostu danych w db to zadbaj o odpowiednie przypisywanie do szefów propertisów oraz tworzenia dla nich chosenProperties 
-        // żeby póżniej na etapie przypisywania codów, workerzy mogli poprawnie przyisać sobie subskrypcje
-        
         $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
         
         if ($user->isAdmin !== null)
