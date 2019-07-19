@@ -40,7 +40,9 @@ Route::get('/admin/graphic-requests', 'AdminController@graphicRequests');
 Route::get('/admin/graphic-request/{graphicRequestId}/{chosenMessageId}', 'AdminController@graphicRequestShow');
 Route::post('/admin/make-a-message', 'AdminController@makeAMessage');
 Route::get('/admin/graphic-request/message/change-status/{graphicRequestId}/{messageId}', 'AdminController@graphicRequestMessageChangeStatus');
-Route::get('/admin/approve/messages/{bossId}', 'AdminController@approveMessages');
+Route::get('/admin/approve/messages', 'AdminController@approveMessages');
+Route::get('/admin/approve/messages/{bossId}', 'AdminController@approveMessageShow');
+Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminController@approveMessageStatusChange');
 Route::post('/admin/make-an-approve-message', 'AdminController@makeAnApproveMessage');
 
 Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');

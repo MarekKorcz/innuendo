@@ -99,6 +99,19 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">Approve messages</h4>
+                <p class="card-text text-center">
+                    View with all approve messages sent by bosses
+                </p>
+                <div class="text-center">
+                    <a class="btn btn-success" href="{{ URL::to('admin/approve/messages') }}">
+                        Show
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

@@ -155,6 +155,14 @@ class AdminController extends Controller
                 'id' => $id,
                 'isBoss' => 1
             ])->first();
+            
+            $boss['promoCode'] = null;
+            $bossPromoCode = PromoCode::where('boss_id', $boss->id)->first();
+
+            if ($bossPromoCode !== null)
+            {
+                $boss['promoCode'] = $bossPromoCode;
+            }
 
             return view('admin.boss_show')->with([
                 'boss' => $boss,
@@ -322,9 +330,7 @@ class AdminController extends Controller
     }
     
     public function graphicRequests()
-    {  
-        $boss = auth()->user();
-        
+    {
         $graphicRequests = GraphicRequest::where('id', '!=', null)->with([
             'property',
             'year',
@@ -452,7 +458,29 @@ class AdminController extends Controller
         return redirect()->route('welcome')->with('error', 'Something went wrong');
     }
     
-    public function approveMessages($bossId)
+    public function approveMessages()
+    {
+        $promoCodes = PromoCode::where('id', '!=', null)->where('boss_id', '!=', null)->with('promo')->get();
+
+        foreach ($promoCodes as $promoCode)
+        {           
+            $boss = User::where([
+                'id' => $promoCode->boss_id,
+                'isBoss' => 1
+            ])->first();
+            
+            if ($boss !== null)
+            {
+                $promoCode['boss'] = $boss;
+            }
+        }
+        
+        return view('admin.approve_messages')->with([
+            'promoCodes' => $promoCodes
+        ]);
+    }
+    
+    public function approveMessageShow($bossId)
     {
         $boss = User::where([
             'id' => $bossId,
@@ -468,7 +496,9 @@ class AdminController extends Controller
 
             if ($promoCode !== null)
             {
-                return view('admin.approve_messages')->with([
+                $promoCode['boss'] = $boss;
+                
+                return view('admin.approve_message_show')->with([
                     'promoCode' => $promoCode,
                     'boss' => $boss,
                     'admin' => auth()->user()
@@ -476,7 +506,44 @@ class AdminController extends Controller
             }
         }
         
-        return redirect()->route('welcome')->with('error');
+        return redirect()->route('welcome');
+    }
+    
+    public function approveMessageStatusChange($promoCodeId)
+    {
+        $promoCode = PromoCode::where('id', $promoCodeId)->with('promo')->first();
+ 
+        if ($promoCode !== null)
+        {
+            $boss = User::where([
+                'id' => $promoCode->boss_id,
+                'isBoss' => 1
+            ])->first();
+            
+            if ($boss !== null)
+            {
+                if ($boss->isApproved == 0)
+                {
+                    $boss->isApproved = 1;
+                    
+                } else if ($boss->isApproved == 1) {
+                    
+                    $boss->isApproved = 0;
+                }
+                
+                $boss->save();
+                
+                $promoCode['boss'] = $boss;
+            }
+            
+            return view('admin.approve_message_show')->with([
+                'promoCode' => $promoCode,
+                'boss' => $promoCode['boss'],
+                'admin' => auth()->user()
+            ]);
+        }
+        
+        return redirect()->route('welcome');
     }
     
     public function makeAnApproveMessage()

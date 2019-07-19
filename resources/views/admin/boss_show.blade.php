@@ -10,7 +10,10 @@
                 <td>Email</td>
                 <td>Phone</td>
                 <td>Created At</td>
-                <td>Approve Messages</td>
+                @if ($boss->promoCode !== null)
+                    <td>isApproved</td>
+                    <td>Approve Messages</td>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -19,11 +22,20 @@
                 <td>{{$boss->email}}</td>
                 <td>{{$boss->phone_number}}</td>
                 <td>{{$boss->created_at}}</td>
-                <td>
-                    <a class="btn btn-success" href="{{ URL::to('/admin/approve/messages/' . $boss->id) }}">
-                        Show
-                    </a>
-                </td>
+                @if ($boss->promoCode !== null)
+                    <td>
+                        @if ($boss->isApproved == 0)
+                            No
+                        @else
+                            Yes
+                        @endif
+                    </td>
+                    <td>
+                        <a class="btn btn-success" href="{{ URL::to('/admin/approve/messages/' . $boss->id) }}">
+                            Show
+                        </a>
+                    </td>
+                @endif
             </tr>
         </tbody>
     </table>
