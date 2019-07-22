@@ -1,8 +1,10 @@
 @component('mail::message')
 
+# Resetowanie hasła do Twojego konta
+
 Witaj,
 
-Otrzymujesz ten e-mail, ponieważ otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta. 
+Otrzymujesz ten e-mail, ponieważ dostaliśmy prośbę o zresetowanie hasła do Twojego konta. 
 Kliknij w poniższy przycisk aby tego dokonać.
 
 {{-- Action Button --}}

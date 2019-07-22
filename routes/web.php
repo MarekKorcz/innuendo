@@ -21,7 +21,7 @@ Route::post('/temp-boss/register/store', 'Auth\RegisterController@tempUserBossRe
 Route::post('/register/check-if-code-exists', 'Auth\RegisterController@checkIfCodeExists');
 Route::post('/register/new-boss', 'Auth\RegisterController@registerNewBoss');
 
-Route::get('/admin/user/list', 'AdminController@userLisAuth\t');
+Route::get('/admin/user/list', 'AdminController@userList');
 Route::get('/admin/boss/list', 'AdminController@bossList');
 Route::get('/admin/employee/list', 'AdminController@employeeList');
 Route::get('/admin/user/show/{id}', 'AdminController@userShow');

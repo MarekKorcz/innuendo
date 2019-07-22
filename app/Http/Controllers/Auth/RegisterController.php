@@ -12,6 +12,7 @@ use App\Purchase;
 use App\Interval;
 use App\Substart;
 use App\PromoCode;
+use App\Mail\AdminTempBossCreate2ndStep;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -142,9 +143,7 @@ class RegisterController extends Controller
                                         $startDate = $substart->start_date;
 
                                         if ($substart->isActive)
-                                        {                                            
-                                            // >> todo: sprawdz czy kiedy aktywowana subskrypcja to czy tu też się dobrze wszystko zapisuję
-
+                                        {
                                             for ($i = 1; $i <= $subscription->duration; $i++)
                                             {
                                                 $bossInterval = Interval::where([
@@ -165,8 +164,6 @@ class RegisterController extends Controller
                                                 $interval->purchase_id = $purchase->id;
                                                 $interval->save();
                                             }
-
-                                            // << todo
 
                                         } else {
 
@@ -292,10 +289,7 @@ class RegisterController extends Controller
                         $tempBossEntity->delete();
                         $tempBossPropertyEntity->delete();
                         
-                        // todo: ogarnij wyświetlanie zwrotnych komentarzy kiedy w kontrolerze coś pójdzie nie tak
-                    
-                        // todo: zrób maila z potwierdzeniem rejestracji!!!
-//                        \Mail::to($boss)->send(new AdminTempBossCreate($boss));
+                        \Mail::to($boss)->send(new AdminTempBossCreate2ndStep($boss));
                         
                         auth()->login($boss);
 

@@ -9,6 +9,7 @@ use App\GraphicRequest;
 use App\Message;
 use App\PromoCode;
 use App\Mail\AdminTempBossCreate;
+use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +35,6 @@ class AdminController extends Controller
      */
     public function userList()
     {
-        // todo: populate DB with real data and check if they are being displayed properly
         $users = User::where([
             'isAdmin' => null,
             'isBoss' => null,
@@ -91,7 +91,7 @@ class AdminController extends Controller
         {
             $user = User::where('id', $id)->with('chosenProperties')->first();
             
-            // wyświetl wszystkie wykupione subskrypcje (z podziałem na prywatne i publiczne) + zrób button do wyświetlania tych wizyt
+            // todo: (na póżniej) wyświetl wszystkie wykupione subskrypcje (z podziałem na prywatne i publiczne) + zrób button do wyświetlania tych wizyt
             // zrób button do wyświetlania wszystkich wizyt
             
 //            dump($user);die;
@@ -128,7 +128,7 @@ class AdminController extends Controller
                 }
             }
             
-            // zrób tak żeby były wyświetlone dane user'a z buttonami do zmiany jego danych
+            // todo: (na póżniej) zrób tak żeby były wyświetlone dane user'a z buttonami do zmiany jego danych
             // na dole lista propertisów w któych wykupione subskrypcje wraz z listą subskrypcji zaczętych z buttonami do widoków z wizytami
             // dodaj jeszcze button z wszystkimi wizytami w danych okresach
             dump($properties);die;
@@ -242,7 +242,7 @@ class AdminController extends Controller
             dump($employee->calendars);
             die;
 
-            // todo: create this view
+            // todo: (na póżniej, kiedy będzie trzeba zrobić system wewnętrznego rozliczania się z pracownikami) create this view
 //            return view('admin.employee_show')->with([
 //                'employee' => $employee
 //            ]);

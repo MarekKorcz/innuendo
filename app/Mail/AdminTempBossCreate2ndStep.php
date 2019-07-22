@@ -2,34 +2,28 @@
 
 namespace App\Mail;
 
-use App\TempUser;
+use App\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AdminTempBossCreate extends Mailable
+class AdminTempBossCreate2ndStep extends Mailable
 {
     use Queueable, SerializesModels;
     
     public $boss;
-    public $tempBossRegisterAddress;
+    public $loginUrl;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(TempUser $boss)
+    public function __construct(User $boss)
     {
         $this->boss = $boss;
-        
-        if ($this->boss !== null)
-        {
-            $this->tempBossRegisterAddress = route('tempBossRegisterAddress', [
-                'code' => $boss->register_code
-            ]);
-        }
+        $this->loginUrl = route('login');
     }
 
     /**
@@ -39,6 +33,6 @@ class AdminTempBossCreate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.admin_temp_boss_create');
+        return $this->markdown('emails.admin_temp_boss_create_2nd_step');
     }
 }

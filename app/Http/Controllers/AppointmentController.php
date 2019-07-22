@@ -454,9 +454,6 @@ class AppointmentController extends Controller
                                                     $bossInterval->save();
                                                     $interval->save();
 
-                                                    // todo: zobacz czy wizyty które są abonamentowe mogą być robione poza czasem trwania 
-                                                    // wykupionej subskrypcji
-
                                                     $appointment->interval_id = $interval->id;
 
                                                 } else {
