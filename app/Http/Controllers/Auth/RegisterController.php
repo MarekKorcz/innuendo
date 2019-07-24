@@ -13,6 +13,7 @@ use App\Interval;
 use App\Substart;
 use App\PromoCode;
 use App\Mail\AdminTempBossCreate2ndStep;
+use App\Mail\BossCreateWithPromoCode;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -410,17 +411,16 @@ class RegisterController extends Controller
                                     'purchase_id' => $bossPurchase->id
                                 ]);
                             }
-                        }
-
-    //                  // todo: zrób maila z potwierdzeniem rejestracji!!!
-    ////                \Mail::to($boss)->send(new AdminTempBossCreate($boss));
-
-                        auth()->login($boss);
+                        }                    
 
                         $promoCode->activation_date = date('Y-m-d H:i:s');
                         $promoCode->isActive = 1;
                         $promoCode->boss_id = $boss->id;
                         $promoCode->save();
+                        
+                        \Mail::to($boss)->send(new BossCreateWithPromoCode($boss));
+                        
+                        auth()->login($boss);
 
                         return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją oraz pakietem promocyjnych masaży, zostało stworzone!');
 

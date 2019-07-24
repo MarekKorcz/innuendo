@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-//use App\User;
-//use App\Property;
+use App\Mail\BossCreateWithPromoCode;
 
 // to tests
 use App\Appointment;
@@ -153,6 +152,6 @@ class HomeController extends Controller
     }
     
 //    public function test()
-//    {    
+//    {
 //    }
 }
