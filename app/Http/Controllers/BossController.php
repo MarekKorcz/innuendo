@@ -932,7 +932,6 @@ class BossController extends Controller
                     
                     if ($chosenProperty->subscriptions !== null)
                     {
-//                         todo: detach what...? is it working for sure??
                         $chosenProperty->subscriptions()->detach();
                     }
                     
@@ -1001,11 +1000,6 @@ class BossController extends Controller
                 $workers->prepend($boss);
             }
             
-//           todo:  ogarnij tutaj wyswietlanie wizyt na podstawie czasu trwania subskrypcji
-//            * jesli jest mozliwosc wyswietlenia perioodu zgodnego z czasem terazniejszym to wyswietl, 
-//            * jesli jest nieaktywna subskrypcja wyswietl wszystkie
-//            * jesli subskrypcja sie zakonczyla wyswietl ostatni mozliwy
-            
             $appointmentsCollection = new Collection();
             
             if (count($workers) > 0)
@@ -1060,7 +1054,8 @@ class BossController extends Controller
                                                             $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
                                                             $appointment['date'] = $date;
 
-                                                            $appointment['employee'] = $employee->name;
+                                                            $appointment['employee'] = $employee->name . " " . $employee->surname;
+                                                            $appointment['employee_slug'] = $employee->slug;
                                                             
                                                             $appointment['user'] = $worker;
 
@@ -2070,8 +2065,6 @@ class BossController extends Controller
                     
                 $graphicRequest->updated_at = new \DateTime();
                 $graphicRequest->save();
-                
-                // todo: add message about this change
 
                 return redirect('/boss/graphic-request/' . $graphicRequest->id)->with('success', 'Zapytanie o otworzenie grafiku zostało zmienione!');
             }
@@ -2337,9 +2330,7 @@ class BossController extends Controller
     }
     
     public function getPropertySubscriptions(Request $request)
-    {   
-        
-        // todo: find out if it all works!!!!
+    {
         if ($request->request->all())
         {
             $boss = auth()->user();
@@ -2872,7 +2863,8 @@ class BossController extends Controller
                             'time' => $appointment->start_time . " - " . $appointment->end_time,
                             'worker' => $appointment->worker->name . " " . $appointment->worker->surname,
                             'item' => $appointment->item->name,
-                            'employee' => $employee->name,
+                            'employee' => $employee->name . " " . $employee->surname,
+                            'employee_slug' => $employee->slug,
                             'status' => $appointmentStatus
                         ];
                     }
@@ -3035,7 +3027,8 @@ class BossController extends Controller
                             'time' => $appointment->start_time . " - " . $appointment->end_time,
                             'worker' => $appointment->worker->name . " " . $appointment->worker->surname,
                             'item' => $appointment->item->name,
-                            'employee' => $employee->name,
+                            'employee' => $employee->name . " " . $employee->surname,
+                            'employee_slug' => $employee->slug,
                             'status' => $appointmentStatus
                         ];
                     }

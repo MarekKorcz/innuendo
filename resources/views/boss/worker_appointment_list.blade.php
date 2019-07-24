@@ -23,8 +23,9 @@
             @if ($substart->isActive)
                 <label for="timePeriod">Wybierz okres rozliczeniowy:</label>
                 <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
-                    @foreach ($intervals as $interval)
-                        @if ($interval->start_date <= $today && $interval->end_date >= $today)
+                    @foreach ($intervals as $key => $interval)
+                        @if ($interval->start_date <= $today && $interval->end_date >= $today ||
+                             $interval->end_date < $today && $key + 1 == count($intervals))
                             <option value="{{$interval->id}}" selected>{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
                         @else
                             <option value="{{$interval->id}}">{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
@@ -66,14 +67,22 @@
                 </tr>
             </thead>
             <tbody id="appointments">
-                <!--todo: dodać linki do userów i wykonujących-->
+                <!--todo: dodać linki do userów -->
                 @foreach($appointments as $appointment)
                     <tr>
                         <td>{{$appointment->date}}</td>
                         <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
+                        
+                        
                         <td>{{$appointment->user->name}} {{$appointment->user->surname}}</td>
+                        
+                        
                         <td>{{$appointment->item->name}}</td>
-                        <td>{{$appointment->employee}}</td>
+                        <td>
+                            <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
+                                {{$appointment->employee}}
+                            </a>
+                        </td>
                         <td>
                             {{config('appointment-status.' . $appointment->status)}}
                         </td>

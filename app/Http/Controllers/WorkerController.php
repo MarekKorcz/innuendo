@@ -989,9 +989,6 @@ class WorkerController extends Controller
                                                 $interval->available_units = ($interval->available_units - 1);
                                                 $interval->save();
 
-                                                // todo: zobacz czy wizyty które są abonamentowe mogą być robione poza czasem trwania 
-                                                // wykupionej subskrypcji (drugi taki komunikat w AppointmentController)
-
                                                 $appointment->interval_id = $interval->id;
 
                                             } else {

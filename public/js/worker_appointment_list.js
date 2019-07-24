@@ -134,7 +134,11 @@ $(document).ready(function() {
                             <td>` + value.time + `</td>
                             <td>` + value.worker + `</td>
                             <td>` + value.item + `</td>
-                            <td>` + value.employee + `</td>
+                            <td> 
+                                <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blanc">
+                                    ` + value.employee + `
+                                </a>
+                            </td>
                             <td>` + value.status + `</td>
                         </tr>
                     `);
@@ -193,7 +197,11 @@ $(document).ready(function() {
                             <td>` + value.time + `</td>
                             <td>` + value.worker + `</td>
                             <td>` + value.item + `</td>
-                            <td>` + value.employee + `</td>
+                            <td>
+                                <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blanc">
+                                    ` + value.employee + `
+                                </a>
+                            </td>
                             <td>` + value.status + `</td>
                         </tr>
                     `);
