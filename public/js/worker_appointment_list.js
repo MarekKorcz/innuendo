@@ -132,7 +132,11 @@ $(document).ready(function() {
                         <tr>
                             <td>` + value.date + `</td>
                             <td>` + value.time + `</td>
-                            <td>` + value.worker + `</td>
+                            <td>
+                                <a href="http://localhost:8000/boss/worker/show/` + value.worker_id + `/` + value.substart_id + `/` + value.interval_id + `" target="_blanc">
+                                    ` + value.worker + `
+                                </a>
+                            </td>
                             <td>` + value.item + `</td>
                             <td> 
                                 <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blanc">
@@ -195,7 +199,11 @@ $(document).ready(function() {
                         <tr>
                             <td>` + value.date + `</td>
                             <td>` + value.time + `</td>
-                            <td>` + value.worker + `</td>
+                            <td>
+                                <a href="http://localhost:8000/boss/worker/show/` + value.worker_id + `/` + value.substart_id + `/` + value.interval_id + `" target="_blanc">
+                                    ` + value.worker + `
+                                </a>
+                            </td>
                             <td>` + value.item + `</td>
                             <td>
                                 <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blanc">

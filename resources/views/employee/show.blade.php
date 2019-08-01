@@ -6,7 +6,7 @@
 
 <div class="container">
 
-    <h1 class="text-center padding">{{ $employee->name }}</h2>
+    <h1 class="text-center padding">{{ $employee->name }}</h1>
     
     <hr>
     

@@ -143,6 +143,7 @@ Route::get('/boss/properties/subscription/purchase', 'BossController@propertiesS
 Route::get('/boss/subscription/purchase/{propertyId}/{subscriptionId}', 'BossController@subscriptionPurchase');
 Route::post('/boss/subscription/purchased', 'BossController@subscriptionPurchased');
 Route::get('/boss/worker/appointment/list/{substartId}/{userId}', 'BossController@workerAppointmentList');
+Route::get('/boss/worker/show/{workerId}/{substartId?}/{intervalId?}', 'BossController@workerShow');
 Route::get('/boss/subscription/workers/edit/{substartId}/{intervalId}', 'BossController@subscriptionWorkersEdit');
 Route::post('/boss/subscription/workers/update', 'BossController@subscriptionWorkersUpdate');
 Route::get('/boss/subscription/invoices/{substartId}', 'BossController@subscriptionInvoices');

@@ -1058,6 +1058,8 @@ class BossController extends Controller
                                                             $appointment['employee_slug'] = $employee->slug;
                                                             
                                                             $appointment['user'] = $worker;
+                                                            
+                                                            $appointment['interval_id'] = $currentInterval->id;
 
                                                             $appointmentsCollection->push($appointment);
                                                         }
@@ -1092,6 +1094,129 @@ class BossController extends Controller
                 'intervals' => $intervals,
                 'today' => new \DateTime(date('Y-m-d'))
             ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Shows boss worker.
+     *
+     * @param type $workerId
+     * @param type $substartId
+     * @param type $intervalId
+     * 
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function workerShow($workerId, $substartId, $intervalId)
+    {
+        $boss = auth()->user();
+        
+        $worker = User::where([
+            'id' => $workerId,
+            'boss_id' => $boss->id
+        ])->first();
+        
+        if ($worker !== null || $boss->id == $workerId)
+        {
+            if ($worker == null)
+            {
+                $worker = $boss;
+            }
+            
+            $substart = Substart::where([
+                'id' => $substartId,
+                'boss_id' => $boss->id
+            ])->first();
+            
+            if ($substart !== null)
+            {
+                $interval = Interval::where([
+                    'id' => $intervalId,
+                    'substart_id' => $substart->id
+                ])->first();
+                
+                if ($interval !== null)
+                {
+                    $substartIntervals = Interval::where([
+                        'substart_id' => $substart->id
+                    ])->get();
+                    
+                    $subscription = Subscription::where('id', $substart->subscription_id)->first();
+                    
+                    $appointments = new Collection();
+                    
+                    if ($boss->id == $workerId)
+                    {
+                        $appointments = Appointment::where([
+                            'interval_id' => $interval->id,
+                            'user_id' => $boss->id
+                        ])->get();
+                        
+                        if (count($appointments) > 0)
+                        {
+                            foreach ($appointments as $appointment)
+                            {
+                                $day = Day::where('id', $appointment->day_id)->first();
+                                $month = Month::where('id', $day->month_id)->first();
+                                $year = Year::where('id', $month->year_id)->first();
+                                $calendar = Calendar::where('id', $year->calendar_id)->first();
+                                $employee = User::where('id', $calendar->employee_id)->first();
+
+                                $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
+                                $appointment['date'] = $date;
+
+                                $appointment['employee'] = $employee->name . " " . $employee->surname;
+                                $appointment['employee_slug'] = $employee->slug;
+                            }
+                        }
+                        
+                    } else {
+                        
+                        $usersIntervals = Interval::where('interval_id', $interval->id)->get();
+                        
+                        if (count($usersIntervals) > 0)
+                        {
+                            foreach ($usersIntervals as $userInterval)
+                            {
+                                $userAppointments = Appointment::where([
+                                    'interval_id' => $userInterval->id,
+                                    'user_id' => $worker->id
+                                ])->get();
+                                
+                                if (count($userAppointments) > 0)
+                                {
+                                    foreach ($userAppointments as $userAppointment)
+                                    {
+                                        $day = Day::where('id', $userAppointment->day_id)->first();
+                                        $month = Month::where('id', $day->month_id)->first();
+                                        $year = Year::where('id', $month->year_id)->first();
+                                        $calendar = Calendar::where('id', $year->calendar_id)->first();
+                                        $employee = User::where('id', $calendar->employee_id)->first();
+
+                                        $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
+                                        $appointment['date'] = $date;
+
+                                        $appointment['employee'] = $employee->name . " " . $employee->surname;
+                                        $appointment['employee_slug'] = $employee->slug;
+                            
+                                        $appointments->push($userAppointment);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    return view('boss.worker_show')->with([
+                        'worker' => $worker,
+                        'substart' => $substart,
+                        'interval' => $interval,
+                        'substartIntervals' => $substartIntervals,
+                        'subscription' => $subscription,
+                        'appointments' => $appointments
+                    ]);
+                }
+            }
         }
         
         return redirect()->route('welcome');
@@ -1528,11 +1653,12 @@ class BossController extends Controller
                 
                 foreach ($substartIntervals as $interval)
                 {
-                    if ($interval->start_date < $today && $interval->end_date <= $today) {
-                        
+                    if ($today > $interval->start_date && $today >= $interval->end_date ||
+                        $today >= $interval->start_date && $today <= $interval->end_date) 
+                    {
                         $interval['state'] = 'existing';
                         
-                    } elseif ($interval->start_date > $today || $interval->end_date > $today) {
+                    } elseif ($today < $interval->start_date || $today < $interval->end_date) {
                         
                         $interval['state'] = 'nonexistent';
                     }
@@ -2861,11 +2987,14 @@ class BossController extends Controller
                         $appointmentsArray[] = [
                             'date' => $date,
                             'time' => $appointment->start_time . " - " . $appointment->end_time,
+                            'worker_id' => $appointment->worker->id,
                             'worker' => $appointment->worker->name . " " . $appointment->worker->surname,
                             'item' => $appointment->item->name,
                             'employee' => $employee->name . " " . $employee->surname,
                             'employee_slug' => $employee->slug,
-                            'status' => $appointmentStatus
+                            'status' => $appointmentStatus,
+                            'substart_id' => $substart->id,
+                            'interval_id' => $intervalId
                         ];
                     }
                 }
@@ -3021,15 +3150,18 @@ class BossController extends Controller
                         $employee = User::where('id', $calendar->employee_id)->first();
 
                         $appointmentStatus = config('appointment-status.' . $appointment->status);
-
+                                
                         $appointmentsArray[] = [
                             'date' => $date,
                             'time' => $appointment->start_time . " - " . $appointment->end_time,
+                            'worker_id' => $appointment->worker->id,
                             'worker' => $appointment->worker->name . " " . $appointment->worker->surname,
                             'item' => $appointment->item->name,
                             'employee' => $employee->name . " " . $employee->surname,
                             'employee_slug' => $employee->slug,
-                            'status' => $appointmentStatus
+                            'status' => $appointmentStatus,
+                            'substart_id' => $substart->id,
+                            'interval_id' => $intervalId
                         ];
                     }
                 }

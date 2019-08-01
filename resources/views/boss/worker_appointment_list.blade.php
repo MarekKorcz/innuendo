@@ -67,16 +67,15 @@
                 </tr>
             </thead>
             <tbody id="appointments">
-                <!--todo: dodać linki do userów -->
                 @foreach($appointments as $appointment)
                     <tr>
                         <td>{{$appointment->date}}</td>
                         <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
-                        
-                        
-                        <td>{{$appointment->user->name}} {{$appointment->user->surname}}</td>
-                        
-                        
+                        <td>
+                            <a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blanc">
+                                {{$appointment->user->name}} {{$appointment->user->surname}}
+                            </a>
+                        </td>
                         <td>{{$appointment->item->name}}</td>
                         <td>
                             <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
