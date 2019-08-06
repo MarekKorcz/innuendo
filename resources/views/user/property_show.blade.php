@@ -33,6 +33,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title text-center">{{$employee->name}}</h5>
+                        todo: pokaż zdjęcie
                         <p class="card-text">
                             {!!$employee->description!!}
                         </p>

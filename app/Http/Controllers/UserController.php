@@ -77,11 +77,56 @@ class UserController extends Controller
         
         if ($employee !== null)
         {
-            $employeeCreatedAt = $employee->created_at->format('d.m.Y');
+            $user = auth()->user();
+            
             $calendars = Calendar::where([
                 'employee_id' => $employee->id,
                 'isActive' => 1
             ])->get();
+        
+            if ($user->isBoss) 
+            {                
+                if (count($calendars) > 0)
+                {
+                    foreach ($calendars as $calendar)
+                    {
+                        if ($calendar->property->boss_id !== $user->id)
+                        {
+                            $calendars->pull($calendar->id);
+                        }
+                    }
+                }
+
+            } else if ($user->boss_id !== null) {
+
+                $user = User::where('id', $user->id)->with('chosenProperties')->first();
+                
+                $calendarsAvailableToWorker = new Collection();
+                
+                if (count($user->chosenProperties) > 0 && count($calendars) > 0)
+                {
+                    foreach ($calendars as $calendar)
+                    {
+                        foreach ($user->chosenProperties as $chosenProperty)
+                        {
+                            if ($calendar->property->id === $chosenProperty->property_id)
+                            {
+                                $calendarsAvailableToWorker->push($calendar);
+                            }
+                        }
+                    }
+                }
+                
+                if (count($calendarsAvailableToWorker) > 0)
+                {
+                    $calendars = new Collection();
+                    
+                    foreach ($calendarsAvailableToWorker as $calendar)
+                    {
+                        $calendars->push($calendar);
+                    }
+                }
+            }
 
             $properties = [];
 
@@ -99,6 +144,8 @@ class UserController extends Controller
                     $calendarsArray[$i + 1] = $calendars[$i];
                 }
             }
+            
+            $employeeCreatedAt = $employee->created_at->format('d.m.Y');
 
             return view('employee.show')->with([
                 'employee' => $employee,
@@ -505,8 +552,8 @@ class UserController extends Controller
                 $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
                 $appointment['address'] = $address;
                 
-                $employee = $employee->name;
-                $appointment['employee'] = $employee;
+                $appointment['employee'] = $employee->name . " " . $employee->surname;
+                $appointment['employee_slug'] = $employee->slug;
             }
             
             return view('user.appointment_index')->with([
@@ -557,7 +604,7 @@ class UserController extends Controller
                 * 
                 * 
                 * 
-                * email sanding
+                * todo: email sanding
                 * 
                 * 
                 * 
@@ -1121,14 +1168,62 @@ class UserController extends Controller
         if ($purchase !== null && $purchase->chosenProperty->user_id == auth()->user()->id)
         {
             $expirationDate = null;
+            $substartInterval = null;
+            $intervalAvailableUnits = null;
             $substart = Substart::where('id', $purchase->substart_id)->first();
                     
             if ($substart->isActive)
             {
+                $today = new \DateTime(date('Y-m-d'));
+                        
                 $subscriptionCreationDate = new \DateTime($purchase->subscription->created_at->format('Y-m-d'));
                 $interval = new \DateInterval('P12M');
                 $subscriptionCreationDate->add($interval);            
                 $expirationDate = $subscriptionCreationDate->format('d - m - Y');
+                
+                $substartInterval = Interval::where('substart_id', $substart->id)
+                                            ->where('start_date', '<=', $today)
+                                            ->where('end_date', '>=', $today)
+                                            ->first();
+            
+                if ($substartInterval !== null)
+                {
+                    $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+                    
+                    if ($user !== null && $user->boss_id !== null && count($user->chosenProperties) > 0)
+                    {
+                        foreach ($user->chosenProperties as $chosenProperty)
+                        {                            
+                            if ($purchase->chosenProperty->property_id == $chosenProperty->property_id)
+                            {
+                                $userPurchase = Purchase::where([
+                                    'chosen_property_id' => $chosenProperty->id,
+                                    'substart_id' => $substart->id
+                                ])->first();
+                                
+                                if ($userPurchase !== null)
+                                {                                    
+                                    $userInterval = Interval::where([
+                                        'interval_id' => $substartInterval->id,
+                                        'purchase_id' => $userPurchase->id
+                                    ])->first();
+                                    
+                                    if ($userInterval !== null)
+                                    {
+                                        $intervalAvailableUnits = $purchase->subscription->quantity;
+                                                
+                                        $userAppointments = Appointment::where('interval_id', $userInterval->id)->get();
+                                        
+                                        if (count($userAppointments) > 0)
+                                        {
+                                            $intervalAvailableUnits = $intervalAvailableUnits - count($userAppointments);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             $appointments = Appointment::where('purchase_id', $purchase->id)->with('item')->get();
@@ -1156,14 +1251,16 @@ class UserController extends Controller
                 $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
                 $appointment['address'] = $address;
 
-                $employee = $employee->name;
-                $appointment['employee'] = $employee;
+                $appointment['employee'] = $employee->name . " " . $employee->surname;
+                $appointment['employee_slug'] = $employee->slug;
             }
 
             return view('user.subscription_purchased_show')->with([
                 'purchase' => $purchase,
                 'expirationDate' => $expirationDate,
-                'appointments' => $appointments->sortByDesc('date_time')
+                'appointments' => $appointments->sortByDesc('date_time'),
+                'substartInterval' => $substartInterval,
+                'intervalAvailableUnits' => $intervalAvailableUnits
             ]);
         }
         

@@ -33,7 +33,11 @@
                     <td>{{$appointment->address}}</td>
                     <td>{{$appointment->item->name}}</td>
                     <td>{{$appointment->minutes}}</td>
-                    <td>{{$appointment->employee}}</td>
+                    <td>
+                        <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
+                            {{$appointment->employee}}
+                        </a>
+                    </td>
                     <td>
                         {{config('appointment-status.' . $appointment->status)}}
                     </td>

@@ -19,7 +19,9 @@
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h2>Status subskrypcji</h2>
                 @if ($expirationDate !== null)
-                    <p>Dostępne zabiegi w obecnym miesiącu: <strong>{{$purchase->available_units}}</strong></p>
+                    @if ($intervalAvailableUnits !== null)
+                        <p>Dostępne zabiegi w obecnym miesiącu (od {{$substartInterval->start_date->format('Y-m-d')}} do {{$substartInterval->end_date->format('Y-m-d')}}): <strong>{{$intervalAvailableUnits}}</strong></p>
+                    @endif
                     <p>Ważny do: <strong>{{$expirationDate}}r</strong></p>
                 @else
                     <p>Subskrypcja nieaktywna. Aktywacja nastąpi wraz z pierwszym wykonanym zabiegiem</p>
@@ -52,7 +54,11 @@
                                 <td>{{$appointment->address}}</td>
                                 <td>{{$appointment->item->name}}</td>
                                 <td>{{$appointment->minutes}}</td>
-                                <td>{{$appointment->employee}}</td>
+                                <td>
+                                    <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
+                                        {{$appointment->employee}}
+                                    </a>
+                                </td>
                                 <td>
                                     {{config('appointment-status.' . $appointment->status)}}
                                 </td>

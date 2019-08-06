@@ -6,7 +6,7 @@
 
 <div class="container">
 
-    <h1 class="text-center padding">{{ $employee->name }}</h1>
+    <h1 class="text-center padding">{{ $employee->name }} {{$employee->surname}}</h1>
     
     <hr>
     
@@ -14,12 +14,15 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h3 style="padding: 9px;">Opis</h3>
-                <p>Imię: <strong>{{$employee->name}}</strong></p>
+                <p>Imię: <strong>{{$employee->name}} {{$employee->surname}}</strong></p>
                 <p>Adres e-mail: <strong>{{$employee->email}}</strong></p>
                 <p>Pracuje od: <strong>{{ $employeeCreatedAt }}</strong></p>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <div class="text-center">
+                    
+                    <!--todo: zmień te zdjęcie-->
+                    
                     <img class="img-fluid" src="/img/wladimir.jpg" width="300" height="450">
                 </div>
             </div>

@@ -40,7 +40,7 @@
         <p>Cena: <strong>{{$appointment->item->price}} zł</strong></p>
         <p>Wykonawca: 
             <a href="{{ URL::to('employee/' . $employee->slug) }}">
-                <strong>{{$employee->name}}</strong>
+                <strong>{{$employee->name}} {{$employee->surname}}</strong>
             </a>
         </p>
         <p>
