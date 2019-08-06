@@ -79,73 +79,76 @@ class UserController extends Controller
         {
             $user = auth()->user();
             
-            $calendars = Calendar::where([
-                'employee_id' => $employee->id,
-                'isActive' => 1
-            ])->get();
-        
-            if ($user->isBoss) 
-            {                
-                if (count($calendars) > 0)
-                {
-                    foreach ($calendars as $calendar)
-                    {
-                        if ($calendar->property->boss_id !== $user->id)
-                        {
-                            $calendars->pull($calendar->id);
-                        }
-                    }
-                }
+            $employeeCreatedAt = $employee->created_at->format('d.m.Y');
+            $calendars = new Collection();
+            $properties = [];
+            
+            if ($user !== null)
+            {
+                $calendars = Calendar::where([
+                    'employee_id' => $employee->id,
+                    'isActive' => 1
+                ])->get();
 
-            } else if ($user->boss_id !== null) {
-
-                $user = User::where('id', $user->id)->with('chosenProperties')->first();
-                
-                $calendarsAvailableToWorker = new Collection();
-                
-                if (count($user->chosenProperties) > 0 && count($calendars) > 0)
-                {
-                    foreach ($calendars as $calendar)
+                if ($user->isBoss) 
+                {                
+                    if (count($calendars) > 0)
                     {
-                        foreach ($user->chosenProperties as $chosenProperty)
+                        foreach ($calendars as $key => $calendar)
                         {
-                            if ($calendar->property->id === $chosenProperty->property_id)
+                            if ($calendar->property->boss_id !== $user->id)
                             {
-                                $calendarsAvailableToWorker->push($calendar);
+                                $calendars->forget($key);
                             }
                         }
                     }
-                }
-                
-                if (count($calendarsAvailableToWorker) > 0)
-                {
-                    $calendars = new Collection();
-                    
-                    foreach ($calendarsAvailableToWorker as $calendar)
+
+                } else if ($user->boss_id !== null) {
+
+                    $user = User::where('id', $user->id)->with('chosenProperties')->first();
+
+                    $calendarsAvailableToWorker = new Collection();
+
+                    if (count($user->chosenProperties) > 0 && count($calendars) > 0)
                     {
-                        $calendars->push($calendar);
+                        foreach ($calendars as $calendar)
+                        {
+                            foreach ($user->chosenProperties as $chosenProperty)
+                            {
+                                if ($calendar->property->id === $chosenProperty->property_id)
+                                {
+                                    $calendarsAvailableToWorker->push($calendar);
+                                }
+                            }
+                        }
+                    }
+
+                    if (count($calendarsAvailableToWorker) > 0)
+                    {
+                        $calendars = new Collection();
+
+                        foreach ($calendarsAvailableToWorker as $calendar)
+                        {
+                            $calendars->push($calendar);
+                        }
                     }
                 }
+
+                for ($i = 0; $i < count($calendars); $i++)
+                {
+                    $properties[$i] = Property::where('id', $calendars[$i]->property_id)->first();
+                }
             }
-
-            $properties = [];
-
-            for ($i = 0; $i < count($calendars); $i++)
-            {
-                $properties[$i] = Property::where('id', $calendars[$i]->property_id)->first();
-            }
-
+            
             $calendarsArray = [];
 
-            if (count($calendars))
+            if (count($calendars) > 0)
             {
                 for ($i = 0; $i < count($calendars); $i++)
                 {
                     $calendarsArray[$i + 1] = $calendars[$i];
                 }
             }
-            
-            $employeeCreatedAt = $employee->created_at->format('d.m.Y');
 
             return view('employee.show')->with([
                 'employee' => $employee,
