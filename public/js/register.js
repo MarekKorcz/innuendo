@@ -147,6 +147,7 @@ $(document).ready(function()
         }
         
         let codeInput = $("input#code");
+        let codeDataElement = document.getElementById("code-data")
         
         if (codeInput.length == 1)
         {
@@ -162,9 +163,13 @@ $(document).ready(function()
                     
                     $("div#code-error").append('<p class="field-warning">Podany kod jest za krótki</p>');
                     
-                } else {
+                } else if (codeDataElement.dataset.for !== undefined) {
                     
                     codeReady = true;
+                    
+                } else {
+                    
+                    event.preventDefault();
                 }
 
             } else if (codeInput.val() === "") {
@@ -178,7 +183,7 @@ $(document).ready(function()
                     $("div#code-error").append('<p class="field-warning">Wpisz kod rejestracyjny</p>');
                 }
             }
-        }
+        }        
         
         let passwordInput = $("input#password");
         
