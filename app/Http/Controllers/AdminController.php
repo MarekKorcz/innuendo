@@ -7,8 +7,10 @@ use App\TempUser;
 use App\TempProperty;
 use App\GraphicRequest;
 use App\Message;
+use App\Calendar;
 use App\PromoCode;
 use App\Mail\AdminTempBossCreate;
+use App\Mail\AdminTempEmployeeCreate;
 use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -73,9 +75,11 @@ class AdminController extends Controller
     public function employeeList()
     {
         $employees = User::where('isEmployee', '!=', null)->orderBy('created_at', 'desc')->get();
+        $tempEmployees = TempUser::where('isEmployee', 1)->orderBy('created_at', 'desc')->get();
 
         return view('admin.employee_list')->with([
-            'employees' => $employees
+            'employees' => $employees,
+            'tempEmployees' => $tempEmployees
         ]);
     }
     
@@ -224,31 +228,216 @@ class AdminController extends Controller
     }
     
     /**
-     * Display specific resource.
-     *
-     * @param integer $id
-     * @return Response
+     * Show create employee form.
      */
-    public function employeeShow($id)
+    public function employeeCreate()
     {
-        if ($id !== null)
-        {            
-            $employee = User::where([
-                'id' => $id,
-                'isEmployee' => 1
-            ])->with('calendars')->first();
-            
-            dump($employee);
-            dump($employee->calendars);
-            die;
+        return view('admin.employee_create');
+    }
+    
+    /**
+     * Add employee.
+     */
+    public function employeeAdd()
+    {
+        $rules = array(
+            'name'           => 'required',
+            'surname'        => 'required',
+            'email'          => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
 
-            // todo: (na póżniej, kiedy będzie trzeba zrobić system wewnętrznego rozliczania się z pracownikami) create this view
-//            return view('admin.employee_show')->with([
-//                'employee' => $employee
-//            ]);
+        if ($validator->fails()) {
+            return Redirect::to('admin/employee/list')
+                ->withErrors($validator);
+        } else {
+            
+            $employee = new TempUser();
+            $employee->name = Input::get('name');
+            $employee->surname = Input::get('surname');
+            $employee->email = Input::get('email');
+            
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $codeText = "";
+
+            for ($i = 0; $i < 20; $i++) 
+            {
+                $codeText .= $characters[rand(0, $charactersLength - 1)];
+            }
+                
+            $employee->register_code = $codeText;
+            $employee->isEmployee = 1;
+            $employee->save();
+
+            \Mail::to($employee)->send(new AdminTempEmployeeCreate($employee));
+
+            return redirect('admin/employee/list/')->with('success', 'Employee temporary entity has been successfully added!');
+        }
+    }
+    
+    /**
+     * Manually send activation email to employee.
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function tempUserEmployeeSendActivationEmail($id)
+    {
+        $employee = TempUser::where([
+            'id' => $id,
+            'isEmployee' => 1
+        ])->first();
+            
+        if ($employee !== null)
+        {
+            \Mail::to($employee)->send(new AdminTempEmployeeCreate($employee));
+
+            return redirect('admin/employee/list')->with('success', 'Activation email has been sended to employee!');
         }
         
         return redirect()->route('welcome');
+    }
+    
+    /**
+     * Display specific resource.
+     *
+     * @param string $slug
+     * @return Response
+     */
+    public function employeeShow($slug)
+    {
+        $employee = User::where([
+            'isEmployee' => 1,
+            'slug' => $slug
+        ])->first();
+        
+        if ($employee !== null)
+        {
+            $user = auth()->user();
+            
+            $calendars = new Collection();
+            $properties = [];
+            
+            if ($user !== null)
+            {
+                $calendars = Calendar::where([
+                    'employee_id' => $employee->id,
+                    'isActive' => 1
+                ])->get();
+
+                if ($user->isBoss) 
+                {                
+                    if (count($calendars) > 0)
+                    {
+                        foreach ($calendars as $key => $calendar)
+                        {
+                            if ($calendar->property->boss_id !== $user->id)
+                            {
+                                $calendars->forget($key);
+                            }
+                        }
+                    }
+
+                } else if ($user->boss_id !== null) {
+
+                    $user = User::where('id', $user->id)->with('chosenProperties')->first();
+
+                    $calendarsAvailableToWorker = new Collection();
+
+                    if (count($user->chosenProperties) > 0 && count($calendars) > 0)
+                    {
+                        foreach ($calendars as $calendar)
+                        {
+                            foreach ($user->chosenProperties as $chosenProperty)
+                            {
+                                if ($calendar->property->id === $chosenProperty->property_id)
+                                {
+                                    $calendarsAvailableToWorker->push($calendar);
+                                }
+                            }
+                        }
+                    }
+
+                    if (count($calendarsAvailableToWorker) > 0)
+                    {
+                        $calendars = new Collection();
+
+                        foreach ($calendarsAvailableToWorker as $calendar)
+                        {
+                            $calendars->push($calendar);
+                        }
+                    }
+                }
+
+                for ($i = 0; $i < count($calendars); $i++)
+                {
+                    $properties[$i] = Property::where('id', $calendars[$i]->property_id)->first();
+                }
+            }
+            
+            $calendarsArray = [];
+
+            if (count($calendars) > 0)
+            {
+                for ($i = 0; $i < count($calendars); $i++)
+                {
+                    $calendarsArray[$i + 1] = $calendars[$i];
+                }
+            }
+            
+            // todo: (na póżniej, będzie trzeba zrobić system wewnętrznego rozliczania się z pracownikami)
+
+            return view('admin.employee_show')->with([
+                'employee' => $employee,
+                'calendars' => $calendarsArray,
+                'properties' => $properties
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * Updates employee data.
+     *
+     * @return Response
+     */
+    public function employeeUpdate()
+    {
+        $rules = array(
+            'name'           => 'required',
+            'surname'        => 'required',
+            'slug'           => 'required',
+            'email'          => 'required',
+            'phone_number'   => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('admin/employee/show/' . Input::get('slug'))
+                ->withErrors($validator);
+        } else {
+            
+            $employee = User::where([
+                'id' => Input::get('id'),
+                'isEmployee' => 1
+            ])->first();
+            
+            if ($employee !== null)
+            {
+                $employee->name = Input::get('name');
+                $employee->surname = Input::get('surname');
+                $employee->slug = Input::get('slug');
+                $employee->email = Input::get('email');
+                $employee->phone_number = Input::get('phone_number');
+                $employee->save();
+
+//                \Mail::to($boss)->send(new AdminTempBossCreate($boss));
+
+                return redirect('admin/employee/show/' . $employee->slug)->with('success', 'Employee entity has been successfully updated!');
+            }
+        }
     }
     
     /**
@@ -276,12 +465,11 @@ class AdminController extends Controller
      *
      * @return Response
      */
-    public function bossStore(Request $request)
+    public function bossStore()
     {
         $rules = array(
             'name'           => 'required',
             'surname'        => 'required',
-            'boss_email'     => 'required',
             'street'         => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);

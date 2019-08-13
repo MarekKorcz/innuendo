@@ -18,6 +18,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/temp-boss/register/{code}', 'Auth\RegisterController@tempUserBossRegistrationCreate')->name('tempBossRegisterAddress');
 Route::post('/temp-boss/register/store', 'Auth\RegisterController@tempUserBossRegistrationStore');
+Route::get('/temp-employee/register/{code}', 'Auth\RegisterController@tempUserEmployeeRegistrationCreate')->name('tempEmployeeRegisterAddress');
+Route::post('/temp-employee/register/store', 'Auth\RegisterController@tempUserEmployeeRegistrationStore');
 Route::post('/register/check-if-code-exists', 'Auth\RegisterController@checkIfCodeExists');
 Route::post('/register/new-boss', 'Auth\RegisterController@registerNewBoss');
 
@@ -28,7 +30,11 @@ Route::get('/admin/user/show/{id}', 'AdminController@userShow');
 Route::get('/admin/boss/show/{id}', 'AdminController@bossShow');
 Route::get('/admin/temp-user/boss/show/{id}', 'AdminController@tempUserBossShow');
 Route::get('/admin/temp-user/user/show/{id}', 'AdminController@tempUserUserShow');
+Route::get('/admin/employee/create', 'AdminController@employeeCreate');
+Route::post('/admin/employee/add', 'AdminController@employeeAdd');
+Route::get('/admin/temp-user/employee/send-activation-email/{id}', 'AdminController@tempUserEmployeeSendActivationEmail');
 Route::get('/admin/employee/show/{id}', 'AdminController@employeeShow');
+Route::post('/admin/employee/update', 'AdminController@employeeUpdate');
 Route::put('/admin/user/edit', 'AdminController@userEdit');
 Route::get('/admin/boss/create', 'AdminController@bossCreate');
 Route::post('/admin/boss/store', 'AdminController@bossStore');

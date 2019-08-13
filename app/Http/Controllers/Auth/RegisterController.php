@@ -13,6 +13,7 @@ use App\Interval;
 use App\Substart;
 use App\PromoCode;
 use App\Mail\AdminTempBossCreate2ndStep;
+use App\Mail\AdminTempEmployeeCreate2ndStep;
 use App\Mail\BossCreateWithPromoCode;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -206,19 +207,23 @@ class RegisterController extends Controller
     public function tempUserBossRegistrationCreate($code)
     {     
         $bossRegisterCode = htmlentities($code, ENT_QUOTES, "UTF-8");
-        $boss = TempUser::where('register_code', $bossRegisterCode)->first();
         
-        if ($boss !== null)
+        if ($bossRegisterCode !== null)
         {
-            $property = TempProperty::where('temp_user_id', $boss->id)->first();
-            
-            if ($property !== null)
+            $boss = TempUser::where('register_code', $bossRegisterCode)->first();
+
+            if ($boss !== null)
             {
-                return view('auth.temp_user_boss_register')->with([
-                    'tempUser' => $boss,
-                    'tempProperty' => $property,
-                    'registerCode' => $bossRegisterCode
-                ]);
+                $property = TempProperty::where('temp_user_id', $boss->id)->first();
+
+                if ($property !== null)
+                {
+                    return view('auth.temp_user_boss_register')->with([
+                        'tempUser' => $boss,
+                        'tempProperty' => $property,
+                        'registerCode' => $bossRegisterCode
+                    ]);
+                }
             }
         }
         
@@ -250,10 +255,14 @@ class RegisterController extends Controller
                 ->withErrors($validator);
         } else {
             
-            $tempBossEntity = TempUser::where('register_code', Input::get('register_code'))->first();
+            $tempBossEntity = TempUser::where([
+                'register_code' => Input::get('register_code'),
+                'isBoss' => 1
+            ])->first();
+            
             $tempBossPropertyEntity = TempProperty::where('temp_user_id', $tempBossEntity->id)->with('subscriptions')->first();
             
-            if ($tempBossEntity !== null && $tempBossPropertyEntity)
+            if ($tempBossEntity !== null && $tempBossPropertyEntity !== null)
             {
                 $boss = User::create([
                     'name' => Input::get('name'),
@@ -438,6 +447,88 @@ class RegisterController extends Controller
             return redirect('/register')->with([
                 'error' => 'Przepraszamy, wszystkie kody promocyjne zostały już wykorzystane!'
             ]);
+        }
+    }
+    
+    /**
+     * Creates a view to create employee from TempUser
+     * 
+     * @param string $code
+     */
+    public function tempUserEmployeeRegistrationCreate($code)
+    {             
+        $employeeRegisterCode = htmlentities($code, ENT_QUOTES, "UTF-8");
+        
+        if ($employeeRegisterCode !== null)
+        {
+            $employee = TempUser::where('register_code', $employeeRegisterCode)->first();
+
+            if ($employee !== null)
+            {
+                return view('auth.temp_user_employee_register')->with([
+                    'tempUser' => $employee,
+                    'registerCode' => $employeeRegisterCode
+                ]);
+            }
+        }
+        
+        return redirect()->route('login');
+    }
+    
+    /**
+     * Handle storing employee made from TempUser
+     */
+    public function tempUserEmployeeRegistrationStore()
+    {
+        $rules = array(
+            'name'                  => 'required|string|min:4|max:24',
+            'surname'               => 'required|string|min:3|max:24',
+            'email'                 => 'required|string|email|unique:users,email|max:33',
+            'phone_number'          => 'required|numeric|regex:/[0-9]/|min:7',
+            'password'              => 'required|min:7|confirmed'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('temp-employee/register/' . Input::get('register_code'))
+                ->withErrors($validator);
+        } else {
+            
+            $tempEmployeeEntity = TempUser::where([
+                'register_code' => Input::get('register_code'),
+                'isEmployee' => 1
+            ])->first();
+            
+            if ($tempEmployeeEntity !== null)
+            {
+                $employee = User::create([
+                    'name' => Input::get('name'),
+                    'surname' => Input::get('surname'),
+                    'slug' => str_slug(Input::get('name') . "_" . Input::get('surname')),
+                    'email' => Input::get('email'),
+                    'phone_number' => Input::get('phone_number'),
+                    'password' => Hash::make(Input::get('password')),
+                    'isEmployee' => 1
+                ]);
+
+                if ($employee !== null)
+                {
+                    $tempEmployeeEntity->delete();
+                        
+                    \Mail::to($employee)->send(new AdminTempEmployeeCreate2ndStep($employee));
+
+                    auth()->login($employee);
+
+                    return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto zostało utworzone!');
+                }
+                
+                return redirect('/temp-employee/register')->with([
+                    'error' => 'Coś poszło nie tak',
+                    'code' => Input::get('register_code')
+                ]);
+            }
+            
+            return redirect()->route('welcome');
         }
     }
     

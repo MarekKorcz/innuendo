@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'surname', 'phone_number', 'email', 'password', 'isEmployee', 'isBoss', 'boss_id', 'isApproved'
+        'name', 'slug', 'surname', 'phone_number', 'email', 'profile_image', 'password', 'isEmployee', 'isBoss', 'boss_id', 'isApproved'
     ];
 
     /**
@@ -113,5 +113,10 @@ class User extends Authenticatable
     public function calendars()
     {
         return $this->hasMany('App\Calendar', 'employee_id');
+    }
+    
+    public function getImageAttribute()
+    {
+        return $this->profile_image;
     }
 }

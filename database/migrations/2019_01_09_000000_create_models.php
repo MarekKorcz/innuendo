@@ -167,9 +167,10 @@ class CreateModels extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('email')->unique();
-            $table->integer('phone_number');
+            $table->integer('phone_number')->nullable();
             $table->string('register_code')->nullable();
             $table->boolean('isBoss')->default(0);
+            $table->boolean('isEmployee')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

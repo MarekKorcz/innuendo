@@ -8,26 +8,26 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AdminTempBossCreate extends Mailable
+class AdminTempEmployeeCreate extends Mailable
 {
     use Queueable, SerializesModels;
     
-    public $boss;
-    public $tempBossRegisterAddress;
+    public $employee;
+    public $tempEmployeeRegisterAddress;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(TempUser $boss)
+    public function __construct(TempUser $employee)
     {
-        $this->boss = $boss;
+        $this->employee = $employee;
         
-        if ($this->boss !== null)
+        if ($this->employee !== null)
         {
-            $this->tempBossRegisterAddress = route('tempBossRegisterAddress', [
-                'code' => $this->boss->register_code
+            $this->tempEmployeeRegisterAddress = route('tempEmployeeRegisterAddress', [
+                'code' => $this->employee->register_code
             ]);
         }
     }
@@ -39,6 +39,6 @@ class AdminTempBossCreate extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.admin_temp_boss_create');
+        return $this->markdown('emails.admin_temp_employee_create');
     }
 }
