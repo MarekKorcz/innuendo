@@ -47,6 +47,11 @@ Route::get('/admin/approve/messages/{bossId}', 'AdminController@approveMessageSh
 Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminController@approveMessageStatusChange');
 Route::post('/admin/make-an-approve-message', 'AdminController@makeAnApproveMessage');
 
+Route::get('/userimage/{fileName}', [
+   'uses' => 'AdminController@getUserImage',
+    'as'  => 'account.image'
+]);
+
 Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');
 Route::post('/employee/assign/store', 'EmployeeController@store');
 

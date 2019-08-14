@@ -13,9 +13,12 @@ use App\Mail\AdminTempBossCreate;
 use App\Mail\AdminTempEmployeeCreate;
 use App\Property;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Redirect;
 
 class AdminController extends Controller
@@ -403,7 +406,7 @@ class AdminController extends Controller
      *
      * @return Response
      */
-    public function employeeUpdate()
+    public function employeeUpdate(Request $request)
     {
         $rules = array(
             'name'           => 'required',
@@ -431,9 +434,19 @@ class AdminController extends Controller
                 $employee->slug = Input::get('slug');
                 $employee->email = Input::get('email');
                 $employee->phone_number = Input::get('phone_number');
+                
+                $file = $request->file('profile_image');
+                
+                if ($file)
+                {
+                    $fileName = $request->get('name') . '_' . $request->get('surname') . '_' . time() . '.jpg';
+                    
+                    Storage::disk('local')->put($fileName, File::get($file));
+                    
+                    $employee->profile_image = $fileName;
+                }
+                
                 $employee->save();
-
-//                \Mail::to($boss)->send(new AdminTempBossCreate($boss));
 
                 return redirect('admin/employee/show/' . $employee->slug)->with('success', 'Employee entity has been successfully updated!');
             }
@@ -776,5 +789,12 @@ class AdminController extends Controller
             
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
+    }
+    
+    public function getUserImage($filename)
+    {
+        $file = Storage::disk('local')->get($filename);
+        
+        return new Response($file, 200);
     }
 }

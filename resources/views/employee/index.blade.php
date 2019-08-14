@@ -11,8 +11,17 @@
             <div class="row padding">
                 <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                     <div class="card">
-                        todo: zmienić zdjęcia!!!!
-                        <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                        @if (Storage::disk('local')->has($employees[$i]->profile_image))
+                            <div style="padding: 1rem;">
+                                <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
+                                     alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
+                                     style="width: 100%;" 
+                                     border="0"
+                                >
+                            </div>
+                        @else
+                            todo: doać defaultowe zdjęcie?
+                        @endif
                         <div class="card-body">
                             <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
                             <p class="card-text">
@@ -29,8 +38,17 @@
         @elseif ($i % 3 == 0)
                 <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                     <div class="card">
-                        todo: zmienić zdjęcia!!!!
-                        <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                        @if (Storage::disk('local')->has($employees[$i]->profile_image))
+                            <div style="padding: 1rem;">
+                                <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
+                                     alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
+                                     style="width: 100%;"
+                                     border="0"
+                                >
+                            </div>
+                        @else
+                            todo: doać defaultowe zdjęcie?
+                        @endif
                         <div class="card-body">
                             <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
                             <p class="card-text">
@@ -48,8 +66,17 @@
         @else
             <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                 <div class="card">
-                    todo: zmienić zdjęcia!!!!
-                    <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid">
+                    @if (Storage::disk('local')->has($employees[$i]->profile_image))
+                        <div style="padding: 1rem;">
+                            <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
+                                 alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
+                                 style="width: 100%;"; 
+                                 border="0"
+                            >
+                        </div>
+                    @else
+                        todo: doać defaultowe zdjęcie?
+                    @endif
                     <div class="card-body">
                         <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
                         <p class="card-text">

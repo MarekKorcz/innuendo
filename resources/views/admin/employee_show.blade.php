@@ -11,7 +11,7 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                {{ Form::open(['action' => 'AdminController@employeeUpdate', 'method' => 'POST']) }}
+                {{ Form::open(['action' => 'AdminController@employeeUpdate', 'method' => 'POST', 'enctype' => 'multipart/form-data']) }}
     
                     <div class="form-group">
                         {{ Form::label('name', 'Name') }}
@@ -33,6 +33,10 @@
                         {{ Form::label('phone_number', 'Phone number') }}
                         {{ Form::number('phone_number', $employee->phone_number, array('class' => 'form-control')) }}
                     </div>
+                    <div class="form-group">
+                        {{ Form::label('profile_image', 'Profile image') }}<br>
+                        {{ Form::file('profile_image', null, array('class' => 'form-control')) }}
+                    </div>
                 
                     {{ Form::hidden('id', $employee->id) }}
 
@@ -42,10 +46,17 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <div class="text-center">
-                    
-                    todo: zmień te zdjęcie
-                    
-                    <img class="img-fluid" src="/img/wladimir.jpg" width="300" height="450">
+                    @if (Storage::disk('local')->has($employee->profile_image))
+                        <div style="padding: 1rem;">
+                            <img src="{{ route('account.image', ['fileName' => $employee->profile_image]) }}" 
+                                 alt="{{$employee->name}} {{$employee->surname}}" 
+                                 style="width:100%;"
+                                 border="0"
+                            >
+                        </div>
+                    @else
+                        todo: doać defaultowe zdjęcie?
+                    @endif
                 </div>
             </div>
         </div>
