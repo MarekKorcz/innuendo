@@ -16,6 +16,13 @@ Auth::routes();
 Route::get('/', 'HomeController@welcome')->name('welcome');
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('locale/{locale}', function($locale) {
+    
+    Session::put('locale', $locale);
+    
+    return redirect()->back();
+});
+
 Route::get('/temp-boss/register/{code}', 'Auth\RegisterController@tempUserBossRegistrationCreate')->name('tempBossRegisterAddress');
 Route::post('/temp-boss/register/store', 'Auth\RegisterController@tempUserBossRegistrationStore');
 Route::get('/temp-employee/register/{code}', 'Auth\RegisterController@tempUserEmployeeRegistrationCreate')->name('tempEmployeeRegisterAddress');

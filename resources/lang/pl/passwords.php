@@ -12,10 +12,11 @@ return [
     | has failed, such as for an invalid token or invalid new password.
     |
     */
+    
+    'password' => 'Hasło musi posiadać przynajmniej 6 cyfr i przejsć walidację.',
+    'reset' => 'Twoje hasło zostało zmienione!',
+    'sent' => 'Wiadomość z linkiem do zmiany hasła została wysłana na Twój adres email!',
+    'token' => 'Ten token resetujący hasło jest nieważny.',
+    'user' => "Nie możemy znaleźć użytkownika o podanym adresie e-mail.",
 
-    'password' => 'Passwords must be at least six characters and match the confirmation.',
-    'reset' => 'Your password has been reset!',
-    'sent' => 'We have e-mailed your password reset link!',
-    'token' => 'This password reset token is invalid.',
-    'user' => "We can't find a user with that e-mail address.",
 ];

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\BossCreateWithPromoCode;
 
 // to tests
 use App\Appointment;
@@ -23,6 +22,7 @@ use App\Day;
 use App\Month;
 use App\Year;
 use App\TempUser;
+use App\Mail\BossCreateWithPromoCode;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 
@@ -35,7 +35,9 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except([
+            'welcome'
+        ]);
     }
     
     /**

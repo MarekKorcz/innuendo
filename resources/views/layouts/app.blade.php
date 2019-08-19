@@ -47,46 +47,41 @@
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" style="margin-right: 10px;">
-                    <a class="nav-link" href="{{ url('employees') }}">Pracownicy</a>
+                    <a class="nav-link" href="{{ url('employees') }}">@lang('navbar.employees')</a>
                 </li>
                 @guest
                     <li class="nav-item" style="font-weight: 600;">
-                        <a class="nav-link" href="{{ route('login') }}">{{ __('Zaloguj') }}</a>
+                        <a class="nav-link" href="{{ route('login') }}">@lang('navbar.login')</a>
                     </li>
                     @if (Route::has('register'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('Zarejestruj') }}</a>
+                            <a class="nav-link" href="{{ route('register') }}">@lang('navbar.register')</a>
                         </li>
                     @endif
                 @else
-<!--                    @if (Auth::user()->isBoss)
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/boss/properties/subscription/purchase') }}">Pakiety</a>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/user/properties/subscription') }}">Pakiety</a>
-                        </li>
-                    @endif
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('user/properties') }}">Lokalizacje</a>
-                    </li>-->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('home') }}">
-                            Moje konto
+                            @lang('navbar.my_account')
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('logout') }}"
                            onclick="event.preventDefault();
                            document.getElementById('logout-form').submit();">
-                            {{ __('Wyloguj') }}
+                            @lang('navbar.logout')
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
                     </li>
                 @endguest
+                <li class="nav-item">
+                    @if (Session('locale') == "en")
+                        <a class="nav-link" href="{{ url('locale/pl') }}">Polski</a>
+                    @else
+                        <a class="nav-link" href="{{ url('locale/en') }}">English</a>
+                    @endif
+                </li>
             </ul>
         </div>
         
@@ -102,7 +97,7 @@
     <footer class="container-fluid text-center">
         <div class="row">
             <div class="col-sm-3" style="padding: 15px;">
-                <h4>Kontakt</h4>
+                <h4>@lang('footer.contact')</h4>
                 <h5>mark.korcz@gmail.com</h5>
                 <h5>602 342 396</h5>
                 <a id="facebook" href="https://www.facebook.com/Gabinet.Masazu.Mokotow/">
@@ -123,7 +118,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <p id="copyright">{{ now()->year }} &copy; Wszelkie prawa zastrzeżone</p>
+                <p id="copyright">{{ now()->year }} &copy; @lang('footer.all_rights')</p>
             </div>
         </div>
     </footer>
