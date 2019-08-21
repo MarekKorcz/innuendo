@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'subscriptions' => 'Subscriptions',
+    'discounts' => 'Discounts',
     'employees' => 'Employees',
     'login' => 'Login',
     'logout' => 'Logout',

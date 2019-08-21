@@ -47,10 +47,16 @@
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" style="margin-right: 10px;">
+                    <a class="nav-link" href="{{ url('subscriptions') }}">@lang('navbar.subscriptions')</a>
+                </li>
+                <li class="nav-item" style="margin-right: 10px;">
+                    <a class="nav-link" href="{{ url('discounts') }}">@lang('navbar.discounts')</a>
+                </li>
+                <li class="nav-item" style="margin-right: 10px;">
                     <a class="nav-link" href="{{ url('employees') }}">@lang('navbar.employees')</a>
                 </li>
                 @guest
-                    <li class="nav-item" style="font-weight: 600;">
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">@lang('navbar.login')</a>
                     </li>
                     @if (Route::has('register'))

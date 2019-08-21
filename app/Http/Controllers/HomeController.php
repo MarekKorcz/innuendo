@@ -36,7 +36,9 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except([
-            'welcome'
+            'welcome',
+            'subscriptions',
+            'discounts'
         ]);
     }
     
@@ -151,6 +153,16 @@ class HomeController extends Controller
         return view($route)->with([
             'user' => $user
         ]);
+    }
+    
+    public function subscriptions()
+    {
+        return view('subscriptions');
+    }
+    
+    public function discounts()
+    {
+        return view('discounts');
     }
     
 //    public function test()
