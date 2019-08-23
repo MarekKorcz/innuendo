@@ -17,7 +17,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/appointment/index') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/user/properties') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('boss/property/list/') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('boss/properties/subscription/purchase/') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('boss/subscription/list/0/0') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('boss/graphic-requests') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('boss/codes/') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/boss/approve/messages') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>

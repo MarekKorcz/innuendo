@@ -22,7 +22,7 @@
                         </p>
                     @endif
                     <a href="{{ URL::to('user/property/' . $property->id) }}" class="btn btn-success">
-                        Zobacz
+                        @lang('common.show')
                     </a>
                 </div>
             </div>

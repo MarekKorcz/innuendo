@@ -51,15 +51,15 @@
         <div class="row">
             <div class="col-xs-2" style="text-align: right;">
                 <strong>Wystawca:</strong><br>
-                <strong>Adres: </strong><br>
-                <strong>Numer telefonu: </strong><br>
-                <strong>Adres email: </strong><br>
+                <strong>@lang('common.address') : </strong><br>
+                <strong>@lang('common.phone_number'): </strong><br>
+                <strong>@lang('common.email_address') : </strong><br>
                 <strong>Nip: </strong><br>
             </div>
             
             <div class="col-xs-3" style="text-align: left;">
                 {{config('app.name')}}<br>
-                !!!!Adres firmy!!!!<br>
+                :todo ??         !!!!Adres firmy!!!!<br>
                 602-342-396<br>
                 {{$adminInvoiceData->email}}<br>
                 {{$adminInvoiceData->nip}}<br>
@@ -67,11 +67,11 @@
             
             <div class="col-xs-2" style="text-align: right;">
                 <strong>Odbiorca:</strong><br>
-                <strong>Adres: </strong><br>
+                <strong>@lang('common.address') : </strong><br>
                 @if ($bossInvoiceData->phone_number)
-                    <strong>Numer telefonu: </strong><br>
+                    <strong>@lang('common.phone_number'): </strong><br>
                 @endif
-                <strong>Adres email: </strong><br>
+                <strong>@lang('common.email_address') : </strong><br>
                 <strong>Nip: </strong><br>
             </div>
 

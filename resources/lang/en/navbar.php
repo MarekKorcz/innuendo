@@ -8,4 +8,5 @@ return [
     'logout' => 'Logout',
     'register' => 'Register',
     'my_account' => 'My account',
+    'property_edit' => 'Property edit'
 ];

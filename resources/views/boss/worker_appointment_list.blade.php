@@ -60,7 +60,7 @@
                 <tr>                
                     <td>Data</td>
                     <td>Godzina</td>
-                    <td>Imię i Nazwisko</td>
+                    <td>@lang('common.name_and_surname')</td>
                     <td>Zabieg</td>
                     <td>Wykonawca</td>
                     <td>Status</td>

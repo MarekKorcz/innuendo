@@ -49,7 +49,7 @@
             {{ Form::hidden('_method', 'PUT') }}
             
             <div class="text-center">
-                {{ Form::submit('Aktualizuj', array('class' => 'btn btn-primary')) }}
+                <input type="submit" value="@lang('common.update')" class="btn btn-primary">
             </div>
 
         {{ Form::close() }}

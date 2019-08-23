@@ -11,7 +11,7 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h3>Opis</h3>
+                <h3>@lang('common.description')</h3>
                 <p>Nazwa: <strong>{{$purchase->subscription->name}}</strong></p>
                 <p>{{$purchase->subscription->description}}</p>
                 
@@ -38,7 +38,7 @@
                         <tr>                
                             <td>Data</td>
                             <td>Godzina</td>
-                            <td>Adres</td>
+                            <td>@lang('common.address')</td>
                             <td>Nazwa</td>
                             <td>Czas</td>
                             <td>Wykonawca</td>
@@ -64,7 +64,7 @@
                                 </td>
                                 <td>
                                     <a class="btn btn-primary" href="{{ URL::to('/appointment/show/' . $appointment->id) }}">
-                                        Pokaż
+                                        @lang('common.show')
                                     </a>
                                 </td>
                             </tr>

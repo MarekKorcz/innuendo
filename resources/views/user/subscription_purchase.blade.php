@@ -13,9 +13,9 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-12 col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h3>Opis</h3>
+                <h3>@lang('common.description')</h3>
                 <p>Nazwa: <strong>{{$subscription->name}}</strong></p>
-                <p>Opis: <strong>{{ $subscription->description }}</strong></p>
+                <p>@lang('common.description') : <strong>{{ $subscription->description }}</strong></p>
                 <p>Cena:  
                     <strike>{{$subscription->old_price}}</strike>
                     <strong>{{$subscription->new_price}}</strong>

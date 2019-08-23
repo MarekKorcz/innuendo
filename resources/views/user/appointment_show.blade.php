@@ -33,7 +33,7 @@
         </div>
         <p>Wizyta dnia: <strong>{{$day}} {{$month}} {{$year}}</strong></p>
         <p>Godzina wizyty: <strong>{{$appointment->start_time}}</strong> - <strong>{{$appointment->end_time}}</strong></p>
-        <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}, {{$property->city}}</strong></p>
+        <p>@lang('common.address'): <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}, {{$property->city}}</strong></p>
         <p>Całkowity czas wizyty: <strong>{{$appointment->minutes}} minut</strong></p>
         <p>Rodzaj wizyty: <strong>{{$appointment->item->name}}</strong></p>
         <p>Opis wizyty: <strong>{{$appointment->item->description}}</strong></p>

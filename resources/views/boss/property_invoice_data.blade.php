@@ -15,17 +15,17 @@
                     {{ Form::open(['id' => 'property-invoice-data', 'action' => 'BossController@invoiceDataStore', 'method' => 'POST']) }}
     
                         <div class="form-group">
-                            {{ Form::label('company_name', 'Nazwa firmy') }}
+                            <label for="company_name">@lang('common.company_name')</label>
                             {{ Form::text('company_name', Input::old('company_name'), array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('email', 'Email') }}
-                            {{ Form::email('email', Input::old('email'), array('class' => 'form-control')) }}
+                            <label for="email">@lang('common.email_address')</label>
+                            {{ Form::email('email', Input::old(@lang('common.email_address')), array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('phone_number', 'Numer telefonu') }}
+                            <label for="phone_number">@lang('common.phone_number')</label>
                             {{ Form::text('phone_number', Input::old('phone_number'), array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
@@ -47,7 +47,7 @@
                         
                         <input type="hidden" id="substart_id" name="substart_id" value="{{$substart->id}}">
 
-                        {{ Form::submit('Dodaj', array('class' => 'btn btn-primary')) }}
+                        <input type="submit" value="@lang('common.add')" class="btn btn-primary">
 
                     {{ Form::close() }}
                 </div>

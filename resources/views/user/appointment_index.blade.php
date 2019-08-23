@@ -17,7 +17,7 @@
             <tr>                
                 <td>Data</td>
                 <td>Godzina</td>
-                <td>Adres</td>
+                <td>@lang('common.address')</td>
                 <td>Nazwa</td>
                 <td>Czas</td>
                 <td>Wykonawca</td>
@@ -43,7 +43,7 @@
                     </td>
                     <td>
                         <a class="btn btn-primary" href="{{ URL::to('/appointment/show/' . $appointment->id) }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </td>
                 </tr>

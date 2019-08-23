@@ -25,11 +25,11 @@
                         </p>
                         @if ($subscription->isPurchased)
                             <a href="{{ URL::to('boss/subscription/list/' . $property->id) . '/' . $subscription->id }}" class="btn btn-success">
-                                Zobacz
+                                @lang('common.show')
                             </a>
                         @else
                             <a href="{{ URL::to('boss/subscription/purchase/' . $property->id) . '/' . $subscription->id }}" class="btn btn-success">
-                                Zamów
+                                @lang('common.order')
                             </a>
                         @endif
                     </div>

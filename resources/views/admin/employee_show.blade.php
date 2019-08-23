@@ -14,11 +14,11 @@
                 {{ Form::open(['action' => 'AdminController@employeeUpdate', 'method' => 'POST', 'enctype' => 'multipart/form-data']) }}
     
                     <div class="form-group">
-                        {{ Form::label('name', 'Name') }}
+                        <label for="name">@lang('common.name')</label>
                         {{ Form::text('name', $employee->name, array('class' => 'form-control')) }}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('surname', 'Surname') }}
+                        <label for="surname">@lang('common.surname')</label>
                         {{ Form::text('surname', $employee->surname, array('class' => 'form-control')) }}
                     </div>
                     <div class="form-group">
@@ -26,11 +26,11 @@
                         {{ Form::text('slug', $employee->slug, array('class' => 'form-control')) }}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('email', 'Email') }}
+                        <label for="email">@lang('common.email_address')</label>
                         {{ Form::text('email', $employee->email, array('class' => 'form-control')) }}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('phone_number', 'Phone number') }}
+                        <label for="phone_number">@lang('common.phone_number')</label>
                         {{ Form::number('phone_number', $employee->phone_number, array('class' => 'form-control')) }}
                     </div>
                     <div class="form-group">
@@ -64,7 +64,7 @@
 
     @if ($calendars && count($calendars) == count($properties))
     
-        <h2 class="text-center padding-top">Grafik w:</h2>
+        <h2 class="text-center padding-top">@lang('common.schedule_in') :</h2>
     
         @for ($i = 1; $i <= count($calendars); $i++)
             @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
@@ -81,7 +81,7 @@
                                 </p>
                                 <div class="text-center">
                                     <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
-                                        Zobacz
+                                        @lang('common.show')
                                     </a>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                                 </p>
                                 <div class="text-center">
                                     <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
-                                        Zobacz
+                                        @lang('common.show')
                                     </a>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                             </p>
                             <div class="text-center">
                                 <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
-                                    Zobacz
+                                    @lang('common.show')
                                 </a>
                             </div>
                         </div>

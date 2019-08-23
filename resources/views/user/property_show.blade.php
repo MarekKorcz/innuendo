@@ -11,13 +11,13 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h3>Opis</h3>
+                <h3>@lang('common.description')</h3>
                 <p>Nazwa: <strong>{{$property->name}}</strong></p>
-                <p>Data powstania: <strong>{{ $propertyCreatedAt }}</strong></p>
+                <p>@lang('common.creation_date') : <strong>{{ $propertyCreatedAt }}</strong></p>
                 @if ($property->description)
-                    <span>Opis: {!! $property->description !!}</span>
+                    <span>@lang('common.description') : {!! $property->description !!}</span>
                 @endif
-                <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</strong></p>
+                <p>@lang('common.address') : <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</strong></p>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h2>todo: Place to show something??</h2>

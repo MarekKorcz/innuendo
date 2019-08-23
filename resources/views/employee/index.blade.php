@@ -29,7 +29,7 @@
                             </p>
                             <div class="text-center">
                                 <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
-                                    Zobacz
+                                    @lang('common.show')
                                 </a>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                             </p>
                             <div class="text-center">
                                 <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
-                                    Zobacz
+                                    @lang('common.show')
                                 </a>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         </p>
                         <div class="text-center">
                             <a href="{{ URL::to('/employee/' . $employees[$i]->slug) }}" class="btn btn-success">
-                                Zobacz
+                                @lang('common.show')
                             </a>
                         </div>
                     </div>

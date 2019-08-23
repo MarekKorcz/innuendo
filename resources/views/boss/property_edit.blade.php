@@ -5,7 +5,9 @@
 
 <div class="container">
     <div class="jumbotron" style="margin: 15px;">
-        <h1>Edytuj lokalizacje</h1>
+        <h1>
+            @lang('navbar.property_edit')
+        </h1>
 
         {{ Form::open(['id' => 'property-edit', 'action' => ['BossController@propertyUpdate'], 'method' => 'POST']) }}
 
@@ -15,29 +17,30 @@
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('street', 'Ulica') }}
+                <label for="street">@lang('common.street')</label>
                 {{ Form::text('street', $property->street, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('street_number', 'Numer ulicy') }}
+                <label for="street_number">@lang('common.street_number')</label>
                 {{ Form::text('street_number', $property->street_number, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('house_number', 'Numer domu') }}
+                <label for="house_number">@lang('common.house_number')</label>
                 {{ Form::text('house_number', $property->house_number, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('city', 'Miasto') }}
+                <label for="city">@lang('common.city')</label>
                 {{ Form::text('city', $property->city, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
         
             {{ Form::hidden('property_id', $property->id) }}
             {{ Form::hidden('_method', 'PUT') }}
-            {{ Form::submit('Aktualizuj', array('class' => 'btn btn-primary')) }}
+            
+            <input type="submit" value="@lang('common.update')" class="btn btn-primary">
 
         {{ Form::close() }}
     </div>

@@ -8,7 +8,7 @@ Jesteśmy zachwyceni wizją naszej przyszłej owocnej współpracy oraz nie moż
 By to przybliżyć, <strong>zaloguj się na swoje konto</strong> i <strong>skontaktuj z nami</strong>!
 
 @component('mail::button', ['url' => $loginUrl])
-Zaloguj się
+@lang('common.login')
 @endcomponent
 
 Dziękujemy, <br>

@@ -216,7 +216,7 @@
                                     Wysłałeś już zapytanie o otwarcie grafiku w tym dniu
                                 </p>
                                 <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id) }}" class="btn btn-success" style="color: white;">
-                                    Zobacz
+                                    @lang('common.show')
                                 </a>
                             @else
                                 <p style="padding-top: 40px; font-size: 24px;">

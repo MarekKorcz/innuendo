@@ -58,7 +58,7 @@
         
         {{ Form::hidden('_method', 'PUT') }}
         
-        {{ Form::submit('Zaktualizuj', array('class' => 'btn btn-primary')) }}
+        <input type="submit" value="@lang('common.update')" class="btn btn-primary">
 
     {{ Form::close() }}
 

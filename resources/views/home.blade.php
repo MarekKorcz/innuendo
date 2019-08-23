@@ -16,7 +16,7 @@
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success btn-lg" href="{{ URL::to('/appointment/index') }}">
-                        Pokaż
+                        @lang('common.show')
                     </a>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/user/properties') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('user/subscription/purchased/property/list/') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('user/properties/subscription/') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>

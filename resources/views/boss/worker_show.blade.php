@@ -13,9 +13,9 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h3 style="padding: 9px;">Opis</h3>
-                <p>Imię: <strong>{{$worker->name}} {{ $worker->surname }}</strong></p>
-                <p>Adres e-mail: <strong>{{$worker->email}}</strong></p>
+                <h3 style="padding: 9px;">@lang('common.description')</h3>
+                <p>@lang('common.name') : <strong>{{$worker->name}} {{ $worker->surname }}</strong></p>
+                <p>@lang('common.email_address') : <strong>{{$worker->email}}</strong></p>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <div class="text-center">

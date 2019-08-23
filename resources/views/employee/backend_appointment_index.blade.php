@@ -39,7 +39,7 @@
                     </td>
                     <td>
                         <a class="btn btn-primary" href="{{ URL::to('/employee/backend-appointment/show/' . $appointment->id) }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </td>
                 </tr>

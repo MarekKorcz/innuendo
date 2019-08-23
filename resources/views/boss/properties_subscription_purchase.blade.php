@@ -26,11 +26,11 @@
                     @endif
                     @if ($property->isOwn)
                         <a href="{{ URL::to('boss/property/subscriptions/purchase/' . $property->id) }}" class="btn btn-success">
-                            Zobacz
+                            @lang('common.show')
                         </a>
                     @else
                         <a href="{{ URL::to('user/property/subscription/list/' . $property->id) }}" class="btn btn-success">
-                            Zobacz
+                            @lang('common.show')
                         </a>
                     @endif
                 </div>

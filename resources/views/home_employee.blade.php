@@ -16,7 +16,7 @@
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success btn-lg" href="{{ URL::to('/employee/backend-graphic') }}">
-                        Pokaż
+                        @lang('common.show')
                     </a>
                 </div>
             </div>

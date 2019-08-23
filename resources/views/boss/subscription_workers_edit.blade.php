@@ -7,14 +7,16 @@
 <div class="container">
     
     <div class="text-center">
-        <h2>Osoby przypisane do subskrypcji - {{$subscription->name}}</h2>
+        <h2>
+            @lang('common.people_assigned_to_subscription') {{$subscription->name}}
+        </h2>
     </div>
     <div class="wrapper cont">
         <div class="text-center">
             <div class="row">
                 <div class="offset-sm-3 offset-md-3 offset-lg-3"></div>
                     <div class="col-6">
-                        <label for="timePeriod" style="font-size: 24px;">Wybierz okres rozliczeniowy:</label>                        
+                        <label for="timePeriod" style="font-size: 24px;">@lang('common.select_a_billing_period') :</label>                        
                         <ul id="timePeriod" class="list-group">
                             @foreach ($substartIntervals as $substartInterval)
                                 @if ($substartInterval->workers)
@@ -40,11 +42,14 @@
     
     <div class="col-sm-12 col-md-12 col-lg-12 col-12">
         <h2 class="text-center">
-            Pracownicy przypisani
+            @lang('common.assigned_employees')            
             @if (count($substartIntervals) > 0)
                 @foreach ($substartIntervals as $substartInterval)
                     @if ($substartInterval->workers)
-                        do okresu od {{$substartInterval->start_date->format('Y-m-d')}} do {{$substartInterval->end_date->format('Y-m-d')}}
+                        @lang('common.to_period_from')
+                        {{$substartInterval->start_date->format('Y-m-d')}} 
+                        @lang('common.to')
+                        {{$substartInterval->end_date->format('Y-m-d')}}
                     @endif
                 @endforeach
             @endif
@@ -55,10 +60,10 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <td class="text-center">Włącz</td>
-                    <td class="text-center">Wyłącz</td>
-                    <td>Imię i Nazwisko</td>
-                    <td>Email</td>
+                    <td class="text-center">@lang('common.turn_on')</td>
+                    <td class="text-center">@lang('common.turn_off')</td>
+                    <td>@lang('common.name_and_surname')</td>
+                    <td>@lang('common.email_address')</td>
                 </tr>
             </thead>
             <tbody id="workers">
@@ -74,7 +79,7 @@
                                                 @if ($worker->withoutSubscription == false)
                                                     <td>
                                                         <div class="text-center">
-                                                            Posiadał subskrypcje
+                                                            @lang('common.had_subscription')
                                                         </div>
                                                     </td>
                                                     <td></td>
@@ -82,7 +87,7 @@
                                                     <td></td>
                                                     <td>
                                                         <div class="text-center">
-                                                            Nie posiadał subskrypcji
+                                                            @lang('common.did_not_have_subscription')
                                                         </div>
                                                     </td>
                                                 @endif
@@ -90,7 +95,7 @@
                                                 @if ($worker->withoutSubscription == false)
                                                     <td>
                                                         <div class="text-center">
-                                                            Posiada subskrypcje
+                                                            @lang('common.have_subscription')
                                                         </div>
                                                     </td>
                                                     <td></td>
@@ -102,7 +107,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="text-center">
-                                                            Nie posiada subskrypcji
+                                                            @lang('common.do_not_have_subscription')
                                                         </div>
                                                     </td>
                                                 @endif
@@ -110,7 +115,7 @@
                                                 @if ($worker->withoutSubscription == false)
                                                     <td>
                                                         <div class="text-center">
-                                                            Posiada subskrypcje
+                                                            @lang('common.have_subscription')
                                                         </div>
                                                     </td>
                                                     <td>
@@ -126,7 +131,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="text-center">
-                                                            Nie posiada subskrypcji
+                                                            @lang('common.do_not_have_subscription')
                                                         </div>
                                                     </td>
                                                 @endif
@@ -146,7 +151,7 @@
                                                 @if ($worker->withoutSubscription == false)
                                                     <td>
                                                         <div class="text-center">
-                                                            Posiada subskrypcje
+                                                            @lang('common.have_subscription')
                                                         </div>
                                                     </td>
                                                     <td>
@@ -162,7 +167,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="text-center">
-                                                            Nie posiada subskrypcji
+                                                            @lang('common.do_not_have_subscription')
                                                         </div>
                                                     </td>
                                                 @endif                                 
@@ -185,7 +190,7 @@
                                 {{ Form::hidden('interval_id', $substartInterval->id) }}
                                 
                                 <div class="text-center" style="margin: 1rem;">
-                                    {{ Form::submit('Aktualizuj', array('class' => 'btn btn-primary')) }}
+                                    <input type="submit" value="@lang('common.update')" class="btn btn-primary">                                    
                                     <div id="submit-warning" class="warning"></div>
                                 </div>
                             @endif

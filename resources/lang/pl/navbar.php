@@ -8,4 +8,5 @@ return [
     'logout' => 'Wyloguj',
     'register' => 'Zarejestruj',
     'my_account' => 'Moje konto',
+    'property_edit' => 'Edytuj lokalizacje'
 ];

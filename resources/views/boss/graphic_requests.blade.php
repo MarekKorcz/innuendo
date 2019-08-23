@@ -23,7 +23,7 @@
                     <td>{{count($graphicRequest->employees)}}</td>
                     <td>
                         <a class="btn btn-success" href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id . '/0') }}">
-                            Pokaż
+                            @lang('common.show')
                         </a>
                     </td>
                 </tr>

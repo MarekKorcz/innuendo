@@ -10,22 +10,22 @@
         {{ Form::open(['id' => 'property-invoice-data', 'action' => ['BossController@invoiceDataUpdate'], 'method' => 'POST']) }}
                 
             <div class="form-group">
-                {{ Form::label('company_name', 'Nazwa firmy') }}
+                {{ Form::label('company_name', @lang('common.company_name')) }}
                 {{ Form::text('company_name', $invoiceData->company_name, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('email', 'Email') }}
+                {{ Form::label('email', @lang('common.email_address')) }}
                 {{ Form::email('email', $invoiceData->email, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('phone_number', 'Numer telefonu') }}
+                {{ Form::label('phone_number', @lang('common.phone_number')) }}
                 {{ Form::text('phone_number', $invoiceData->phone_number, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('nip', ' NIP') }}
+                {{ Form::label('nip', 'NIP') }}
                 {{ Form::text('nip', $invoiceData->nip, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
@@ -44,7 +44,7 @@
             {{ Form::hidden('substart_id', $substart->id) }}
             {{ Form::hidden('_method', 'PUT') }}
             
-            {{ Form::submit('Aktualizuj', array('class' => 'btn btn-primary')) }}
+            <input type="submit" value="@lang('common.update')" class="btn btn-primary">
 
         {{ Form::close() }}
     </div>

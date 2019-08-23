@@ -8,46 +8,46 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    <h3>Zarejestruj się</h3>
+                    <h3>@lang('common.register')</h3>
                 </div>
 
                 <div class="card-body">
                     {{ Form::open(['id' => 'temp-employee-register', 'action' => 'Auth\RegisterController@tempUserEmployeeRegistrationStore', 'method' => 'POST']) }}
     
                         <div class="form-group">
-                            {{ Form::label('name', 'Imię') }}
+                            <label for="name">@lang('common.name')</label>
                             {{ Form::text('name', $tempUser->name, array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('surname', 'Nazwisko') }}
+                            <label for="surname">@lang('common.surname')</label>
                             {{ Form::text('surname', $tempUser->surname, array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('email', 'Email') }}
+                            <label for="email">@lang('common.email_address')</label>
                             {{ Form::text('email', $tempUser->email, array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('phone_number', 'Numer telefonu') }}
+                            <label for="phone_number">@lang('common.phone_number')</label>
                             {{ Form::number('phone_number', $tempUser->phone_number, array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('password', 'Hasło') }}
+                            <label for="password">@lang('common.password')</label>
                             {{ Form::password('password', array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('password_confirmation', 'Hasło (powtórz)') }}
+                            <label for="password_confirmation">@lang('common.password_confirm')</label>
                             {{ Form::password('password_confirmation', array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         
                         <input type="hidden" id="register_code" name="register_code" value="{{$registerCode}}">
 
-                        {{ Form::submit('Stwórz', array('class' => 'btn btn-primary')) }}
+                        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
 
                     {{ Form::close() }}
                 </div>

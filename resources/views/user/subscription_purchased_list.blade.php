@@ -20,7 +20,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success" href="{{ URL::to('user/subscription/purchased/show/' . $subscription->purchase_id) }}">
-                            Zobacz
+                            @lang('common.show')
                         </a>                                    
                     </div>
                 </div>

@@ -23,11 +23,11 @@
                         @if ($property->description)
                             {!!$property->description!!}
                         @endif
-                        <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}} {{$property->city}}</strong></p>
+                        <p>@lang('common.address') : <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}} {{$property->city}}</strong></p>
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success" href="{{ URL::to('user/subscription/list/purchased/' . $property->id) }}">
-                            Zobacz
+                            @lang('common.show')
                         </a>                                    
                     </div>
                 </div>

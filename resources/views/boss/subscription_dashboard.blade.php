@@ -21,7 +21,7 @@
                         @if ($propertyWithSubscriptions['property']->description)
                             {!!$propertyWithSubscriptions['property']->description!!}
                         @endif
-                        <p>Adres: 
+                        <p>@lang('common.address') : 
                             <strong>
                                 {{$propertyWithSubscriptions['property']->street}} 
                                 {{$propertyWithSubscriptions['property']->street_number}} / 
@@ -135,10 +135,10 @@
                                             <table class="table table-striped table-bordered">
                                                 <thead>
                                                     <tr>                
-                                                        <td>Imie</td>
-                                                        <td>Nazwisko</td>
-                                                        <td>Email</td>
-                                                        <td>Telefon</td>
+                                                        <td>@lang('common.name')</td>
+                                                        <td>@lang('common.surname')</td>
+                                                        <td>@lang('common.email_address')</td>
+                                                        <td>@lang('common.phone_number')</td>
                                                         <td>Wizyty</td>
                                                     </tr>
                                                 </thead>
@@ -151,7 +151,7 @@
                                                         <td>{{$worker['phone_number']}}</td>
                                                         <td>
                                                             <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/' . $worker['id']) }}">
-                                                                Pokaż
+                                                                @lang('common.show')
                                                             </a>
                                                         </td>
                                                     </tr>                 

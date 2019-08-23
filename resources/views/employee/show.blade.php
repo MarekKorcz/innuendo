@@ -13,10 +13,10 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h3 style="padding: 9px;">Opis</h3>
-                <p>Imię: <strong>{{$employee->name}} {{$employee->surname}}</strong></p>
-                <p>Adres e-mail: <strong>{{$employee->email}}</strong></p>
-                <p>Pracuje od: <strong>{{ $employeeCreatedAt }}</strong></p>
+                <h3 style="padding: 9px;">@lang('common.description')</h3>
+                <p>@lang('common.name') : <strong>{{$employee->name}} {{$employee->surname}}</strong></p>
+                <p>@lang('common.email_address') : <strong>{{$employee->email}}</strong></p>
+                <p>@lang('common.working_since') : <strong>{{ $employeeCreatedAt }}</strong></p>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <div class="text-center">
@@ -29,7 +29,7 @@
                             >
                         </div>
                     @else
-                        todo: doać defaultowe zdjęcie?
+                        todo: dodać defaultowe zdjęcie?
                     @endif
                 </div>
             </div>
@@ -38,7 +38,7 @@
 
     @if ($calendars && count($calendars) == count($properties))
     
-        <h2 class="text-center padding-top">Grafik w:</h2>
+        <h2 class="text-center padding-top">@lang('common.schedule_in') :</h2>
     
         @for ($i = 1; $i <= count($calendars); $i++)
             @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
@@ -55,7 +55,7 @@
                                 </p>
                                 <div class="text-center">
                                     <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
-                                        Zobacz
+                                        @lang('common.show')
                                     </a>
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
                                 </p>
                                 <div class="text-center">
                                     <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
-                                        Zobacz
+                                        @lang('common.show')
                                     </a>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                             </p>
                             <div class="text-center">
                                 <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
-                                    Zobacz
+                                    @lang('common.show')
                                 </a>
                             </div>
                         </div>

@@ -20,7 +20,7 @@
                     @if ($property->description)
                         {!!$property->description!!}
                     @endif
-                    <p>Adres: 
+                    <p>@lang('common.address') : 
                         <strong>
                             {{$property->street}} 
                             {{$property->street_number}} / 
@@ -29,7 +29,7 @@
                         </strong>
                     </p>
                     <a href="{{ URL::to('boss/property/' . $property->id) }}" class="btn btn-success">
-                        Zobacz
+                        @lang('common.show')
                     </a>
                 </div>
             </div>

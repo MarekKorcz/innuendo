@@ -20,7 +20,7 @@
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success" href="{{ URL::to('employee/backend-calendar/' . $calendar->id . '/0/0/0') }}">
-                            Zobacz
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>

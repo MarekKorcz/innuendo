@@ -7,7 +7,7 @@
         <ul class="nav navbar-nav">
             <li>
                 <a class="btn btn-success" href="{{ URL::to('boss/property/' . $property->id . '/edit') }}">
-                    Edytuj lokalizacje
+                    @lang('navbar.property_edit')
                 </a>
             </li>
         </ul>
@@ -18,15 +18,15 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h3>Opis</h3>
-                <p>Nazwa: <strong>{{$property->name}}</strong></p>
-                <p>Data powstania: <strong>{{ $propertyCreatedAt }}</strong></p>
+                <h3>@lang('common.description')</h3>
+                <p>@lang('common.company_name') : <strong>{{$property->name}}</strong></p>
+                <p>@lang('common.creation_date') : <strong>{{ $propertyCreatedAt }}</strong></p>
                 @if ($property->description)
-                    <span>Opis: {!!$property->description!!}</span>
+                    <span>@lang('common.description') : {!!$property->description!!}</span>
                 @endif
-                <p>Adres: <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</strong></p>
+                <p>@lang('common.address') : <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</strong></p>
                 @if ($property->city)
-                    <p>Miasto: <strong>{{$property->city}}</strong></p>
+                    <p>@lang('common.city') : <strong>{{$property->city}}</strong></p>
                 @endif
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
@@ -35,15 +35,17 @@
         </div>
     </div>
     
-    <h2 class="text-center" style="padding: 2rem;">Twoi pracownicy:</h2>
+    <h2 class="text-center" style="padding: 2rem;">
+        @lang('common.your_employees') :
+    </h2>
     
     @if ($workers !== null)
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>                
-                    <td>Imię</td>
-                    <td>Email</td>
-                    <td>Telefon</td>
+                    <td>@lang('common.name')</td>
+                    <td>@lang('common.email_address')</td>
+                    <td>@lang('common.phone_number')</td>
                 </tr>
             </thead>
             <tbody>
@@ -57,7 +59,9 @@
             </tbody>
         </table>
     @else
-        <h3 class="text-center">Obecnie żaden z Twoich pracowników nie jest przypisany do tej lokalizacji</h3>      
+        <h3 class="text-center">
+            @lang('common.no_employee_assigned_to_property')
+        </h3>      
     @endif
     
     <br>

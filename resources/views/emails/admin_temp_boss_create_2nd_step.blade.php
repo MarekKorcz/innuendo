@@ -7,7 +7,7 @@ Właśnie udało Ci się zarejestrować do {{ config('app.name') }}!<br><br>
 Jesteśmy zachwyceni wizją naszej przyszłej owocnej współpracy oraz nie możemy się doczekać naszej pierwszej wizyty w Twoim biurze!
 
 @component('mail::button', ['url' => $loginUrl])
-Zaloguj się
+@lang('common.login')
 @endcomponent
 
 Dziękujemy, <br>
