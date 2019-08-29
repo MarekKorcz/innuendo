@@ -82,12 +82,20 @@
             @endif
         @endforeach
     </div>
-            
-    <div id="substarts-header" class="text-center">
-        <h2>
-            @lang('common.subscription_duration_period') :
-        </h2>
-    </div>
+          
+    @foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
+        @if ($propertyWithSubscriptions['property']->isChecked == true)
+            @foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
+                @if ($subscription->isChecked && count($subscription->purchases) > 0)
+                    <div id="substarts-header" class="text-center">
+                        <h2>
+                            @lang('common.subscription_duration_period') :
+                        </h2>
+                    </div>
+                @endif
+            @endforeach
+        @endif
+    @endforeach
     <div id="substarts" class="wrapper cont">
         @foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
             @if ($propertyWithSubscriptions['property']->isChecked == true)
@@ -139,13 +147,15 @@
                                 @if ($purchase->substart->isCurrent)
                                     @if (count($purchase->substart->workers) > 0)
                                         <div class="text-center">
-                                            <h2>@lang('common.people_assigned_to_subscription') :</h2>
-                                            <a class="btn btn-primary" href="{{ URL::to('boss/subscription/workers/edit/' . $substart->id . '/0') }}">
-                                                @lang('common.edit')
-                                            </a>
-                                            <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/0') }}">
-                                                @lang('common.all_massages')
-                                            </a>
+                                            <div id="button-space" style="padding: 1rem;">
+                                                <h2>@lang('common.people_assigned_to_subscription') :</h2>
+                                                <a class="btn btn-primary" href="{{ URL::to('boss/subscription/workers/edit/' . $substart->id . '/0') }}">
+                                                    @lang('common.edit')
+                                                </a>
+                                                <a class="btn btn-primary" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/0') }}">
+                                                    @lang('common.all_massages')
+                                                </a>
+                                            </div>
                                             <table class="table table-striped table-bordered">
                                                 <thead>
                                                     <tr>                

@@ -12,7 +12,7 @@ class Substart extends Model
      * @var array
      */
     protected $fillable = [
-        'start_date', 'end_date', 'user_id', 'boss_id', 'property_id', 'subscription_id', 'purchase_id'
+        'start_date', 'end_date', 'user_id', 'boss_id', 'isActive', 'property_id', 'subscription_id', 'purchase_id'
     ];
     
     /**

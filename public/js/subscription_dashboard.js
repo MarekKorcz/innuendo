@@ -95,15 +95,15 @@ window.addEventListener('DOMContentLoaded', () => {
                         subscriptionNode = `
                             <div class="box text-center" data-subscription_id="` + subscription.id + `">
                                 <div class="data">
-                                    <p>Nazwa: <strong>` + subscription.name + `</strong></p>
+                                    <p>` + subscription.name_description + ` : <strong>` + subscription.name + `</strong></p>
                                     ` + subscription.description + `
-                                    <p>Cena regularna: <strong>` + subscription.old_price + `</strong></p>
-                                    <p>Cena z subskrypcją: <strong>` + subscription.new_price + `</strong></p>
-                                    <p>Ilość zabiegów w miesiącu: <strong>` + subscription.quantity + `</strong></p>
-                                    <p>Czas subskrypcji (w miesiącach): <strong>` + subscription.duration + `</strong></p>
+                                    <p>` + subscription.old_price_description + ` : <strong>` + subscription.old_price + `</strong></p>
+                                    <p>` + subscription.new_price_description + ` : <strong>` + subscription.new_price + `</strong></p>
+                                    <p>` + subscription.quantity_description + ` : <strong>` + subscription.quantity + `</strong></p>
+                                    <p>` + subscription.duration_description + ` : <strong>` + subscription.duration + `</strong></p>
                                 </div>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/purchase/` + subscription.property_id + `/` + subscription.id + `">
-                                    Kup subskrypcje
+                                <a class="btn btn-primary" href="` + subscription.button + `">
+                                    ` + subscription.button_description + `
                                 </a>
                             </div>
                         `;
@@ -113,12 +113,12 @@ window.addEventListener('DOMContentLoaded', () => {
                         subscriptionNode = `
                             <div class="box text-center" data-subscription_id="` + subscription.id + `">
                                 <div class="data">
-                                    <p>Nazwa: <strong>` + subscription.name + `</strong></p>
+                                    <p>` + subscription.name_description + ` : <strong>` + subscription.name + `</strong></p>
                                     ` + subscription.description + `
-                                    <p>Cena regularna: <strong>` + subscription.old_price + `</strong></p>
-                                    <p>Cena z subskrypcją: <strong>` + subscription.new_price + `</strong></p>
-                                    <p>Ilość zabiegów w miesiącu: <strong>` + subscription.quantity + `</strong></p>
-                                    <p>Czas subskrypcji (w miesiącach): <strong>` + subscription.duration + `</strong></p>
+                                    <p>` + subscription.old_price_description + ` : <strong>` + subscription.old_price + `</strong></p>
+                                    <p>` + subscription.new_price_description + ` : <strong>` + subscription.new_price + `</strong></p>
+                                    <p>` + subscription.quantity_description + ` : <strong>` + subscription.quantity + `</strong></p>
+                                    <p>` + subscription.duration_description + ` : <strong>` + subscription.duration + `</strong></p>
                                 </div>
                             </div>
                         `;
@@ -131,7 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     
     function getSubscriptionSubstarts(propertyId, subscriptionId)
-    {
+    {        
         return fetch('http://localhost:8000/boss/get/subscription/substarts', {
             method: 'POST',
             headers: {
@@ -159,7 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
             if (data.type === "success")
             {
                 substartsHeader.append(`
-                    <h2>Okres trwania subskrypcji:</h2>
+                    <h2>` + data.header +` :</h2>
                 `);
                 
                 // >> adding substarts
@@ -167,23 +167,21 @@ window.addEventListener('DOMContentLoaded', () => {
                 {
                     let substartNode = ``;
                     
-                    console.log(substart);
-                    
                     if (substart.id == data.newestSubstart[0].id)
                     {
-                        if (substart.isActiveMessage !== "Nieaktywowana")
+                        if (substart.isActive == 1)
                         {
                             substartNode = `
-                                <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id +`">
+                                <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id + `">
                                     <div class="data">
                                         <p>
-                                            Od: <strong>` + substart.start_date + `</strong> 
-                                            do: <strong>` + substart.end_date + `</strong>
+                                            ` + substart.start_date_description + ` : <strong>` + substart.start_date + `</strong> 
+                                            ` + substart.end_date_description + ` : <strong>` + substart.end_date + `</strong>
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
-                                    <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/invoices/` + substart.id + `">
-                                        Rozliczenia
+                                    <a class="btn btn-primary" href="` + substart.button + `">
+                                        ` + substart.button_description + `
                                     </a>
                                 </div>
                             `;
@@ -194,8 +192,8 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id +`">
                                     <div class="data">
                                         <p>
-                                            Od: <strong>` + substart.start_date + `</strong> 
-                                            do: <strong>` + substart.end_date + `</strong>
+                                            ` + substart.start_date_description + ` : <strong>` + substart.start_date + `</strong> 
+                                            ` + substart.end_date_description + ` : <strong>` + substart.end_date + `</strong>
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
@@ -205,19 +203,19 @@ window.addEventListener('DOMContentLoaded', () => {
                         
                     } else {
                         
-                        if (substart.isActiveMessage !== "Nieaktywowana")
+                        if (substart.isActive == 1)
                         {
                             substartNode = `
                                 <div class="substart text-center" data-substart_id="` + substart.id +`">
                                     <div class="data">
                                         <p>
-                                            Od: <strong>` + substart.start_date + `</strong> 
-                                            do: <strong>` + substart.end_date + `</strong>
+                                            ` + substart.start_date_description + ` : <strong>` + substart.start_date + `</strong> 
+                                            ` + substart.end_date_description + ` : <strong>` + substart.end_date + `</strong>
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
-                                    <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/invoices/` + substart.id + `">
-                                        Rozliczenia
+                                    <a class="btn btn-primary" href="` + substart.button + `">
+                                        ` + substart.button_description + `
                                     </a>
                                 </div>
                             `;
@@ -228,8 +226,8 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <div class="substart text-center" data-substart_id="` + substart.id +`">
                                     <div class="data">
                                         <p>
-                                            Od: <strong>` + substart.start_date + `</strong> 
-                                            do: <strong>` + substart.end_date + `</strong>
+                                            ` + substart.start_date_description + ` : <strong>` + substart.start_date + `</strong> 
+                                            ` + substart.end_date_description + ` : <strong>` + substart.end_date + `</strong>
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
@@ -247,24 +245,24 @@ window.addEventListener('DOMContentLoaded', () => {
                 {
                     let workersTab = `
                         <div class="text-center">                        
-                            <p>
-                                <h2>Osoby przypisane do danej subskrypcji:</h2>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/workers/edit/` + data.lastSubstartId + `/0">
-                                    Edycja
+                            <div id="button-space" style="padding: 1rem;">
+                                <h2> ` + data.header_workers + ` :</h2>
+                                <a class="btn btn-primary" href="` + data.subscription_workers_edit_button + `">
+                                    ` + data.subscription_workers_edit_button_description + `
                                 </a>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.lastSubstartId + `/0">
-                                    Wszystkie wizyty
+                                <a class="btn btn-primary" href="` + data.worker_appointment_list_button + `">
+                                    ` + data.worker_appointment_list_button_description + `
                                 </a>
-                            </p>
+                            </div>
                         </div>
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>                
-                                    <td>Imie</td>
-                                    <td>Nazwisko</td>
-                                    <td>Email</td>
-                                    <td>Telefon</td>
-                                    <td>Wizyty</td>
+                                    <td>` + data.name_description + `</td>
+                                    <td>` + data.surname_description + `</td>
+                                    <td>` + data.email_description + `</td>
+                                    <td>` + data.phone_number_description + `</td>
+                                    <td>` + data.appointments_description + `</td>
                                 </tr>
                             </thead>
                             <tbody id="workersTable"></tbody>
@@ -284,8 +282,8 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <td>` + worker.email + `</td>
                                 <td>` + worker.phone_number + `</td>
                                 <td>
-                                    <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.lastSubstartId + `/` + worker.id + `">
-                                        Pokaż
+                                    <a class="btn btn-primary" href="` + worker.workers_appointment_show_button + `">
+                                        ` + data.show_button_description + `
                                     </a>
                                 </td>
                             </tr>
@@ -299,7 +297,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     let workersTab = `
                         <div class="text-center">                        
                             <p>
-                                <h2>Brak osób przypisanych do danej subskrypcji</h2>
+                                <h2>` + data.no_people_assigned_to_subscription + `</h2>
                             </p>
                         </div>
                     `;

@@ -47,7 +47,7 @@ return [
     
     
     
-    'subscription_massages ' => 'Masaże dotyczące subskrypcji - ',
+    'subscription_massages' => 'Masaże dotyczące subskrypcji - ',
     'write_your_name_and_lastname' => 'Wpisz imię lub nazwisko',
     'subscription_first_time_activation_info' => 'Subskrypcja nie została jeszcze aktywowana. Aktywacja nastąpi wraz ze zrealizowaniem pierwszego zabiegu',
     'all_massages' => 'Wszystkie masaże',
@@ -336,4 +336,6 @@ return [
     'verify_your_email_address_description_button' => 'kliknij tutaj, aby poprosić o kolejny',
 //    'terms_accept' => 'Akceptuje powyższy regulamin',
     'subscriptions_list' => 'Lista subskrypcji',
+    'duration_is_over' => 'Czas trwania dobiegł końca',
+    'no_people_assigned_to_subscription' => 'Brak osób przypisanych do danej subskrypcji',
 ];

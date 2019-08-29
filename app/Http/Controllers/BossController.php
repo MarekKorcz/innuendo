@@ -860,7 +860,7 @@ class BossController extends Controller
                          * 
                          * 
                          * 
-                         * Email sending
+                         * todo: Email sending
                          * 
                          * 
                          * 
@@ -2485,13 +2485,22 @@ class BossController extends Controller
                         $propertySubscriptions[] = [
                             'id' => $propertySubscription->id,
                             'name' => $propertySubscription->name,
-                            'description' => $propertySubscription->name,
+                            'name_description' => \Lang::get('common.label'),
+                            'description' => $propertySubscription->description,
                             'old_price' => $propertySubscription->old_price,
+                            'old_price_description' => \Lang::get('common.regular_price'),
                             'new_price' => $propertySubscription->new_price,
+                            'new_price_description' => \Lang::get('common.price_with_subscription'),
                             'quantity' => $propertySubscription->quantity,
+                            'quantity_description' => \Lang::get('common.number_of_massages_to_use_per_month'),
                             'duration' => $propertySubscription->duration,
-                            'property_id' => $property->id,
-                            'isPurchased' => false
+                            'duration_description' => \Lang::get('common.subscription_duration'),
+                            'button' => route('subscriptionPurchaseView', [
+                                'propertyId' => $property->id,
+                                'subscriptionId' => $propertySubscription->id
+                            ]),
+                            'button_description' => \Lang::get('common.purchase_subscription'),
+                            'isPurchased' => false,
                         ];
                     }
                     // <<
@@ -2616,7 +2625,7 @@ class BossController extends Controller
             $boss = User::where([
                 'id' => auth()->user()->id,
                 'isBoss' => 1
-            ])->with('chosenProperties')->first();;
+            ])->with('chosenProperties')->first();
             
             $workers = User::where('boss_id', $boss->id)->with('chosenProperties')->get();
             $workersCollection = new Collection();
@@ -2678,6 +2687,10 @@ class BossController extends Controller
                     'surname' => $workerCollection->surname,
                     'email' => $workerCollection->email,
                     'phone_number' => $workerCollection->phone_number,
+                    'workers_appointment_show_button' => route('workerAppointmentList', [
+                        'substartId' => $substart->id,
+                        'userId' => $workerCollection->id
+                    ]),
                 ];
             }
             
@@ -2804,10 +2817,29 @@ class BossController extends Controller
 
                     $data = [
                         'type'    => 'success',
+                        'header'    => \Lang::get('common.subscription_duration_period'),
                         'substarts' => $this->turnSubstartObjectsToArrays($substarts),
                         'newestSubstart' => $this->turnSubstartObjectsToArrays($newestSubstart),
                         'workers' => $workers,
-                        'lastSubstartId' => $substarts->last()->id
+                        'lastSubstartId' => $substarts->last()->id,
+                        'header_workers' => \Lang::get('common.people_assigned_to_subscription'),
+                        'subscription_workers_edit_button' => route('subscriptionWorkersEdit', [
+                            'substartId' => $substarts->last()->id,
+                            'intervalId' => 0
+                        ]),
+                        'subscription_workers_edit_button_description' => \Lang::get('common.edit'),
+                        'worker_appointment_list_button' => route('workerAppointmentList', [
+                            'substartId' => $substarts->last()->id,
+                            'userId' => 0
+                        ]),
+                        'worker_appointment_list_button_description' => \Lang::get('common.all_massages'),
+                        'show_button_description' => \Lang::get('common.show'),
+                        'no_people_assigned_to_subscription' => \Lang::get('common.no_people_assigned_to_subscription'),
+                        'name_description' => \Lang::get('common.name'),
+                        'surname_description' => \Lang::get('common.surname'),
+                        'email_description' => \Lang::get('common.email_address'),
+                        'phone_number_description' => \Lang::get('common.phone_number'),
+                        'appointments_description' => \Lang::get('common.appointments'),
                     ];
 
                     return new JsonResponse($data, 200, array(), true);
@@ -2832,25 +2864,24 @@ class BossController extends Controller
             
             if ($substarts->end_date < $today)
             {
-                $isActiveMessage = "Czas trwania dobiegł końca";
+                $isActiveMessage = \Lang::get('common.duration_is_over');
             
             } elseif ($substarts->start_date <= $today && $today <= $substarts->end_date) {
                 
-                if ($substarts->isActive == 1)
-                {
-                    $isActiveMessage = "Aktywowana";
-                
-                } elseif ($substarts->isActive == 0) {
-                    
-                    $isActiveMessage = "Nieaktywowana";
-                }
+                $isActiveMessage = $substarts->isActive == 1 ? \Lang::get('common.activated') : \Lang::get('common.not_activated');
             }
                                         
             $substartArray[] = [
-                'id' => $substarts->id,
                 'start_date' => $substarts->start_date->format('Y-m-d'),
+                'start_date_description' => \Lang::get('common.from'),
                 'end_date' => $substarts->end_date->format('Y-m-d'),
-                'isActiveMessage' => $isActiveMessage
+                'end_date_description' => \Lang::get('common.to'),
+                'button' => route('subscriptionInvoices', [
+                    'substartId' => $substarts->id
+                ]),
+                'button_description' => \Lang::get('common.invoices'),
+                'isActiveMessage' => $isActiveMessage,
+                'isActive' => $substarts->isActive,
             ];
             
         } else if (is_a($substarts, 'Illuminate\Database\Eloquent\Collection') && count($substarts) > 0) {
@@ -2858,28 +2889,27 @@ class BossController extends Controller
             foreach ($substarts as $substart)
             {
                 $isActiveMessage = "";
-            
+                
                 if ($substart->end_date < $today)
                 {
-                    $isActiveMessage = "Czas trwania dobiegł końca";
+                    $isActiveMessage = \Lang::get('common.duration_is_over');
 
                 } elseif ($substart->start_date <= $today && $today <= $substart->end_date) {
 
-                    if ($substart->isActive == 1)
-                    {
-                        $isActiveMessage = "Aktywowana";
-
-                    } elseif ($substart->isActive == 0) {
-
-                        $isActiveMessage = "Nieaktywowana";
-                    }
+                    $isActiveMessage = $substart->isActive == 1 ? \Lang::get('common.activated') : \Lang::get('common.not_activated');
                 }
             
                 $substartArray[] = [
-                    'id' => $substart->id,
                     'start_date' => $substart->start_date->format('Y-m-d'),
+                    'start_date_description' => \Lang::get('common.from'),
                     'end_date' => $substart->end_date->format('Y-m-d'),
-                    'isActiveMessage' => $isActiveMessage
+                    'end_date_description' => \Lang::get('common.to'),
+                    'button' => route('subscriptionInvoices', [
+                        'substartId' => $substart->id
+                    ]),
+                    'button_description' => \Lang::get('common.invoices'),
+                    'isActiveMessage' => $isActiveMessage,
+                    'isActive' => $substart->isActive
                 ];
             }
         }
