@@ -1,18 +1,18 @@
 @extends('layouts.app')
 @section('content')
 <div class="container" style="padding: 18px;">
-    <h2>Boss values: </h2>
+    <h2>@lang('common.bosses') :</h2>
     
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Name</td>
-                <td>Email</td>
-                <td>Phone</td>
-                <td>Created At</td>
+                <td>@lang('common.name')</td>
+                <td>@lang('common.email_address')</td>
+                <td>@lang('common.phone_number')</td>
+                <td>@lang('common.created_at')</td>
                 @if ($boss->promoCode !== null)
-                    <td>isApproved</td>
-                    <td>Approve Messages</td>
+                    <td>@lang('common.is_approved')</td>
+                    <td>@lang('common.approved_messages')</td>
                 @endif
             </tr>
         </thead>
@@ -25,14 +25,14 @@
                 @if ($boss->promoCode !== null)
                     <td>
                         @if ($boss->isApproved == 0)
-                            No
+                            @lang('common.no')
                         @else
-                            Yes
+                            @lang('common.yes')
                         @endif
                     </td>
                     <td>
                         <a class="btn btn-success" href="{{ URL::to('/admin/approve/messages/' . $boss->id) }}">
-                            Show
+                            @lang('common.show')
                         </a>
                     </td>
                 @endif
@@ -40,15 +40,15 @@
         </tbody>
     </table>
 
-    <h2>Properties owned by boss: </h2>
+    <h2>@lang('common.properties_owned_by_bosses') :</h2>
     
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Name</td>
-                <td>Street</td>
-                <td>Created At</td>
-                <td>Action</td>
+                <td>@lang('common.name')</td>
+                <td>@lang('common.street')</td>
+                <td>@lang('common.created_at')</td>
+                <td>@lang('common.action')</td>
             </tr>
         </thead>
         <tbody>
@@ -59,19 +59,15 @@
                     <td>{{$property->created_at}}</td>
                     <td>
                         <a class="btn btn-success" href="{{ URL::to('/property/' . $property->id) }}">
-                            Show
+                            @lang('common.show')
                         </a>
                         <a class="btn btn-primary" href="{{ URL::to('/property/' . $property->id . '/edit') }}">
-                            Edit
+                            @lang('common.edit')
                         </a>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    
-    <h2>Boss purchased subscriptions: </h2>
-    
-    <p class="lead">todo: panel dla admina z danymi dotyczącymi wykupionej subskrypcji</p>
 </div>
 @endsection

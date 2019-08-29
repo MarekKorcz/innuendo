@@ -10,6 +10,11 @@ use App\Code;
 use App\ChosenProperty;
 use App\Purchase;
 use App\Interval;
+use App\Subscription;
+use App\Calendar;
+use App\Year;
+use App\Month;
+use App\Day;
 use App\Substart;
 use App\PromoCode;
 use App\Mail\AdminTempBossCreate2ndStep;
@@ -287,24 +292,161 @@ class RegisterController extends Controller
 
                     if ($property !== null)
                     {
-                        if ($tempBossPropertyEntity->subscriptions !== null)
-                        {
-                            foreach ($tempBossPropertyEntity->subscriptions as $subscription)
-                            {
-                                $property->subscriptions()->attach($subscription);
-                                $tempBossPropertyEntity->subscriptions()->detach($subscription);
-                            }
-                        }
+                        // uncomment this and comment code below if you want to add only subscriptions from tempProperty
+//                        if ($tempBossPropertyEntity->subscriptions !== null)
+//                        {
+//                            foreach ($tempBossPropertyEntity->subscriptions as $subscription)
+//                            {
+//                                $property->subscriptions()->attach($subscription);
+//                                $tempBossPropertyEntity->subscriptions()->detach($subscription);
+//                            }
+//                        }
                         
+                        // delete temporary entities
                         $tempBossEntity->delete();
                         $tempBossPropertyEntity->delete();
                         
-                        \Mail::to($boss)->send(new AdminTempBossCreate2ndStep($boss));
+                        // add all available subscriptions
+                        $subscriptions = Subscription::where('id', '!=', null)->get();
                         
-                        auth()->login($boss);
+                        if (count($subscriptions) > 0)
+                        {
+                            foreach ($subscriptions as $sub)
+                            {
+                                $property->subscriptions()->attach($sub);
+                            }
+                        }
+                        
+                        // create calendar and sign employee (for now, me) to it
+                        $employee = User::where([
+                            'name' => 'Marek',
+                            'surname' => 'Korcz',
+                            'isEmployee' => 1
+                        ])->first();
 
-                        return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją zostały stworzone!');
+                        if ($employee !== null)
+                        {                            
+                            $calendar = new Calendar();
+                            $calendar->isActive = 1;
+                            $calendar->property_id = $property->id;
+                            $calendar->employee_id = $employee->id;
+                            $calendar->save();
 
+                            if ($calendar !== null)
+                            {
+                                $currentYear = new Year();
+                                $currentYear->year = date('Y');
+                                $currentYear->calendar_id = $calendar->id;
+                                $currentYear->save();
+
+                                $currentYearIncrementedByOneYear = date('Y', strtotime("+1 year", strtotime(date('Y'))));
+
+                                $nextYear = new Year();
+                                $nextYear->year = $currentYearIncrementedByOneYear;
+                                $nextYear->calendar_id = $calendar->id;
+                                $nextYear->save();
+
+                                $today = date('Y-n');                
+
+                                for ($i = 1; $i <= 3; $i++)
+                                {                    
+                                    $monthName = "";
+                                    $todayInParts = explode("-", $today);
+                                    $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, (int)$todayInParts[1], (int)$todayInParts[0]);
+                                    $month = null;
+
+                                    switch ((int)$todayInParts[1]) 
+                                    {
+                                        case 1:
+                                            $monthName = "Styczeń";
+                                            break;
+                                        case 2:
+                                            $monthName = "Luty";
+                                            break;
+                                        case 3:
+                                            $monthName = "Marzec";
+                                            break;
+                                        case 4:
+                                            $monthName = "Kwiecień";
+                                            break;
+                                        case 5:
+                                            $monthName = "Maj";
+                                            break;
+                                        case 6:
+                                            $monthName = "Czerwiec";
+                                            break;
+                                        case 7:
+                                            $monthName = "Lipiec";
+                                            break;
+                                        case 8:
+                                            $monthName = "Sierpień";
+                                            break;
+                                        case 9:
+                                            $monthName = "Wrzesień";
+                                            break;
+                                        case 10:
+                                            $monthName = "Październik";
+                                            break;
+                                        case 11:
+                                            $monthName = "Listopad";
+                                            break;
+                                        case 12:
+                                            $monthName = "Grudzień";
+                                            break;
+                                    }
+
+                                    if ((int)$todayInParts[0] == (int)date("Y"))
+                                    {
+                                        $month = new Month();
+                                        $month->month = $monthName;
+                                        $month->month_number = $todayInParts[1];
+                                        $month->days_in_month = $numberOfDaysInMonth;
+                                        $month->year_id = $currentYear->id;
+                                        $month->save();
+
+                                    } else {
+
+                                        $month = new Month();
+                                        $month->month = $monthName;
+                                        $month->month_number = $todayInParts[1];
+                                        $month->days_in_month = $numberOfDaysInMonth;
+                                        $month->year_id = $nextYear->id;
+                                        $month->save();
+                                    }
+
+                                    if ($month !== null)
+                                    {
+                                        for ($j = 1; $j <= $numberOfDaysInMonth; $j++)
+                                        {
+                                            $year = Year::where('id', $month->year_id)->first();
+                                            $monthNumber = strlen($month->month_number) == 2 ? $month->month_number : "0" . $month->month_number;
+                                            $dayNumber = strlen($j) == 2 ? $j : "0" . $j;
+
+                                            $fullDate = $year->year . "-" . $monthNumber . "-" . $dayNumber;
+                                            $dayDate = new \DateTime($fullDate);
+
+                                            if ($dayDate->format("N") != 7)
+                                            {                                          
+                                                $day = new Day();
+                                                $day->day_number = $dayDate->format("j");
+                                                $day->number_in_week = $dayDate->format("N");
+                                                $day->month_id = $month->id;
+                                                $day->save();
+                                            }
+                                        }
+                                    }
+
+                                    $today = date('Y-m-d', strtotime("+1 month", strtotime($today)));
+                                }
+                                
+                                \Mail::to($boss)->send(new AdminTempBossCreate2ndStep($boss));
+
+                                auth()->login($boss);
+
+                                return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją zostały stworzone!');
+                            }
+                        }
+                        
                     } else {
 
                         $boss->delete();

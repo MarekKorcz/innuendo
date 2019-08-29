@@ -1,14 +1,14 @@
 @component('mail::message')
 
-# Ukończenie rejestracji w {{ config('app.name') }} !
+# @lang('common.completing_registration_in') {{ config('app.name') }} !
 
-Gratulacje {{$employee->name}} {{$employee->surname}}!<br><br>
-Właśnie udało Ci się zarejestrować do {{ config('app.name') }}!<br>
+@lang('common.congratulations') {{$employee->name}} {{$employee->surname}}!<br><br>
+@lang('common.you_just_registered_to') {{ config('app.name') }}!<br>
 
 @component('mail::button', ['url' => $loginUrl])
 @lang('common.login')
 @endcomponent
 
-Dziękujemy, <br>
+@lang('common.thank_you') , <br>
 {{ config('app.name') }}
 @endcomponent

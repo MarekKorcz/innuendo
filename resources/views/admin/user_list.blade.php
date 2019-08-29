@@ -1,14 +1,14 @@
 @extends('layouts.app')
 @section('content')
 <div class="container" style="padding: 18px;">
-    <h1>TempUser users entites:</h1>
+    <h1>@lang('common.temp_user_user_entites') :</h1>
     
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Name</td>
-                <td>Created At</td>
-                <td>Action</td>
+                <td>@lang('common.name')</td>
+                <td>@lang('common.created_at')</td>
+                <td>@lang('common.action')</td>
             </tr>
         </thead>
         <tbody>
@@ -18,7 +18,7 @@
                     <td>{{$tempUser->created_at}}</td>
                     <td>
                         <a class="btn btn-primary" href="{{ URL::to('/admin/temp-user/user/show/' . $tempUser->id) }}">
-                            Show
+                            @lang('common.show')
                         </a>
                     </td>
                 </tr>
@@ -26,14 +26,14 @@
         </tbody>
     </table>
 
-    <h1>Active users:</h1>
+    <h1>@lang('common.active_users') :</h1>
     
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Name</td>
-                <td>Created At</td>
-                <td>Action</td>
+                <td>@lang('common.name')</td>
+                <td>@lang('common.created_at')</td>
+                <td>@lang('common.action')</td>
             </tr>
         </thead>
         <tbody>
@@ -43,7 +43,7 @@
                     <td>{{$user->created_at}}</td>
                     <td>
                         <a class="btn btn-primary" href="{{ URL::to('/admin/user/show/' . $user->id) }}">
-                            Show
+                            @lang('common.show')
                         </a>
                     </td>
                 </tr>

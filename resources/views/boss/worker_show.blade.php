@@ -7,8 +7,16 @@
 <div class="container">
 
     <h2 class="text-center">{{ $worker->name }} {{ $worker->surname }}</h2>
-    <h4 class="text-center">subskrypcja {{$subscription->name}}</h4>
-    <h5 id="intervalPeriod" class="text-center">za okres {{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</h5>
+    <h4 class="text-center">
+        @lang('common.subscription')
+        {{$subscription->name}}
+    </h4>
+    <h5 id="intervalPeriod" class="text-center">
+        @lang('common.for_the_period_from')
+        {{$interval->start_date->format('Y-m-d')}} 
+        @lang('common.to') 
+        {{$interval->end_date->format('Y-m-d')}}
+    </h5>
     
     <div class="jumbotron">
         <div class="row">
@@ -20,7 +28,7 @@
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <div class="text-center">
                     @if ($substart->isActive)
-                        <label for="timePeriod">Wybierz okres rozliczeniowy:</label>
+                        <label for="timePeriod">@lang('common.select_a_billing_period') :</label>
                         <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
                             @foreach ($substartIntervals as $substartInterval)
                                 @if ($interval->start_date == $substartInterval->start_date &&
@@ -32,7 +40,7 @@
                             @endforeach
                         </select>
                     @else
-                        <p>Subskrypcja nie została jeszcze aktywowana. Aktywacja nastąpi wraz ze zrealizowaniem pierwszego zabiegu</p>
+                        <p>@lang('common.subscription_first_time_activation_info')</p>
                     @endif
                 </div>
             </div>
@@ -43,11 +51,11 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>                
-                    <td>Data</td>
-                    <td>Godzina</td>
-                    <td>Zabieg</td>
-                    <td>Wykonawca</td>
-                    <td>Status</td>
+                    <td>@lang('common.date')</td>
+                    <td>@lang('common.hour')</td>
+                    <td>@lang('common.massage')</td>
+                    <td>@lang('common.executor')</td>
+                    <td>@lang('common.status')</td>
                 </tr>
             </thead>
             <tbody id="appointments">

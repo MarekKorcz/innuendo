@@ -6,7 +6,7 @@
 
 <div class="container">    
     <div class="text-center">
-        <h1 class="text-center padding">Lista lokalizacji z wykupionymi pakietami</h1>
+        <h1 class="text-center padding">@lang('common.property_list_with_purchased_subscription')</h1>
         <hr>
     </div>
     <div class="wrapper">
@@ -14,7 +14,7 @@
             <div class="card">
                 <div class="card-body">
                     @if ($property->boss_id)
-                        <p style="color: blue;">#private property</p>
+                        <p style="color: blue;">@lang('common.private_property')</p>
                     @endif
                     <strong>
                         {{$property->name}}
@@ -23,7 +23,12 @@
                         @if ($property->description)
                             {!!$property->description!!}
                         @endif
-                        <p>@lang('common.address') : <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}} {{$property->city}}</strong></p>
+                        <p>
+                            @lang('common.address') : 
+                            <strong>
+                                {{$property->street}} {{$property->street_number}} / {{$property->house_number}} {{$property->city}}
+                            </strong>
+                        </p>
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success" href="{{ URL::to('user/subscription/list/purchased/' . $property->id) }}">

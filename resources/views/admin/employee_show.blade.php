@@ -34,13 +34,13 @@
                         {{ Form::number('phone_number', $employee->phone_number, array('class' => 'form-control')) }}
                     </div>
                     <div class="form-group">
-                        {{ Form::label('profile_image', 'Profile image') }}<br>
+                        <label for="profile_image">@lang('common.profile_image')</label><br>
                         {{ Form::file('profile_image', null, array('class' => 'form-control')) }}
                     </div>
                 
                     {{ Form::hidden('id', $employee->id) }}
 
-                    {{ Form::submit('Upload', array('class' => 'btn btn-primary')) }}
+                    <input type="submit" value="@lang('common.update')" class="btn btn-primary">
 
                 {{ Form::close() }}
             </div>

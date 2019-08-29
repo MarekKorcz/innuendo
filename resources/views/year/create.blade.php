@@ -7,18 +7,18 @@
         <ul class="nav navbar-nav">
             <li>
                 <a class="btn btn-success" href="{{ URL::previous() }}">
-                    Back to Property
+                    @lang('common.back_to_property')
                 </a>
             </li>
         </ul>
     </nav>
 
-    <h1>Create a Year</h1>
+    <h1>@lang('common.create_year')</h1>
 
     {{ Form::open(['action' => 'YearController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
-            {{ Form::label('year', 'Year') }}
+            <label for="year">@lang('common.year')</label>
             {{ Form::number('year', Input::old('year'), array('class' => 'form-control')) }}
         </div>
         @if ($calendar)
@@ -26,7 +26,8 @@
         @else
             {{ Form::hidden('calendar_id', Input::old('calendar_id')) }}
         @endif
-        {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+        
+        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
 
     {{ Form::close() }}
 

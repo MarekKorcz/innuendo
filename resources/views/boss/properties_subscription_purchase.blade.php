@@ -5,7 +5,7 @@
 
 <div class="container">
     <div class="text-center">
-        <h1>Wybierz Lokalizację w której chcesz wykupić subskrypcje</h1>
+        <h1>@lang('common.pick_subscription_from_property')</h1>
     </div>
     <div id="properties" class="wrapper">
         @foreach ($properties as $property)
@@ -15,6 +15,7 @@
                 <div class="card">
             @endif
                 <div class="text-center">
+                    <!--todo: co z tym??-->
                     ZDJĘCIE
                 </div>
                 <div class="card-body">

@@ -1,18 +1,18 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    <h2 class="text-center">Subscriptions</h2>
+    <h2 class="text-center">@lang('common.subscriptions')</h2>
     
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Name</td>
-                <td>Description</td>
-                <td>Old price</td>
-                <td>New price</td>
-                <td>Quantity</td>
-                <td>Duration</td>
-                <td>Action</td>
+                <td>@lang('common.name')</td>
+                <td>@lang('common.description')</td>
+                <td>@lang('common.old_price')</td>
+                <td>@lang('common.new_price')</td>
+                <td>@lang('common.quantity')</td>
+                <td>@lang('common.duration')</td>
+                <td>@lang('common.action')</td>
             </tr>
         </thead>
         <tbody>
@@ -26,10 +26,10 @@
                     <td>{{$subscription->duration}}</td>
                     <td>
                         <a class="btn btn-primary" href="{{ URL::to('/subscription/show/' . $subscription->id) }}">
-                            Show
+                            @lang('common.show')
                         </a>
                         <a class="btn btn-success" href="{{ URL::to('/subscription/' . $subscription->id . '/edit') }}">
-                            Edit
+                            @lang('common.edit')
                         </a>
                     </td>
                 </tr>

@@ -12,14 +12,15 @@
         <div class="row">
             <div class="col-12 col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h3>@lang('common.description')</h3>
-                <p>Nazwa: <strong>{{$subscription->name}}</strong></p>
+                <p>@lang('common.label') : <strong>{{$subscription->name}}</strong></p>
                 <p>@lang('common.description') : <strong>{{ $subscription->description }}</strong></p>
-                <p>Cena:  
+                <p>
+                    @lang('common.price') :
                     <strike>{{$subscription->old_price}}</strike>
                     <strong>{{$subscription->new_price}}</strong>
                 </p>
-                <p>Ilość zabiegów do wykorzystania w miesiącu: <strong>{{$subscription->quantity}}</strong></p>
-                <p>Czas trwania pakietu: <strong>{{$subscription->duration}} miesięcy</strong></p>
+                <p>@lang('common.number_of_massages_to_use_per_month') : <strong>{{$subscription->quantity}}</strong></p>
+                <p>@lang('common.subscription_duration') : <strong>{{$subscription->duration}} @lang('common.months_count')</strong></p>
             </div>
             <div class="col-12 col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <img class="img-fluid" src="/img/column2.jpg">
@@ -29,7 +30,7 @@
             <div class="col-12 col-xs-12 col-sm-12 col-lg-12 col-md-12">
                 <div class="text-center" style="padding-top: 27px;">
                     <div style="background-color: white; border: 2px darkgrey solid;" class="jumbotron">
-                        <h2 style="padding-bottom: 21px;">Regulamin</h2>
+                        <h2 style="padding-bottom: 21px;">@lang('common.regulations')</h2>
                         <div style="text-align: left;">
                             <p><strong>1.</strong> TheBalance.com and its affiliated sites (collectively, the “Site”) are Dotdash brands, owned and operated by About, Inc. and its affiliates ("The Balance", the "Company", "we", or "us"). Access to and use of the Site is subject to these terms and conditions of use (“Terms of Use”).</p>
 
@@ -67,7 +68,14 @@
                                 </div>-->
                             
                                 <div class="form-group">
+                                    <!--                                    <label>
+                                        <span style="font-size: 21px;">@lang('common.terms_accept') :</span>
+                                    </label>-->
+                                    
+                                    
+                                    <!--todo: jak tu zrobić tłumaczenie?????-->
                                     {!! Html::decode(Form::label('terms','<span style="font-size: 21px;">Akceptuje powyższy regulamin:</span>')) !!}
+                                    
                                     {{ Form::checkbox('terms', null, null, array('class' => 'form-control')) }}
                                     <div class="warning"></div>
                                 </div>
@@ -75,7 +83,7 @@
                                 {{ Form::hidden('subscription_id', $subscription->id) }}
                                 {{ Form::hidden('property_id', $property->id) }}
                                 
-                                {{ Form::submit('Zamawiam', array('class' => 'btn btn-primary btn-lg')) }}
+                                <input type="submit" value="@lang('common.order')" class="btn btn-primary btn-lg">
 
                             {{ Form::close() }}
                         </div>

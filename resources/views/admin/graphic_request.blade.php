@@ -5,20 +5,20 @@
 {!! Html::script('js/graphic_request_show.js') !!}
 
     <div class="container">
-        <h2 class="text-center" style="padding-top: 2rem;">Grafik request from: {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
+        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from') : {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
         <p class="text-center">{{$graphicRequest->property->name}} - {{$graphicRequest->boss->name}} {{$graphicRequest->boss->surname}}</p>
     </div>
 
     <div class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <p>From: <strong>{{$graphicRequest->start_time}}</strong></p>
-                <p>To: <strong>{{$graphicRequest->end_time}}</strong></p>
+                <p>@lang('common.start_time') : <strong>{{$graphicRequest->start_time}}</strong></p>
+                <p>@lang('common.end_time') : <strong>{{$graphicRequest->end_time}}</strong></p>
                 @if ($graphicRequest->comment)
-                    <p>Comment: <strong>{{$graphicRequest->comment}}</strong></p>
+                    <p>@lang('common.comment') : <strong>{{$graphicRequest->comment}}</strong></p>
                 @endif
                 <div id="employees" style="margin-top: 2rem;">
-                    <p class="text-center">Chosen employees:</p>
+                    <p class="text-center">@lang('common.chosen_employees') :</p>
                     <ul style="padding: 12px;">
                         @foreach($graphicRequest->allEmployees as $employee)
                             @if ($employee->isChosen == true)
@@ -29,16 +29,20 @@
                         @endforeach
                     </ul>
                 </div>
-                <p>Date of last modification: <strong>{{$graphicRequest->updated_at}}</strong></p>
+                <p>@lang('common.last_update') : 
+                    <strong>
+                        {{$graphicRequest->updated_at}}
+                    </strong>
+                </p>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h1 class="text-center">Place for something?</h1>
+                <h1 class="text-center">todo: Place for something?</h1>
             </div>
         </div>
     </div>
 
     <div class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
-        <h3 class="text-center">Messages:</h3>
+        <h3 class="text-center">@lang('common.messages') :</h3>
         <hr style="margin-bottom: 2rem;">
         @if (count($graphicRequestMessages) > 0)
             @foreach ($graphicRequestMessages as $message)
@@ -67,9 +71,9 @@
                                 <div class="text-right" style="padding-right: 3rem;">
                                     <a class="btn btn-success btn-sm" href="{{ URL::to('/admin/graphic-request/message/change-status/' . $graphicRequest->id . '/' . $message->id) }}">
                                         @if ($message->status == 0)
-                                            Mark as written
+                                            @lang('common.mark_as_written')
                                         @elseif ($message->status == 1)
-                                            Mark as sended
+                                            @lang('common.mark_as_sent')
                                         @endif
                                     </a>
                                     {{config('message-status.' . $message->status)}}
@@ -93,7 +97,7 @@
                 {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}
             
                 <div class="text-center">
-                    {{ Form::submit('Send', array('class' => 'btn btn-primary')) }}
+                    <input type="submit" value="@lang('common.send')" class="btn btn-primary">
                 </div>
 
             {{ Form::close() }}

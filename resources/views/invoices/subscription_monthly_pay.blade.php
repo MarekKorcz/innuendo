@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-2"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>faktura_za_{{$interval->start_date->format("Y-m-d")}}_{{$interval->end_date->format("Y-m-d")}}</title>
+    <title>@lang('common.invoice_for') {{$interval->start_date->format("Y-m-d")}}_{{$interval->end_date->format("Y-m-d")}}</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -44,13 +44,13 @@
     <div style="padding-left: 2rem; padding-right: 2rem;">
         
         <div class="green-font-color text-center">
-            <h2>Faktura</h2>
+            <h2>@lang('common.invoice')</h2>
             <p>Nr {{$substart->id}}/{{$interval->start_date->format("Y/m")}}</p>
         </div>
         
         <div class="row">
             <div class="col-xs-2" style="text-align: right;">
-                <strong>Wystawca:</strong><br>
+                <strong>@lang('common.executor') : </strong><br>
                 <strong>@lang('common.address') : </strong><br>
                 <strong>@lang('common.phone_number'): </strong><br>
                 <strong>@lang('common.email_address') : </strong><br>
@@ -66,13 +66,13 @@
             </div>
             
             <div class="col-xs-2" style="text-align: right;">
-                <strong>Odbiorca:</strong><br>
-                <strong>@lang('common.address') : </strong><br>
+                <strong>@lang('common.receiver') :</strong><br>
+                <strong>@lang('common.address') :</strong><br>
                 @if ($bossInvoiceData->phone_number)
-                    <strong>@lang('common.phone_number'): </strong><br>
+                    <strong>@lang('common.phone_number') :</strong><br>
                 @endif
                 <strong>@lang('common.email_address') : </strong><br>
-                <strong>Nip: </strong><br>
+                <strong>Nip :</strong><br>
             </div>
 
             <div class="col-xs-3" style="text-align: left;">
@@ -94,8 +94,8 @@
 
         <div class="row">
             <div class="col-xs-2" style="text-align: right;">
-                <strong>Data wystawienia:</strong><br>
-                <strong>Termin płatności:</strong><br>
+                <strong>@lang('common.date_of_issue') :</strong><br>
+                <strong>@lang('common.payment_deadline') :</strong><br>
             </div>
             
             <div class="col-xs-3" style="text-align: left;">
@@ -104,13 +104,13 @@
             </div>
             
             <div class="col-xs-2" style="text-align: right;">
-                <strong>Sposób płatności:</strong><br>
-                <strong>Bank:</strong><br>
-                <strong>Numer konta:</strong><br>
+                <strong>@lang('common.payment_method') :</strong><br>
+                <strong>Bank :</strong><br>
+                <strong>@lang('common.account_number') :</strong><br>
             </div>
             
             <div class="col-xs-3" style="text-align: left;">
-                Przelew<br>
+                @lang('common.transfer')<br>
                 {{$adminInvoiceData->bank_name}}<br>
                 {{$adminInvoiceData->account_number}}<br>
             </div>
@@ -122,16 +122,16 @@
             <thead>
                 <tr>
                     <th scope="col">Lp.</th>
-                    <th scope="col-3">Nazwa</th>
-                    <th scope="col">Ilość</th>
+                    <th scope="col-3">@lang('common.label')</th>
+                    <th scope="col">@lang('common.quantity')</th>
                     <th scope="col">Jm</th>
-                    <th scope="col">Cena netto</th>
-                    <th scope="col">Rabat %</th>
-                    <th scope="col">Cena netto po rabacie</th>
+                    <th scope="col">@lang('common.net_price')</th>
+                    <th scope="col">@lang('common.discount') %</th>
+                    <th scope="col">@lang('common.net_price_after_discount')</th>
                     <th scope="col">VAT</th>
-                    <th scope="col">Kwota netto</th>
-                    <th scope="col">Kwota VAT</th>
-                    <th scope="col">Kwota brutto</th>
+                    <th scope="col">@lang('common.net_amount')</th>
+                    <th scope="col">@lang('common.vat_amount')</th>
+                    <th scope="col">@lang('common.the_gross_amount')</th>
                 </tr>
             </thead>
             <tbody>
@@ -156,10 +156,10 @@
                 <table class="table table-bordered bottom-table">
                     <thead>
                         <tr>
-                            <th scope="col">Stawka VAT</th>
-                            <th scope="col">Netto</th>
+                            <th scope="col">@lang('common.vat_rate')</th>
+                            <th scope="col">@lang('common.net')</th>
                             <th scope="col">VAT</th>
-                            <th scope="col">Brutto</th>
+                            <th scope="col">@lang('common.gross')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -178,7 +178,7 @@
             <div class="col-xs-8"></div>
             <div class="col-xs-4">
                 <div class="bottom-tile">
-                    Razem do zapłaty: <br>
+                    @lang('common.together_to_pay') : <br>
                     <strong>{{$subscriptionAllGrossPrice}} zł</strong>
                 </div>
             </div>
@@ -196,11 +196,11 @@
         <div class="row" style="padding-right: 6rem;">
             <div class="col-xs-6 text-center">
                 <p class="text-center">----------------------------------------------------------------------</p>
-                <p class="text-center">Osoba upoważniona do odbioru</p>
+                <p class="text-center">@lang('common.person_authorized_to_pick_up')</p>
             </div>
             <div class="col-xs-6">
                 <p class="text-center">----------------------------------------------------------------------</p>
-                <p class="text-center">Osoba upoważniona do wystawienia</p>
+                <p class="text-center">@lang('common.person_authorized_to_issue')</p>
             </div>
         </div>
     </div>

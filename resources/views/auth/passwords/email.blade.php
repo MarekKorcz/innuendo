@@ -6,7 +6,7 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    <h3>Zresetuj hasło</h3>
+                    <h3>@lang('common.password_reset')</h3>
                 </div>
 
                 <div class="card-body">
@@ -36,7 +36,7 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Wyślij link resetujący hasło
+                                    @lang('common.send_password_reset_link')
                                 </button>
                             </div>
                         </div>

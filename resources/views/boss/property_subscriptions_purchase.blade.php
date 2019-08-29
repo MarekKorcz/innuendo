@@ -5,7 +5,7 @@
 
 <div class="container">
     <div class="text-center">
-        <h1>Subskrypcje przypisane do {{$property->name}}</h1>
+        <h1>@lang('common.subscriptions_assigned_to') {{$property->name}}</h1>
     </div>
     <div id="subscriptions" class="wrapper">
         @if (count($subscriptions) > 0)
@@ -16,6 +16,7 @@
                     <div class="card">
                 @endif
                     <div class="text-center">
+                        <!--todo: co tutaj?-->
                         ZDJĘCIE
                     </div>
                     <div class="card-body">
@@ -36,6 +37,7 @@
                 </div>
             @endforeach
         @else
+            <!--todo: co z tym?-->
             <h3>tu musi byc lista z Buttonem do zakupu</h3>
         @endif
     </div>

@@ -5,35 +5,35 @@
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
-        <h2 class="text-center">Create subscription</h2>
+        <h2 class="text-center">@lang('common.create_subscription')</h2>
 
         {{ Form::open(['id' => 'subscriptionForm', 'action' => 'SubscriptionController@store', 'method' => 'POST']) }}
 
             <div class="form-group">
-                <label for="name">Name</label>
+                <label for="name">@lang('common.label') :</label>
                 <input id="name" class="form-control" type="text" name="name">
             </div>    
             <div class="form-group">
-                <label for="description">Description</label>
+                <label for="description">@lang('common.description') :</label>
                 <input id="description" class="form-control" type="text" name="description">
             </div>
             <div class="form-group">
-                <label for="old_price">Old price</label>
+                <label for="old_price">@lang('common.old_price') :</label>
                 <input id="old_price" class="form-control" type="text" name="old_price">
             </div>
             <div class="form-group">
-                <label for="new_price">New price</label>
+                <label for="new_price">@lang('common.new_price') :</label>
                 <input id="new_price" class="form-control" type="text" name="new_price">
             </div>
             <div class="form-group">
-                <label for="quantity">Quantity per month</label>
+                <label for="quantity">@lang('common.quantity_per_month') :</label>
                 <input id="quantity" class="form-control" type="text" name="quantity">
             </div>
             <div class="form-group">
-                <label for="duration">Duration (how many months)</label>
+                <label for="duration">@lang('common.duration_how_many_months') :</label>
                 <input id="duration" class="form-control" type="text" name="duration">
             </div>
-            <h4 class="text-center">Items</h4>
+            <h4 class="text-center">@lang('common.items') :</h4>
             <div id="items" class="form-group">
                 <ul>
                     @foreach($items as $item)
@@ -46,7 +46,8 @@
             @else
                 {{ Form::hidden('property_id', Input::old('property_id')) }}
             @endif
-            {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+            
+            <input type="submit" value="@lang('common.create')" class="btn btn-primary">
 
         {{ Form::close() }}
     </div>

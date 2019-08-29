@@ -7,22 +7,22 @@
         <ul class="nav navbar-nav">
             <li>
                 <a class="btn btn-success" href="{{ URL::previous() }}">
-                    Back to Year
+                    @lang('common.back_to_year')
                 </a>
             </li>
         </ul>
     </nav>
 
-    <h1>Create a Month</h1>
+    <h1>@lang('common.create_month')</h1>
 
     {{ Form::open(['action' => 'MonthController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
-            {{ Form::label('month', 'Month') }}
+            <label for="month">@lang('common.month')</label>
             {{ Form::text('month', Input::old('month'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('month_number', 'Month number') }}
+            <label for="month_number">@lang('common.month_number')</label>
             {{ Form::number('month_number', Input::old('month_number'), array('class' => 'form-control')) }}
         </div>
         @if ($year)
@@ -30,7 +30,8 @@
         @else
             {{ Form::hidden('year_id', Input::old('year_id')) }}
         @endif
-        {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+        
+        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
 
     {{ Form::close() }}
 

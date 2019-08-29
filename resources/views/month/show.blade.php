@@ -6,14 +6,14 @@
         <div class="navbar-header">
             {!!Form::open(['action' => ['MonthController@destroy', $month->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                 {{ Form::hidden('_method', 'DELETE') }}
-                {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
             {!!Form::close()!!}
         </div>
         <ul class="nav navbar-nav">
             <li>
                 @if ($year)
                     <a class="btn btn-success" href="{{ URL::to('year/show/' . $year->id) }}">
-                        Back to Year
+                        @lang('common.back_to_year')
                     </a>
                 @endif
             </li>
@@ -26,13 +26,13 @@
         @if (count($days) > 0)
             <table class="table table-striped">
                 <tr>
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
-                    <th>Thursday</th>
-                    <th>Friday</th>
-                    <th>Saturday</th>
-                    <th>Sunday</th>
+                    <th>@lang('common.monday')</th>
+                    <th>@lang('common.tuesday')</th>
+                    <th>@lang('common.wednesday')</th>
+                    <th>@lang('common.thursday')</th>
+                    <th>@lang('common.friday')</th>
+                    <th>@lang('common.saturday')</th>
+                    <th>@lang('common.sunday')</th>
                 </tr>
                 <div class="list-group">
                     @for ($i = 0; $i < count($days); $i++)
@@ -73,7 +73,7 @@
         @endif
         <div class="text-center" style="padding-top: 50px;">
             <a class="btn btn-success" href="{{ action('DayController@create', $month->id) }}">
-                Add Days
+                @lang('common.add_day')
             </a>
         </div>
     </div>

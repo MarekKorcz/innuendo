@@ -8,7 +8,7 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center">Przypisz dane do faktury do {{$property->name}}</h3>
+                    <h3 class="text-center">@lang('common.add_invoice_data_to') {{$property->name}}</h3>
                 </div>
 
                 <div class="card-body">

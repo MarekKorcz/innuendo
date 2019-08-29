@@ -8,7 +8,7 @@
     
     <div class="text-center">
         <h2>
-            @lang('common.people_assigned_to_subscription') {{$subscription->name}}
+            @lang('common.people_assigned_to_subscription') : {{$subscription->name}}
         </h2>
     </div>
     <div class="wrapper cont">
@@ -184,6 +184,11 @@
                     @foreach($substartIntervals as $substartInterval)
                         @if ($substartInterval->workers)
                             @if ($today > $substartInterval->start_date && $today > $substartInterval->end_date)
+                            
+                            
+                            <!--todo: coś tu? czemu puste?????-->
+                            
+                            
                             
                             @else
                                 {{ Form::hidden('substart_id', $substart->id) }}

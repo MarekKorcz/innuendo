@@ -5,7 +5,7 @@
 {!! Html::style('css/property_index.css') !!}
 
 <div class="container">
-    <h1 class="text-center padding-top">Wybierz Lokalizacje z której interesują Cie grafiki</h1>
+    <h1 class="text-center padding-top">@lang('common.pick_property_to_choose_schedule')</h1>
     
     <div class="wrapper">
         @foreach ($properties as $property)

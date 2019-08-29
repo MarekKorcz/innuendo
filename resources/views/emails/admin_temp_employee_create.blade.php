@@ -1,15 +1,15 @@
 @component('mail::message')
 
-# Rejestracja do {{ config('app.name') }}
+# @lang('common.registration_to') {{ config('app.name') }}
 
-Witaj, {{$employee->name}} {{$employee->surname}}
+@lang('common.greetings') , {{$employee->name}} {{$employee->surname}}
 
-W celu zakończenia procesu rejestracji, kliknij w poniższy przycisk i wypełnij pozostałe dane oraz hasło.
+@lang('common.admin_temp_employee_create_mail_text')
 
 @component('mail::button', ['url' => $tempEmployeeRegisterAddress])
 @lang('common.register')
 @endcomponent
 
-Dziękujemy, <br>
+@lang('common.thank_you') , <br>
 {{ config('app.name') }}
 @endcomponent

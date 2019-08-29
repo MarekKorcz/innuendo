@@ -5,22 +5,22 @@
 
 <div class="container">
     <div class="jumbotron" style="margin: 15px;">
-        <h1 class="text-center">Edytuj dane do faktury</h1>
+        <h1 class="text-center">@lang('common.edit_invoice_data')</h1>
 
         {{ Form::open(['id' => 'property-invoice-data', 'action' => ['BossController@invoiceDataUpdate'], 'method' => 'POST']) }}
                 
             <div class="form-group">
-                {{ Form::label('company_name', @lang('common.company_name')) }}
+                <label for="company_name">@lang('common.company_name')</label>
                 {{ Form::text('company_name', $invoiceData->company_name, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('email', @lang('common.email_address')) }}
+                <label for="email">@lang('common.email_address')</label>
                 {{ Form::email('email', $invoiceData->email, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('phone_number', @lang('common.phone_number')) }}
+                <label for="phone_number">@lang('common.phone_number')</label>
                 {{ Form::text('phone_number', $invoiceData->phone_number, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>

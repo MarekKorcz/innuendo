@@ -5,109 +5,115 @@
 
 <div class="container" style="padding: 2rem;">
     <div class="card-header text-center">
-        <span style="font-size: 27px;">Moje konto</span> - zalogowany jako <strong>{{$user->name}} {{$user->surname}}</strong>
+        <span style="font-size: 27px;">
+            @lang('navbar.my_account') 
+        </span> 
+        - @lang('common.logged_in_as') 
+        <strong>
+            {{$user->name}} {{$user->surname}}
+        </strong>
     </div>
     <div class="wrapper">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Create boss with first property</h4>
+                <h4 class="card-title text-center">@lang('common.create_boss_with_first_property')</h4>
                 <p class="card-text text-center">
-                    Create initial boss account with property
+                    @lang('common.create_boss_with_first_property_description')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success" href="{{ URL::to('/admin/boss/create') }}">
-                        Create
+                        @lang('common.show')
                     </a>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Bosses list</h4>
+                <h4 class="card-title text-center">@lang('common.bosses_list')</h4>
                 <p class="card-text text-center">
-                    View with list of active bosses and TempUser boss entites
+                    @lang('common.bosses_list_description')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success" href="{{ URL::to('/admin/boss/list') }}">
-                        Show
+                        @lang('common.show')
                     </a>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Employees list</h4>
+                <h4 class="card-title text-center">@lang('common.employees_list')</h4>
                 <p class="card-text text-center">
-                    View with employees list
+                    @lang('common.employees_list_description')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success" href="{{ URL::to('/admin/employee/list') }}">
-                        Show
+                        @lang('common.show')
                     </a>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Users list</h4>
+                <h4 class="card-title text-center">@lang('common.users_list')</h4>
                 <p class="card-text text-center">
-                    View with list of active users and TempUser user entites
+                    @lang('common.users_list_description')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success" href="{{ URL::to('/admin/user/list') }}">
-                        Show
+                        @lang('common.show')
                     </a>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">All Properties</h4>
+                <h4 class="card-title text-center">@lang('common.all_properties')</h4>
                 <p class="card-text text-center">
-                    View with list of all created and temporary properties
+                    @lang('common.all_properties_description')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success" href="{{ URL::to('/property/index') }}">
-                        Show
+                        @lang('common.show')
                     </a>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Subscriptions</h4>
+                <h4 class="card-title text-center">@lang('common.subscriptions')</h4>
                 <p class="card-text text-center">
-                    View with list of created subscriptions
+                    @lang('common.subscriptions_description')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success" href="{{ URL::to('/subscription/index') }}">
-                        Show
+                        @lang('common.show')
                     </a>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Graphic requests</h4>
+                <h4 class="card-title text-center">@lang('common.all_graphic_requests')</h4>
                 <p class="card-text text-center">
-                    View with all graphic requests made by bosses
+                    @lang('common.all_graphic_requests_description')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success" href="{{ URL::to('admin/graphic-requests') }}">
-                        Show
+                        @lang('common.show')
                     </a>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Approve messages</h4>
+                <h4 class="card-title text-center">@lang('common.approved_messages')</h4>
                 <p class="card-text text-center">
-                    View with all approve messages sent by bosses
+                    @lang('common.approved_messages_description')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success" href="{{ URL::to('admin/approve/messages') }}">
-                        Show
+                        @lang('common.show')
                     </a>
                 </div>
             </div>

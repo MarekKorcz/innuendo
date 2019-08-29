@@ -1,15 +1,15 @@
 @component('mail::message')
 
-# Ukończenie rejestracji w {{ config('app.name') }} !
+# @lang('common.completing_registration_in') {{ config('app.name') }} !
 
-Gratulacje {{$boss->name}} {{$boss->surname}}!<br><br>
-Właśnie udało Ci się zarejestrować do {{ config('app.name') }}!<br><br>
-Jesteśmy zachwyceni wizją naszej przyszłej owocnej współpracy oraz nie możemy się doczekać naszej pierwszej wizyty w Twoim biurze!
+@lang('common.congratulations') {{$boss->name}} {{$boss->surname}}!<br><br>
+@lang('common.you_just_registered_to') {{ config('app.name') }}!<br><br>
+@lang('common.admin_temp_boss_create_2nd_step_mail_text')
 
 @component('mail::button', ['url' => $loginUrl])
 @lang('common.login')
 @endcomponent
 
-Dziękujemy, <br>
+@lang('common.thank_you') , <br>
 {{ config('app.name') }}
 @endcomponent

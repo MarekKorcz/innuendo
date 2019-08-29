@@ -7,22 +7,22 @@
         <ul class="nav navbar-nav">
             <li>
                 <a class="btn btn-success" href="{{ URL::previous() }}">
-                    Back to Month
+                    @lang('common.back_to_month')
                 </a>
             </li>
         </ul>
     </nav>
 
-    <h1>Create Days</h1>
+    <h1>@lang('common.create_days')</h1>
 
     {{ Form::open(['action' => 'DayController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
-            {{ Form::label('start_day', 'Start day') }}
+            <label for="start_day">@lang('common.start_day')</label>
             {{ Form::number('start_day', Input::old('start_day'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('end_day', 'End day') }}
+            <label for="end_day">@lang('common.end_day')</label>
             {{ Form::number('end_day', Input::old('end_day'), array('class' => 'form-control')) }}
         </div>
         @if ($month)
@@ -30,7 +30,8 @@
         @else
             {{ Form::hidden('month_id', Input::old('month_id')) }}
         @endif
-        {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+        
+        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
 
     {{ Form::close() }}
 

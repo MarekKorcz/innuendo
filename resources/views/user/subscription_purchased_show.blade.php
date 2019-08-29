@@ -2,8 +2,6 @@
 
 @section('content')
 
-<!--{!! Html::script('js/property_show.js') !!}-->
-
 <div class="container">
 
     <h1 class="text-center" style="padding: 2rem;">{{$purchase->subscription->name}}</h1>
@@ -12,19 +10,34 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h3>@lang('common.description')</h3>
-                <p>Nazwa: <strong>{{$purchase->subscription->name}}</strong></p>
+                <p>@lang('common.label') : <strong>{{$purchase->subscription->name}}</strong></p>
                 <p>{{$purchase->subscription->description}}</p>
-                
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h2>Status subskrypcji</h2>
+                <h2>
+                    @lang('common.status')
+                </h2>
                 @if ($expirationDate !== null)
                     @if ($intervalAvailableUnits !== null)
-                        <p>Dostępne zabiegi w obecnym miesiącu (od {{$substartInterval->start_date->format('Y-m-d')}} do {{$substartInterval->end_date->format('Y-m-d')}}): <strong>{{$intervalAvailableUnits}}</strong></p>
+                        <p>
+                            @lang('common.available_massages_in_current_month')
+                            {{$substartInterval->start_date->format('Y-m-d')}} 
+                            @lang('common.to') 
+                            {{$substartInterval->end_date->format('Y-m-d')}} 
+                            ):
+                            <strong>
+                                {{$intervalAvailableUnits}}
+                            </strong>
+                        </p>
                     @endif
-                    <p>Ważny do: <strong>{{$expirationDate}}r</strong></p>
+                    <p>
+                        @lang('common.valid_until') : 
+                        <strong>
+                            {{$expirationDate}}
+                        </strong>
+                    </p>
                 @else
-                    <p>Subskrypcja nieaktywna. Aktywacja nastąpi wraz z pierwszym wykonanym zabiegiem</p>
+                    <p>@lang('common.subscription_first_time_activation_info')</p>
                 @endif
             </div>
         </div>
@@ -32,18 +45,18 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-                <h2 class="text-center">Lista wizyt</h2>
+                <h2 class="text-center">@lang('common.appointments_list')</h2>
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>                
-                            <td>Data</td>
-                            <td>Godzina</td>
+                            <td>@lang('common.date')</td>
+                            <td>@lang('common.hour')</td>
                             <td>@lang('common.address')</td>
-                            <td>Nazwa</td>
-                            <td>Czas</td>
-                            <td>Wykonawca</td>
-                            <td>Status</td>
-                            <td>Akcja</td>
+                            <td>@lang('common.label')</td>
+                            <td>@lang('common.time')</td>
+                            <td>@lang('common.executor')</td>
+                            <td>@lang('common.status')</td>
+                            <td>@lang('common.action')</td>
                         </tr>
                     </thead>
                     <tbody>

@@ -2,17 +2,17 @@
 @section('content')
 <div class="container">
 
-    <h1 class="text-center">All graphic requests</h1>
+    <h1 class="text-center">@lang('common.all_graphic_requests')</h1>
     
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Owner</td>
-                <td>Date</td>
-                <td>Time</td>
-                <td>Comment</td>
-                <td>Employees</td>
-                <td>Action</td>
+                <td>@lang('common.owner')</td>
+                <td>@lang('common.date')</td>
+                <td>@lang('common.time')</td>
+                <td>@lang('common.comment')</td>
+                <td>@lang('common.employees')</td>
+                <td>@lang('common.action')</td>
             </tr>
         </thead>
         <tbody>
@@ -25,7 +25,7 @@
                     <td>{{count($graphicRequest->employees)}}</td>
                     <td>
                         <a class="btn btn-success" href="{{ URL::to('/admin/graphic-request/' . $graphicRequest->id . '/0') }}">
-                            Show
+                            @lang('common.show')
                         </a>
                     </td>
                 </tr>

@@ -5,24 +5,24 @@
 
 <div class="container">
     <div class="jumbotron" style="margin: 15px;">
-        <h1 class="text-center">Edytuj zapytanie o otworzenie grafiku</h1>
+        <h1 class="text-center">@lang('common.edit_graphic_request')</h1>
 
         {{ Form::open(['id' => 'request-form', 'action' => ['BossController@graphicRequestUpdate'], 'method' => 'POST']) }}
                 
             <div class="form-group">
-                {{ Form::label('start_time', 'Od której godziny') }}
+                <label for="start_time">@lang('common.start_time')</label>
                 {{ Form::time('start_time', $graphicRequest->start_time, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                {{ Form::label('end_time', 'Do której godziny') }}
+                <label for="end_time">@lang('common.end_time')</label>
                 {{ Form::time('end_time', $graphicRequest->end_time, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
 
             <div id="appointment-quantity-counter"></div>
 
-            <p class="text-center">Wybierz spośród naszych pracowników</p>
+            <p class="text-center">@lang('common.choose_from_within_our_employees')</p>
             <ul id="employees" style="padding-left: 12px; padding-right: 12px;">
                 @foreach($graphicRequest->allEmployees as $employee)
                     @if ($employee->isChosen == true)
@@ -35,7 +35,7 @@
             <div id="employees-warning" class="warning"></div>
 
             <div class="form-group">
-                {{ Form::label('comment', 'Komentarz do zapytania') }}
+                <label for="comment">@lang('common.comment')</label>
                 {{ Form::textarea('comment', $graphicRequest->comment, array('class' => 'form-control')) }}
             </div>
             

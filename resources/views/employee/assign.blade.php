@@ -7,26 +7,28 @@
         <ul class="nav navbar-nav">
             <li>
                 <a class="btn btn-success" href="{{ URL::previous() }}">
-                    Go Back
+                    @lang('common.go_back')
                 </a>
             </li>
         </ul>
     </nav>
 
-    <h1>Assign an Employee</h1>
+    <h1>@lang('common.assign_an_employee')</h1>
 
     {{ Form::open(['action' => 'EmployeeController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
-            {{ Form::label('employee', 'Employee') }}
+            <label for="employee">@lang('common.employee')</label>
             {{ Form::select('employee', $employees, null, array('class' => 'form-control')) }}
         </div>
+    
         @if ($calendar)
             {{ Form::hidden('calendar_id', $calendar->id) }}
         @else
             {{ Form::hidden('calendar_id', Input::old('calendar_id')) }}
         @endif
-        {{ Form::submit('Assign', array('class' => 'btn btn-primary')) }}
+        
+        <input type="submit" value="@lang('common.assign')" class="btn btn-primary">
 
     {{ Form::close() }}
 

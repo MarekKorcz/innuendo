@@ -7,22 +7,22 @@
         <ul class="nav navbar-nav">
             <li>
                 <a class="btn btn-success" href="{{ URL::previous() }}">
-                    Back to Day
+                    @lang('common.back_to_day')
                 </a>
             </li>
         </ul>
     </nav>
 
-    <h1>Create Graphic</h1>
+    <h1>@lang('common.create_graphic')</h1>
 
     {{ Form::open(['action' => 'GraphicController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
-            {{ Form::label('start_time', 'Start (what time)') }}
+            <label for="start_time">@lang('common.start_time')</label>
             {{ Form::time('start_time', Input::old('start_time'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('end_time', 'End (what time)') }}
+            <label for="end_time">@lang('common.end_time')</label>
             {{ Form::time('end_time', Input::old('end_time'), array('class' => 'form-control')) }}
         </div>
         @if ($day)
@@ -30,7 +30,7 @@
         @else
             {{ Form::hidden('day_id', Input::old('day_id')) }}
         @endif
-        {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
 
     {{ Form::close() }}
 

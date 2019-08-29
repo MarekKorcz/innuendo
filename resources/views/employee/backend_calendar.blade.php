@@ -9,7 +9,7 @@
 <div class="container">
     
     <a class="btn btn-primary" href="{{ URL::to('/employee/backend-graphic') }}">
-        Go Back
+        @lang('common.go_back')
     </a>
 
     <div id="calendar" class="table-responsive">
@@ -47,12 +47,12 @@
         <table class="table">
             <thead>
                 <tr id="days">
-                    <th class="text-center">Pon</th>
-                    <th class="text-center">Wt</th>
-                    <th class="text-center">Śr</th>
-                    <th class="text-center">Czw</th>
-                    <th class="text-center">Pt</th>
-                    <th class="text-center">Sob</th>
+                    <th class="text-center">@lang('common.monday_abbreviation')</th>
+                    <th class="text-center">@lang('common.thuesday_abbreviation')</th>
+                    <th class="text-center">@lang('common.wednesday_abbreviation')</th>
+                    <th class="text-center">@lang('common.thursday_abbreviation')</th>
+                    <th class="text-center">@lang('common.friday_abbreviation')</th>
+                    <th class="text-center">@lang('common.saturday_abbreviation')</th>
                 </tr>
             </thead>
             <tbody>
@@ -121,11 +121,11 @@
                                         <a href="#makeAnAppointment" 
                                            data-toggle="modal" 
                                            data-id="{{$graphic[$i]['time']}}" 
-                                           title="Kliknij by rozpocząć rezerwacje" 
+                                           title="@lang('common.click_to_make_reservation')" 
                                            class="appointment-term box-1" 
                                            style="background-color: lightgreen;">
                                             <p style="margin-top: 15px;">
-                                                Wolne
+                                                @lang('common.available')
                                             </p>
                                         </a>
                                 </div>
@@ -164,7 +164,7 @@
                             @endif
                         @endfor
                     @else
-                        <h3 style="padding: 40px; color: coral;">Ten dzień nie posiada otwartego grafiku</h3>
+                        <h3 style="padding: 40px; color: coral;">@lang('common.had_not_sent_graphic_request')</h3>
                     @endif
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
@@ -175,7 +175,7 @@
     <div class="modal hide" id="makeAnAppointment">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Rezerwacja wizyty</h3>
+                <h3>@lang('common.appointment_reservation')</h3>
                 <button class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">                
@@ -194,7 +194,7 @@
                         <input type="hidden" name="day" value="{{$current_day}}"/>
                     </div>
                  
-                    {{ Form::submit('Przejdz do rezerwacji', array('class' => 'btn btn-primary')) }}
+                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn btn-primary">
 
                 {{ Form::close() }}
                  

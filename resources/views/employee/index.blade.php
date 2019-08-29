@@ -5,7 +5,7 @@
 {!! Html::style('css/employee_index.css') !!}
 
 <div class="container">
-    <h1 class="text-center padding-top">Pracownicy</h1>
+    <h1 class="text-center padding-top">@lang('common.employees')</h1>
     @for ($i = 1; $i <= count($employees); $i++)
         @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
             <div class="row padding">
@@ -20,7 +20,7 @@
                                 >
                             </div>
                         @else
-                            todo: doać defaultowe zdjęcie?
+                            todo: dodać defaultowe zdjęcie?
                         @endif
                         <div class="card-body">
                             <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
@@ -47,7 +47,7 @@
                                 >
                             </div>
                         @else
-                            todo: doać defaultowe zdjęcie?
+                            todo: dodać defaultowe zdjęcie?
                         @endif
                         <div class="card-body">
                             <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
@@ -75,7 +75,7 @@
                             >
                         </div>
                     @else
-                        todo: doać defaultowe zdjęcie?
+                        todo: ddoać defaultowe zdjęcie?
                     @endif
                     <div class="card-body">
                         <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>

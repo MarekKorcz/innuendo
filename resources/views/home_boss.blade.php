@@ -5,15 +5,21 @@
 
 <div class="container" style="padding: 2rem;">
     <div class="card-header text-center">
-        <span style="font-size: 27px;">Moje konto</span> - zalogowany jako <strong>{{$user->name}} {{$user->surname}}</strong>
+        <span style="font-size: 27px;">
+            @lang('navbar.my_account') 
+        </span> 
+        - @lang('common.logged_in_as') 
+        <strong>
+            {{$user->name}} {{$user->surname}}
+        </strong>
     </div>
     <div class="wrapper">
         @if ($user->isApproved == 1)
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Twoje wizyty</h4>
+                    <h4 class="card-title text-center">@lang('common.appointments')</h4>
                     <p class="card-text text-center">
-                        Widok Twoich wizyt 
+                        @lang('common.your_appointments_view') 
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/appointment/index') }}">
@@ -25,9 +31,9 @@
 
     <!--        <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Grafiki</h4>
+                    <h4 class="card-title text-center">@lang('common.schedules')</h4>
                     <p class="card-text text-center">
-                        Grafiki wraz z opisem lokalizacji oraz wykonujących zabiegi
+                        @lang('common.schedules_with_property_description_and_executor')
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/user/properties') }}">
@@ -67,9 +73,9 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Panel zarządzania lokalizacjami i subskrypcjami</h4>
+                    <h4 class="card-title text-center">@lang('common.property_and_subscription_management_panel')</h4>
                     <p class="card-text text-center">
-                        Widok z lokalizacjami oraz z przypisanymi do nich subskrypcjami wraz z pracownikami zarejestrowanymi do korzystania z nich 
+                        @lang('common.property_and_subscription_management_panel_with_attached_workers')
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('boss/subscription/list/0/0') }}">
@@ -81,9 +87,9 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Panel z zapytaniami o otwarcie grafików</h4>
+                    <h4 class="card-title text-center">@lang('common.graphic_requests_management_panel')</h4>
                     <p class="card-text text-center">
-                        Widok z listą zapytań o otwarcie w danych dniach grafików
+                        @lang('common.graphic_requests_management_panel_description')
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('boss/graphic-requests') }}">
@@ -95,9 +101,9 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Generacja kodów rejestracji</h4>
+                    <h4 class="card-title text-center">@lang('common.register_codes_generation')</h4>
                     <p class="card-text text-center">
-                        Widok generacji kodów do rejestracji dla praconików w celu przydzielenia ich do odpowiednich pakietów
+                        @lang('common.register_codes_generation_description')
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('boss/codes/') }}">
@@ -109,9 +115,9 @@
         @else
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Umów się z nami</h4>
+                    <h4 class="card-title text-center">@lang('common.make_an_appointment_with_us')</h4>
                     <p class="card-text text-center">
-                        Skontaktuj się z nami w celu przeprowadzenia weryfikacji i ułatwienia dalszego etapu (todo: do poprawy na bank)
+                        @lang('common.make_an_appointment_with_us_description')
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/boss/approve/messages') }}">

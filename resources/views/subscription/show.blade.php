@@ -9,13 +9,13 @@
             <div class="navbar-header">
                 {!!Form::open(['action' => ['SubscriptionController@destroy', $subscription->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                     {{ Form::hidden('_method', 'DELETE') }}
-                    {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                    <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
                 {!!Form::close()!!}
             </div>
             <ul class="nav navbar-nav">
                 <li>
                     <a class="btn btn-primary" href="{{ URL::to('/subscription/' . $subscription->id . '/edit') }}">
-                        Edit
+                        @lang('common.edit')
                     </a>
                 </li>
             </ul>
@@ -27,13 +27,13 @@
         <div class="text-center">
             <h3>{!! $subscription->description !!}</h3>
         </div>
-        <p>Old price: <strong>{{ $subscription->old_price }}</strong></p>
-        <p>New price: <strong>{{ $subscription->new_price }}</strong></p>
-        <p>Quantity per month: <strong>{{ $subscription->quantity }}</strong></p>
-        <p>How many months since start: <strong>{{ $subscription->duration }}</strong></p>
+        <p>@lang('common.old_price') : <strong>{{ $subscription->old_price }}</strong></p>
+        <p>@lang('common.new_price') : <strong>{{ $subscription->new_price }}</strong></p>
+        <p>@lang('common.quantity_per_month') : <strong>{{ $subscription->quantity }}</strong></p>
+        <p>@lang('common.how_many_months_since_start') : <strong>{{ $subscription->duration }}</strong></p>
         <div class="form-group">
             @if (count($properties) > 0)
-                <h3 class="text-center">Subscriptions in property:</h3>
+                <h3 class="text-center">@lang('common.subscriptions_available_for_purchase') :</h3>
                 <ul id="properties" data-subscription_id="{{ $subscription->id }}">
                     @foreach($properties as $property)
                         @if($property['active'])
@@ -45,7 +45,7 @@
                 </ul>
             @endif
             @if (count($tempProperties) > 0)
-                <h3 class="text-center">Subscriptions in temporary property:</h3>
+                <h3 class="text-center">@lang('common.subscriptions_available_for_purchase_in_temp_properties') :</h3>
                 <ul id="tempProperties" data-subscription_id="{{ $subscription->id }}">
                     @foreach($tempProperties as $tempProperty)
                         @if($tempProperty['active'])
@@ -57,7 +57,7 @@
                 </ul>
             @endif
         </div>
-        <h3 class="text-center">Items in subscription:</h3>
+        <h3 class="text-center">@lang('common.items_in_subscription') :</h3>
         <div class="form-group">
             <ul id="items" data-subscription_id="{{ $subscription->id }}">
                 @foreach($items as $item)

@@ -4,26 +4,26 @@
     <div class="jumbotron" style="margin-top: 15px;">
         {{ Form::open(['action' => 'AdminController@employeeAdd', 'method' => 'POST']) }}
         
-            <h2 class="text-center">Create Employee account</h2>
+            <h2 class="text-center">@lang('common.create_employee_account')</h2>
 
             <div class="form-group">
-                {{ Form::label('name', 'Name') }}
+                <label for="name">@lang('common.name')</label>
                 {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
             </div>
             <div class="form-group">
-                {{ Form::label('surname', 'Surname') }}
+                <label for="surname">@lang('common.surname')</label>
                 {{ Form::text('surname', Input::old('surname'), array('class' => 'form-control')) }}
             </div>
             <div class="form-group">
-                {{ Form::label('email', 'Email') }}
+                <label for="email">@lang('common.email_address')</label>
                 {{ Form::text('email', Input::old('email'), array('class' => 'form-control')) }}
             </div>
             <div class="form-group">
-                {{ Form::label('phone_number', 'Phone number') }}
+                <label for="phone_number">@lang('common.phone_number')</label>
                 {{ Form::number('phone_number', Input::old('phone_number'), array('class' => 'form-control')) }}
             </div>
 
-            {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+            <input type="submit" value="@lang('common.create')" class="btn btn-primary">
 
         {{ Form::close() }}
     </div>

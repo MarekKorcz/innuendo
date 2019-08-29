@@ -1,11 +1,10 @@
 @component('mail::message')
 
-# Resetowanie hasła do Twojego konta
+# @lang('common.reset_password_to_your_account')
 
-Witaj,
+@lang('common.greetings') ,
 
-Otrzymujesz ten e-mail, ponieważ dostaliśmy prośbę o zresetowanie hasła do Twojego konta. 
-Kliknij w poniższy przycisk aby tego dokonać.
+@lang('common.reset_password_to_your_account_description')
 
 {{-- Action Button --}}
 @isset($actionText)
@@ -20,7 +19,7 @@ Kliknij w poniższy przycisk aby tego dokonać.
     }
 ?>
 @component('mail::button', ['url' => $actionUrl, 'color' => $color])
-Resetuj
+@lang('common.password_reset')
 @endcomponent
 @endisset
 

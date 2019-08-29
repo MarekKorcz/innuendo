@@ -6,7 +6,7 @@
 
 <div class="container">
 
-    <h1 class="text-center padding">Lista dostępnych pakietów</h2>
+    <h1 class="text-center padding">@lang('common.available_subscriptions')</h2>
     
     <hr>
     
@@ -21,11 +21,11 @@
                     <div class="text-center">
                         @if ($subscription->purchase_id)
                             <a class="btn btn-success" href="{{ URL::to('user/subscription/purchased/show/' . $subscription->purchase_id) }}">
-                                Posiadasz już ten pakiet
+                                @lang('common.already_have_subscription')
                             </a>
                         @else
                             <a class="btn btn-success" href="{{ URL::to('user/subscription/show/' . $property->id . '/' . $subscription->id) }}">
-                                Wykup
+                                @lang('common.buy')
                             </a>  
                         @endif
                     </div>

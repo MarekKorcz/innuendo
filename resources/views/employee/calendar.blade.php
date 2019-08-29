@@ -9,7 +9,7 @@
 <div class="container">
     
     <a class="btn btn-primary" href="{{ URL::to('/employee/' . $employee_slug) }}">
-        Back to Employee
+        @lang('common.back_to_employee')
     </a>
 
     <div id="calendar" class="table-responsive">
@@ -47,12 +47,12 @@
         <table class="table">
             <thead>
                 <tr id="days">
-                    <th class="text-center">Pon</th>
-                    <th class="text-center">Wt</th>
-                    <th class="text-center">Śr</th>
-                    <th class="text-center">Czw</th>
-                    <th class="text-center">Pt</th>
-                    <th class="text-center">Sob</th>
+                    <th class="text-center">@lang('common.monday_abbreviation')</th>
+                    <th class="text-center">@lang('common.thuesday_abbreviation')</th>
+                    <th class="text-center">@lang('common.wednesday_abbreviation')</th>
+                    <th class="text-center">@lang('common.thursday_abbreviation')</th>
+                    <th class="text-center">@lang('common.friday_abbreviation')</th>
+                    <th class="text-center">@lang('common.saturday_abbreviation')</th>
                 </tr>
             </thead>
             <tbody>
@@ -122,16 +122,16 @@
                                         <a href="#makeAnAppointment" 
                                            data-toggle="modal" 
                                            data-id="{{$graphic[$i]['time']}}" 
-                                           title="Kliknij by rozpocząć rezerwacje" 
+                                           title="@lang('common.click_to_make_reservation')" 
                                            class="appointment-term box-1" 
                                            style="background-color: lightgreen;">
                                             <p style="margin-top: 15px;">
-                                                Wolne
+                                                @lang('common.available')
                                             </p>
                                         </a>
                                     @else
                                         <div class="appointment-term box-1" style="background-color: lightgrey;">
-                                            Wolne
+                                            @lang('common.available')
                                         </div>
                                     @endif
                                 </div>
@@ -141,11 +141,11 @@
                                     @if ($graphic[$i]['appointmentId'] == 0)
                                         @if ($graphic[$i]['canMakeAnAppointment']) 
                                             <div class="box-1">
-                                                Zajęte
+                                                @lang('common.booked')
                                             </div>
                                         @else
                                             <div class="box-1" style="background-color: lightgrey;">
-                                                Zajęte
+                                                @lang('common.booked')
                                             </div>
                                         @endif
                                     @elseif ($graphic[$i]['appointmentId'] > 0)
@@ -153,7 +153,7 @@
                                            class="appointment-term box-1" 
                                            style="background-color: skyblue;">
                                             <p style="margin-top: 15px;">
-                                                Szczegóły wizyty
+                                                @lang('common.appointment_details')
                                             </p>
                                         </a>
                                     @endif
@@ -165,11 +165,11 @@
                                     @if ($graphic[$i]['appointmentId'] == 0)
                                         @if ($graphic[$i]['canMakeAnAppointment']) 
                                             <div class="box-2">
-                                                Zajęte
+                                                @lang('common.booked')
                                             </div>
                                         @else
                                             <div class="box-2" style="background-color: lightgrey;">
-                                                Zajęte
+                                                @lang('common.booked')
                                             </div>
                                         @endif
                                     @elseif ($graphic[$i]['appointmentId'] > 0)
@@ -177,7 +177,7 @@
                                            class="appointment-term box-2" 
                                            style="background-color: skyblue;">
                                             <p style="margin-top: 45px;">
-                                                Szczegóły wizyty
+                                                @lang('common.appointment_details')
                                             </p>
                                         </a>
                                     @endif
@@ -190,11 +190,11 @@
                                     @if ($graphic[$i]['appointmentId'] == 0)
                                         @if ($graphic[$i]['canMakeAnAppointment']) 
                                             <div class="box-3">
-                                                Zajęte
+                                                @lang('common.booked')
                                             </div>
                                         @else
                                             <div class="box-3" style="background-color: lightgrey;">
-                                                Zajęte
+                                                @lang('common.booked')
                                             </div>
                                         @endif
                                     @elseif ($graphic[$i]['appointmentId'] > 0)
@@ -202,7 +202,7 @@
                                            class="appointment-term box-3" 
                                            style="background-color: skyblue;">
                                             <p style="margin-top: 72px;">
-                                                Szczegóły wizyty
+                                                @lang('common.appointment_details')
                                             </p>
                                         </a>
                                     @endif
@@ -213,14 +213,14 @@
                         @if ($canSendRequest)
                             @if ($graphicRequest !== null)
                                 <p style="padding-top: 40px; font-size: 24px;">
-                                    Wysłałeś już zapytanie o otwarcie grafiku w tym dniu
+                                    @lang('common.already_sent_graphic_request')
                                 </p>
                                 <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id) }}" class="btn btn-success" style="color: white;">
                                     @lang('common.show')
                                 </a>
                             @else
                                 <p style="padding-top: 40px; font-size: 24px;">
-                                    Wyślij zapytanie o otwarcie tego dnia grafiku
+                                    @lang('common.send_graphic_request')
                                 </p>
                                 <a href="#makeAGraphicRequest" 
                                    id="request-btn" 
@@ -228,11 +228,11 @@
                                    style="color: white;"
                                    data-toggle="modal"
                                 >
-                                    Wyślij
+                                    @lang('common.send')
                                 </a>
                             @endif
                         @else
-                            <h3 style="padding: 40px; color: coral;">Ten dzień nie posiada otwartego grafiku</h3>
+                            <h3 style="padding: 40px; color: coral;">@lang('common.had_not_sent_graphic_request')</h3>
                         @endif
                     @endif
                 </div>
@@ -244,7 +244,7 @@
     <div class="modal hide" id="makeAnAppointment">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Rezerwacja wizyty</h3>
+                <h3>@lang('common.appointment_reservation')</h3>
                 <button class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">         
@@ -262,7 +262,7 @@
                         <input type="hidden" name="day" value="{{$current_day}}"/>
                     </div>
                  
-                    {{ Form::submit('Przejdz do rezerwacji', array('class' => 'btn btn-primary')) }}
+                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn btn-primary">
 
                 {{ Form::close() }}
             </div>
@@ -272,19 +272,19 @@
     <div id="makeAGraphicRequest" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Wyślij zapytanie o otwarcie grafiku</h3>
+                <h3>@lang('common.send_graphic_request')</h3>
                 <button class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
                 {{ Form::open(['id' => 'request-form', 'action' => 'BossController@makeAGraphicRequest', 'method' => 'POST', 'novalidate' => true]) }}
 
                         <div class="form-group">
-                            {{ Form::label('start_time', 'Od której godziny') }}
+                            <label for="start_time">@lang('common.start_time')</label>
                             {{ Form::time('start_time', Input::old('start_time'), array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
                         <div class="form-group">
-                            {{ Form::label('end_time', 'Do której godziny') }}
+                            <label for="end_time">@lang('common.end_time')</label>
                             {{ Form::time('end_time', Input::old('end_time'), array('class' => 'form-control')) }}
                             <div class="warning"></div>
                         </div>
@@ -292,7 +292,7 @@
                         <div id="appointment-quantity-counter"></div>
                                                 
                         @if (count($employees) > 0)
-                            <p class="text-center">Wybierz spośród naszych pracowników</p>
+                            <p class="text-center">@lang('common.choose_from_within_our_employees')</p>
                             <ul id="employees" style="padding: 12px;">
                                 @foreach($employees as $employee)
                                     @if(count($employees) == 1)
@@ -306,7 +306,7 @@
                         @endif
 
                         <div class="form-group">
-                            {{ Form::label('comment', 'Komentarz do zapytania') }}
+                            <label for="comment">@lang('common.comment')</label>
                             {{ Form::textarea('comment', Input::old('comment'), array('class' => 'form-control')) }}
                         </div>
                         
@@ -321,7 +321,7 @@
                         @endif
                  
                         <div class="text-center">
-                            {{ Form::submit('Przejdz do rezerwacji', array('class' => 'btn btn-success')) }}
+                            <input type="submit" value="@lang('common.go_to_reservation')" class="btn btn-success">
                         </div>
 
                 {{ Form::close() }}

@@ -5,13 +5,13 @@
 {!! Html::script('js/approve_messages.js') !!}
 
     <div id="title" class="container">
-        <h2 class="text-center" style="padding-top: 2rem;">Messages between admin and {{$promoCode->boss->name}} {{$promoCode->boss->surname}} ( {{$promoCode->promo->title}} )</h2>
+        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.messages_between_admin_and') {{$promoCode->boss->name}} {{$promoCode->boss->surname}} ( {{$promoCode->promo->title}} )</h2>
         <div id="approve-button" class="text-center" style="padding-top: 1rem; padding-bottom: 1rem;">
             <a class="btn btn-info" href="{{ URL::to('/admin/approve/message/status/change/' . $promoCode->id) }}">
                 @if ($promoCode->boss->isApproved == 0)
-                    Approve
+                    @lang('common.approve')
                 @else
-                    Disapprove
+                    @lang('common.disapprove')
                 @endif
             </a>
         </div>
@@ -64,7 +64,7 @@
                 {{ Form::hidden('boss_id', $boss->id) }}
             
                 <div class="text-center">
-                    {{ Form::submit('Wyślij', array('class' => 'btn btn-primary')) }}
+                    <input type="submit" value="@lang('common.send')" class="btn btn-primary">
                 </div>
 
             {{ Form::close() }}

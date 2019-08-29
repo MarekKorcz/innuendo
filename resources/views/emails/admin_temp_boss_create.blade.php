@@ -1,15 +1,15 @@
 @component('mail::message')
 
-# Rejestracja do {{ config('app.name') }}
+# @lang('common.registration_to') {{ config('app.name') }}
 
-Witaj, {{$boss->name}} {{$boss->surname}}
+@lang('common.greetings') , {{$boss->name}} {{$boss->surname}}
 
-W celu zakończenia procesu rejestracji, kliknij w poniższy przycisk i wypełnij pozostałe dane oraz hasło.
+@lang('common.admin_temp_boss_create_mail_text')
 
 @component('mail::button', ['url' => $tempBossRegisterAddress])
 @lang('common.register')
 @endcomponent
 
-Dziękujemy, <br>
+@lang('common.thank_you') , <br>
 {{ config('app.name') }}
 @endcomponent

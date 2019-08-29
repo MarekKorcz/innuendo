@@ -6,37 +6,37 @@
             <div class="navbar-header">
                 {!!Form::open(['action' => ['PropertyController@destroy', $property->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                     {{ Form::hidden('_method', 'DELETE') }}
-                    {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                    <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
                 {!!Form::close()!!}
             </div>
             <ul class="nav navbar-nav">
                 <li>
                     <a class="btn btn-success" href="{{ URL::to('property/' . $property->id . '/edit') }}">
-                        Edit
+                        @lang('common.edit')
                     </a>
                 </li>
             </ul>
         </nav>
         
-        <h2 class="text-center">Property values:</h2>
+        <h2 class="text-center">@lang('common.property_values') :</h2>
         
         <table class="table table-striped">
             <tr>
-                <th>Name:</th>
-                <th>Owner:</th>
-                <th>Description:</th>
-                <th>Street:</th>
-                <th>Street number:</th>
-                <th>House number:</th>
-                <th>City:</th>
-                <th>canShow:</th>
+                <th>@lang('common.name') :</th>
+                <th>@lang('common.owner') :</th>
+                <th>@lang('common.description') :</th>
+                <th>@lang('common.street') :</th>
+                <th>@lang('common.street_number') :</th>
+                <th>@lang('common.house_number') :</th>
+                <th>@lang('common.city') :</th>
+                <th>@lang('common.can_show') :</th>
             </tr>
             <tr>
                 <td>{{ $property->name }}</td>
                 @if ($property->boss !== null)
                     <td>{{ $property->boss->name }} {{ $property->boss->surname }}</td>
                 @else
-                    <td>Public</td>
+                    <td>@lang('common.public')</td>
                 @endif
                 <td>{!! $property->description !!}</td>
                 <td>{{ $property->street }}</td>
@@ -46,23 +46,23 @@
                 <td>
                     @if ($property->canShow == 0)
                         <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
-                            Show
+                            @lang('common.show')
                         </a>
                     @else
                         <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
-                            Don't Show
+                            @lang('common.do_not_show')
                         </a>
                     @endif
                 </td>
             </tr>
         </table>
         
-        <h3 class="text-center">Subscriptions:</h3>
+        <h3 class="text-center">@lang('common.subscriptions') :</h3>
     
         <ul class="nav navbar-nav">
             <li>
                 <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('subscription/create/' . $property->id) }}">
-                    Create Subscription
+                    @lang('common.create_subscription')
                 </a>
             </li>
         </ul>
@@ -70,12 +70,12 @@
         @if (count($subscriptions) > 0)
             <table class="table table-striped">
                 <tr>
-                    <th>Name:</th>
-                    <th>Description:</th>
-                    <th>Old Price:</th>
-                    <th>New price:</th>
-                    <th>Quantity:</th>
-                    <th>Duration:</th>
+                    <th>@lang('common.name') :</th>
+                    <th>@lang('common.description') :</th>
+                    <th>@lang('common.old_price') :</th>
+                    <th>@lang('common.new_price') :</th>
+                    <th>@lang('common.quantity') :</th>
+                    <th>@lang('common.duration') :</th>
                 </tr>
                     @foreach ($subscriptions as $subscription)
                         <tr>
@@ -89,7 +89,7 @@
                     @endforeach
             </table>
         @else
-            <h4>There is no subscriptions attached</h4>
+            <h4>@lang('common.there_is_no_subscriptions_attached')</h4>
         @endif
     </div>
         
@@ -101,13 +101,13 @@
                         {!!Form::open(['action' => ['CalendarController@deactivate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                             {{ Form::hidden('property_id', $property->id) }}
                             {{ Form::hidden('_method', 'POST') }}
-                            {{ Form::submit('Deactivate Calendar', ['class' => 'btn btn-primary']) }}
+                            <input type="submit" value="@lang('common.deactivate_calendar')" class="btn btn-primary">
                         {!!Form::close()!!}
                     @else
                         {!!Form::open(['action' => ['CalendarController@activate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                             {{ Form::hidden('property_id', $property->id) }}
                             {{ Form::hidden('_method', 'POST') }}
-                            {{ Form::submit('Activate Calendar', ['class' => 'btn btn-success']) }}
+                            <input type="submit" value="@lang('common.activate_calendar')" class="btn btn-success">
                         {!!Form::close()!!}
                     @endif
                 </div>
@@ -115,19 +115,19 @@
                     {!!Form::open(['action' => ['CalendarController@destroy', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                         {{ Form::hidden('property_id', $property->id) }}
                         {{ Form::hidden('_method', 'DELETE') }}
-                        {{ Form::submit('Delete Calendar', ['class' => 'btn btn-danger']) }}
+                        <input type="submit" value="@lang('common.delete_calendar')" class="btn btn-danger">
                     {!!Form::close()!!}
                 </div>
                 
                 @if ($calendar->employee_id != null)
                     <div class="text-center" style="margin-bottom: 40px;">
                         <h2 style="margin-bottom: 15px;">
-                            Calendar assigned to 
+                            @lang('common.calendar_assigned_to')
                             <a href="{{ URL::to('employee/' . $employees[$calendar->id]->slug) }}">
                                 {{$employees[$calendar->id]->name}}
                             </a>
                         </h2>
-                        <h3>Years:</h3>
+                        <h3>@lang('common.years') :</h3>
                     </div>
                     @if (count($years[$calendar->id]) > 0)
                         <div class="list-group">
@@ -140,14 +140,14 @@
                     @endif
                     <div class="text-center" style="padding-top: 30px;">
                         <a class="btn btn-success" href="{{ action('YearController@create', $calendar->id) }}">
-                            Add Year
+                            @lang('common.add_year')
                         </a>
                     </div>
                 @else
-                    <h1 class="text-center">New calendar</h1>
+                    <h1 class="text-center">@lang('common.new_calendar')</h1>
                     <div class="text-center" style="padding-top: 30px;">
                         <a class="btn btn-primary" href="{{ action('EmployeeController@assign', $calendar->id) }}">
-                            Assign Calendar to Employee
+                            @lang('common.assign_calendar_to_employee')
                         </a>
                     </div>
                 @endif
@@ -157,7 +157,7 @@
 
     <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
         <a class="btn btn-success" href="{{ action('CalendarController@create', $property->id) }}">
-            Create Calendar
+            @lang('common.create_calendar')
         </a>
     </div>
     

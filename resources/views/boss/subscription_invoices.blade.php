@@ -5,13 +5,16 @@
 {!! Html::script('js/subscription_invoices.js') !!}
 
 <div class="container">
-    <h1 class="text-center">Subskrypcja - {{$subscription->name}}</h1>
+    <h1 class="text-center">
+        @lang('common.subscription_capital') 
+        {{$subscription->name}}
+    </h1>
     <div class="text-center" style="margin: 1rem;">
         <a href="{{ URL::to('/boss/subscription/invoice/edit/' . $invoiceData->id . '/' . $substart->id) }}" class="btn btn-success">
-            Edytuj dane do faktury
+            @lang('common.edit_invoice_data')
         </a> 
     </div>
-    <h3 class="text-center">Faktury za okres:</h3>
+    <h3 class="text-center">@lang('common.invoice_for_period') :</h3>
     <div class="row">
         <div class="col"></div>
         <div class="col-9">

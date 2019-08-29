@@ -7,11 +7,14 @@
 <div class="container">
     
     <div class="text-center">
-        <h2>Zabiegi dotyczące subskrypcji - {{$subscription->name}}</h2>
+        <h2>
+            @lang('common.subscription_massages')
+            {{$subscription->name}}
+        </h2>
     </div>
     <div id="workers-panel" class="wrapper cont">
         <div class="text-center">
-            <label for="search">Wpisz imię lub nazwisko:</label>
+            <label for="search">@lang('common.write_your_name_and_lastname') :</label>
             @if($worker !== null)
                 <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" autocomplete="off">
             @else
@@ -21,7 +24,7 @@
         </div>
         <div class="text-center">
             @if ($substart->isActive)
-                <label for="timePeriod">Wybierz okres rozliczeniowy:</label>
+                <label for="timePeriod">@lang('common.select_a_billing_period') :</label>
                 <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
                     @foreach ($intervals as $key => $interval)
                         @if ($interval->start_date <= $today && $interval->end_date >= $today ||
@@ -33,21 +36,25 @@
                     @endforeach
                 </select>
             @else
-                <p>Subskrypcja nie została jeszcze aktywowana. Aktywacja nastąpi wraz ze zrealizowaniem pierwszego zabiegu</p>
+                <p>@lang('common.subscription_first_time_activation_info')</p>
             @endif
         </div>
     </div>
     
     <div class="col-sm-12 col-md-12 col-lg-12 col-12">
         <h2 class="text-center">
-            Wszystkie wizyty
+            @lang('common.all_massages')
             @if ($worker !== null)
-                należące do {{$worker->name}} {{$worker->surname}}
+                @lang('common.belonging_to')                
+                {{$worker->name}} {{$worker->surname}}
             @endif
             @if ($intervals)
                 @foreach ($intervals as $interval)
                     @if ($interval->start_date <= $today && $interval->end_date >= $today)
-                        za okres od {{$interval->start_date->format('Y-m-d')}} do {{$interval->end_date->format('Y-m-d')}}
+                        @lang('common.for_the_period_from')
+                        {{$interval->start_date->format('Y-m-d')}}
+                        @lang('common.to')
+                        {{$interval->end_date->format('Y-m-d')}}
                     @endif
                 @endforeach
             @endif
@@ -58,12 +65,12 @@
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>                
-                    <td>Data</td>
-                    <td>Godzina</td>
+                    <td>@lang('common.date')</td>
+                    <td>@lang('common.hour')</td>
                     <td>@lang('common.name_and_surname')</td>
-                    <td>Zabieg</td>
-                    <td>Wykonawca</td>
-                    <td>Status</td>
+                    <td>@lang('common.massage')</td>
+                    <td>@lang('common.executor')</td>
+                    <td>@lang('common.status')</td>
                 </tr>
             </thead>
             <tbody id="appointments">

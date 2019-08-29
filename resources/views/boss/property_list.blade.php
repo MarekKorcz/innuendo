@@ -5,7 +5,7 @@
 {!! Html::style('css/property_list.css') !!}
 
 <div class="container">
-    <h1 class="text-center padding-top">Twoje Lokalizacje</h1>
+    <h1 class="text-center padding-top">@lang('common.your_properties')</h1>
     
     
     <div class="wrapper">
@@ -20,7 +20,8 @@
                     @if ($property->description)
                         {!!$property->description!!}
                     @endif
-                    <p>@lang('common.address') : 
+                    <p>
+                        @lang('common.address') : 
                         <strong>
                             {{$property->street}} 
                             {{$property->street_number}} / 

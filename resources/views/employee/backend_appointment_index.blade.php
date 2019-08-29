@@ -5,24 +5,24 @@
     <nav class="navbar navbar-inverse">
         <div class="navbar-header">
             <a class="btn btn-success" href="{{ URL::previous() }}">
-                Wróć
+                @lang('common.go_back')
             </a>
         </div>
     </nav>
 
-    <h1>Wszystkie wizyty</h1>
+    <h1>@lang('common.all_massages')</h1>
     
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Data</td>
-                <td>Godzina</td>
-                <td>Gdzie</td>
-                <td>Nazwa</td>
-                <td>Czas</td>
-                <td>Wykonawca</td>
-                <td>Status</td>
-                <td>Akcja</td>
+                <td>@lang('common.date')</td>
+                <td>@lang('common.hour')</td>
+                <td>@lang('common.where')</td>
+                <td>@lang('common.label')</td>
+                <td>@lang('common.time')</td>
+                <td>@lang('common.executor')</td>
+                <td>@lang('common.status')</td>
+                <td>@lang('common.action')</td>
             </tr>
         </thead>
         <tbody>

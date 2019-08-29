@@ -2,16 +2,16 @@
 @section('content')
 <div class="container">
 
-    <h1>Wszystkie zapytania o grafiki</h1>
+    <h1>@lang('common.all_graphic_requests')</h1>
     
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Data</td>
-                <td>Godzina</td>
-                <td>Komentarz</td>
-                <td>Ilu pracowników</td>
-                <td>Akcja</td>
+                <td>@lang('common.date')</td>
+                <td>@lang('common.hour')</td>
+                <td>@lang('common.comment')</td>
+                <td>@lang('common.number_of_employees')</td>
+                <td>@lang('common.action')</td>
             </tr>
         </thead>
         <tbody>

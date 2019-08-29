@@ -7,26 +7,26 @@
         <ul class="nav navbar-nav">
             <li>
                 <a href="{{ URL::previous() }}" class="btn btn-primary">
-                    Wróć
+                    @lang('common.go_back')
                 </a>
             </li>
         </ul>
     </nav>
 
-    <h1>Edytuj wizytę</h1>
+    <h1>@lang('common.appointment_edit')</h1>
 
     {{ Form::open(['action' => ['WorkerController@appointmentUpdate', $appointment->id], 'method' => 'POST']) }}
 
         <div class="form-group">
-            {{ Form::label('start_time', 'Godzina rozpoczęcia') }}
+            <label for="start_time">@lang('common.start_time') :</label>
             {{ Form::time('start_time', $appointment->start_time, array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('end_time', 'Godzina zakończenia') }}
+            <label for="end_time">@lang('common.end_time') :</label>
             {{ Form::time('end_time', $appointment->end_time, array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            <label for="item">Rodzaj wizyty: </label>
+            <label for="item">@lang('common.massages') :</label>
             <select name="item" class="form-control">
                 @foreach ($items as $item)
                     @if ($item['isActive'])
@@ -38,7 +38,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="item">Status: </label>
+            <label for="item">@lang('common.status') :</label>
             <select id="appointment-status" name="status" class="form-control">
                 @foreach ($statuses as $status)
                     @if ($status['isActive'])

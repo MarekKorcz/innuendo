@@ -82,7 +82,7 @@
                         </div>
                         
                         <div class="form-group row">
-                            <label for="code" class="col-md-4 col-form-label text-md-right">Kod rejestracyjny:</label>
+                            <label for="code" class="col-md-4 col-form-label text-md-right">@lang('common.registration_code') :</label>
 
                             <div class="col-md-6">
                                 <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" required>
@@ -145,27 +145,27 @@
                     <h3 class="text-center">@lang('common.report_your_company')</h3>
 
                     <div class="form-group">
-                        <label for="property_name">@lang('common.company_name')</label>
+                        <label for="property_name">@lang('common.company_name') :</label>
                         {{ Form::text('property_name', Input::old('property_name'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        <label for="street">@lang('common.street')</label>
+                        <label for="street">@lang('common.street') :</label>
                         {{ Form::text('street', Input::old('street'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        <label for="street_number">@lang('common.street_number')</label>
+                        <label for="street_number">@lang('common.street_number') :</label>
                         {{ Form::text('street_number', Input::old('street_number'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        <label for="house_number">@lang('common.house_number')</label>
+                        <label for="house_number">@lang('common.house_number') :</label>
                         {{ Form::text('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        <label for="city">@lang('common.city')</label>
+                        <label for="city">@lang('common.city') :</label>
                         {{ Form::text('city', Input::old('city'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>

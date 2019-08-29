@@ -14,7 +14,7 @@
                             <div class="text-right">
                                 {!!Form::open(['action' => ['BossController@destroyCode', $codes[$i]['code_id']], 'method' => 'POST'])!!}
                                     {{ Form::hidden('_method', 'DELETE') }}
-                                    {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                                    <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
                                 {!!Form::close()!!}
                             </div>
                             <div class="text-center">
@@ -77,21 +77,21 @@
 
                                         @if ($codes[$i]['code'])
                                             <p>
-                                                Przy rejestracji pracownicy muszą wpisać poniższy kod
+                                                @lang('common.registration_code_description')
                                             </p>
                                             <p>
-                                                Kod do rejestracji:
+                                                @lang('common.registration_code') :
                                                 <input class="code-text" name="code-text" type="text" value="{{$codes[$i]['code']}}" style="margin: 0px 12px 0px 12px;">
                                                 <a class="btn btn-info copy-button">
-                                                    Kopjuj kod
+                                                    @lang('common.registration_code_copy')
                                                 </a>
                                             </p>
 
                                             <input name="code" type="hidden" value="false">
-                                            {{ Form::submit('Wyłącz rejestracje', array('class' => 'btn btn-warning')) }}
+                                            <input type="submit" value="@lang('common.turn_registration_off')" class="btn btn-warning">
                                         @else
                                             <input name="code" type="hidden" value="true">
-                                            {{ Form::submit('Włącz rejestracje', array('class' => 'btn btn-success')) }}
+                                            <input type="submit" value="@lang('common.turn_registration_on')" class="btn btn-success">
                                         @endif
                                     </div>
                                 {{ Form::close() }}
@@ -104,7 +104,7 @@
         
         <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
             <a class="btn btn-success" href="{{ action('BossController@addCode') }}">
-                Dodaj nowy kod
+                @lang('common.add_new_code')
             </a>
         </div>
     </div>

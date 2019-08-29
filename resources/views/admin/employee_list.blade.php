@@ -7,20 +7,20 @@
         <ul class="nav navbar-nav">
             <li style="padding: 5px;">
                 <a href="{{ URL::to('admin/employee/create') }}" class="btn btn-primary">
-                    Create new Employee
+                    @lang('common.create_employee_account')
                 </a>
             </li>
         </ul>
     </nav>
     
-    <h2>TempUser employee entites:</h2>
+    <h2>@lang('common.temp_user_employee_entites') :</h2>
 
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Name</td>
-                <td>Created At</td>
-                <td>Activation Email</td>
+                <td>@lang('common.name')</td>
+                <td>@lang('common.created_at')</td>
+                <td>@lang('common.activation_email')</td>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +30,7 @@
                     <td>{{$tempEmployee->created_at}}</td>
                     <td>
                         <a class="btn btn-success" href="{{ URL::to('/admin/temp-user/employee/send-activation-email/' . $tempEmployee->id) }}">
-                            Send
+                            @lang('common.send')
                         </a>
                     </td>
                 </tr>
@@ -38,14 +38,14 @@
         </tbody>
     </table>
     
-    <h2>Active Employees: </h2>
+    <h2>@lang('common.active_employees') :</h2>
 
     <table class="table table-striped table-bordered">
         <thead>
             <tr>                
-                <td>Name</td>
-                <td>Created At</td>
-                <td>Action</td>
+                <td>@lang('common.name')</td>
+                <td>@lang('common.created_at')</td>
+                <td>@lang('common.action')</td>
             </tr>
         </thead>
         <tbody>
@@ -55,7 +55,7 @@
                     <td>{{$employee->created_at}}</td>
                     <td>
                         <a class="btn btn-primary" href="{{ URL::to('/admin/employee/show/' . $employee->slug) }}">
-                            Show
+                            @lang('common.show')
                         </a>
                     </td>
                 </tr>

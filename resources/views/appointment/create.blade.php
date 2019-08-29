@@ -9,19 +9,20 @@
         <ul class="nav navbar-nav">
             <li>
                 <a href="{{ URL::to('/employee/calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn btn-primary">
-                    Powrót do kalendarza
+                    @lang('common.back_to_calendar')
                 </a>
             </li>
         </ul>
     </nav>
     
-    <h1 style="padding-top: 30px;">Zarezerwuj wizytę</h1>
+    <h1 style="padding-top: 30px;">@lang('common.reserve_appointment')</h1>
 
     {{ Form::open(['id' => 'appointment-create', 'action' => 'AppointmentController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
             <p>
-                Godzina wizyty: <strong style="font-size: 20px;">{{$appointmentTerm}}</strong>
+                @lang('common.hour') : 
+                <strong style="font-size: 20px;">{{$appointmentTerm}}</strong>
             </p>
             @if ($appointmentTerm)
                 {{ Form::hidden('appointmentTerm', $appointmentTerm) }}
@@ -31,14 +32,14 @@
         </div>
     
         <div class="form-group">
-            {{ Form::label('item', 'Rodzaj zabiegu:') }}
+            <label for="item">@lang('common.massage')</label>
             <select id="item" name="item" class="form-control">
-                <option disabled selected value> --- wybierz rodzaj zabiegu --- </option>
+                <option disabled selected value> @lang('common.choose_massage') </option>
                 @foreach ($items as $item)
                     @if ($item->subscription_name)
-                        <option value="{{$item->id}}" data-subscription_id="{{$item->subscription_id}}">{{$item->name}} - {{$item->minutes}} minut - {{$item->price}} zł - {{$item->subscription_name}}</option>
+                        <option value="{{$item->id}}" data-subscription_id="{{$item->subscription_id}}">{{$item->name}} - {{$item->minutes}} @lang('common.minutes') - {{$item->price}} zł - {{$item->subscription_name}}</option>
                     @else
-                        <option value="{{$item->id}}">{{$item->name}} - {{$item->minutes}} minut - {{$item->price}} zł</option>
+                        <option value="{{$item->id}}">{{$item->name}} - {{$item->minutes}} @lang('common.minutes') - {{$item->price}} zł</option>
                     @endif
                 @endforeach
             </select>
@@ -77,7 +78,7 @@
             {{ Form::hidden('day', Input::old('day')) }}
         @endif
         
-        {{ Form::submit('Zarezerwuj', array('class' => 'btn btn-primary')) }}
+        <input type="submit" value="@lang('common.reserve')" class="btn btn-primary">
 
     {{ Form::close() }}
 </div>

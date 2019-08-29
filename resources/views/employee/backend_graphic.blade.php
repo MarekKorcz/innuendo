@@ -5,7 +5,7 @@
 
 <div class="container">
 
-    <h1 class="text-center" style="padding: 2rem;">Grafiki w:</h1>
+    <h1 class="text-center" style="padding: 2rem;">@lang('common.schedule_in') :</h1>
 
     <div class="wrapper">
         @foreach ($calendars as $calendar)

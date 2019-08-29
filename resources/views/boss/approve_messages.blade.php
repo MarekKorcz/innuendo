@@ -5,7 +5,7 @@
 {!! Html::script('js/approve_messages.js') !!}
 
     <div id="title" class="container">
-        <h2 class="text-center" style="padding-top: 2rem;">Wiadomości dotyczące {{$promoCode->promo->title}}</h2>
+        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.messages_regarding') : {{$promoCode->promo->title}}</h2>
     </div>
 
     <div id="messages" class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
@@ -48,13 +48,13 @@
             {{ Form::open(['id' => 'send-message', 'action' => ['BossController@makeAnApproveMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}
                 
                 <div class="form-group text-center">
-                    {{ Form::text('text', Input::old('text'), array('id' => 'text', 'style' => 'width: 60%;', 'placeholder' => 'Napisz do nas wiadomość', 'autocomplete' => 'off')) }}
+                    <input id="text" type="text" style="width: 60%;" value="{{Input::old('text')}}" placeholder="@lang('common.send_a_message_to_us')" autocomplete="off">
                 </div>
             
                 {{ Form::hidden('promo_code_id', $promoCode->id) }}
             
                 <div class="text-center">
-                    {{ Form::submit('Wyślij', array('class' => 'btn btn-primary')) }}
+                    <input type="submit" value="@lang('common.send')" class="btn btn-primary">
                 </div>
 
             {{ Form::close() }}

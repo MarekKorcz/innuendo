@@ -5,7 +5,7 @@
 {!! Html::style('css/property_list.css') !!}
 
 <div class="container">
-    <h1 class="text-center">Wybierz Lokalizacje z której interesują Cie pakiety</h1>
+    <h1 class="text-center">@lang('common.pick_subscription_from_property')</h1>
     <div id="properties" class="wrapper">
         @foreach ($properties as $property)
             @if ($property->boss_id)
@@ -22,7 +22,8 @@
                     @if ($property->description)
                         {!!$property->description!!}
                     @endif
-                    <p>@lang('common.address') : 
+                    <p>
+                        @lang('common.address') : 
                         <strong>
                             {{$property->street}} 
                             {{$property->street_number}} / 

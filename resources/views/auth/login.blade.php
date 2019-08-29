@@ -62,7 +62,7 @@
 
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        Przypomnij hasło
+                                        @lang('common.remind_password')
                                     </a>
                                 @endif
                             </div>

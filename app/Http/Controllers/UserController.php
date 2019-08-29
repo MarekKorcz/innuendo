@@ -529,7 +529,8 @@ class UserController extends Controller
      */
     public function appointmentIndex()
     {
-        $appointments = Appointment::where('user_id', auth()->user()->id)->with('item')->get();
+        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+        $appointments = Appointment::where('user_id', $user->id)->with('item')->get();
         
         if ($appointments !== null)
         {
@@ -559,8 +560,20 @@ class UserController extends Controller
                 $appointment['employee_slug'] = $employee->slug;
             }
             
+            $property = null;
+            
+            if (count($appointments) == 0)
+            {
+                if (count($user->chosenProperties) > 0)
+                {
+                    $property = Property::where('id', $user->chosenProperties->first()->property_id)->first();
+                }
+            }
+            
             return view('user.appointment_index')->with([
-                'appointments' => $appointments->sortByDesc('date_time')
+                'appointments' => $appointments->sortByDesc('date_time'),
+                'property' => $property,
+                'user' => $user
             ]);
         }
         

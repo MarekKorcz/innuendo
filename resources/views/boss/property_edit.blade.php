@@ -12,7 +12,7 @@
         {{ Form::open(['id' => 'property-edit', 'action' => ['BossController@propertyUpdate'], 'method' => 'POST']) }}
 
             <div class="form-group">
-                {{ Form::label('name', 'Nazwa') }}
+                <label for="name">@lang('common.company_name')</label>
                 {{ Form::text('name', $property->name, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>

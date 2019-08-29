@@ -11,19 +11,20 @@
         <ul class="nav navbar-nav">
             <li>
                 <a href="{{ URL::to('/employee/backend-calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn btn-primary">
-                    Powrót do kalendarza
+                    @lang('common.back_to_calendar')
                 </a>
             </li>
         </ul>
     </nav>
     
-    <h1 style="padding-top: 30px;">Zarezerwuj wizytę</h1>
+    <h1 style="padding-top: 30px;">@lang('common.reserve_appointment')</h1>
 
     {{ Form::open(['id' => 'appointment-create', 'action' => 'WorkerController@appointmentStore', 'method' => 'POST']) }}
 
         <div class="form-group">
             <p>
-                Godzina wizyty: <strong style="font-size: 20px;">{{$appointmentTerm}}</strong>
+                @lang('common.hour') : 
+                <strong style="font-size: 20px;">{{$appointmentTerm}}</strong>
             </p>
             @if ($appointmentTerm)
                 {{ Form::hidden('appointmentTerm', $appointmentTerm) }}
@@ -36,8 +37,8 @@
             <div class="row">
                 <div id="credential-1" class="col-8 col-sm-8 col-md-10 col-lg-10">
                     <div class="form-group">
-                        <label for="search">Klient</label>
-                        <input id="search" class="form-control" type="text" name="search" placeholder="Szukaj klienta" autocomplete="off">
+                        <label for="search">@lang('common.client')</label>
+                        <input id="search" class="form-control" type="text" name="search" placeholder="@lang('common.look_for_client')" autocomplete="off">
                     </div>
                     <div class="warning"></div>
                     <ul id="result" class="list-group"></ul>
@@ -45,7 +46,7 @@
                 </div>
                 <div class="col-4 col-sm-4 col-md-2 col-lg-2">
                     <div class="text-center" style="padding: 3px;">
-                        <label for="isNew">Nowy?</label><br>
+                        <label for="isNew">@lang('common.is_new')</label><br>
                         <input id="isNew" type="checkbox" style="width: 30px; height: 30px;">
                     </div>
                 </div>
@@ -96,7 +97,7 @@
             {{ Form::hidden('propertyId', Input::old('propertyId')) }}
         @endif
         
-        {{ Form::submit('Zarezerwuj', array('class' => 'btn btn-primary')) }}
+        <input type="submit" value="@lang('common.reserve')" class="btn btn-primary">
 
     {{ Form::close() }}
 </div>

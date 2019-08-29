@@ -429,7 +429,7 @@ class BossController extends Controller
                         if ($chosenProperty !== null && count($chosenProperty->subscriptions) > 0)
                         {
                             foreach ($chosenProperty->subscriptions as $chosenSub)
-                            {
+                            {                                
                                 // >> check if subscription is purchased
                                 if ($chosenSub->id == $subscription->id)
                                 {

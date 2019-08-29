@@ -5,14 +5,20 @@
 
 <div class="container" style="padding: 2rem;">
     <div class="card-header text-center">
-        <span style="font-size: 27px;">Moje konto</span> - zalogowany jako <strong>{{$user->name}} {{$user->surname}}</strong>
+        <span style="font-size: 27px;">
+            @lang('navbar.my_account') 
+        </span> 
+        - @lang('navbar.logged_in_as') 
+        <strong>
+            {{$user->name}} {{$user->surname}}
+        </strong>
     </div>
     <div class="wrapper">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">Twoje wizyty</h4>
+                <h4 class="card-title text-center">@lang('common.appointments')</h4>
                 <p class="card-text text-center">
-                    Widok Twoich wizyt 
+                    @lang('common.your_appointments_view')
                 </p>
                 <div class="text-center">
                     <a class="btn btn-success btn-lg" href="{{ URL::to('/appointment/index') }}">
@@ -24,9 +30,9 @@
         @if ($showGraphicsView)
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Grafiki</h4>
+                    <h4 class="card-title text-center">@lang('common.schedules')</h4>
                     <p class="card-text text-center">
-                        Grafiki wraz z opisem lokalizacji oraz wykonujących zabiegi
+                        @lang('common.schedules_with_property_description_and_executor')
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/user/properties') }}">
@@ -39,9 +45,9 @@
         @if ($showSubscriptionsView)
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Pakiety</h4>
+                    <h4 class="card-title text-center">@lang('common.purchased_view')</h4>
                     <p class="card-text text-center">
-                        Widok z Twoimi wykupionymi pakietami przypisanymi do lokalizacji
+                        @lang('common.purchased_subscriptions_attached_to_properties')
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('user/subscription/purchased/property/list/') }}">
@@ -54,9 +60,9 @@
         @if ($showPurchaseSubscriptionsView)
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Wykup pakiet</h4>
+                    <h4 class="card-title text-center">@lang('common.purchase_subscription')</h4>
                     <p class="card-text text-center">
-                        Widok z dostępnymi pakietami w wybranych lokalizacjach
+                        @lang('common.purchased_subscriptions_attached_to_properties')
                     </p>
                     <div class="text-center">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('user/properties/subscription/') }}">

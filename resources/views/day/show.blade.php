@@ -8,21 +8,21 @@
             <li>
                 @if ($month)
                     <a class="btn btn-success" href="{{ URL::to('month/show/' . $month->id) }}">
-                        Back to Month
+                        @lang('common.back_to_month')
                     </a>
                 @endif
             </li>
         </ul>
     </nav>
 
-    <h2 style="padding: 20px;">Day {{ $day->day_number }}</h2>
+    <h2 style="padding: 20px;">@lang('common.day') {{ $day->day_number }}</h2>
     
     <div class="jumbotron">
         @if (count($graphic) > 0)
             <table class="table table-striped">
                 <tr>
-                    <th style="width: 16.66%">Hours</th>
-                    <th class="text-center">Appointments</th>
+                    <th style="width: 16.66%">@lang('common.hours')</th>
+                    <th class="text-center">@lang('common.appointments')</th>
                 </tr>
                 <div class="list-group">
                     <tr>
@@ -45,7 +45,7 @@
         @if (count($graphic) == 0)
             <div class="text-center" style="padding-top: 50px;">
                 <a class="btn btn-success" href="{{ action('GraphicController@create', $day->id) }}">
-                    Add Graphic
+                    @lang('common.create_graphic')
                 </a>
             </div>
         @endif

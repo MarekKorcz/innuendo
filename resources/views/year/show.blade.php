@@ -6,18 +6,18 @@
         <div class="navbar-header">
             {!!Form::open(['action' => ['YearController@destroy', $year->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                 {{ Form::hidden('_method', 'DELETE') }}
-                {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
+                <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
             {!!Form::close()!!}
         </div>
         <ul class="nav navbar-nav">
             <li>
                 @if ($property_id != 0)
                     <a class="btn btn-success" href="{{ URL::to('property/' . $property_id) }}">
-                        Back to Property
+                        @lang('common.back_to_property')
                     </a>
                 @else
                     <a class="btn btn-primary" href="{{ URL::to('/property/index') }}">
-                        View All Properties
+                        @lang('common.all_properties')
                     </a>
                 @endif
             </li>
@@ -30,18 +30,16 @@
     
     <div class="jumbotron">
         <div class="text-center" style="margin-bottom: 40px;">
-            <h2>Values:</h2>
+            <h2>@lang('common.values') :</h2>
         </div>
         <table class="table table-striped">
             <tr>
-                <th>Id:</th>
-                <th>Year:</th>
-                <th>Created at:</th>
-                <th>Updated at:</th>
-                <th>Property id:</th>
+                <th>@lang('common.year') :</th>
+                <th>@lang('common.created_at') :</th>
+                <th>@lang('common.updated_at') :</th>
+                <th>@lang('common.property_id') :</th>
             </tr>
             <tr>
-                <td>{{ $year->id }}</td>
                 <td>{{ $year->year }}</td>
                 <td>{{ $year->created_at }}</td>
                 <td>{{ $year->updated_at }}</td>
@@ -52,7 +50,7 @@
     
     <div class="jumbotron">
         <div class="text-center" style="margin-bottom: 40px;">
-            <h2>Months:</h2>
+            <h2>@lang('common.months') :</h2>
         </div>
         @if (count($months) > 0)
             <div class="list-group">
@@ -65,7 +63,7 @@
         @endif
         <div class="text-center" style="padding-top: 50px;">
             <a class="btn btn-success" href="{{ action('MonthController@create', $year->id) }}">
-                Add Month
+                @lang('common.add_month')
             </a>
         </div>
     </div>

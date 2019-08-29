@@ -7,42 +7,42 @@
         <ul class="nav navbar-nav">
             <li>
                 <a href="{{ URL::to('/property/index') }}" class="btn btn-primary">
-                    View All Properties
+                    @lang('common.all_properties')
                 </a>
             </li>
         </ul>
     </nav>
 
-    <h1>Create a Property</h1>
+    <h1>@lang('common.create_property')</h1>
 
     {{ Form::open(['action' => 'PropertyController@store', 'method' => 'POST']) }}
 
         <div class="form-group">
-            {{ Form::label('name', 'Name') }}
+            <label for="name">@lang('common.name')</label>
             {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('description', 'Description') }}
+            <label for="description">@lang('common.description')</label>
             {{ Form::textarea('description', Input::old('description'), array('id' => 'article-ckeditor', 'class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('street', 'Street') }}
+            <label for="street">@lang('common.street')</label>
             {{ Form::text('street', Input::old('street'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('street_number', 'Street number') }}
+            <label for="street_number">@lang('common.street_number')</label>
             {{ Form::text('street_number', Input::old('street_number'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('house_number', 'House number') }}
+            <label for="house_number">@lang('common.house_number')</label>
             {{ Form::text('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('city', 'City') }}
+            <label for="city">@lang('common.city')</label>
             {{ Form::text('city', Input::old('city'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('user', 'Users:') }}
+            <label for="user">@lang('common.users') :</label>
             <select id="user" name="user" class="form-control">
                 <option value="0"></option>
                 @foreach ($users as $user)
@@ -51,7 +51,7 @@
             </select>
         </div>
 
-        {{ Form::submit('Create', array('class' => 'btn btn-primary')) }}
+        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
 
     {{ Form::close() }}
 
