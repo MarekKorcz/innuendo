@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            getSubscriptionSubstarts(propertyId, element.dataset.subscription_id)
+            getSubscriptionSubstarts(propertyId, element.dataset.subscription_id);
         }
     });
     
@@ -131,7 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     
     function getSubscriptionSubstarts(propertyId, subscriptionId)
-    {        
+    {
         return fetch('http://localhost:8000/boss/get/subscription/substarts', {
             method: 'POST',
             headers: {
@@ -254,19 +254,19 @@ window.addEventListener('DOMContentLoaded', () => {
                                     ` + data.worker_appointment_list_button_description + `
                                 </a>
                             </div>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>                
+                                        <td>` + data.name_description + `</td>
+                                        <td>` + data.surname_description + `</td>
+                                        <td>` + data.email_description + `</td>
+                                        <td>` + data.phone_number_description + `</td>
+                                        <td>` + data.appointments_description + `</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="workersTable"></tbody>
+                            </table>
                         </div>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>                
-                                    <td>` + data.name_description + `</td>
-                                    <td>` + data.surname_description + `</td>
-                                    <td>` + data.email_description + `</td>
-                                    <td>` + data.phone_number_description + `</td>
-                                    <td>` + data.appointments_description + `</td>
-                                </tr>
-                            </thead>
-                            <tbody id="workersTable"></tbody>
-                        </table>
                     `;
 
                     workers.append(workersTab);
@@ -331,33 +331,33 @@ window.addEventListener('DOMContentLoaded', () => {
             {
                 let workersTab = `
                     <div class="text-center">                        
-                        <p>
-                            <h2>Osoby przypisane do danej subskrypcji:</h2>
-                            <a class="btn btn-primary" href="http://localhost:8000/boss/subscription/workers/edit/` + data.substartId + `/0">
-                                Edycja
+                        <div id="button-space" style="padding: 1rem;">
+                            <h2>` + data.header_workers + ` :</h2>
+                            <a class="btn btn-primary" href="` + data.subscription_workers_edit_button + `">
+                                ` + data.subscription_workers_edit_button_description + `
                             </a>
-                            <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.substartId + `/0">
-                                Wszystkie wizyty
+                            <a class="btn btn-primary" href="` + data.worker_appointment_list_button + `">
+                                ` + data.worker_appointment_list_button_description + `
                             </a>
-                        </p>
+                        </div>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>                
+                                    <td>` + data.name_description + `</td>
+                                    <td>` + data.surname_description + `</td>
+                                    <td>` + data.email_description + `</td>
+                                    <td>` + data.phone_number_description + `</td>
+                                    <td>` + data.appointments_description + `</td>
+                                </tr>
+                            </thead>
+                            <tbody id="workersTable"></tbody>
+                        </table>
                     </div>
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>                
-                                <td>Imie</td>
-                                <td>Nazwisko</td>
-                                <td>Email</td>
-                                <td>Telefon</td>
-                                <td>Wizyty</td>
-                            </tr>
-                        </thead>
-                        <tbody id="workersTable"></tbody>
-                    </table>
                 `;
                 
                 workers.append(workersTab);
                 
-                let workersTable = $("tbody#workersTable");                
+                let workersTable = $("tbody#workersTable");
                 
                 $.each(data.workers, function (index, worker) 
                 {
@@ -368,8 +368,8 @@ window.addEventListener('DOMContentLoaded', () => {
                             <td>` + worker.email + `</td>
                             <td>` + worker.phone_number + `</td>
                             <td>
-                                <a class="btn btn-primary" href="http://localhost:8000/boss/worker/appointment/list/` + data.substartId + `/` + worker.id + `">
-                                    Pokaż
+                                <a class="btn btn-primary" href="` + worker.workers_appointment_show_button + `">
+                                    ` + data.show_button_description + `
                                 </a>
                             </td>
                         </tr>
@@ -383,7 +383,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 let workersTab = `
                     <div class="text-center">                        
                         <p>
-                            <h2>Brak osób przypisanych do danej subskrypcji</h2>
+                            <h2>` + data.no_people_assigned_to_subscription + `</h2>
                         </p>
                     </div>
                 `;

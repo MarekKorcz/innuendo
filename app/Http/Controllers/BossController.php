@@ -2589,30 +2589,44 @@ class BossController extends Controller
     }
     
     public function getSubscriptionWorkers(Request $request)
-    {        
-        if ($request->request->all())
-        {
-            $substartId = htmlentities((int)$request->get('substartId'), ENT_QUOTES, "UTF-8");
-            $substart = Substart::where('id', $substartId)->first();
-            
-            $workers = $this->getWorkersFrom($substartId);
-            
-            if (count($workers) > 0)
-            {
-                $data = [
-                    'type'    => 'success',
-                    'message' => "Udało się pobrać użytkowników posiadający daną subskrypcje",
-                    'workers' => $workers,
-                    'substartId' => $substart->id
-                ];
+    {
+        $substartId = htmlentities((int)$request->get('substartId'), ENT_QUOTES, "UTF-8");
+        $substart = Substart::where('id', $substartId)->first();
 
-                return new JsonResponse($data, 200, array(), true);
-            }
+        $workers = $this->getWorkersFrom($substartId);
+
+        if (count($workers) > 0)
+        {
+            $data = [
+                'type'    => 'success',
+                'message' => "Udało się pobrać użytkowników posiadający daną subskrypcje",
+                'workers' => $workers,
+                'header_workers' => \Lang::get('common.people_assigned_to_subscription'),
+                'subscription_workers_edit_button' => route('subscriptionWorkersEdit', [
+                    'substartId' => $substart->id,
+                    'intervalId' => 0
+                ]),
+                'subscription_workers_edit_button_description' => \Lang::get('common.edit'),
+                'worker_appointment_list_button' => route('workerAppointmentList', [
+                    'substartId' => $substart->id,
+                    'userId' => 0
+                ]),
+                'worker_appointment_list_button_description' => \Lang::get('common.all_massages'),
+                'show_button_description' => \Lang::get('common.show'),
+                'name_description' => \Lang::get('common.name'),
+                'surname_description' => \Lang::get('common.surname'),
+                'email_description' => \Lang::get('common.email_address'),
+                'phone_number_description' => \Lang::get('common.phone_number'),
+                'appointments_description' => \Lang::get('common.appointments')
+            ];
+
+            return new JsonResponse($data, 200, array(), true);
         }
         
         return new JsonResponse(array(
             'type'    => "error",
-            'message' => "Pusty request"            
+            'message' => "Pusty request",
+            'no_people_assigned_to_subscription' => \Lang::get('common.no_people_assigned_to_subscription'),
         ));
     }
     
@@ -2834,7 +2848,6 @@ class BossController extends Controller
                         ]),
                         'worker_appointment_list_button_description' => \Lang::get('common.all_massages'),
                         'show_button_description' => \Lang::get('common.show'),
-                        'no_people_assigned_to_subscription' => \Lang::get('common.no_people_assigned_to_subscription'),
                         'name_description' => \Lang::get('common.name'),
                         'surname_description' => \Lang::get('common.surname'),
                         'email_description' => \Lang::get('common.email_address'),
@@ -2849,7 +2862,8 @@ class BossController extends Controller
         
         return new JsonResponse(array(
             'type'    => 'error',
-            'message' => 'Pusty request'            
+            'message' => 'Pusty request',
+            'no_people_assigned_to_subscription' => \Lang::get('common.no_people_assigned_to_subscription'),
         )); 
     }
 
@@ -2872,6 +2886,7 @@ class BossController extends Controller
             }
                                         
             $substartArray[] = [
+                'id' => $substarts->id,
                 'start_date' => $substarts->start_date->format('Y-m-d'),
                 'start_date_description' => \Lang::get('common.from'),
                 'end_date' => $substarts->end_date->format('Y-m-d'),
@@ -2900,6 +2915,7 @@ class BossController extends Controller
                 }
             
                 $substartArray[] = [
+                    'id' => $substart->id,
                     'start_date' => $substart->start_date->format('Y-m-d'),
                     'start_date_description' => \Lang::get('common.from'),
                     'end_date' => $substart->end_date->format('Y-m-d'),
