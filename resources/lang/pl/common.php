@@ -338,4 +338,8 @@ return [
     'subscriptions_list' => 'Lista subskrypcji',
     'duration_is_over' => 'Czas trwania dobiegł końca',
     'no_people_assigned_to_subscription' => 'Brak osób przypisanych do danej subskrypcji',
+    'graphic_requests_header' => 'Zapytania o grafiki',
+    'graphic_requests_header_description' => 'Przy użyciu kalendarza, wybierz interesujący Ciebie i Twoich pracowników dzień tygodnia w którym chcielibyście żabyśmy was odwiedzili, 
+                                              następnie wypełnij potrzebne dane i wyślij do nas zapytanie',
+    'graphic_requests_header_description_2' => 'Obecnie, nie posiadasz jeszcze żadnej wykupionej subskrypcji by móc wysłać do nas zapytanie o otworzenie grafiku.',
 ];

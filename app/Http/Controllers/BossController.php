@@ -2018,8 +2018,8 @@ class BossController extends Controller
     }
     
     public function graphicRequests()
-    {  
-        $boss = auth()->user();
+    {
+        $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
         
         $graphicRequests = GraphicRequest::where('boss_id', $boss->id)->with([
             'property',
@@ -2028,17 +2028,29 @@ class BossController extends Controller
             'day',
             'employees'
         ])->get();
+        
+        $property = null;
 
-        foreach ($graphicRequests as $graphicRequest)
-        {                
-            if ($graphicRequest->comment !== null && strlen($graphicRequest->comment) > 24)
+        if (count($graphicRequests) > 0)
+        {
+            foreach ($graphicRequests as $graphicRequest)
+            {                
+                if ($graphicRequest->comment !== null && strlen($graphicRequest->comment) > 24)
+                {
+                    $graphicRequest->comment = substr($graphicRequest->comment, 0, 24).'...';
+                }
+            }
+        } else {
+            
+            if (count($boss->chosenProperties) > 0)
             {
-                $graphicRequest->comment = substr($graphicRequest->comment, 0, 24).'...';
+                $property = Property::where('id', $boss->chosenProperties->first()->property_id)->first();
             }
         }
         
         return view('boss.graphic_requests')->with([
-            'graphicRequests' => $graphicRequests
+            'graphicRequests' => $graphicRequests,
+            'property' => $property
         ]);
     }
     
