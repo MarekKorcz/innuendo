@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+
+{!! Html::script('js/login.js') !!}
+
 <div class="container" style="padding: 2rem;">
     <div class="row justify-content-center">
         <div class="col-md-10">
@@ -10,7 +13,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form id="login" method="POST" action="{{ route('login') }}" novalidate>
                         @csrf
 
                         <div class="form-group row">
@@ -24,6 +27,8 @@
                                         <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
+                                
+                                <div id="email-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
 
@@ -38,6 +43,8 @@
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
+                                
+                                <div id="password-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
 

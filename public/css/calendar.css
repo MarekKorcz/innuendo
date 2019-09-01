@@ -98,3 +98,7 @@ a:hover {
     outline: 0;
     margin: calc(12.5vw + 10px);
 }
+
+li:hover {
+    cursor: pointer;
+}

@@ -29,7 +29,7 @@
                                     </span>
                                 @endif
                                 
-                                <div id="name-error"></div>
+                                <div id="name-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
                         
@@ -45,7 +45,7 @@
                                     </span>
                                 @endif
                                 
-                                <div id="surname-error"></div>
+                                <div id="surname-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
                         
@@ -61,7 +61,7 @@
                                     </span>
                                 @endif
                                 
-                                <div id="phone_number-error"></div>
+                                <div id="phone_number-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
 
@@ -77,7 +77,7 @@
                                     </span>
                                 @endif
                                 
-                                <div id="email-error"></div>
+                                <div id="email-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
                         
@@ -93,7 +93,7 @@
                                     </span>
                                 @endif
                                 
-                                <div id="code-error"></div>
+                                <div id="code-error" style="padding-left: 6px;"></div>
                                 <div id="code-data"></div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                                     </span>
                                 @endif
                                 
-                                <div id="password-error"></div>
+                                <div id="password-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
 
@@ -120,7 +120,7 @@
                             <div class="col-md-6">
                                 <input id="password_confirm" type="password" class="form-control" name="password_confirm" required>
                                 
-                                <div id="password_confirm-error"></div>
+                                <div id="password_confirm-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
 

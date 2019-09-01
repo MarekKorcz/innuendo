@@ -278,34 +278,34 @@
                 {{ Form::open(['id' => 'request-form', 'action' => 'BossController@makeAGraphicRequest', 'method' => 'POST', 'novalidate' => true]) }}
 
                         <div class="form-group">
-                            <label for="start_time">@lang('common.start_time')</label>
+                            <label for="start_time" style="padding-left: 9px;">@lang('common.start_time')</label>
                             {{ Form::time('start_time', Input::old('start_time'), array('class' => 'form-control')) }}
-                            <div class="warning"></div>
+                            <div class="warning" style="margin: 6px 0 0 6px;"></div>
                         </div>
                         <div class="form-group">
-                            <label for="end_time">@lang('common.end_time')</label>
+                            <label for="end_time" style="padding-left: 9px;">@lang('common.end_time')</label>
                             {{ Form::time('end_time', Input::old('end_time'), array('class' => 'form-control')) }}
-                            <div class="warning"></div>
+                            <div class="warning" style="margin: 6px 0 0 6px;"></div>
                         </div>
                 
                         <div id="appointment-quantity-counter"></div>
                                                 
                         @if (count($employees) > 0)
-                            <h3 class="text-center">@lang('common.choose_from_within_our_employees')</h3>
-                            <ul id="employees" style="padding: 12px;">
+                            <h4 class="text-center">@lang('common.choose_from_within_our_employees')</h4>
+                            <ul id="employees" style="padding: 12px 12px 0 12px;">
                                 @foreach($employees as $employee)
                                     @if(count($employees) == 1)
-                                        <li class="form-control" style="background-color: lightgreen;" data-active="true" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                        <li class="form-control" style="background-color: lightgreen; margin: 3px;" data-active="true" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
                                     @else
-                                        <li class="form-control" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                        <li class="form-control" value="{{$employee->id}}" style="margin: 3px;">{{$employee->name}} {{$employee->surname}}</li>
                                     @endif
                                 @endforeach
                             </ul>
-                            <div id="employees-warning" class="warning"></div>
+                            <div id="employees-warning" class="warning" style="margin: 6px 0 0 18px;"></div>
                         @endif
 
                         <div class="form-group">
-                            <label for="comment">@lang('common.comment')</label>
+                            <label for="comment" style="padding-left: 21px;">@lang('common.comment')</label>
                             {{ Form::textarea('comment', Input::old('comment'), array('class' => 'form-control')) }}
                         </div>
                         

@@ -16,6 +16,7 @@ $(document).ready(function()
         {
             if (nameInput.val() !== "") 
             {                
+                $("input#name").removeClass("input-warning");
                 $("div#name-error > p.field-warning").remove();
                 
                 if (nameInput.val().length < 4)
@@ -24,6 +25,7 @@ $(document).ready(function()
                     
                     nameReady = false;
                     
+                    $("input#name").addClass("input-warning");
                     $("div#name-error").append('<p class="field-warning">Podane imię jest za krótkie</p>');
                     
                 } else {
@@ -39,6 +41,7 @@ $(document).ready(function()
                 
                 if ($("div#name-error > p.field-warning").length == 0)
                 {
+                    $("input#name").addClass("input-warning");
                     $("div#name-error").append('<p class="field-warning">Wpisz imię</p>');
                 }
             }
@@ -50,6 +53,7 @@ $(document).ready(function()
         {
             if (surnameInput.val() !== "") 
             {                
+                $("input#surname").removeClass("input-warning");
                 $("div#surname-error > p.field-warning").remove();
                 
                 if (surnameInput.val().length < 3)
@@ -58,6 +62,7 @@ $(document).ready(function()
                     
                     surnameReady = false;
                     
+                    $("input#surname").addClass("input-warning");
                     $("div#surname-error").append('<p class="field-warning">Podane nazwisko jest za krótkie</p>');
                     
                 } else {
@@ -73,6 +78,7 @@ $(document).ready(function()
                 
                 if ($("div#surname-error > p.field-warning").length == 0)
                 {
+                    $("input#surname").addClass("input-warning");
                     $("div#surname-error").append('<p class="field-warning">Wpisz nazwisko</p>');
                 }
             }
@@ -84,6 +90,7 @@ $(document).ready(function()
         {
             if (phoneNumberInput.val() !== "") 
             {
+                $("input#phone_number").removeClass("input-warning");
                 $("div#phone_number-error > p.field-warning").remove();
                 
                 if (phoneNumberInput.val().length < 7)
@@ -92,6 +99,7 @@ $(document).ready(function()
                     
                     phoneNumberReady = false;
                     
+                    $("input#phone_number").addClass("input-warning");
                     $("div#phone_number-error").append('<p class="field-warning">Podany numer telefonu jest za krótki</p>');
                     
                 } else {
@@ -107,6 +115,7 @@ $(document).ready(function()
                 
                 if ($("div#phone_number-error > p.field-warning").length == 0)
                 {
+                    $("input#phone_number").addClass("input-warning");
                     $("div#phone_number-error").append('<p class="field-warning">Wpisz numer telefonu</p>');
                 }
             }
@@ -117,7 +126,8 @@ $(document).ready(function()
         if (emailInput.length == 1)
         {
             if (emailInput.val() !== "") 
-            {                
+            {         
+                $("input#email").removeClass("input-warning");
                 $("div#email-error > p.field-warning").remove();
                 
                 if (!validateEmail(emailInput.val()))
@@ -126,6 +136,7 @@ $(document).ready(function()
                     
                     emailReady = false;
                     
+                    $("input#email").addClass("input-warning");
                     $("div#email-error").append('<p class="field-warning">Niepoprawny email</p>');
                     
                 } else {
@@ -141,6 +152,7 @@ $(document).ready(function()
                 
                 if ($("div#email-error > p.field-warning").length == 0)
                 {
+                    $("input#email").addClass("input-warning");
                     $("div#email-error").append('<p class="field-warning">Wpisz adres email</p>');
                 }
             }
@@ -153,6 +165,7 @@ $(document).ready(function()
         {
             if (codeInput.val() !== "") 
             {
+                $("input#code").removeClass("input-warning");
                 $("div#code-error > p.field-warning").remove();
                 
                 if (codeInput.val().length < 6)
@@ -161,6 +174,7 @@ $(document).ready(function()
                     
                     codeReady = false;
                     
+                    $("input#code").addClass("input-warning");
                     $("div#code-error").append('<p class="field-warning">Podany kod jest za krótki</p>');
                     
                 } else if (codeDataElement.dataset.for !== undefined) {
@@ -180,6 +194,7 @@ $(document).ready(function()
                 
                 if ($("div#code-error > p.field-warning").length == 0)
                 {
+                    $("input#code").addClass("input-warning");
                     $("div#code-error").append('<p class="field-warning">Wpisz kod rejestracyjny</p>');
                 }
             }
@@ -191,6 +206,7 @@ $(document).ready(function()
         {
             if (passwordInput.val() !== "") 
             {
+                $("input#password").removeClass("input-warning");
                 $("div#password-error > p.field-warning").remove();
                 
                 if (passwordInput.val().length < 7)
@@ -199,6 +215,7 @@ $(document).ready(function()
                     
                     passwordReady = false;
                     
+                    $("input#password").addClass("input-warning");
                     $("div#password-error").append('<p class="field-warning">Hasło musi składać się przynajmniej z 7 znaków</p>');
                     
                 } else {
@@ -214,6 +231,7 @@ $(document).ready(function()
                 
                 if ($("div#password-error > p.field-warning").length == 0)
                 {
+                    $("input#password").addClass("input-warning");
                     $("div#password-error").append('<p class="field-warning">Wpisz hasło</p>');
                 }
             }
@@ -225,6 +243,7 @@ $(document).ready(function()
         {
             if (passwordConfirmInput.val() !== "") 
             {
+                $("input#password_confirm").removeClass("input-warning");
                 $("div#password_confirm-error > p.field-warning").remove();
                 
                 if (passwordConfirmInput.val().length < 7)
@@ -233,6 +252,7 @@ $(document).ready(function()
                     
                     passwordConfirmReady = false;
                     
+                    $("input#password_confirm").addClass("input-warning");
                     $("div#password_confirm-error").append('<p class="field-warning">Hasło musi składać się przynajmniej z 7 znaków</p>');
                     
                 } else if (passwordConfirmInput.val().length >= 7 && passwordInput.val() !== passwordConfirmInput.val()) {
@@ -241,6 +261,7 @@ $(document).ready(function()
                     
                     passwordConfirmReady = false;
                     
+                    $("input#password_confirm").addClass("input-warning");
                     $("div#password_confirm-error").append('<p class="field-warning">Podane hasła różnią się</p>');
                     
                 } else {
@@ -256,6 +277,7 @@ $(document).ready(function()
                 
                 if ($("div#password_confirm-error > p.field-warning").length == 0)
                 {
+                    $("input#password_confirm").addClass("input-warning");
                     $("div#password_confirm-error").append('<p class="field-warning">Powtórz hasło</p>');
                 }
             }
