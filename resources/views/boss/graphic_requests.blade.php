@@ -40,15 +40,19 @@
             <h1>@lang('common.graphic_requests_header')</h1>
             @if ($property !== null)
                 <h3>@lang('common.graphic_requests_header_description')</h3>
-                <a class="btn btn-success" href="{{ URL::to('/user/property/' . $property->id) }}">
-                    @lang('common.go_to_schedule')
-                </a>
+                <div style="padding: 1rem;">
+                    <a class="btn btn-success btn-lg" href="{{ URL::to('/user/property/' . $property->id) }}">
+                        @lang('common.go_to_schedule')
+                    </a>
+                </div>
             @else
                 <h3>@lang('common.graphic_requests_header_description_2')</h3>
                 <h4>@lang('common.go_to_schedule_description_4')</h4>
-                <a class="btn btn-success" href="{{ URL::to('/boss/subscription/list/0/0') }}">
-                    @lang('common.subscriptions_list')
-                </a>
+                <div style="padding: 1rem;">
+                    <a class="btn btn-success btn-lg" href="{{ URL::to('/boss/subscription/list/0/0') }}">
+                        @lang('common.subscriptions_list')
+                    </a>
+                </div>
             @endif
         </div> 
     @endif

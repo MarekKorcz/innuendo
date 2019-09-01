@@ -212,19 +212,18 @@
                     @else
                         @if ($canSendRequest)
                             @if ($graphicRequest !== null)
-                                <p style="padding-top: 40px; font-size: 24px;">
-                                    @lang('common.already_sent_graphic_request')
-                                </p>
-                                <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id) }}" class="btn btn-success" style="color: white;">
+                                <h2 style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.already_sent_graphic_request')</h2>
+                                <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id) }}" 
+                                   class="btn btn-success btn-lg" 
+                                   style="color: white;"
+                                >
                                     @lang('common.show')
                                 </a>
                             @else
-                                <p style="padding-top: 40px; font-size: 24px;">
-                                    @lang('common.send_graphic_request')
-                                </p>
+                                <h2 style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.send_graphic_request')</h2>
                                 <a href="#makeAGraphicRequest" 
                                    id="request-btn" 
-                                   class="btn btn-success" 
+                                   class="btn btn-success btn-lg" 
                                    style="color: white;"
                                    data-toggle="modal"
                                 >
@@ -272,7 +271,7 @@
     <div id="makeAGraphicRequest" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>@lang('common.send_graphic_request')</h3>
+                <h2 class="text-center">@lang('common.send_graphic_request')</h2>
                 <button class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
@@ -292,7 +291,7 @@
                         <div id="appointment-quantity-counter"></div>
                                                 
                         @if (count($employees) > 0)
-                            <p class="text-center">@lang('common.choose_from_within_our_employees')</p>
+                            <h3 class="text-center">@lang('common.choose_from_within_our_employees')</h3>
                             <ul id="employees" style="padding: 12px;">
                                 @foreach($employees as $employee)
                                     @if(count($employees) == 1)

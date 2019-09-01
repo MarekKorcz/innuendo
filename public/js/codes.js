@@ -1,4 +1,6 @@
-$(document).ready(function() {
+$(document).ready(function() 
+{
+    handleTurnOnCodeRegistrationButtonActivation();
     
     $(".copy-button").on('click', function(event) {
         
@@ -118,8 +120,6 @@ $(document).ready(function() {
                 
                 element.style.backgroundColor = "lightgreen";
                 element.dataset.active = "true";
-                
-                console.log('Nie można zmienić aktualnego stanu subskrypcji kodu');
             }
         }
     });
@@ -142,9 +142,7 @@ $(document).ready(function() {
         .then((res) => res.json())
         .then((data) => {
             if (data.type === "success")
-            {
-                console.log(data.message);
-                                
+            {  
                 document.querySelectorAll('[data-code_id]').forEach( 
                     function(item) {
                         if (item.dataset.code_id == codeId)
@@ -173,6 +171,8 @@ $(document).ready(function() {
                     }
                 );
             }
+            
+            handleTurnOnCodeRegistrationButtonActivation();
         });
     }
     
@@ -193,7 +193,7 @@ $(document).ready(function() {
         .then((data) => {
             if (data.type === "success")
             {
-                console.log(data.message);
+                handleTurnOnCodeRegistrationButtonActivation();
             }
         });
     }
@@ -216,8 +216,65 @@ $(document).ready(function() {
         .then((data) => {
             if (data.type === "success")
             {
-                console.log(data.message);
+                handleTurnOnCodeRegistrationButtonActivation();
             }
         });
+    }
+    
+    function handleTurnOnCodeRegistrationButtonActivation()
+    {        
+        // get all code-items elements
+        let codeItemsElements = document.getElementsByClassName("code-items");
+        
+        if (codeItemsElements.length > 0)
+        {
+            // iterate through all property and subscription elements to check whether at least one property 
+            // and one subscription in code are activated by boss
+            for (let codeItem of codeItemsElements) 
+            {
+                // set variables
+                let activePropertyElements = false;
+                let activeSubscriptionsElements = false;
+            
+                for (let ulItem of codeItem.children) 
+                {
+                    if (ulItem.className == "property")
+                    {
+                        for (let liItem of ulItem.children) 
+                        {
+                            if (liItem.dataset.active === "true")
+                            {
+                                activePropertyElements = true;
+                            }
+                        }
+                    }
+                    
+                    if (ulItem.className == "subscriptions")
+                    {
+                        for (let liItem of ulItem.children) 
+                        {
+                            if (liItem.dataset.active === "true")
+                            {
+                                activeSubscriptionsElements = true;
+                            }
+                        }
+                    }
+                }
+                
+                // get code id and find each code`s submit button
+                let codeId = codeItem.dataset.code_id;
+                let activateRegistrationButton = document.body.querySelector("div[data-code_id='" + codeId + "'] + div > input[type='submit']");
+                
+                // decide whether enable or disable registration button in code
+                if (activePropertyElements && activeSubscriptionsElements)
+                {
+                    activateRegistrationButton.removeAttribute("disabled");
+                    
+                } else {
+                    
+                    activateRegistrationButton.setAttribute("disabled", "disabled");
+                }
+            }
+        }
     }
 });

@@ -342,4 +342,6 @@ return [
     'graphic_requests_header_description' => 'Przy użyciu kalendarza, wybierz interesujący Ciebie i Twoich pracowników dzień tygodnia w którym chcielibyście żabyśmy was odwiedzili, 
                                               następnie wypełnij potrzebne dane i wyślij do nas zapytanie',
     'graphic_requests_header_description_2' => 'Obecnie, nie posiadasz jeszcze żadnej wykupionej subskrypcji by móc wysłać do nas zapytanie o otworzenie grafiku.',
+    'register_codes' => 'Kody rejestracyjne',
+    'register_codes_description' => 'Kody rejestracyjne umożliwiają zarejestrowanie się Twoich pracowników oraz przydzielenie ich do wybranych przez Ciebie pakietów i lokalizacji'
 ];

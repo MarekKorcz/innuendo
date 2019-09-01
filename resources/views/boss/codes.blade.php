@@ -1,17 +1,22 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::script('js/boss_dashboard.js') !!}
+{!! Html::style('css/codes.css') !!}
+{!! Html::script('js/codes.js') !!}
 
 <div class="container">
     
-    <div class="jumbotron" style="margin-top: 30px;">
-        @if (count($codes))
+    @if (count($codes) > 0)
+        <div class="text-center" style="padding-top: 1rem;">
+            <h2>@lang('common.register_codes')</h2>
+        </div>
+    
+        <div class="jumbotron" style="margin-top: 30px;">
             @for ($i = 1; $i <= count($codes); $i++)
                 <div class="row" style="padding: 12px;">
                     <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
                         <div class="card">
-                            <div class="text-right">
+                            <div class="text-right" style="padding: 6px;">
                                 {!!Form::open(['action' => ['BossController@destroyCode', $codes[$i]['code_id']], 'method' => 'POST'])!!}
                                     {{ Form::hidden('_method', 'DELETE') }}
                                     <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
@@ -100,13 +105,23 @@
                     </div>
                 </div>
             @endfor
-        @endif
-        
-        <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
-            <a class="btn btn-success" href="{{ action('BossController@addCode') }}">
-                @lang('common.add_new_code')
-            </a>
+
+            <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
+                <a class="btn btn-success" href="{{ action('BossController@addCode') }}">
+                    @lang('common.add_new_code')
+                </a>
+            </div>
         </div>
-    </div>
+    @else
+        <div class="text-center" style="padding: 1rem;">
+            <h2>@lang('common.register_codes')</h2>
+            <h4>@lang('common.register_codes_description')</h4>
+            <div style="padding: 1rem;">
+                <a class="btn btn-success btn-lg" href="{{ action('BossController@addCode') }}">
+                    @lang('common.add_new_code')
+                </a>
+            </div>
+        </div>
+    @endif
 </div>
 @endsection
