@@ -973,7 +973,7 @@ class BossController extends Controller
         
         if ($givenSubstart !== null)
         {
-            $boss = auth()->user();
+            $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
                     
             if ($userId !== 0 && is_int($userId))
             {              
@@ -1086,8 +1086,19 @@ class BossController extends Controller
             
             $intervals = Interval::where('purchase_id', $substart->purchase_id)->get();
             
+            $property = null;
+            
+            if (count($appointmentsCollection) == 0)
+            {
+                if (count($boss->chosenProperties) > 0)
+                {
+                    $property = Property::where('id', $boss->chosenProperties->first()->property_id)->first();
+                }
+            }
+            
             return view('boss.worker_appointment_list')->with([
                 'appointments' => $appointmentsCollection,
+                'property' => $property,
                 'worker' => (int)$userId !== 0 ? $worker : null,
                 'subscription' => $subscription,
                 'substart' => $substart,

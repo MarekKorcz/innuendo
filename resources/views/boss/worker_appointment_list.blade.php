@@ -6,7 +6,7 @@
 
 <div class="container">
     
-    <div class="text-center">
+    <div class="text-center" style="padding-top: 2rem;">
         <h2>
             @lang('common.subscription_massages')
             {{$subscription->name}}
@@ -62,40 +62,54 @@
     </div>
     
     <div id="appointments-table">
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>                
-                    <td>@lang('common.date')</td>
-                    <td>@lang('common.hour')</td>
-                    <td>@lang('common.name_and_surname')</td>
-                    <td>@lang('common.massage')</td>
-                    <td>@lang('common.executor')</td>
-                    <td>@lang('common.status')</td>
-                </tr>
-            </thead>
-            <tbody id="appointments">
-                @foreach($appointments as $appointment)
-                    <tr>
-                        <td>{{$appointment->date}}</td>
-                        <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
-                        <td>
-                            <a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blanc">
-                                {{$appointment->user->name}} {{$appointment->user->surname}}
-                            </a>
-                        </td>
-                        <td>{{$appointment->item->name}}</td>
-                        <td>
-                            <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
-                                {{$appointment->employee}}
-                            </a>
-                        </td>
-                        <td>
-                            {{config('appointment-status.' . $appointment->status)}}
-                        </td>
+        @if (count($appointments) > 0)
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>                
+                        <td>@lang('common.date')</td>
+                        <td>@lang('common.hour')</td>
+                        <td>@lang('common.name_and_surname')</td>
+                        <td>@lang('common.massage')</td>
+                        <td>@lang('common.executor')</td>
+                        <td>@lang('common.status')</td>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="appointments">
+                    @foreach($appointments as $appointment)
+                        <tr>
+                            <td>{{$appointment->date}}</td>
+                            <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
+                            <td>
+                                <a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blanc">
+                                    {{$appointment->user->name}} {{$appointment->user->surname}}
+                                </a>
+                            </td>
+                            <td>{{$appointment->item->name}}</td>
+                            <td>
+                                <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
+                                    {{$appointment->employee}}
+                                </a>
+                            </td>
+                            <td>
+                                {{config('appointment-status.' . $appointment->status)}}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            @if ($property !== null)
+                <div class="text-center" style="padding: 1rem 0 1rem 0;">
+                    <h3>@lang('common.go_to_schedule_description_1')</h3>
+                    <h4>@lang('common.go_to_schedule_description_2')</h4>
+                    <div style="padding: 1rem;">
+                        <a class="btn btn-success btn-lg" href="{{ URL::to('/user/property/' . $property->id) }}">
+                            @lang('common.go_to_schedule')
+                        </a>
+                    </div>
+                </div>
+            @endif
+        @endif
     </div>
 </div>
 @endsection

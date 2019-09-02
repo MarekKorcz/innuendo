@@ -34,7 +34,7 @@
                     <a class="btn btn-primary" href="{{ URL::to('boss/property/' . $propertyWithSubscriptions['property']->id . '/edit') }}">
                         @lang('common.edit')
                     </a>
-                    <a class="btn btn-light" href="{{ URL::to('user/property/' . $propertyWithSubscriptions['property']->id) }}">
+                    <a class="btn btn-primary" href="{{ URL::to('user/property/' . $propertyWithSubscriptions['property']->id) }}">
                         @lang('common.schedules')
                     </a>
                 </div>
