@@ -22,7 +22,7 @@ class Month extends Model
      * @var array
      */
     protected $fillable = [
-        'month', 'month_number', 'days_in_month', 'year_id'
+        'month', 'month_en', 'month_number', 'days_in_month', 'year_id'
     ];
     
     /**

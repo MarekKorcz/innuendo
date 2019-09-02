@@ -30,7 +30,13 @@
             <div class="head-tile" style="width: 50%;">
                 <div class="text-center">
                     <h2>{{$year->year}}</h2>
-                    <h3>{{$month->month}}</h3>
+                    <h3>
+                        @if (Session('locale') == "en")
+                            {{ $month->month_en }}
+                        @else
+                            {{ $month->month }}
+                        @endif
+                    </h3>
                 </div>
             </div>
             <div class="head-tile text-center" style="width: 25%; padding-top: 30px;">

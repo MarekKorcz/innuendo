@@ -22,6 +22,10 @@
             {{ Form::text('month', Input::old('month'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
+            <label for="month_en">@lang('common.month_en')</label>
+            {{ Form::text('month_en', Input::old('month_en'), array('class' => 'form-control')) }}
+        </div>
+        <div class="form-group">
             <label for="month_number">@lang('common.month_number')</label>
             {{ Form::number('month_number', Input::old('month_number'), array('class' => 'form-control')) }}
         </div>

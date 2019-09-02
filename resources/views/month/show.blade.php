@@ -20,7 +20,13 @@
         </ul>
     </nav>
 
-    <h2 style="padding: 20px;">{{ $month->month }}</h2>
+    <h2 style="padding: 20px;">
+        @if (Session('locale') == "en")
+            {{ $month->month_en }}
+        @else
+            {{ $month->month }}
+        @endif
+    </h2>
     
     <div class="jumbotron">
         @if (count($days) > 0)

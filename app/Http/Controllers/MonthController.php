@@ -43,6 +43,7 @@ class MonthController extends Controller
     {
         $rules = array(
             'month' => 'required',
+            'month_en' => 'required',
             'month_number' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -54,7 +55,7 @@ class MonthController extends Controller
             
             $year = Year::where('id', Input::get('year_id'))->first();
             
-            $monthNumber = strlen(Input::get('month_number')) == 2 ? Input::get('month_number') : "0" . Input::get('month_number');
+            $monthNumber = strlen((int)Input::get('month_number')) == 2 ? Input::get('month_number') : "0" . Input::get('month_number');
             $yearNumber = $year->year;
             
             $yearMonth = $yearNumber . "-" . $monthNumber;
@@ -64,16 +65,16 @@ class MonthController extends Controller
                  
             $month = Month::firstOrCreate([
                 'month' => Input::get('month'),
+                'month_en' => Input::get('month_en'),
                 'month_number' => Input::get('month_number'),
                 'days_in_month' => $numberInMonth,
                 'year_id' => Input::get('year_id')
             ]);
             
             return redirect()->action(
-                        'MonthController@show', [
-                            'id' => $month->id
-                    ])->with('success', 'Month successfully created!')
-            ;
+                'MonthController@show', [
+                    'id' => $month->id
+            ])->with('success', 'Month successfully created!');
         }
     }
 

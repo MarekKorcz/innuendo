@@ -85,6 +85,7 @@ class CreateModels extends Migration
         Schema::create('months', function (Blueprint $table) {
             $table->increments('id');
             $table->string('month');
+            $table->string('month_en');
             $table->integer('month_number');
             $table->integer('days_in_month');
             $table->timestamps();

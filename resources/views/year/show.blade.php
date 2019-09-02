@@ -56,7 +56,13 @@
             <div class="list-group">
                 @foreach ($months as $month)
                     <a class="list-group-item text-center" href="{{ URL::to('month/show/' . $month->id) }}">
-                        <h4>{{$month->month}}</h4>
+                        <h4>
+                            @if (Session('locale') == "en")
+                                {{ $month->month_en }}
+                            @else
+                                {{ $month->month }}
+                            @endif
+                        </h4>
                     </a>
                 @endforeach
             </div>
