@@ -23,8 +23,6 @@ return [
     'login' => 'Zaloguj się',
     'create' => 'Stwórz',
     'update' => 'Aktualizuj',
-    'profile_image' => 'Zdjęcie profilowe',
-    'profile' => 'Profil',
     'add' => 'Dodaj',
     'schedule_in' => 'Grafik w',
     'report_your_company' => 'Zgłoś swoją firmę',
@@ -43,10 +41,8 @@ return [
     'did_not_have_subscription' => 'Nie posiadał subskrypcji',
     'have_subscription' => 'Posiada subskrypcje',
     'do_not_have_subscription' => 'Nie posiada subskrypcji',
-    
-    
-    
-    
+    'profile_image' => 'Zdjęcie profilowe',
+    'profile' => 'Profil',
     'subscription_massages' => 'Masaże dotyczące subskrypcji - ',
     'write_your_name_and_lastname' => 'Wpisz imię lub nazwisko',
     'subscription_first_time_activation_info' => 'Subskrypcja nie została jeszcze aktywowana. Aktywacja nastąpi wraz ze zrealizowaniem pierwszego zabiegu',
@@ -123,7 +119,7 @@ return [
     'graphic_requests_management_panel' => 'Panel z zapytaniami o otwarcie grafików',
     'graphic_requests_management_panel_description' => 'Widok z listą zapytań o otwarcie w danych dniach grafików',
     'register_codes_generation' => 'Generacja kodów rejestracji',
-    'register_codes_generation_description' => 'Widok generacji kodów do rejestracji dla praconików w celu przydzielenia ich do odpowiednich pakietów',
+    'register_codes_generation_description' => 'Widok generacji kodów do rejestracji dla pracowników w celu przydzielenia ich do odpowiednich pakietów',
     'make_an_appointment_with_us' => 'Umów się z nami',
     'make_an_appointment_with_us_description' => 'Skontaktuj się z nami w celu przeprowadzenia weryfikacji',
     'schedules_list_in_properties' => 'Lista grafików w lokalizacjach',
@@ -156,7 +152,7 @@ return [
     'receiver' => 'Odbiorca',
     'date_of_issue' => 'Data wystawienia',
     'payment_deadline' => 'Termin płatności',
-    'payment_method' => 'Sposób method',
+    'payment_method' => 'Sposób płatności',
     'account_number' => 'Numer konta',
     'transfer' => 'Przelew',
     'quantity' => 'Ilość',
@@ -331,7 +327,7 @@ return [
     'send_a_message_to_us' => 'Napisz do nas wiadomość',
     'verify_your_email_address' => 'Weryfikuj swój adres email',
     'verify_your_email_address_description' => 'Link weryfikacyjny został wysłany na Twój adres email.',
-    'verify_your_email_address_description_2' => 'Przed kontynuowaniem sprawdź adres e-mail, aby uzyskać link weryfikacyjny.',
+    'verify_your_email_address_description_2' => 'Przed kontynuowaniem, sprawdź adres e-mail, aby uzyskać link weryfikacyjny.',
     'verify_your_email_address_description_3' => 'Jeśli nie otrzymałeś wiadomości e-mail',
     'verify_your_email_address_description_button' => 'kliknij tutaj, aby poprosić o kolejny',
 //    'terms_accept' => 'Akceptuje powyższy regulamin',
@@ -339,9 +335,9 @@ return [
     'duration_is_over' => 'Czas trwania dobiegł końca',
     'no_people_assigned_to_subscription' => 'Brak osób przypisanych do danej subskrypcji',
     'graphic_requests_header' => 'Zapytania o grafiki',
-    'graphic_requests_header_description' => 'Przy użyciu kalendarza, wybierz interesujący Ciebie i Twoich pracowników dzień tygodnia w którym chcielibyście żabyśmy was odwiedzili, 
+    'graphic_requests_header_description' => 'Przy użyciu kalendarza, wybierz interesujący Ciebie i Twoich pracowników dzień tygodnia, w którym chcielibyście żabyśmy was odwiedzili, 
                                               następnie wypełnij potrzebne dane i wyślij do nas zapytanie',
     'graphic_requests_header_description_2' => 'Obecnie, nie posiadasz jeszcze żadnej wykupionej subskrypcji by móc wysłać do nas zapytanie o otworzenie grafiku.',
     'register_codes' => 'Kody rejestracyjne',
-    'register_codes_description' => 'Kody rejestracyjne umożliwiają zarejestrowanie się Twoich pracowników oraz przydzielenie ich do wybranych przez Ciebie pakietów i lokalizacji'
+    'register_codes_description' => 'Kody rejestracyjne umożliwiają zarejestrowanie się Twoich pracowników oraz przydzielenie ich do wybranych przez Ciebie lokalizacji i pakietów'
 ];
