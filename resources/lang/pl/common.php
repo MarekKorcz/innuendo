@@ -340,5 +340,27 @@ return [
                                               następnie wypełnij potrzebne dane i wyślij do nas zapytanie',
     'graphic_requests_header_description_2' => 'Obecnie, nie posiadasz jeszcze żadnej wykupionej subskrypcji by móc wysłać do nas zapytanie o otworzenie grafiku.',
     'register_codes' => 'Kody rejestracyjne',
-    'register_codes_description' => 'Kody rejestracyjne umożliwiają zarejestrowanie się Twoich pracowników oraz przydzielenie ich do wybranych przez Ciebie lokalizacji i pakietów'
+    'register_codes_description' => 'Kody rejestracyjne umożliwiają zarejestrowanie się Twoich pracowników oraz przydzielenie ich do wybranych przez Ciebie lokalizacji i pakietów',
+    
+    
+    
+    'create_promo' => 'Stwórz akcje promocyjną',
+    'title' => 'Tytuł',
+    'title_en' => 'Tytuł (po angielsku)',
+    'description_en' => 'Opis (po angielsku)',
+    'available_code_count' => 'Liczba dostępnych kodów promocyjnych',
+    'used_code_count' => 'Liczba użytych kodów promocyjnych',
+    'total_code_count' => 'Łączna liczba możliwych kodów promocyjnych',
+    'code_count' => 'Liczba kodów',
+    'promo_edit' => 'Edytuj promocje',
+    'choose_subscriptions_for_promo' => 'Wybierz subskrypcje dla promocji',
+    'promos_list' => 'Lista promocji',
+    'promos_list_description' => 'Widok z listą utworzonych już promocji, z możliwością ich modyfikacji oraz utworzenia nowych',
+    'promo_create_new' => 'Stwórz nową promocje',
+    'promo_create_description' => 'Obecnie nie istniej jeszcze żadna promocja.',
+    'promo_create_description_2' => 'Naciśnij przycisk by utworzyć pierszą z nich',
+    'is_active' => 'Aktywna',
+    'promo_codes_list' => 'Lista kodów promocyjnych należących do promocji',
+    'unused' => 'Nie używany',
+    'used_by' => 'Użyty przez',
 ];

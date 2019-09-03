@@ -51,6 +51,18 @@ Route::get('/admin/graphic-requests', 'AdminController@graphicRequests');
 Route::get('/admin/graphic-request/{graphicRequestId}/{chosenMessageId}', 'AdminController@graphicRequestShow');
 Route::post('/admin/make-a-message', 'AdminController@makeAMessage');
 Route::get('/admin/graphic-request/message/change-status/{graphicRequestId}/{messageId}', 'AdminController@graphicRequestMessageChangeStatus');
+Route::get('/admin/promo/create', 'AdminController@promoCreate');
+Route::post('/admin/promo/store', 'AdminController@promoStore');
+Route::get('/admin/promo/show/{id}', 'AdminController@promoShow');
+Route::get('/admin/promo/edit/{id}', 'AdminController@promoEdit');
+Route::put('/admin/promo/update', 'AdminController@promoUpdate');
+Route::get('/admin/promo/list', 'AdminController@promoList');
+
+
+
+// next: add promo code show, add promo activation feature
+
+
 Route::get('/admin/approve/messages', 'AdminController@approveMessages');
 Route::get('/admin/approve/messages/{bossId}', 'AdminController@approveMessageShow');
 Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminController@approveMessageStatusChange');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 // to tests
 use App\Appointment;
+use App\Promo;
 use App\PromoCode;
 use App\Interval;
 use App\InvoiceData;

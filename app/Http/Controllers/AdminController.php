@@ -8,10 +8,12 @@ use App\TempProperty;
 use App\GraphicRequest;
 use App\Message;
 use App\Calendar;
+use App\Property;
+use App\Subscription;
+use App\Promo;
 use App\PromoCode;
 use App\Mail\AdminTempBossCreate;
 use App\Mail\AdminTempEmployeeCreate;
-use App\Property;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -796,5 +798,179 @@ class AdminController extends Controller
         $file = Storage::disk('local')->get($filename);
         
         return new Response($file, 200);
+    }
+    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function promoCreate()
+    {
+        $subscriptions = Subscription::where('id', '!=', null)->get();
+        
+        return view('promo.create')->with('subscriptions', $subscriptions);
+    }
+    
+    /**
+     * Add promo.
+     */
+    public function promoStore()
+    {
+        $rules = array(
+            'title'            => 'required',
+            'title_en'         => 'required',
+            'description'      => 'required',
+            'description_en'   => 'required',
+            'total_code_count' => 'required',
+            'code'             => 'required',
+            'subscriptions'    => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('admin/promo/create')
+                ->withErrors($validator);
+        } else {
+
+            $admin = User::where([
+                'id' => auth()->user()->id,
+                'isAdmin' => 1
+            ])->first();
+
+            if ($admin !== null)
+            {
+                $promo = new Promo();
+                $promo->title = Input::get('title');
+                $promo->title_en = Input::get('title_en');
+                $promo->description = Input::get('description');
+                $promo->description_en = Input::get('description_en');
+                $promo->available_code_count = Input::get('total_code_count');
+                $promo->total_code_count = Input::get('total_code_count');
+                $promo->admin_id = $admin->id;
+                $promo->save();
+
+                if ($promo !== null)
+                {
+                    for ($i = 1; $i <= $promo->total_code_count; $i++)
+                    {
+                        $promoCode = new PromoCode();
+                        $promoCode->code = Input::get('code');
+                        $promoCode->promo_id = $promo->id;
+                        $promoCode->save();
+
+                        foreach (Input::get('subscriptions') as $sub)
+                        {
+                            $subscription = Subscription::where('id', $sub)->first();
+
+                            if ($subscription !== null)
+                            {
+                                $promoCode->subscriptions()->attach($subscription->id);
+                            }
+                        }
+                    }
+                }
+                
+                return redirect()->action(
+                    'AdminController@promoShow', [
+                        'id' => $promo->id,
+                    ]
+                )->with('success', 'Promo with promo codes have been created!');
+            }
+            
+            return redirect()->route('welcome');
+        }
+    }
+    
+    public function promoShow($id)
+    {
+        $promo = Promo::where('id', $id)->with('promoCodes')->first();
+        
+        if ($promo !== null)
+        {
+            if (count($promo->promoCodes) > 0)
+            {
+                foreach ($promo->promoCodes as $promoCode)
+                {
+                    if ($promoCode->isActive == 1)
+                    {
+                        $boss = User::where('id', $promoCode->boss_id)->first();
+                        
+                        if ($boss !== null)
+                        {
+                            $promoCode['boss'] = $boss;
+                        }
+                    }
+                }
+            }
+            
+            return view('promo.show')->with([
+                'promo' => $promo
+            ]);
+        }
+    }
+    
+    public function promoEdit($id)
+    {
+        $promo = Promo::where('id', $id)->first();
+        
+        if ($promo !== null)
+        {            
+            return view('promo.edit')->with([
+                'promo' => $promo
+            ]);
+        }
+    }
+    
+    public function promoUpdate()
+    {
+        $rules = array(
+            'promo_id'         => 'required',
+            'title'            => 'required',
+            'title_en'         => 'required',
+            'description'      => 'required',
+            'description_en'   => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('admin/promo/edit/' . Input::get('promo_id'))
+                ->withErrors($validator);
+        } else {
+            
+            $admin = User::where([
+                'id' => auth()->user()->id,
+                'isAdmin' => 1
+            ])->first();
+
+            if ($admin !== null)
+            {
+                $promo = Promo::where('id', Input::get('promo_id'))->first();
+                
+                if ($promo !== null)
+                {
+                    $promo->title = Input::get('title');
+                    $promo->title_en = Input::get('title_en');
+                    $promo->description = Input::get('description');
+                    $promo->description_en = Input::get('description_en');                    
+                    $promo->save();
+                    
+                    return redirect()->action(
+                        'AdminController@promoShow', [
+                            'id' => $promo->id,
+                        ]
+                    )->with('success', 'Promo has been updated!');
+                }
+            }
+            
+            return redirect()->route('welcome');
+        }
+    }
+    
+    public function promoList()
+    {
+        $promos = Promo::where('id', '!=', null)->get();
+        
+        return view('promo.list')->with('promos', $promos);
     }
 }

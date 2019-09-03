@@ -23,7 +23,21 @@ class Promo extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'description', 'available_code_count', 'used_code_count', 'total_code_count', 'admin_id'
+        'title', 'title_en', 'description', 'description_en', 'available_code_count', 'used_code_count', 
+        'total_code_count', 'isActive', 'admin_id'
+    ];
+    
+    /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'available_code_count' => 'integer',
+        'used_code_count' => 'integer',
+        'total_code_count' => 'integer',
+        'isActive' => 'boolean',
+        'admin_id' => 'integer'
     ];
     
     /**

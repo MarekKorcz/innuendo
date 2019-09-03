@@ -2297,7 +2297,7 @@ class BossController extends Controller
             
             $boss = auth()->user();
             
-            if ($boss->isBoss == 1 && $boss->isApproved == 0)
+            if ($boss->isApproved == 0)
             {
                 $promoCode = PromoCode::where([
                     'id' => Input::get('promo_code_id'),

@@ -266,10 +266,13 @@ class CreateModels extends Migration
         Schema::create('promos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->string('description')->nullable();
+            $table->string('title_en');
+            $table->string('description');
+            $table->string('description_en');
             $table->integer('available_code_count')->nullable();
-            $table->integer('used_code_count')->nullable();
-            $table->integer('total_code_count')->nullable();
+            $table->integer('used_code_count')->nullable()->default(0);
+            $table->integer('total_code_count');
+            $table->boolean('isActive')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->integer('admin_id')->unsigned()->index()->foreign()->references("id")->on("users");

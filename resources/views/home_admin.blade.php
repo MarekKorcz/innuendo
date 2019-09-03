@@ -107,6 +107,19 @@
         </div>
         <div class="card">
             <div class="card-body">
+                <h4 class="card-title text-center">@lang('common.promos_list')</h4>
+                <p class="card-text text-center">
+                    @lang('common.promos_list_description')
+                </p>
+                <div class="text-center">
+                    <a class="btn btn-success" href="{{ URL::to('/admin/promo/list') }}">
+                        @lang('common.show')
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
                 <h4 class="card-title text-center">@lang('common.approved_messages')</h4>
                 <p class="card-text text-center">
                     @lang('common.approved_messages_description')
