@@ -8,7 +8,7 @@
                 <div class="card-header">@lang('common.password_reset')</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('password.update') }}">
+                    <form method="POST" action="{{ route('password.update') }}" novalidate>
                         @csrf
 
                         <input type="hidden" name="token" value="{{ $token }}">

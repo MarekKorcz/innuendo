@@ -5,34 +5,33 @@
 
 <div class="container">
     <div class="jumbotron" style="margin: 15px;">
-        <h1>
-            @lang('navbar.property_edit')
-        </h1>
+        
+        <h1 class="text-center">@lang('navbar.property_edit')</h1>
 
         {{ Form::open(['id' => 'property-edit', 'action' => ['BossController@propertyUpdate'], 'method' => 'POST']) }}
 
             <div class="form-group">
-                <label for="name">@lang('common.company_name')</label>
+                <label for="name">@lang('common.company_name') :</label>
                 {{ Form::text('name', $property->name, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                <label for="street">@lang('common.street')</label>
+                <label for="street">@lang('common.street') :</label>
                 {{ Form::text('street', $property->street, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                <label for="street_number">@lang('common.street_number')</label>
+                <label for="street_number">@lang('common.street_number') :</label>
                 {{ Form::text('street_number', $property->street_number, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                <label for="house_number">@lang('common.house_number')</label>
+                <label for="house_number">@lang('common.house_number') :</label>
                 {{ Form::text('house_number', $property->house_number, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
             <div class="form-group">
-                <label for="city">@lang('common.city')</label>
+                <label for="city">@lang('common.city') :</label>
                 {{ Form::text('city', $property->city, array('class' => 'form-control')) }}
                 <div class="warning"></div>
             </div>
@@ -40,7 +39,9 @@
             {{ Form::hidden('property_id', $property->id) }}
             {{ Form::hidden('_method', 'PUT') }}
             
-            <input type="submit" value="@lang('common.update')" class="btn btn-primary">
+            <div class="text-center" style="padding-top: 1rem;">
+                <input type="submit" value="@lang('common.update')" class="btn btn-primary">
+            </div>
 
         {{ Form::close() }}
     </div>

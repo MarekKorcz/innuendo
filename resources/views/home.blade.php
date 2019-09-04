@@ -8,7 +8,7 @@
         <span style="font-size: 27px;">
             @lang('navbar.my_account') 
         </span> 
-        - @lang('navbar.logged_in_as') 
+        - @lang('common.logged_in_as') 
         <strong>
             {{$user->name}} {{$user->surname}}
         </strong>
