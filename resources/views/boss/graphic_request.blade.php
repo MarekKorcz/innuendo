@@ -81,7 +81,7 @@
             {{ Form::open(['id' => 'send-message', 'action' => ['BossController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}
                 
                 <div class="form-group text-center">
-                    <input id="text" type="text" style="width: 60%;" value="{{Input::old('text')}}" placeholder="@lang('common.send_a_message_to_us')" autocomplete="off">
+                    <input id="text" name="text" type="text" style="width: 60%;" value="{{Input::old('text')}}" placeholder="@lang('common.send_a_message_to_us')" autocomplete="off">
                 </div>
             
                 {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}

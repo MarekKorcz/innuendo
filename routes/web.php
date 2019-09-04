@@ -57,10 +57,12 @@ Route::get('/admin/promo/show/{id}', 'AdminController@promoShow');
 Route::get('/admin/promo/edit/{id}', 'AdminController@promoEdit');
 Route::put('/admin/promo/update', 'AdminController@promoUpdate');
 Route::get('/admin/promo/list', 'AdminController@promoList');
+Route::get('/admin/promo-code/show/{id}', 'AdminController@promoCodeShow');
+Route::post('/admin/make-a-promo-code-message', 'AdminController@makeAPromoCodeMessage');
+Route::get('/admin/promo-code/message/change-status/{promoId}/{messageId}', 'AdminController@promoCodeMessageChangeStatus');
 
 
-
-// next: add promo code show, add promo activation feature
+// next: add promo activation feature
 
 
 Route::get('/admin/approve/messages', 'AdminController@approveMessages');

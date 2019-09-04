@@ -663,7 +663,7 @@ class AdminController extends Controller
     
     public function approveMessages()
     {
-        $promoCodes = PromoCode::where('id', '!=', null)->where('boss_id', '!=', null)->with('promo')->get();
+        $promoCodes = PromoCode::where('id', '!=', null)->where('boss_id', '!=', null)->with('promo')->orderBy('activation_date', 'desc')->get();
 
         foreach ($promoCodes as $promoCode)
         {           
@@ -714,7 +714,7 @@ class AdminController extends Controller
     
     public function approveMessageStatusChange($promoCodeId)
     {
-        $promoCode = PromoCode::where('id', $promoCodeId)->with('promo')->first();
+        $promoCode = PromoCode::where('id', $promoCodeId)->first();
  
         if ($promoCode !== null)
         {
@@ -735,15 +735,13 @@ class AdminController extends Controller
                 }
                 
                 $boss->save();
-                
-                $promoCode['boss'] = $boss;
             }
             
-            return view('admin.approve_message_show')->with([
-                'promoCode' => $promoCode,
-                'boss' => $promoCode['boss'],
-                'admin' => auth()->user()
-            ]);
+            return redirect()->action(
+                'AdminController@approveMessageShow', [
+                    'id' => $boss->id,
+                ]
+            )->with('success', 'User isApproved ahs been changed!');
         }
         
         return redirect()->route('welcome');
@@ -908,6 +906,8 @@ class AdminController extends Controller
                 'promo' => $promo
             ]);
         }
+        
+        return redirect()->route('welcome');
     }
     
     public function promoEdit($id)
@@ -920,6 +920,8 @@ class AdminController extends Controller
                 'promo' => $promo
             ]);
         }
+        
+        return redirect()->route('welcome');
     }
     
     public function promoUpdate()
@@ -972,5 +974,80 @@ class AdminController extends Controller
         $promos = Promo::where('id', '!=', null)->get();
         
         return view('promo.list')->with('promos', $promos);
+    }
+    
+    public function promoCodeShow($id)
+    {
+        $promoCode = PromoCode::where('id', $id)->with([
+            'boss',
+            'promo',
+            'subscriptions',
+            'messages'
+        ])->first();
+        
+        if ($promoCode !== null)
+        {
+            return view('promo.code_show')->with([
+                'promoCode' => $promoCode
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    public function makeAPromoCodeMessage()
+    {
+        $rules = array(
+            'text'          => 'required|string',
+            'promo_code_id' => 'required|numeric'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::to('admin/promo-code/show/' . Input::get('promo_code_id'));
+            
+        } else {
+            
+            $promoCode = PromoCode::where('id', Input::get('promo_code_id'))->first();
+
+            if ($promoCode !== null)
+            {
+                $message = new Message();
+                $message->text = Input::get('text');
+                $message->status = 0;
+                $message->owner_id = auth()->user()->id;
+                $message->promo_code_id = $promoCode->id;
+                $message->save();
+
+                return redirect('/admin/promo-code/show/' . $promoCode->id)->with('success', 'Message has been sended!');
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Something went wrong');
+        }
+    }
+    
+    public function promoCodeMessageChangeStatus($promoId, $messageId)
+    {
+        $promoCode = PromoCode::where('id', $promoId)->first();
+        $message = Message::where('id', $messageId)->first();
+        
+        if ($promoCode !== null && $message !== null && $message->promo_code_id == $promoCode->id)
+        {
+            if ($message->status == 0)
+            {
+                $message->status = 1;
+                
+            } else if ($message->status = 1) {
+                
+                $message->status = 0;
+            }
+            
+            $message->save();
+            
+            return redirect('/admin/promo-code/show/' . $promoCode->id)->with('success', 'Message status has been changed!');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Something went wrong');
     }
 }

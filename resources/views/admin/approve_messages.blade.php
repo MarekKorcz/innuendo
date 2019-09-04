@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
 
-    <h1 class="text-center">@lang('common.approved_messages')</h1>
+    <h1 class="text-center">@lang('common.approval_messages')</h1>
     
     <table class="table table-striped table-bordered">
         <thead>

@@ -120,7 +120,7 @@
         </div>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title text-center">@lang('common.approved_messages')</h4>
+                <h4 class="card-title text-center">@lang('common.approval_messages')</h4>
                 <p class="card-text text-center">
                     @lang('common.approved_messages_description')
                 </p>

@@ -57,7 +57,7 @@
             {{ Form::open(['id' => 'send-message', 'action' => ['AdminController@makeAnApproveMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}
                 
                 <div class="form-group text-center">
-                    {{ Form::text('text', Input::old('text'), array('id' => 'text', 'style' => 'width: 60%;', 'placeholder' => 'Odpisz', 'autocomplete' => 'off')) }}
+                    <input id="text" type="text" name="text" value="{{ Input::old('text') }}" style="width: 60%;" placeholder="@lang('common.reply')" autocomplete="off">
                 </div>
             
                 {{ Form::hidden('promo_code_id', $promoCode->id) }}

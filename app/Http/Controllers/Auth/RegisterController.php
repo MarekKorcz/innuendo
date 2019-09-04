@@ -491,10 +491,20 @@ class RegisterController extends Controller
             $promoCode = PromoCode::where([
                 'code' => Input::get('code'),
                 'isActive' => 0
-            ])->with('subscriptions')->first();
+            ])->with([
+                'subscriptions',
+                'promo'
+            ])->first();
 
             if ($promoCode !== null)
             {
+                if ($promoCode->promo->isActive == 0)
+                {
+                    return redirect('/register')->with([
+                        'error' => 'Przepraszamy, czas promocji dobiegł końca!'
+                    ]);
+                }
+                
                 $boss = User::create([
                     'name' => Input::get('name'),
                     'surname' => Input::get('surname'),

@@ -237,6 +237,7 @@ return [
     'approved' => 'Zatwierdzony',
     'disapprove' => 'Dezaprobuj',
     'approved_messages' => 'Zatwierdzone wiadomości',
+    'approval_messages' => 'Wiadomości dotyczące zatwierdzenia',
     'messages_between_admin_and' => 'Wiadomości między adminem i',
     'owner' => 'Właściciel',
     'activation_email' => 'Email aktywacyjny',
@@ -363,4 +364,8 @@ return [
     'promo_codes_list' => 'Lista kodów promocyjnych należących do promocji',
     'unused' => 'Nie używany',
     'used_by' => 'Użyty przez',
+    'promo_code_header' => 'Kod promocyjny należący do promocji',
+    'activation_date' => 'Data aktywacji',
+    'send_a_message' => 'Wyślij wiadomość',
+    'reply' => 'Odpisz',
 ];

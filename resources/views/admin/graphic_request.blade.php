@@ -91,7 +91,7 @@
             {{ Form::open(['id' => 'send-message', 'action' => ['AdminController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}
                 
                 <div class="form-group text-center">
-                    {{ Form::text('text', Input::old('text'), array('style' => 'width: 60%;', 'placeholder' => 'Send a message')) }}
+                    <input type="text" name="text" value="{{ Input::old('text') }}" style="width: 60%;" placeholder="@lang('common.send_a_message')" autocomplete="off">
                 </div>
             
                 {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}

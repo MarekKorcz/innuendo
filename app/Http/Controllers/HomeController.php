@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Appointment;
 use App\Promo;
 use App\PromoCode;
+use App\Message;
 use App\Interval;
 use App\InvoiceData;
 use App\GraphicRequest;

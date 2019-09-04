@@ -75,6 +75,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\GraphicRequest', 'graphic_request_employee', 'employee_id', 'graphic_request_id');
     }
+    
+    /**
+     * Get promo code associated with boss.
+     */
+    public function promoCode()
+    {
+        return $this->hasOne('App\PromoCode');
+    }
 
     /**
      *      USER

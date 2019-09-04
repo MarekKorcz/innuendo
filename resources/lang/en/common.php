@@ -236,6 +236,7 @@ return [
     'approved' => 'Approved',
     'disapprove' => 'disapprove',
     'approved_messages' => 'Approved messages',
+    'approval_messages' => 'Approval messages',
     'messages_between_admin_and' => 'Messages between admin and',
     'owner' => 'Owner',
     'activation_email' => 'Activation email',
