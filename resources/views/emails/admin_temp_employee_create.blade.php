@@ -2,7 +2,7 @@
 
 # @lang('common.registration_to') {{ config('app.name') }}
 
-@lang('common.greetings') , {{$employee->name}} {{$employee->surname}}
+@lang('common.greetings'), {{$employee->name}} {{$employee->surname}}
 
 @lang('common.admin_temp_employee_create_mail_text')
 
@@ -10,6 +10,6 @@
 @lang('common.register')
 @endcomponent
 
-@lang('common.thank_you') , <br>
+@lang('common.thank_you'), <br>
 {{ config('app.name') }}
 @endcomponent

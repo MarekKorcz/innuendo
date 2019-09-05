@@ -37,9 +37,9 @@
         </div>
     @else
         <div class="text-center" style="padding: 1rem;">
-            <h1>@lang('common.graphic_requests_header')</h1>
+            <h1 style="padding-bottom: 1rem;">@lang('common.graphic_requests_header')</h1>
             @if ($property !== null)
-                <h3>@lang('common.graphic_requests_header_description')</h3>
+                <h4>@lang('common.graphic_requests_header_description')</h4>
                 <div style="padding: 1rem;">
                     <a class="btn btn-success btn-lg" href="{{ URL::to('/user/property/' . $property->id) }}">
                         @lang('common.go_to_schedule')

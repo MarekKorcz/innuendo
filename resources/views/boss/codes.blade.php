@@ -6,20 +6,7 @@
 
 <div class="container">
     
-    <div style="padding: 1rem 0 1rem 0">
-        
-        
-        
-        
-        
-        
-        <!--todo: add if to check whether boss has purchased at least one subscription or not. If not, add redirect button to purchase view!!-->
-        
-        
-        
-        
-        
-        
+    <div style="padding: 1rem 0 1rem 0">        
         @if (count($codes) > 0)
             <div class="text-center" style="padding-top: 1rem;">
                 <h2>@lang('common.register_codes')</h2>
@@ -128,13 +115,23 @@
             </div>
         @else
             <div class="text-center" style="padding: 1rem;">
-                <h2>@lang('common.register_codes')</h2>
-                <h4>@lang('common.register_codes_description')</h4>
-                <div style="padding: 1rem;">
-                    <a class="btn btn-success btn-lg" href="{{ action('BossController@addCode') }}">
-                        @lang('common.add_new_code')
-                    </a>
-                </div>
+                <h2 style="padding-bottom: 1rem;">@lang('common.register_codes')</h2>
+                @if ($redirectToSubscriptionPurchaseView)
+                    <h3>@lang('common.go_to_schedule_description_3')</h3>
+                    <h4>@lang('common.go_to_schedule_description_4')</h4>
+                    <div style="padding: 1rem;">
+                        <a class="btn btn-success btn-lg" href="{{ URL::to('/boss/subscription/list/0/0') }}">
+                            @lang('common.subscriptions_list')
+                        </a>
+                    </div>
+                @else
+                    <h4>@lang('common.register_codes_description')</h4>
+                    <div style="padding: 1rem;">
+                        <a class="btn btn-success btn-lg" href="{{ action('BossController@addCode') }}">
+                            @lang('common.add_new_code')
+                        </a>
+                    </div>
+                @endif
             </div>
         @endif
     </div>

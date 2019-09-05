@@ -43,9 +43,10 @@ class BossController extends Controller
      */
     public function codes()
     {
-        $boss = auth()->user();
+        $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
         $codes = Code::where('boss_id', $boss->id)->get();
         $codesArray = [];
+        $redirectToSubscriptionPurchaseView = true;
         
         if (count($codes) > 0)
         {
@@ -161,8 +162,17 @@ class BossController extends Controller
             }
         }
         
+        if (count($codesArray) == 0)
+        {
+            if (count($boss->chosenProperties) > 0)
+            {
+                $redirectToSubscriptionPurchaseView = false;
+            }
+        }
+        
         return view('boss.codes')->with([
-            'codes' => $codesArray
+            'codes' => $codesArray,
+            'redirectToSubscriptionPurchaseView' => $redirectToSubscriptionPurchaseView
         ]);
     }
     
@@ -365,7 +375,7 @@ class BossController extends Controller
                 'id' => $propertyId,
                 'boss_id' => $boss->id
             ])->with('subscriptions')->first();
-        }     
+        }
 
         $chosenSubscription = null;
         
@@ -429,7 +439,9 @@ class BossController extends Controller
                         if ($chosenProperty !== null && count($chosenProperty->subscriptions) > 0)
                         {
                             foreach ($chosenProperty->subscriptions as $chosenSub)
-                            {                                
+                            {      
+                                $purchases = new Collection();
+                                
                                 // >> check if subscription is purchased
                                 if ($chosenSub->id == $subscription->id)
                                 {
@@ -471,10 +483,10 @@ class BossController extends Controller
                                             // <<
                                         }
                                     }
-                                    
-                                    $subscription['purchases'] = $purchases;
                                 }
                                 // <<
+                                
+                                $subscription['purchases'] = $purchases;
                             }
                         }
                         // <<
@@ -551,7 +563,7 @@ class BossController extends Controller
             
         } else {
             
-            return redirect()->route('welcome')->with('error', 'Tak lokalizacja nie należy do Ciebie');
+            return redirect()->route('welcome')->with('error', 'Ta lokalizacja nie należy do Ciebie');
         }
     }
     

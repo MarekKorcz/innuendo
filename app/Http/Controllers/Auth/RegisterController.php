@@ -365,6 +365,7 @@ class RegisterController extends Controller
                                 for ($i = 1; $i <= 3; $i++)
                                 {                    
                                     $monthName = "";
+                                    $monthNameEn = "";
                                     $todayInParts = explode("-", $today);
                                     $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, (int)$todayInParts[1], (int)$todayInParts[0]);
                                     $month = null;
@@ -373,39 +374,51 @@ class RegisterController extends Controller
                                     {
                                         case 1:
                                             $monthName = "Styczeń";
+                                            $monthNameEn = "January";
                                             break;
                                         case 2:
                                             $monthName = "Luty";
+                                            $monthNameEn = "February";
                                             break;
                                         case 3:
                                             $monthName = "Marzec";
+                                            $monthNameEn = "March";
                                             break;
                                         case 4:
                                             $monthName = "Kwiecień";
+                                            $monthNameEn = "April";
                                             break;
                                         case 5:
                                             $monthName = "Maj";
+                                            $monthNameEn = "May";
                                             break;
                                         case 6:
                                             $monthName = "Czerwiec";
+                                            $monthNameEn = "June";
                                             break;
                                         case 7:
                                             $monthName = "Lipiec";
+                                            $monthNameEn = "July";
                                             break;
                                         case 8:
                                             $monthName = "Sierpień";
+                                            $monthNameEn = "August";
                                             break;
                                         case 9:
                                             $monthName = "Wrzesień";
+                                            $monthNameEn = "September";
                                             break;
                                         case 10:
                                             $monthName = "Październik";
+                                            $monthNameEn = "October";
                                             break;
                                         case 11:
                                             $monthName = "Listopad";
+                                            $monthNameEn = "November";
                                             break;
                                         case 12:
                                             $monthName = "Grudzień";
+                                            $monthNameEn = "December";
                                             break;
                                     }
 
@@ -413,6 +426,7 @@ class RegisterController extends Controller
                                     {
                                         $month = new Month();
                                         $month->month = $monthName;
+                                        $month->month_en = $monthNameEn;
                                         $month->month_number = $todayInParts[1];
                                         $month->days_in_month = $numberOfDaysInMonth;
                                         $month->year_id = $currentYear->id;
@@ -422,6 +436,7 @@ class RegisterController extends Controller
 
                                         $month = new Month();
                                         $month->month = $monthName;
+                                        $month->month_en = $monthNameEn;
                                         $month->month_number = $todayInParts[1];
                                         $month->days_in_month = $numberOfDaysInMonth;
                                         $month->year_id = $nextYear->id;
