@@ -7,6 +7,19 @@
 <div class="container">
     
     <div style="padding: 1rem 0 1rem 0">
+        
+        
+        
+        
+        
+        
+        <!--todo: add if to check whether boss has purchased at least one subscription or not. If not, add redirect button to purchase view!!-->
+        
+        
+        
+        
+        
+        
         @if (count($codes) > 0)
             <div class="text-center" style="padding-top: 1rem;">
                 <h2>@lang('common.register_codes')</h2>
