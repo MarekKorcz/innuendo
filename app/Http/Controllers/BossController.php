@@ -19,6 +19,7 @@ use App\Substart;
 use App\Purchase;
 use App\Interval;
 use App\PromoCode;
+use App\Mail\SubscriptionPurchased;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -867,18 +868,7 @@ class BossController extends Controller
                         $interval->save();
                         // <<
 
-                        /**
-                         * 
-                         * 
-                         * 
-                         * 
-                         * todo: Email sending
-                         * 
-                         * 
-                         * 
-                         * 
-                         * 
-                         */
+                        \Mail::to($boss)->send(new SubscriptionPurchased($boss, $subscription));
 
                         // redirect
                         return redirect()->action(

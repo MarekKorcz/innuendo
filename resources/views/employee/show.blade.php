@@ -28,8 +28,6 @@
                                  border="0"
                             >
                         </div>
-                    @else
-                        todo: dodać defaultowe zdjęcie?
                     @endif
                 </div>
             </div>

@@ -38,7 +38,7 @@
         <a class="navbar-brand" href="{{ route('welcome') }}">
             <img src="/img/sacred-geometry.jpg" width="72" height="72" class="d-inline-block align-top">
         </a>
-        <span id="logo-text" class="navbar-text mr-auto" style="margin: 0 12px 0 3px;">
+        <span id="logo-text" class="logo-text navbar-text mr-auto" style="margin: 0 12px 0 3px;">
             <a href="{{ route('welcome') }}">
                 {{ config('app.name') }}
             </a>
@@ -115,7 +115,7 @@
                     <img src="/img/sacred-geometry.jpg" width="99" height="99" class="img-fluid">
                 </a>
                 <br>
-                <span id="footer-name">
+                <span id="footer-name" class="logo-text">
                     {{ config('app.name') }}
                 </span>
             </div>

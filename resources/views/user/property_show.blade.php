@@ -32,8 +32,16 @@
             @foreach ($employees as $employee)
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title text-center">{{$employee->name}}</h5>
-                        todo: pokaż zdjęcie
+                        <h3 class="card-title text-center">{{$employee->name}} {{$employee->surname}}</h3>
+                        @if (Storage::disk('local')->has($employee->profile_image))
+                            <div style="padding: 1rem;">
+                                <img src="{{ route('account.image', ['fileName' => $employee->profile_image]) }}" 
+                                     alt="{{$employee->name}} {{$employee->surname}}" 
+                                     style="width: 100%;"; 
+                                     border="0"
+                                >
+                            </div>
+                        @endif
                         <p class="card-text">
                             {!!$employee->description!!}
                         </p>

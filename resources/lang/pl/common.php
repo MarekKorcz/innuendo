@@ -384,4 +384,10 @@ return [
     'user_create_with_promo_code_mail_text_fourth' => ' by po wybraniu naszego pracownika, dokonać pierwszej rezerwacji masażu w umówionym przez szefa dniu!',
     'activate' => 'Aktywuj',
     'deactivate' => 'Dezaktywuj',
+    'subscription_purchased' => 'Wykupienie subskrypcji',
+    'thanks_for_subscription_purchase_header' => 'Gorące gratulacje za wykupienie subskrypcji ',
+    'in' => ' w ',
+    'thanks_for_subscription_purchase_description' => 'Od tej chwili jesteśmy w stanie wykonywać dla Ciebie jak i Twoich pracowników, najlepszej jakości masaże, mające wpływ na poprawę zdrowia, samopoczucia oraz prestiżu związanego z pracą w Twojej firmie, a co za tym idzie, diametralny wzrost wydajnośći oraz zysków!',
+    'thanks_for_subscription_purchase_description_2' => 'Jesteśmy zachwyceni wizją naszej przyszłej owocnej współpracy oraz nie możemy się doczekać naszej pierwszej wizyty w Twoim biurze!',
+    'thanks_for_subscription_purchase_description_3' => 'By to przybliżyć, zaloguj się na swoje konto, następnie wybierz odpowiadający Tobie oraz pracownikom dzień w miesiącu i wyślij do nas zapytanie o otwarcie grafiku w danym dniu. Skontaktujemy się najszybciej jak to tylko możliwe!',
 ];

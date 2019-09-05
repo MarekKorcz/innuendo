@@ -5,25 +5,23 @@
 {!! Html::style('css/employee_index.css') !!}
 
 <div class="container">
-    <h1 class="text-center padding-top">@lang('common.employees')</h1>
+    <h1 class="text-center padding-top">@lang('common.employees') :</h1>
     @for ($i = 1; $i <= count($employees); $i++)
         @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
             <div class="row padding">
                 <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                     <div class="card">
-                        @if (Storage::disk('local')->has($employees[$i]->profile_image))
-                            <div style="padding: 1rem;">
-                                <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
-                                     alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
-                                     style="width: 100%;" 
-                                     border="0"
-                                >
-                            </div>
-                        @else
-                            todo: dodać defaultowe zdjęcie?
-                        @endif
                         <div class="card-body">
-                            <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
+                            <h3 class="card-title text-center">{{$employees[$i]->name}} {{$employees[$i]->surname}}</h3>
+                            @if (Storage::disk('local')->has($employees[$i]->profile_image))
+                                <div style="padding: 1rem;">
+                                    <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
+                                         alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
+                                         style="width: 100%;"; 
+                                         border="0"
+                                    >
+                                </div>
+                            @endif
                             <p class="card-text">
                                 {!!$employees[$i]->description!!}
                             </p>
@@ -38,19 +36,17 @@
         @elseif ($i % 3 == 0)
                 <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                     <div class="card">
-                        @if (Storage::disk('local')->has($employees[$i]->profile_image))
-                            <div style="padding: 1rem;">
-                                <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
-                                     alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
-                                     style="width: 100%;"
-                                     border="0"
-                                >
-                            </div>
-                        @else
-                            todo: dodać defaultowe zdjęcie?
-                        @endif
                         <div class="card-body">
-                            <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
+                            <h3 class="card-title text-center">{{$employees[$i]->name}} {{$employees[$i]->surname}}</h3>
+                            @if (Storage::disk('local')->has($employees[$i]->profile_image))
+                                <div style="padding: 1rem;">
+                                    <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
+                                         alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
+                                         style="width: 100%;"; 
+                                         border="0"
+                                    >
+                                </div>
+                            @endif
                             <p class="card-text">
                                 {!!$employees[$i]->description!!}
                             </p>
@@ -66,19 +62,17 @@
         @else
             <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                 <div class="card">
-                    @if (Storage::disk('local')->has($employees[$i]->profile_image))
-                        <div style="padding: 1rem;">
-                            <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
-                                 alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
-                                 style="width: 100%;"; 
-                                 border="0"
-                            >
-                        </div>
-                    @else
-                        todo: ddoać defaultowe zdjęcie?
-                    @endif
                     <div class="card-body">
-                        <h5 class="card-title text-center">{{$employees[$i]->name}}</h5>
+                        <h3 class="card-title text-center">{{$employees[$i]->name}} {{$employees[$i]->surname}}</h3>
+                        @if (Storage::disk('local')->has($employees[$i]->profile_image))
+                            <div style="padding: 1rem;">
+                                <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
+                                     alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
+                                     style="width: 100%;"; 
+                                     border="0"
+                                >
+                            </div>
+                        @endif
                         <p class="card-text">
                             {!!$employees[$i]->description!!}
                         </p>

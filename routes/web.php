@@ -61,11 +61,6 @@ Route::get('/admin/promo-code/show/{id}', 'AdminController@promoCodeShow');
 Route::post('/admin/make-a-promo-code-message', 'AdminController@makeAPromoCodeMessage');
 Route::get('/admin/promo-code/message/change-status/{promoId}/{messageId}', 'AdminController@promoCodeMessageChangeStatus');
 Route::get('/admin/promo/activation/toggle/{promoId}', 'AdminController@promoActivationToggle');
-
-
-// next: add promo activation feature
-
-
 Route::get('/admin/approve/messages', 'AdminController@approveMessages');
 Route::get('/admin/approve/messages/{bossId}', 'AdminController@approveMessageShow');
 Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminController@approveMessageStatusChange');
