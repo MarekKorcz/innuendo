@@ -60,6 +60,7 @@ Route::get('/admin/promo/list', 'AdminController@promoList');
 Route::get('/admin/promo-code/show/{id}', 'AdminController@promoCodeShow');
 Route::post('/admin/make-a-promo-code-message', 'AdminController@makeAPromoCodeMessage');
 Route::get('/admin/promo-code/message/change-status/{promoId}/{messageId}', 'AdminController@promoCodeMessageChangeStatus');
+Route::get('/admin/promo/activation/toggle/{promoId}', 'AdminController@promoActivationToggle');
 
 
 // next: add promo activation feature

@@ -7,7 +7,6 @@
 <div class="container">
     <h1 class="text-center padding-top">@lang('common.your_properties')</h1>
     
-    
     <div class="wrapper">
         @foreach ($properties as $property)
             <div class="card">

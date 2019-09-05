@@ -1050,4 +1050,27 @@ class AdminController extends Controller
         
         return redirect()->route('welcome')->with('error', 'Something went wrong');
     }
+    
+    public function promoActivationToggle($promoId)
+    {
+        $promo = Promo::where('id', $promoId)->first();
+        
+        if ($promo !== null)
+        {
+            if ($promo->isActive == 0)
+            {
+                $promo->isActive = 1;
+                
+            } else if ($promo->isActive = 1) {
+                
+                $promo->isActive = 0;
+            }
+            
+            $promo->save();
+            
+            return redirect('/admin/promo/show/' . $promo->id)->with('success', 'Promo activation has been changed!');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Something went wrong');
+    }
 }

@@ -382,4 +382,6 @@ return [
     'user_create_with_promo_code_mail_text_second' => 'przydzielił Cię do wybranych pakietów masażu! Odwiedź zakładkę ',
     'user_create_with_promo_code_mail_text_third' => ' następnie ',
     'user_create_with_promo_code_mail_text_fourth' => ' by po wybraniu naszego pracownika, dokonać pierwszej rezerwacji masażu w umówionym przez szefa dniu!',
+    'activate' => 'Aktywuj',
+    'deactivate' => 'Dezaktywuj',
 ];

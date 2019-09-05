@@ -59,12 +59,14 @@
             </div> 
         @endif
             
-        <div class="text-center" style="padding-top: 1rem;">
-            <h2>@lang('common.messages') :</h2>
-            <a class="btn btn-success" href="{{ URL::to('/admin/approve/messages/' . $promoCode->boss->id) }}">
-                @lang('common.show')
-            </a>
-        </div>
+        @if ($promoCode->boss !== null)
+            <div class="text-center" style="padding-top: 1rem;">
+                <h2>@lang('common.messages') :</h2>
+                <a class="btn btn-success" href="{{ URL::to('/admin/approve/messages/' . $promoCode->boss->id) }}">
+                    @lang('common.show')
+                </a>
+            </div>
+        @endif
     </div> 
 </div>
 @endsection

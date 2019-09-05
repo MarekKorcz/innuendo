@@ -38,7 +38,7 @@
         <a class="navbar-brand" href="{{ route('welcome') }}">
             <img src="/img/sacred-geometry.jpg" width="72" height="72" class="d-inline-block align-top">
         </a>
-        <span id="logo-text" class="navbar-text mr-auto">
+        <span id="logo-text" class="navbar-text mr-auto" style="margin: 0 12px 0 3px;">
             <a href="{{ route('welcome') }}">
                 {{ config('app.name') }}
             </a>
@@ -46,13 +46,13 @@
     
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item" style="margin-right: 10px;">
+                <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ url('subscriptions') }}">@lang('navbar.subscriptions')</a>
                 </li>
-                <li class="nav-item" style="margin-right: 10px;">
+                <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ url('discounts') }}">@lang('navbar.discounts')</a>
                 </li>
-                <li class="nav-item" style="margin-right: 10px;">
+                <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ url('employees') }}">@lang('navbar.employees')</a>
                 </li>
                 @guest

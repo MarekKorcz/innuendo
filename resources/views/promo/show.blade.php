@@ -29,11 +29,15 @@
             <p>@lang('common.used_code_count') : <strong>{{ $promo->used_code_count }}</strong></p>
             <p>@lang('common.total_code_count') : <strong>{{ $promo->total_code_count }}</strong></p>
             <p>@lang('common.is_active') : 
-                <strong>
+                <strong style="padding-left: 1rem;">
                     @if ($promo->isActive == 1)
-                        @lang('common.yes')
+                        <a class="btn btn-danger" href="{{ URL::to('/admin/promo/activation/toggle/' . $promo->id) }}">
+                            @lang('common.deactivate')
+                        </a>
                     @else
-                        @lang('common.no')
+                        <a class="btn btn-success" href="{{ URL::to('/admin/promo/activation/toggle/' . $promo->id) }}">
+                            @lang('common.activate')
+                        </a>
                     @endif
                 </strong>
             </p>
