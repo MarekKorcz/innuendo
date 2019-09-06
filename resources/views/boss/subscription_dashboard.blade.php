@@ -74,7 +74,7 @@
                                 </p>
                             </div>
 
-                            @if (count($subscription->purchases) == 0)
+                            @if (count($subscription->propertyPurchases) == 0)
                                 <a class="btn btn-primary" href="{{ URL::to('/boss/subscription/purchase/' . $propertyWithSubscriptions['property']->id . '/' . $subscription->id) }}">
                                     @lang('common.purchase_subscription')
                                 </a>
@@ -88,7 +88,7 @@
         @foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
             @if ($propertyWithSubscriptions['property']->isChecked == true)
                 @foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
-                    @if ($subscription->isChecked && count($subscription->purchases) > 0)
+                    @if ($subscription->isChecked && count($subscription->propertyPurchases) > 0)
                         <div id="substarts-header" class="text-center">
                             <h2>
                                 @lang('common.subscription_duration_period') :
@@ -102,8 +102,8 @@
             @foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
                 @if ($propertyWithSubscriptions['property']->isChecked == true)
                     @foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
-                        @if ($subscription->isChecked && count($subscription->purchases) > 0)
-                            @foreach ($subscription->purchases as $purchase)
+                        @if ($subscription->isChecked && count($subscription->propertyPurchases) > 0)
+                            @foreach ($subscription->propertyPurchases as $purchase)
                                 @if ($purchase->substart !== null)
                                     @if ($purchase->substart->isCurrent)
                                         <div class="substart text-center highlighted" data-substart_id="{{$purchase->substart->id}}">
@@ -143,8 +143,8 @@
             @foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
                 @if ($propertyWithSubscriptions['property']->isChecked == true)
                     @foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
-                        @if ($subscription->isChecked && count($subscription->purchases) > 0)
-                            @foreach ($subscription->purchases as $purchase)
+                        @if ($subscription->isChecked && count($subscription->propertyPurchases) > 0)
+                            @foreach ($subscription->propertyPurchases as $purchase)
                                 @if ($purchase->substart !== null)
                                     @if ($purchase->substart->isCurrent)
                                         @if (count($purchase->substart->workers) > 0)

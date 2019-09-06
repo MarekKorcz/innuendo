@@ -435,7 +435,7 @@ class BossController extends Controller
                             $subscription['isChecked'] = true;
                         }
                         // <<
-                
+                        
                         // >> check if subscription is purchased already
                         if ($chosenProperty !== null && count($chosenProperty->subscriptions) > 0)
                         {
@@ -476,7 +476,7 @@ class BossController extends Controller
                                                 // <<
                                                 
                                                 // get workers assigned to boss purchsed subsription
-                                                $substart['workers'] = $this->getWorkersFrom($substart->id);  
+                                                $substart['workers'] = $this->getWorkersFrom($substart->id);
                                                 
                                                 // set substart to purchase
                                                 $purchase['substart'] = $substart;
@@ -487,7 +487,7 @@ class BossController extends Controller
                                 }
                                 // <<
                                 
-                                $subscription['purchases'] = $purchases;
+                                $subscription['propertyPurchases'] = $purchases;
                             }
                         }
                         // <<
