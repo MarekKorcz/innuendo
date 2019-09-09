@@ -18,10 +18,7 @@
                         <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
                             <div class="card">
                                 <div class="text-right" style="padding: 6px;">
-                                    {!!Form::open(['action' => ['BossController@destroyCode', $codes[$i]['code_id']], 'method' => 'POST'])!!}
-                                        {{ Form::hidden('_method', 'DELETE') }}
-                                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
-                                    {!!Form::close()!!}
+                                    <a class="btn btn-danger delete" style="color: white;" data-code_id="{{$codes[$i]['code_id']}}">@lang('common.delete')</a>
                                 </div>
                                 <div class="text-center">
                                     {{ Form::open(['id' => 'register-code', 'action' => 'BossController@setCode', 'method' => 'POST']) }}
@@ -189,6 +186,24 @@
             <div class="modal-body">
                 <div class="text-center">
                     <a id="removeSubscriptionButton" class="btn btn-success" style="color: white;">@lang('common.turn_off')</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="deleteCode" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.code_delete')</h4>
+                <button id="deleteCodeCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <form method="POST" accept-charset="UTF-8">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                    </form>
                 </div>
             </div>
         </div>

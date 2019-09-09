@@ -395,4 +395,5 @@ return [
     'property_off' => 'Czy chcesz wyłączyć tę lokalizacje w danym kodzie?',
     'subscription_on' => 'Czy chcesz dodać subskrypcje do danego kodu?',
     'subscription_off' => 'Czy chcesz usunąć subskrypcje z danego kodu?',
+    'code_delete' => 'Czy napewno chcesz usunąć dany kod?',
 ];
