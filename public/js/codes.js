@@ -2,11 +2,166 @@ $(document).ready(function()
 {
     handleTurnOnCodeRegistrationButtonActivation();
     
+    let backgroundDiv = document.getElementById('background');
+    
+    document.addEventListener("click", function(event) 
+    {
+        let clickedElement = event.target;
+        
+        if (clickedElement.classList.contains('modal-open') && clickedElement.classList.contains('show'))
+        {
+            clickedElement.classList.remove("modal-open");
+            clickedElement.classList.remove("show");
+
+            backgroundDiv.classList.remove("dark");
+        }
+    });
+    
     $(".copy-button").on('click', function(event) {
         
         let copyText = event.currentTarget.parentNode.children[0];
         copyText.select();
         document.execCommand("copy");
+    });
+    
+    $(".close").on('click', function(event) 
+    {
+        let clickedModalWindow = event.target.parentElement.parentElement.parentElement;
+        
+        clickedModalWindow.classList.remove("modal-open");
+        clickedModalWindow.classList.remove("show");
+        
+        backgroundDiv.classList.remove("dark");
+    });
+    
+    $("#addPropertyButton").on('click', function() 
+    {
+        let modalElement = document.getElementById('addProperty');
+        
+        let propertyId = modalElement.dataset.property_id;
+        let codeId = modalElement.dataset.code_id;
+        
+        setChosenProperty(propertyId, codeId, 0);
+        
+        let propertyElement = document.querySelector("li[data-property_id='" + propertyId + "']");
+                
+        propertyElement.style.backgroundColor = "lightskyblue";
+        propertyElement.dataset.active = "true";
+        
+        modalElement.classList.remove("modal-open");
+        modalElement.classList.remove("show");
+
+        backgroundDiv.classList.remove("dark");
+    });
+    
+    $("#removePropertyButton").on('click', function() 
+    {
+        let modalElement = document.getElementById('removeProperty');
+        
+        let propertyId = modalElement.dataset.property_id;
+        let chosenPropertyId = modalElement.dataset.chosen_property_id;
+        let codeId = modalElement.dataset.code_id;
+        
+        let propertyElement = document.querySelector("li[data-property_id='" + propertyId + "']");
+        
+        deleteChosenProperty(chosenPropertyId);
+                
+        propertyElement.style.backgroundColor = "";
+        propertyElement.dataset.active = "false";
+        
+        let codeSubscriptionElement = document.querySelector("div[data-code_id='" + codeId + "'] ul.subscriptions");
+        let codeSubscriptionElementChildren = codeSubscriptionElement.children;
+                
+        for (let i = 0; i < codeSubscriptionElementChildren.length; i++)
+        {
+            codeSubscriptionElementChildren[i].style.backgroundColor =  "";
+            codeSubscriptionElementChildren[i].dataset.active = "false";
+        }
+        
+        modalElement.classList.remove("modal-open");
+        modalElement.classList.remove("show");
+
+        backgroundDiv.classList.remove("dark");
+    });
+    
+    $("#addSubscriptionButton").on('click', function() 
+    {
+        let modalElement = document.getElementById('addSubscription');
+        
+        let subscriptionId = modalElement.dataset.subscription_id;
+        let codeId = modalElement.dataset.code_id;
+        let propertyId = null;
+            
+        let codePropertyElement = document.querySelector("div[data-code_id='" + codeId + "'] ul.property");
+        let codePropertyElementChildren = codePropertyElement.children;
+        let isPropertySet = false;
+
+        for (let i = 0; i < codePropertyElementChildren.length; i++) 
+        {
+            propertyId = codePropertyElementChildren[i].dataset.property_id;
+
+            if (codePropertyElementChildren[i].dataset.active == "true")
+            {
+                isPropertySet = true;
+            }
+        }
+
+        if (!isPropertySet)
+        {
+            setChosenProperty(propertyId, codeId, subscriptionId);
+
+            for (let i = 0; i < codePropertyElementChildren.length; i++) 
+            {
+                codePropertyElementChildren[i].style.backgroundColor = "lightskyblue";
+                codePropertyElementChildren[i].dataset.active = "true";
+            }
+
+            isPropertySet = true;
+        }        
+        
+        let subscriptionElement = document.querySelector("li[data-subscription_id='" + subscriptionId + "']");
+        
+        if (isPropertySet)
+        {
+            let chosenPropertyId = subscriptionElement.parentElement.dataset.chosen_property_id;
+
+            if (subscriptionElement.dataset.active === "false")
+            {
+                subscriptionElement.style.backgroundColor = "lightgreen";
+                subscriptionElement.dataset.active = true;
+            }
+
+            setSubscriptionToChosenPropertySubscription(chosenPropertyId, subscriptionId);
+        }      
+        
+        modalElement.classList.remove("modal-open");
+        modalElement.classList.remove("show");
+
+        backgroundDiv.classList.remove("dark");
+    });
+    
+    $("#removeSubscriptionButton").on('click', function() 
+    {
+        let modalElement = document.getElementById('removeSubscription');
+        
+        let subscriptionId = modalElement.dataset.subscription_id;
+        
+        let subscriptionElement = document.querySelector("li[data-subscription_id='" + subscriptionId + "']");
+
+        if (subscriptionElement.dataset.active === "true")
+        {
+            subscriptionElement.style.backgroundColor = "";
+            subscriptionElement.dataset.active = false;
+        }
+        
+        let chosenPropertyId = subscriptionElement.parentElement.dataset.chosen_property_id;
+
+        setSubscriptionToChosenPropertySubscription(chosenPropertyId, subscriptionId); 
+
+        modalElement.classList.remove("modal-open");
+        modalElement.classList.remove("show");
+
+        backgroundDiv.classList.remove("dark");
     });
     
     $("ul.property > li.form-control").click(function (event) {
@@ -16,112 +171,62 @@ $(document).ready(function()
         
         if (element.dataset.active === "true")
         {
-            if (confirm("Czy chcesz WYŁĄCZYĆ tę lokalizacje w danym kodzie")) 
-            {
-                let chosenPropertyId = element.dataset.chosen_property_id;
-                
-                deleteChosenProperty(chosenPropertyId);
-                element.style.backgroundColor =  "";
-                element.dataset.active = "false";
+            let propertyId = element.dataset.property_id;
+            let chosenPropertyId = element.dataset.chosen_property_id;
+            let codeId = element.parentElement.parentElement.dataset.code_id;
 
-                let codeElement = element.parentElement.parentElement;
-                let codeSubscriptionElement = codeElement.children[1];
-                let codeSubscriptionElementChildren = codeSubscriptionElement.children;
-                
-                for (let i = 0; i < codeSubscriptionElementChildren.length; i++)
-                {
-                    codeSubscriptionElementChildren[i].style.backgroundColor =  "";
-                    codeSubscriptionElementChildren[i].dataset.active = "false";
-                }
-            }
+            let propertyModal = document.getElementById('removeProperty');
+
+            propertyModal.dataset.property_id = propertyId;
+            propertyModal.dataset.chosen_property_id = chosenPropertyId;
+            propertyModal.dataset.code_id = codeId;
+
+            propertyModal.classList.add('show');
+            propertyModal.classList.add('modal-open');
+
+            backgroundDiv.classList.add('dark');
 
         } else {
-
-            if (confirm("Czy chcesz WŁĄCZYĆ tę lokalizacje w danym kodzie")) 
-            {
-                let propertyId = element.dataset.property_id;
-                let codeId = codeElement.dataset.code_id;
-                
-                setChosenProperty(propertyId, codeId, 0);
-                element.style.backgroundColor = "lightskyblue";
-                element.dataset.active = "true";
-            }
+            
+            let propertyId = element.dataset.property_id;
+            let codeId = codeElement.dataset.code_id;
+            
+            let propertyModal = document.getElementById('addProperty');
+            
+            propertyModal.dataset.property_id = propertyId;
+            propertyModal.dataset.code_id = codeId;
+            
+            propertyModal.classList.add('show');
+            propertyModal.classList.add('modal-open');
+            
+            backgroundDiv.classList.add('dark');
         }  
     });
     
-    $("ul.subscriptions > li.form-control").click(function (event) {
+    $("ul.subscriptions > li.form-control").click(function (event) 
+    {
+        let element = event.target;
         
-        let element = event.target; 
-        let question;
+        let subscriptionId = element.dataset.subscription_id;
         
-        if (element.dataset.active === 'true')
+        let subscriptionModal = document.getElementById('removeSubscription');
+            
+        if (element.dataset.active == 'false')
         {
-            question = "Czy chcesz usunąć subskrypcje z danego kodu?";
+            subscriptionModal = document.getElementById('addSubscription');
             
-        } else {
+            let codeElement = element.parentElement.parentElement;            
+            let codeId = codeElement.dataset.code_id;
             
-            question = "Czy chcesz dodać subskrypcje do danego kodu?";
+            subscriptionModal.dataset.code_id = codeId;
         }
-        
-        if (confirm(question)) 
-        {
-            // check and set property to code
-            let subscriptionListParentElement = element.parentElement.parentElement;
-            let codePropertyElement = subscriptionListParentElement.firstElementChild;
-            let codePropertyElementChildren = codePropertyElement.children;
-            let isPropertySet = false;
-            
-            for (let i = 0; i < codePropertyElementChildren.length; i++) 
-            {
-                propertyId = codePropertyElementChildren[i].dataset.property_id;
-                
-                if (codePropertyElementChildren[i].dataset.active == "true")
-                {
-                    isPropertySet = true;
-                }
-            }
-            
-            if (!isPropertySet)
-            {
-                let code_id = subscriptionListParentElement.dataset.code_id;
-                let subscription_id = element.dataset.subscription_id;
-                
-                setChosenProperty(propertyId, code_id, subscription_id);
-                
-                for (let i = 0; i < codePropertyElementChildren.length; i++) 
-                {
-                    codePropertyElementChildren[i].style.backgroundColor = "lightskyblue";
-                    codePropertyElementChildren[i].dataset.active = "true";
-                }
-                
-                isPropertySet = true;
-            }
-            
-            // change code's subscription
-            if (isPropertySet)
-            {
-                let chosenPropertyId = element.parentElement.dataset.chosen_property_id;
-                let subscriptionId = element.dataset.subscription_id;
 
-                if (element.dataset.active === "true")
-                {
-                    element.style.backgroundColor = "";
-                    element.dataset.active = false;
+        subscriptionModal.dataset.subscription_id = subscriptionId;
 
-                } else {
+        subscriptionModal.classList.add('show');
+        subscriptionModal.classList.add('modal-open');
 
-                    element.style.backgroundColor = "lightgreen";
-                    element.dataset.active = true;
-                }
-
-                setSubscriptionToChosenPropertySubscription(chosenPropertyId, subscriptionId); 
-                
-            } else {
-                
-                element.style.backgroundColor = "lightgreen";
-                element.dataset.active = "true";
-            }
-        }
+        backgroundDiv.classList.add('dark');
     });
     
     function setChosenProperty(propertyId, codeId, subscriptionId = 0)

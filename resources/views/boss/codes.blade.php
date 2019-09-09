@@ -28,7 +28,8 @@
                                         @if ($codes[$i]['properties'])
                                             @foreach ($codes[$i]['properties'] as $property)
                                                 <div class="code-items" data-code_id="{{$codes[$i]['code_id']}}" style="padding: 12px 21px 12px 21px;">
-                                                    <ul class="property">
+                                                    <h4>@lang('common.properties')</h4>
+                                                    <ul class="property" style="padding: 0 2rem 0 2rem;">
                                                         @if ($property['chosen_property_id'] != 0)
                                                             <li class="form-control" 
                                                                 data-active="true" 
@@ -47,8 +48,9 @@
                                                                 {{$property['property_name']}}
                                                             </li>
                                                         @endif
-                                                    </ul>             
-                                                    <ul class="subscriptions" data-chosen_property_id="{{$property['chosen_property_id']}}">
+                                                    </ul>     
+                                                    <h4>@lang('common.subscriptions')</h4>
+                                                    <ul class="subscriptions" data-chosen_property_id="{{$property['chosen_property_id']}}" style="padding: 0 2rem 0 2rem;">
                                                         @foreach ($property['subscriptions'] as $subscription)
                                                             @if ($subscription['isChosen'])
                                                                 <li class="form-control" 
@@ -135,5 +137,65 @@
             </div>
         @endif
     </div>
+    
+    <div id="addProperty" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.property_on')</h4>
+                <button id="addPropertyCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <a id="addPropertyButton" class="btn btn-success" style="color: white;">@lang('common.turn_on')</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="removeProperty" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.property_off')</h4>
+                <button id="removePropertyCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <a id="removePropertyButton" class="btn btn-success" style="color: white;">@lang('common.turn_off')</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="addSubscription" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.subscription_on')</h4>
+                <button id="addSubscriptionCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <a id="addSubscriptionButton" class="btn btn-success" style="color: white;">@lang('common.turn_on')</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="removeSubscription" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.subscription_off')</h4>
+                <button id="removeSubscriptionCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <a id="removeSubscriptionButton" class="btn btn-success" style="color: white;">@lang('common.turn_off')</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="background"></div>
+    
 </div>
+
 @endsection

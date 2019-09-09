@@ -341,7 +341,7 @@ return [
                                               następnie wypełnij potrzebne dane i wyślij do nas zapytanie',
     'graphic_requests_header_description_2' => 'Obecnie, nie posiadasz jeszcze żadnej wykupionej subskrypcji by móc wysłać do nas zapytanie o otworzenie grafiku.',
     'register_codes' => 'Kody rejestracyjne',
-    'register_codes_description' => 'Kody rejestracyjne umożliwiają zarejestrowanie się Twoich pracowników oraz przydzielenie ich do wybranych przez Ciebie lokalizacji i pakietów',
+    'register_codes_description' => 'Kody rejestracyjne umożliwiają zarejestrowanie się Twoich pracowników oraz przydzielenie ich do wybranych przez Ciebie lokalizacji i pakietów masażu',
     
     
     
@@ -390,4 +390,9 @@ return [
     'thanks_for_subscription_purchase_description' => 'Od tej chwili jesteśmy w stanie wykonywać dla Ciebie jak i Twoich pracowników, najlepszej jakości masaże, mające wpływ na poprawę zdrowia, samopoczucia oraz prestiżu związanego z pracą w Twojej firmie, a co za tym idzie, diametralny wzrost wydajnośći oraz zysków!',
     'thanks_for_subscription_purchase_description_2' => 'Jesteśmy zachwyceni wizją naszej przyszłej owocnej współpracy oraz nie możemy się doczekać naszej pierwszej wizyty w Twoim biurze!',
     'thanks_for_subscription_purchase_description_3' => 'By to przybliżyć, zaloguj się na swoje konto, następnie wybierz odpowiadający Tobie oraz pracownikom dzień w miesiącu i wyślij do nas zapytanie o otwarcie grafiku w danym dniu. Skontaktujemy się najszybciej jak to tylko możliwe!',
+    'properties' => 'Lokalizacje',
+    'property_on' => 'Czy chcesz włączyć tę lokalizacje w danym kodzie?',
+    'property_off' => 'Czy chcesz wyłączyć tę lokalizacje w danym kodzie?',
+    'subscription_on' => 'Czy chcesz dodać subskrypcje do danego kodu?',
+    'subscription_off' => 'Czy chcesz usunąć subskrypcje z danego kodu?',
 ];
