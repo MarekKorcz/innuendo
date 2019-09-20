@@ -1,14 +1,12 @@
 @extends('layouts.app')
 @section('content')
+
+{!! Html::style('css/month_show.css') !!}
+{!! Html::script('js/month_show.js') !!}
+
 <div class="container">
 
     <nav class="navbar navbar-inverse">
-        <div class="navbar-header">
-            {!!Form::open(['action' => ['MonthController@destroy', $month->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                {{ Form::hidden('_method', 'DELETE') }}
-                <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
-            {!!Form::close()!!}
-        </div>
         <ul class="nav navbar-nav">
             <li>
                 @if ($year)
@@ -18,6 +16,11 @@
                 @endif
             </li>
         </ul>
+        <div class="navbar-header">
+            <a class="btn btn-danger delete" style="color: white;" data-month_id="{{$month->id}}">
+                @lang('common.delete')
+            </a>
+        </div>
     </nav>
 
     <h2 style="padding: 20px;">
@@ -83,5 +86,25 @@
             </a>
         </div>
     </div>
+    
+    <div id="deleteMonth" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.month_delete')</h4>
+                <button id="deleteMonthCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <form method="POST" accept-charset="UTF-8">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="background"></div>
 </div>
 @endsection

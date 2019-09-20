@@ -97,21 +97,22 @@ class CalendarController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $calendar_id
+     * @param  int  $calendarId
      * @return Response
      */
-    public function destroy(Request $request, $calendar_id)
+    public function destroy($calendarId)
     {        
-        $calendar = Calendar::where('id', $calendar_id)->first();
-        $property_id = $request->get('property_id');
+        $calendar = Calendar::where('id', $calendarId)->first();
         
-        if ($calendar !== null && $calendar->property_id == $property_id)
+        if ($calendar !== null)
         {
+            $propertyId = $calendar->property_id;         
+            
             $calendar->delete();
             
             return redirect()->action(
                 'PropertyController@show', [
-                    'id' => $property_id
+                    'id' => $propertyId
                 ]
             )->with('success', 'Calendar deleted!');
         }

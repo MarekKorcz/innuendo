@@ -1,4 +1,46 @@
-$(document).ready(function() {
+$(document).ready(function() 
+{
+    let backgroundDiv = document.getElementById('background');
+    
+    document.addEventListener("click", function(event) 
+    {
+        let clickedElement = event.target;
+        
+        if (clickedElement.classList.contains('modal-open') && clickedElement.classList.contains('show'))
+        {
+            clickedElement.classList.remove("modal-open");
+            clickedElement.classList.remove("show");
+
+            backgroundDiv.classList.remove("dark");
+        }
+    });
+    
+    $(".close").on('click', function(event) 
+    {
+        let clickedModalWindow = event.target.parentElement.parentElement.parentElement;
+        
+        clickedModalWindow.classList.remove("modal-open");
+        clickedModalWindow.classList.remove("show");
+        
+        backgroundDiv.classList.remove("dark");
+    });
+    
+    $(".delete").on('click', function(event) 
+    {
+        event.preventDefault();
+        
+        let modalFormElement = document.querySelector("div#deleteSubscription form");
+        
+        modalFormElement.action = ("http://localhost:8000/subscription/" + event.target.dataset.subscription_id);
+        
+        let modalElement = document.getElementById('deleteSubscription');
+        
+        modalElement.classList.add("modal-open");
+        modalElement.classList.add("show");
+
+        backgroundDiv.classList.add("dark");
+    });
+    
     $("ul#properties > li.form-control").click(function (event) {
 
         if (confirm("Do you wanna change property's subscription")) 

@@ -1,13 +1,16 @@
 @extends('layouts.app')
 @section('content')
+
+{!! Html::style('css/property_show.css') !!}
+{!! Html::script('js/property_show.js') !!}
+
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
         <nav class="navbar navbar-inverse">
             <div class="navbar-header">
-                {!!Form::open(['action' => ['PropertyController@destroy', $property->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                    {{ Form::hidden('_method', 'DELETE') }}
-                    <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
-                {!!Form::close()!!}
+                <div class="text-right" style="padding: 6px;">
+                    <a class="btn btn-danger delete-property" style="color: white;" data-property_id="{{$property->id}}">@lang('common.delete')</a>
+                </div>
             </div>
             <ul class="nav navbar-nav">
                 <li>
@@ -112,11 +115,9 @@
                     @endif
                 </div>
                 <div style="padding: 5px;">
-                    {!!Form::open(['action' => ['CalendarController@destroy', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                        {{ Form::hidden('property_id', $property->id) }}
-                        {{ Form::hidden('_method', 'DELETE') }}
-                        <input type="submit" value="@lang('common.delete_calendar')" class="btn btn-danger">
-                    {!!Form::close()!!}
+                    <a class="btn btn-danger delete-calendar" style="color: white;" data-calendar_id="{{$calendar->id}}">
+                        @lang('common.delete')
+                    </a>
                 </div>
                 
                 @if ($calendar->employee_id != null)
@@ -127,7 +128,9 @@
                                 {{$employees[$calendar->id]->name}}
                             </a>
                         </h2>
-                        <h3>@lang('common.years') :</h3>
+                        @if (count($years[$calendar->id]) > 0)
+                            <h3>@lang('common.years') :</h3>
+                        @endif
                     </div>
                     @if (count($years[$calendar->id]) > 0)
                         <div class="list-group">
@@ -160,6 +163,44 @@
             @lang('common.create_calendar')
         </a>
     </div>
+    
+    <div id="deleteProperty" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.property_delete')</h4>
+                <button id="deletePropertyCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <form method="POST" accept-charset="UTF-8">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="deleteCalendar" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.calendar_delete')</h4>
+                <button id="deleteCalendarCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <form method="POST" accept-charset="UTF-8">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="background"></div>
     
 </div>
 @endsection

@@ -47,7 +47,7 @@ class GraphicController extends Controller
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('graphic/create')
+            return Redirect::to('graphic/' . Input::get('day_id'))
                 ->withErrors($validator);
         } else {
             
@@ -72,11 +72,9 @@ class GraphicController extends Controller
                 'day_id' => Input::get('day_id')
             ]);
             
-            return redirect()->action(
-                        'DayController@show', [
-                            'id' => Input::get('day_id')
-                    ])->with('success', 'Graphic has been successfully added!')
-            ;
+            return redirect()->action('DayController@show', [
+                    'id' => Input::get('day_id')
+            ])->with('success', 'Graphic has been successfully added!');
         }
     }
 }

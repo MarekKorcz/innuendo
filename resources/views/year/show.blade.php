@@ -1,14 +1,12 @@
 @extends('layouts.app')
 @section('content')
+
+{!! Html::style('css/year_show.css') !!}
+{!! Html::script('js/year_show.js') !!}
+
 <div class="container">
 
     <nav class="navbar navbar-inverse">
-        <div class="navbar-header">
-            {!!Form::open(['action' => ['YearController@destroy', $year->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                {{ Form::hidden('_method', 'DELETE') }}
-                <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
-            {!!Form::close()!!}
-        </div>
         <ul class="nav navbar-nav">
             <li>
                 @if ($property_id != 0)
@@ -22,31 +20,18 @@
                 @endif
             </li>
         </ul>
+        <div class="navbar-header">
+            <a class="btn btn-danger delete" style="color: white;" data-year_id="{{$year->id}}">
+                @lang('common.delete')
+            </a>
+        </div>
     </nav>
 
-    <h2 style="padding: 20px;">{{ $year->year }}</h2>
+    <div class="text-center">
+        <h2>{{ $year->year }}</h2>
+    </div>
     
     <hr>
-    
-    <div class="jumbotron">
-        <div class="text-center" style="margin-bottom: 40px;">
-            <h2>@lang('common.values') :</h2>
-        </div>
-        <table class="table table-striped">
-            <tr>
-                <th>@lang('common.year') :</th>
-                <th>@lang('common.created_at') :</th>
-                <th>@lang('common.updated_at') :</th>
-                <th>@lang('common.property_id') :</th>
-            </tr>
-            <tr>
-                <td>{{ $year->year }}</td>
-                <td>{{ $year->created_at }}</td>
-                <td>{{ $year->updated_at }}</td>
-                <td>{{ $property_id }}</td>
-            </tr>
-        </table>
-    </div>
     
     <div class="jumbotron">
         <div class="text-center" style="margin-bottom: 40px;">
@@ -73,5 +58,25 @@
             </a>
         </div>
     </div>
+    
+    <div id="deleteYear" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.year_delete')</h4>
+                <button id="deleteYearCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <form method="POST" accept-charset="UTF-8">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="background"></div>
 </div>
 @endsection

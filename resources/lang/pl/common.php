@@ -396,4 +396,10 @@ return [
     'subscription_on' => 'Czy chcesz dodać subskrypcje do danego kodu?',
     'subscription_off' => 'Czy chcesz usunąć subskrypcje z danego kodu?',
     'code_delete' => 'Czy napewno chcesz usunąć dany kod?',
+    'property_delete' => 'Czy napewno chcesz usunąć daną lokalizacje?',
+    'calendar_delete' => 'Czy napewno chcesz usunąć dany kalendarz?',
+    'subscription_delete' => 'Czy napewno chcesz usunąć daną subskrypcje?',
+    'year_delete' => 'Czy napewno chcesz usunąć dany rok?',
+    'month_delete' => 'Czy napewno chcesz usunąć dany miesiąc?',
+    'add_schedule' => 'Dodaj grafik',
 ];

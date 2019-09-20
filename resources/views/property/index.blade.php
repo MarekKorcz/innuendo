@@ -21,8 +21,6 @@
                 <thead>
                     <tr>
                         <td>@lang('common.name')</td>
-                        <td>@lang('common.email_address')</td>
-                        <td>@lang('common.phone_number')</td>
                         <td>@lang('common.street')</td>
                         <td>@lang('common.city')</td>
                         <td>@lang('common.can_show')</td>
@@ -34,8 +32,6 @@
                     @foreach($properties as $key => $value)
                     <tr>
                         <td>{{ $value->name }}</td>
-                        <td>{{ $value->email }}</td>
-                        <td>{{ $value->phone_number }}</td>
                         <td>{{ $value->street }}</td>
                         <td>{{ $value->city }}</td>
                         <td>

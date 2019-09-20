@@ -1,16 +1,16 @@
 @extends('layouts.app')
 @section('content')
 
+{!! Html::style('css/backend_subscription_show.css') !!}
 {!! Html::script('js/backend_subscription_show.js') !!}
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
         <nav class="navbar navbar-inverse">
             <div class="navbar-header">
-                {!!Form::open(['action' => ['SubscriptionController@destroy', $subscription->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                    {{ Form::hidden('_method', 'DELETE') }}
-                    <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
-                {!!Form::close()!!}
+                <a class="btn btn-danger delete" style="color: white;" data-subscription_id="{{$subscription->id}}">
+                    @lang('common.delete')
+                </a>
             </div>
             <ul class="nav navbar-nav">
                 <li>
@@ -69,6 +69,26 @@
                 @endforeach
             </ul>
         </div> 
-    </div> 
+    </div>
+    
+    <div id="deleteSubscription" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.subscription_delete')</h4>
+                <button id="deleteSubscriptionCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <form method="POST" accept-charset="UTF-8">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="background"></div>
 </div>
 @endsection

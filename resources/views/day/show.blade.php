@@ -42,13 +42,12 @@
                 </div>
             </table>
         @endif
-        @if (count($graphic) == 0)
-            <div class="text-center" style="padding-top: 50px;">
-                <a class="btn btn-success" href="{{ action('GraphicController@create', $day->id) }}">
-                    @lang('common.create_graphic')
-                </a>
-            </div>
-        @endif
+        
+        <div class="text-center" style="padding-top: 50px;">
+            <a class="btn btn-success" href="{{ action('GraphicController@create', $day->id) }}">
+                @lang('common.create_graphic')
+            </a>
+        </div>
     </div>
 </div>
 @endsection

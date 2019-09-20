@@ -47,7 +47,9 @@
                 {{ Form::hidden('property_id', Input::old('property_id')) }}
             @endif
             
-            <input type="submit" value="@lang('common.create')" class="btn btn-primary">
+            <div class="text-center">
+                <input type="submit" value="@lang('common.create')" class="btn btn-primary">
+            </div>
 
         {{ Form::close() }}
     </div>

@@ -221,7 +221,7 @@
                         @if ($canSendRequest)
                             @if ($graphicRequest !== null)
                                 <h2 style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.already_sent_graphic_request')</h2>
-                                <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id) }}" 
+                                <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id . '/0') }}" 
                                    class="btn btn-success btn-lg" 
                                    style="color: white;"
                                 >

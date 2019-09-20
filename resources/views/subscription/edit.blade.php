@@ -35,7 +35,9 @@
 
             {{ Form::hidden('_method', 'PUT') }}
             
-            <input type="submit" value="@lang('common.update')" class="btn btn-primary">
+            <div class="text-center">
+                <input type="submit" value="@lang('common.update')" class="btn btn-primary">
+            </div>
 
         {{ Form::close() }}
     </div>

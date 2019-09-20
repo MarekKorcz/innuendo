@@ -81,12 +81,9 @@ class DayController extends Controller
                 }
             }
 
-            return redirect()->action(
-                        'MonthController@show', [
-                            'id' => $month->id
-                        ]
-                    )->with('success', 'Days have been successfully created!')
-            ;
+            return redirect()->action('MonthController@show', [
+                'id' => $month->id
+            ])->with('success', 'Days have been successfully created!');
         }
     }
 
@@ -99,27 +96,30 @@ class DayController extends Controller
     public function show($id)
     {
         $day = Day::where('id', $id)->first();
-        $graphicTime = Graphic::where('day_id', $day->id)->first();
+        $graphicTimes = Graphic::where('day_id', $day->id)->get();
         
         $graphic = [];
         
-        if ($graphicTime !== null)
+        if (count($graphicTimes) > 0)
         {
-            $workUnits = ($graphicTime->total_time / 60) * 4;
-            $startTime = date('G:i', strtotime($graphicTime->start_time));
-            
-            $startTimePart = explode(":", $startTime);
-            $startTime = $startTimePart[0] . ":" . $startTimePart[1];
-            
-            for ($i = 0; $i < $workUnits; $i++) 
+            foreach ($graphicTimes as $graphicTime)
             {
-                $graphic[] = [
-                    $startTime,
-                    'place to show asigned employee'
-                ];
-                
-                $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
-                $startTime = date('G:i', $timeIncrementedBy15Minutes);
+                $workUnits = ($graphicTime->total_time / 60) * 4;
+                $startTime = date('G:i', strtotime($graphicTime->start_time));
+
+                $startTimePart = explode(":", $startTime);
+                $startTime = $startTimePart[0] . ":" . $startTimePart[1];
+
+                for ($i = 0; $i < $workUnits; $i++) 
+                {
+                    $graphic[] = [
+                        $startTime,
+                        'place to show asigned employee'
+                    ];
+
+                    $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
+                    $startTime = date('G:i', $timeIncrementedBy15Minutes);
+                }
             }
         }
         

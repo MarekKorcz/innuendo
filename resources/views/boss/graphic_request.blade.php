@@ -7,11 +7,12 @@
     <div id="title" class="container">
         <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from') : {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
         <p class="text-center">@lang('common.regarding') : {{$graphicRequest->property->name}}</p>
+<!--        todo: co z tym??
         <div class="text-center" style="padding-bottom: 1rem;">
             <a class="btn btn-success" href="{{ URL::to('/boss/graphic-request/edit/' . $graphicRequest->id) }}">
                 @lang('common.edit')
             </a>
-        </div>
+        </div>-->
     </div>
 
     <div id="info" class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
