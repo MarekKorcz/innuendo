@@ -35,8 +35,8 @@ class WorkerController extends Controller
     
     /**
      * Shows graphics list.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * 
+     * @return type
      */
     public function graphicList()
     {
@@ -132,9 +132,9 @@ class WorkerController extends Controller
                                 'month_id' => $month->id,
                                 'day_number' => $currentDate->format("d")
                             ])->first();
-                        }
-                        else
-                        {
+                            
+                        } else {
+                            
                             $currentDay = Day::where([
                                 'month_id' => $month->id,
                                 'day_number' => $day_number
@@ -150,9 +150,9 @@ class WorkerController extends Controller
                             $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
 
                             $currentDay = $currentDay->day_number;
-                        }
-                        else
-                        {
+                            
+                        } else {
+                            
                             $currentDay = 0;
                             $graphic = [];
                             $graphicTime = [];
@@ -176,8 +176,11 @@ class WorkerController extends Controller
                             'isEmployee' => 1,
                             'id' => $calendar->employee_id
                         ])->first();
+                        
+                        $property = Property::where('id', $calendar->property_id)->first();
 
                         return view('employee.backend_calendar')->with([
+                            'property' => $property,
                             'calendar_id' => $calendar->id,
                             'employee_slug' => $employee->slug,
                             'availablePreviousMonth' => $availablePreviousMonth,
@@ -189,19 +192,19 @@ class WorkerController extends Controller
                             'graphic' => $graphic,
                             'graphic_id' => $graphicTime ? $graphicTime->id : null
                         ]);
-                    }
-                    else
-                    {
+                        
+                    } else {
+                        
                         $message = 'Brak otwartego grafiku na ten dzień';
                     }
-                }
-                else
-                {
+                    
+                } else {
+                    
                     $message = 'Brak otwartego grafiku na ten miesiąc';
                 }
-            }
-            else
-            {
+                
+            } else {
+                
                 $message = 'Brak otwartego grafiku na ten rok';
             }
             
@@ -213,9 +216,9 @@ class WorkerController extends Controller
                     'day_number' => 0
                 ]
             )->with('error', $message);
-        }   
-        else
-        {
+            
+        } else {
+            
             $message = 'Niepoprawny numer id kalendarza!';
         }
         

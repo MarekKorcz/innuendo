@@ -127,6 +127,8 @@ Route::get('/day/show/{id}', 'DayController@show');
 
 Route::get('/graphic/{id}', 'GraphicController@create');
 Route::post('/graphic/store', 'GraphicController@store');
+Route::get('/graphic/{id}/edit', 'GraphicController@edit');
+Route::put('/graphic/update', 'GraphicController@update');
 
 Route::post('/appointment/beforeShowCreatePage', 'AppointmentController@beforeShowCreatePage');
 Route::get('/appointment/create', 'AppointmentController@create');

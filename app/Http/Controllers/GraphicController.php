@@ -77,4 +77,72 @@ class GraphicController extends Controller
             ])->with('success', 'Graphic has been successfully added!');
         }
     }
+    
+    public function edit($id)
+    {
+        $graphic = Graphic::where('id', $id)->with('day')->first();
+        
+        if ($graphic !== null)
+        {
+            return view('graphic.edit')->with([
+                'graphic' => $graphic,
+                'day' => $graphic->day
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    public function update()
+    {
+        $rules = array(
+            'start_time'  => 'required',
+            'end_time'    => 'required',
+            'graphic_id'  => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('/graphic/' . Input::get('graphic_id') . '/edit')
+                ->withErrors($validator);
+        } else {
+        
+            $graphic = Graphic::where('id', Input::get('graphic_id'))->with([
+                'appointments',
+                'day'
+            ])->first();
+        
+            if ($graphic !== null)
+            {
+                // >> count total time
+                $startTimeExploded = explode(":", Input::get('start_time'));
+                $endTimeExploded = explode(":", Input::get('end_time'));
+                
+                $startDate = \DateTime::createFromFormat('H:i', $startTimeExploded[0] . ":" . $startTimeExploded[1]);
+                $endDate = \DateTime::createFromFormat('H:i', $endTimeExploded[0] . ":" . $endTimeExploded[1]);                
+                
+                $graph = $startDate->diff($endDate);
+                $minutes = 0;
+
+                if ($graph->h > 0)
+                {
+                    $minutes = $graph->h * 60;
+                }
+
+                $minutes += $graph->i;
+                // <<
+            
+                $graphic->start_time = Input::get('start_time');
+                $graphic->end_time = Input::get('end_time');
+                $graphic->total_time = $minutes;
+                $graphic->save();
+                
+                return redirect()->action('DayController@show', [
+                    'id' => $graphic->day->id
+                ])->with('success', 'Graphic has been successfully updated!');
+            }
+
+            return redirect('/graphic/' . Input::get('graphic_id') . '/edit')->with('error', 'Something went wrong!');
+        }
+    }
 }

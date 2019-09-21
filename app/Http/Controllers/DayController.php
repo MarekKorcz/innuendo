@@ -6,6 +6,7 @@ use App\Year;
 use App\Month;
 use App\Day;
 use App\Graphic;
+use App\Property;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -87,51 +88,36 @@ class DayController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
     public function show($id)
     {
         $day = Day::where('id', $id)->first();
-        $graphicTimes = Graphic::where('day_id', $day->id)->get();
         
-        $graphic = [];
-        
-        if (count($graphicTimes) > 0)
+        if ($day !== null)
         {
-            foreach ($graphicTimes as $graphicTime)
+            $month = Month::where('id', $day->month_id)->first();
+            
+            if ($month !== null)
             {
-                $workUnits = ($graphicTime->total_time / 60) * 4;
-                $startTime = date('G:i', strtotime($graphicTime->start_time));
-
-                $startTimePart = explode(":", $startTime);
-                $startTime = $startTimePart[0] . ":" . $startTimePart[1];
-
-                for ($i = 0; $i < $workUnits; $i++) 
+                $year = Year::where('id', $month->year_id)->with('calendar')->first();
+                
+                if ($year !== null)
                 {
-                    $graphic[] = [
-                        $startTime,
-                        'place to show asigned employee'
-                    ];
+                    $property = Property::where('id', $year->calendar->property_id)->first();
+                    
+                    $graphicTime = Graphic::where('day_id', $day->id)->first();
 
-                    $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
-                    $startTime = date('G:i', $timeIncrementedBy15Minutes);
+                    return view('day.show')->with([
+                        'day' => $day,
+                        'month' => $month,
+                        'year' => $year,
+                        'calendar' => $year->calendar,
+                        'property' => $property,
+                        'graphicTime' => $graphicTime
+                    ]);
                 }
             }
         }
         
-        if ($day)
-        {
-            $month = Month::where('id', $day->month_id)->first();
-        }
-        
-        return view('day.show')->with([
-            'day' => $day,
-            'graphic' => $graphic,
-            'month' => $month
-        ]);
+        return redirect()->route('welcome');
     }
 }

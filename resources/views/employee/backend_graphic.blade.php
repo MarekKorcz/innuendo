@@ -5,27 +5,37 @@
 
 <div class="container">
 
-    <h1 class="text-center" style="padding: 2rem;">@lang('common.schedule_in') :</h1>
+    <div class="text-center" style="padding: 1rem;">
+        <h1>@lang('common.schedule_in') :</h1>
+    </div>
 
-    <div class="wrapper">
-        @foreach ($calendars as $calendar)
-            <div class="card">
-                <div class="text-center">
-                    <img src="{{ asset('img/rick-and-morty.jpg') }}" class="img-fluid" style="width: 200px; height: 280px;"/>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title text-center">{{$calendar->property->name}}</h5>
-                    <p class="card-text">
-                        {!!$calendar->property->description!!}
-                    </p>
-                    <div class="text-center">
-                        <a class="btn btn-success" href="{{ URL::to('employee/backend-calendar/' . $calendar->id . '/0/0/0') }}">
-                            @lang('common.show')
-                        </a>
-                    </div>
-                </div>
-            </div>
-        @endforeach
+    <div class="row" style="padding-bottom: 1rem;">
+        <div class="offset-1"></div>
+        <div class="col-10">
+            <table class="table table-striped table-bordered text-center">
+                <thead>
+                    <tr>                
+                        <td>@lang('common.label')</td>
+                        <!--<td>@lang('common.description')</td>-->
+                        <td>@lang('common.action')</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($calendars as $calendar)            
+                        <tr>
+                            <td>{{$calendar->property->name}}</td>
+                            <!--<td>{!!$calendar->property->description!!}</td>-->
+                            <td>
+                                <a class="btn btn-success" href="{{ URL::to('employee/backend-calendar/' . $calendar->id . '/0/0/0') }}">
+                                    @lang('common.show')
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="offset-1"></div>
     </div>
 </div>
 @endsection

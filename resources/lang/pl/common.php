@@ -402,4 +402,6 @@ return [
     'year_delete' => 'Czy napewno chcesz usunąć dany rok?',
     'month_delete' => 'Czy napewno chcesz usunąć dany miesiąc?',
     'add_schedule' => 'Dodaj grafik',
+    'edit_schedule' => 'Edytuj grafik',
+    'minutes_capital' => 'Minuty',
 ];

@@ -8,11 +8,18 @@
 
 <div class="container">
     
-    <a class="btn btn-primary" href="{{ URL::to('/employee/backend-graphic') }}">
-        @lang('common.go_back')
-    </a>
+    <div style="padding: 1rem 0 0 2rem;">
+        <a class="btn btn-primary" href="{{ URL::to('/employee/backend-graphic') }}">
+            @lang('common.go_back')
+        </a>
+    </div>
 
-    <div id="calendar" class="table-responsive">
+    <div id="calendar" class="table-responsive" style="padding-bottom: 2rem;">
+        <div class="text-center" style="padding-bottom: 3px;">
+            <h2>@lang('common.schedule_in') <strong>{{$property->name}}</strong></h2>
+            <h4>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}, {{$property->city}}</h4>
+        </div>
+        
         <div id="table-nav-bar">
             <div class="head-tile text-center" style="width: 25%; padding-top: 30px;">
                 @if ($availablePreviousMonth && $month->month_number == 1)
@@ -119,7 +126,7 @@
             <div class="row">
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
                 <div id="appointments" class="text-center col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                    @if(count($graphic))
+                    @if(count($graphic) > 0)
                         @for ($i = 0; $i < count($graphic); $i++)
                             @if ($graphic[$i]['appointment'] == null)
                                 <div class="appointment">
