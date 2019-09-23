@@ -1,13 +1,16 @@
 @extends('layouts.app')
 @section('content')
+
+{!! Html::style('css/temp_property_show.css') !!}
+{!! Html::script('js/temp_property_show.js') !!}
+
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
         <nav class="navbar navbar-inverse">
             <div class="navbar-header">
-                {!!Form::open(['action' => ['PropertyController@tempPropertyDestroy', $tempProperty->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                    {{ Form::hidden('_method', 'DELETE') }}
-                    <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
-                {!!Form::close()!!}
+                <div class="text-right" style="padding: 6px;">
+                    <a class="btn btn-danger delete" style="color: white;" data-temp_property_id="{{$tempProperty->id}}">@lang('common.delete')</a>
+                </div>
             </div>
             <ul class="nav navbar-nav">
                 <li>
@@ -70,5 +73,26 @@
             <p class="text-center">@lang('common.there_is_no_subscriptions_attached')</p>
         @endif
     </div>
+    
+    <div id="deleteTempProperty" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="text-center">@lang('common.temp_property_delete')</h4>
+                <button id="deleteTempPropertyCloseButton" class="close" data-dismiss="modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <form method="POST" accept-charset="UTF-8">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="background"></div>
+    
 </div>
 @endsection

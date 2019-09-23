@@ -397,6 +397,7 @@ return [
     'subscription_off' => 'Czy chcesz usunąć subskrypcje z danego kodu?',
     'code_delete' => 'Czy napewno chcesz usunąć dany kod?',
     'property_delete' => 'Czy napewno chcesz usunąć daną lokalizacje?',
+    'temp_property_delete' => 'Czy napewno chcesz usunąć daną tymczasową lokalizacje?',
     'calendar_delete' => 'Czy napewno chcesz usunąć dany kalendarz?',
     'subscription_delete' => 'Czy napewno chcesz usunąć daną subskrypcje?',
     'year_delete' => 'Czy napewno chcesz usunąć dany rok?',
