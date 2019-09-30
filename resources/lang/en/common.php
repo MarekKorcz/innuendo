@@ -31,7 +31,6 @@ return [
     'no_employee_assigned_to_property' => 'Currently, none of your employees are assigned to this location',
     'people_assigned_to_subscription' => 'People assigned to subscription',
     'select_a_billing_period' => 'Select a billing period',
-    'assigned_employees' => 'Employees assigned',
     'to_period_from' => 'to period from',
     'from' => 'from',
     'to' => 'to',

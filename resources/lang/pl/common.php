@@ -31,7 +31,6 @@ return [
     'no_employee_assigned_to_property' => 'Obecnie żaden z naszych pracowników nie jest przypisany do tej lokalizacji. Przepraszamy!',
     'people_assigned_to_subscription' => 'Osoby przypisane do subskrypcji',
     'select_a_billing_period' => 'Wybierz okres rozliczeniowy',
-    'assigned_employees' => 'Pracownicy przypisani',
     'to_period_from' => 'do okresu od',
     'from' => 'od',
     'to' => 'do',
@@ -406,4 +405,6 @@ return [
     'edit_schedule' => 'Edytuj grafik',
     'minutes_capital' => 'Minuty',
     'no_approve_messages' => 'Obecnie nie ma żadnego zapytania o zatwierdzenie',
+    'no_message_appointment' => 'Nikt z osób przypisanych do subskrypcji nie ma obecnie umówionego masażu',
+    'go_to_register_code_generation_view' => 'By umożliwić rejestracje Twoim pracownikom, przejdz do widoku generacji kodów, wybierz lokalizacje do których chcesz by pracownicy mieli dostęp, a następnie udostępnij im wygenerowany kod dzięki któremu zostaną automatycznie dopisani'
 ];

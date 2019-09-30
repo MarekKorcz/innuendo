@@ -12,34 +12,42 @@
             {{$subscription->name}}
         </h2>
     </div>
-    <div id="workers-panel" class="wrapper cont">
-        <div class="text-center">
-            <label for="search">@lang('common.write_your_name_and_lastname') :</label>
-            @if($worker !== null)
-                <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" autocomplete="off">
-            @else
-                <input id="search" class="form-control" type="text" value="" autocomplete="off">          
-            @endif
-            <ul id="result" class="list-group"></ul>
+    @if (count($appointments) > 0)
+        <div id="workers-panel" class="wrapper cont">
+            <div class="text-center">
+                <label for="search">@lang('common.write_your_name_and_lastname') :</label>
+                @if($worker !== null)
+                    <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" autocomplete="off">
+                @else
+                    <input id="search" class="form-control" type="text" value="" autocomplete="off">          
+                @endif
+                <ul id="result" class="list-group"></ul>
+            </div>
+            <div class="text-center">
+                @if ($substart->isActive)
+                    <label for="timePeriod">@lang('common.select_a_billing_period') :</label>
+                    <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
+                        @foreach ($intervals as $key => $interval)
+                            @if ($interval->start_date <= $today && $interval->end_date >= $today ||
+                                 $interval->end_date < $today && $key + 1 == count($intervals))
+                                <option value="{{$interval->id}}" selected>{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
+                            @else
+                                <option value="{{$interval->id}}">{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                @else
+                    <h4>@lang('common.subscription_first_time_activation_info')</h4>
+                @endif
+            </div>
         </div>
-        <div class="text-center">
-            @if ($substart->isActive)
-                <label for="timePeriod">@lang('common.select_a_billing_period') :</label>
-                <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
-                    @foreach ($intervals as $key => $interval)
-                        @if ($interval->start_date <= $today && $interval->end_date >= $today ||
-                             $interval->end_date < $today && $key + 1 == count($intervals))
-                            <option value="{{$interval->id}}" selected>{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
-                        @else
-                            <option value="{{$interval->id}}">{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
-                        @endif
-                    @endforeach
-                </select>
-            @else
-                <p>@lang('common.subscription_first_time_activation_info')</p>
-            @endif
+    @else
+        <div class="text-center" style="padding: 1rem;">
+            <h3>@lang('common.subscription_first_time_activation_info')</h3>
         </div>
-    </div>
+    @endif
+    
+    <hr>
     
     <div class="col-sm-12 col-md-12 col-lg-12 col-12">
         <h2 class="text-center">
@@ -100,10 +108,10 @@
         @else
             @if ($property !== null)
                 <div class="text-center" style="padding: 1rem 0 1rem 0;">
-                    <h3>@lang('common.go_to_schedule_description_1')</h3>
+                    <h3>@lang('common.no_message_appointment')</h3>
                     <h4>@lang('common.go_to_schedule_description_2')</h4>
                     <div style="padding: 1rem;">
-                        <a class="btn btn-success btn-lg" href="{{ URL::to('/user/property/' . $property->id) }}">
+                        <a class="btn btn-success" href="{{ URL::to('/user/property/' . $property->id) }}">
                             @lang('common.go_to_schedule')
                         </a>
                     </div>

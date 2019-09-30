@@ -899,7 +899,7 @@ class BossController extends Controller
         if ($code->id !== null)
         {
             $type = 'success';
-            $message = 'Dodano nowy kod';
+            $message = 'Dodano nowy kod. Wybierz lokalizacje oraz subskrypcje które chcesz udostępnić swoim pracownikom, następnie włącz rejestracje oraz wyślij im wygenerowany kod z którym będą mogli się zarejestrować!';
             
         } else {
             
