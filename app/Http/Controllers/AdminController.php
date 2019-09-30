@@ -549,9 +549,9 @@ class AdminController extends Controller
             if ($graphicRequest->comment !== null && strlen($graphicRequest->comment) > 24)
             {
                 $graphicRequest->comment = substr($graphicRequest->comment, 0, 24).'...';
-                
-                $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
             }
+                
+            $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
         }
         
         return view('admin.graphic_requests')->with([
@@ -581,87 +581,93 @@ class AdminController extends Controller
                     {
                         if ($employee->id == $chosenEmployee->id)
                         {
-                            $chosenEmployee = User::where('id', $employee->id)->with('calendars')->first();
-                            
                             $employee['isChosen'] = true;
+                            
+                        } else {
+                            
+                            $employee['isChosen'] = false;
+                        }
+                            
+                        $chosenEmployee = User::where('id', $employee->id)->with('calendars')->first();
 
-                            $employee['showProperty'] = false;
-                            
-                            $employee['yearId'] = null;
-                            $employee['monthId'] = null;
-                            $employee['dayId'] = null;
-                            
-                            if (count($chosenEmployee->calendars) > 0)
+                        $employee['showProperty'] = false;
+
+                        $employee['yearId'] = null;
+                        $employee['monthId'] = null;
+                        $employee['dayId'] = null;
+
+                        if (count($chosenEmployee->calendars) > 0)
+                        {
+                            foreach ($chosenEmployee->calendars as $calendar)
                             {
-                                foreach ($chosenEmployee->calendars as $calendar)
+                                $calendar = Calendar::where('id', $calendar->id)->with('years')->first();
+                                    
+                                if ($calendar !== null && $calendar->property_id == $graphicRequest->property_id && count($calendar->years) > 0)
                                 {
-                                    $calendar = Calendar::where('id', $calendar->id)->with('years')->first();
-
-                                    if ($calendar !== null && $calendar->property_id == $graphicRequest->property_id && count($calendar->years) > 0)
+                                    $employee['showProperty'] = false;
+                                    
+                                    foreach ($calendar->years as $year)
                                     {
-                                        foreach ($calendar->years as $year)
-                                        {  
-                                            if ($year->year == $graphicRequest->year->year)
+                                        if ($year->year == $graphicRequest->year->year)
+                                        {
+                                            $year = Year::where('id', $year->id)->with('months')->first();
+
+                                            if (count($year->months) > 0)
                                             {
-                                                $year = Year::where('id', $year->id)->with('months')->first();
-
-                                                if (count($year->months) > 0)
+                                                foreach ($year->months as $month)
                                                 {
-                                                    foreach ($year->months as $month)
+                                                    if ($month->month_number == $graphicRequest->month->month_number)
                                                     {
-                                                        if ($month->month_number == $graphicRequest->month->month_number)
+                                                        $month = Month::where('id', $month->id)->with('days')->first();
+
+                                                        if (count($month->days) > 0)
                                                         {
-                                                            $month = Month::where('id', $month->id)->with('days')->first();
-
-                                                            if (count($month->days) > 0)
+                                                            foreach ($month->days as $day)
                                                             {
-                                                                foreach ($month->days as $day)
+                                                                if ($day->day_number == $graphicRequest->day->day_number)
                                                                 {
-                                                                    if ($day->day_number == $graphicRequest->day->day_number)
-                                                                    {
-                                                                        $employee['dayId'] = $day->id;
-                                                                    }
+                                                                    $employee['dayId'] = $day->id;
                                                                 }
+                                                            }
 
-                                                                if ($employee['dayId'] === null)
-                                                                {
-                                                                    $employee['monthId'] = $month->id;
-                                                                }
-
-                                                            } else {
-
+                                                            if ($employee['dayId'] === null)
+                                                            {
                                                                 $employee['monthId'] = $month->id;
                                                             }
+
+                                                        } else {
+
+                                                            $employee['monthId'] = $month->id;
                                                         }
                                                     }
+                                                }
 
-                                                    if ($employee['monthId'] === null && $employee['dayId'] === null)
-                                                    {
-                                                        $employee['yearId'] = $year->id;
-                                                    }
-
-                                                } else {
-
+                                                if ($employee['monthId'] === null && $employee['dayId'] === null)
+                                                {
                                                     $employee['yearId'] = $year->id;
                                                 }
+
+                                            } else {
+
+                                                $employee['yearId'] = $year->id;
                                             }
                                         }
-                                        
-                                        if ($employee['yearId'] === null && $employee['monthId'] === null && $employee['dayId'] === null)
-                                        {
-                                            $employee['showProperty'] = true;
-                                        }
+                                    }
 
-                                    } else {
-
+                                    if ($employee['yearId'] === null && $employee['monthId'] === null && $employee['dayId'] === null)
+                                    {
                                         $employee['showProperty'] = true;
                                     }
+
+                                } else {
+
+                                    $employee['showProperty'] = true;
                                 }
-
-                            } else {
-
-                                $employee['showProperty'] = true;
                             }
+
+                        } else {
+                            
+                            $employee['showProperty'] = true;
                         }
                     }
                 }

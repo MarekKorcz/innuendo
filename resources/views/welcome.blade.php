@@ -109,7 +109,7 @@
     </div>
     
     <!--Fixed background-->
-    <div id="fixed">
+<!--    <div id="fixed">
         <div class="landing-text">
             <h1>BOOTSTRAP</h1>
             <h3>Learn the basic building blocks.</h3>
@@ -117,7 +117,7 @@
                 Get Started
             </a>
         </div>
-    </div>
+    </div>-->
     
     <div class="container-fluid">
         <div class="row welcome text-center">
@@ -209,7 +209,7 @@
         </div>
     </div>  
     
-    <div class="container-fluid">
+    <div class="container">
         <h2 class="text-center">@lang('welcome.massage_15')</h2>
         <div class="row text-center padding">
             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -259,7 +259,7 @@
         </div>
     </div> 
     
-    <div class="container-fluid">
+    <div class="container">
         <h3 class="text-center">@lang('welcome.discount_paragraph')</h3>
         <div class="row text-center padding">
             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -303,7 +303,7 @@
         </div>
     </div>
     
-    <div class="container-fluid">
+    <div class="container" style="padding: 0 1rem 0 1rem;">
         <div class="row welcome text-center">
             <div class="col-12">
                 <ul>

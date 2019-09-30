@@ -43,7 +43,26 @@
                                     @endif
                                 </li>
                             @else
-                                <li class="form-control" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                <li class="form-control" value="{{$employee->id}}">
+                                    {{$employee->name}} {{$employee->surname}}
+                                    @if ($employee->showProperty !== false)
+                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/property/' . $graphicRequest->property_id) }}">
+                                            @lang('common.create_calendar')
+                                        </a>
+                                    @elseif ($employee->yearId)
+                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/year/show/' . $employee->yearId) }}">
+                                            @lang('common.add_month')
+                                        </a>
+                                    @elseif ($employee->monthId)
+                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/month/show/' . $employee->monthId) }}">
+                                            @lang('common.add_day')
+                                        </a>
+                                    @elseif ($employee->dayId)
+                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/day/show/' . $employee->dayId) }}">
+                                            @lang('common.add_schedule')
+                                        </a>
+                                    @endif
+                                </li>
                             @endif
                         @endforeach
                     </ul>

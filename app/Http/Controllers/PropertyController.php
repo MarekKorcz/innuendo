@@ -89,7 +89,6 @@ class PropertyController extends Controller
     {
         $rules = array(
             'name'          => 'required',
-            'email'         => 'required',
             'street'        => 'required',
             'city'          => 'required'
         );

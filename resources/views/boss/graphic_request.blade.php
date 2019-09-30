@@ -5,7 +5,7 @@
 {!! Html::script('js/graphic_request_show.js') !!}
 
     <div id="title" class="container">
-        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from') : {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
+        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from') : {{$graphicRequest->day->day_number}} {{$graphicRequest->month->month}} {{$graphicRequest->year->year}}</h2>
         <p class="text-center">@lang('common.regarding') : {{$graphicRequest->property->name}}</p>
 <!--        todo: co z tym??
         <div class="text-center" style="padding-bottom: 1rem;">
@@ -38,7 +38,7 @@
                 <p>@lang('common.last_update') : <strong>{{$graphicRequest->updated_at}}</strong></p>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h1 class="text-center">Miejsce na coś?</h1>
+                <h1 class="text-center">todo: Miejsce na coś?</h1>
             </div>
         </div>
     </div>

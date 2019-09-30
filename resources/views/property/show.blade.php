@@ -92,7 +92,9 @@
                     @endforeach
             </table>
         @else
-            <h4>@lang('common.there_is_no_subscriptions_attached')</h4>
+            <div class="text-center">
+                <h4>@lang('common.there_is_no_subscriptions_attached')</h4>
+            </div>
         @endif
     </div>
         

@@ -88,7 +88,7 @@ class UserController extends Controller
                 $calendars = Calendar::where([
                     'employee_id' => $employee->id,
                     'isActive' => 1
-                ])->get();
+                ])->with('property')->get();
 
                 if ($user->isBoss) 
                 {                
@@ -96,9 +96,12 @@ class UserController extends Controller
                     {
                         foreach ($calendars as $key => $calendar)
                         {
-                            if ($calendar->property->boss_id !== $user->id)
+                            if ($calendar->property !== null)
                             {
-                                $calendars->forget($key);
+                                if ($calendar->property->boss_id !== $user->id)
+                                {
+                                    $calendars->forget($key);
+                                }
                             }
                         }
                     }

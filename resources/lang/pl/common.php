@@ -405,4 +405,5 @@ return [
     'add_schedule' => 'Dodaj grafik',
     'edit_schedule' => 'Edytuj grafik',
     'minutes_capital' => 'Minuty',
+    'no_approve_messages' => 'Obecnie nie ma żadnego zapytania o zatwierdzenie',
 ];
