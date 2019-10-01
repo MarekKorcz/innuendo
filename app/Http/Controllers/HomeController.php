@@ -27,6 +27,7 @@ use App\TempUser;
 use App\Mail\BossCreateWithPromoCode;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
 
 class HomeController extends Controller
 {
@@ -167,7 +168,37 @@ class HomeController extends Controller
         return view('discounts');
     }
     
-//    public function test()
-//    {   
+//    {
+//        $filesDirPath = storage_path('app/notes');
+//        $filesDir = scandir($filesDirPath);
+//        
+//        $textFile = storage_path('app') . "/text.txt";
+//        
+//        for ($i = 2; $i < count($filesDir); $i++)
+//        {
+//            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
+//            
+//            // I used this to change files extension
+////            $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/" . $directory[5];
+////            $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/new.json";
+////            rename($oldFileName, $newFileName);
+//            
+//            // this to read notes in every file
+////            $fileName = $filesDirPath . "/" . $filesDir[$i] . "/new.json";
+////            
+////            $file = File::get($fileName);
+////            $decodedFile = json_decode($file);
+////            $memoObjectList = $decodedFile->MemoObjectList;
+////            $note = $memoObjectList[0]->DescRaw;
+//            
+//            // and this to write all notes to one file
+//            $current = file_get_contents($textFile);
+//            $current .= $note . "\n\n\n";
+//            file_put_contents($textFile, $current);
+//        }
 //    }
+    
+    public function test()
+    {   
+    }
 }
