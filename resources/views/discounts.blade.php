@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="container">
         <h3 class="text-center">@lang('welcome.discount_paragraph')</h3>
         <div class="row text-center padding">
             <div class="col-xs-12 col-sm-6 col-md-6">

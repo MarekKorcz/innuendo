@@ -105,8 +105,8 @@ return [
     'meeting_methodology_second_li' => 'Masaże wykonywane są na krzesłach do masażu lub stołach w zależnosći od zapotrzebowania',
     'meeting_methodology_third_li' => 'Pracownicy przychodzą na masaż w kolejności wynikającej z zapisów do grafiku',
     'meeting_methodology_fourth_li' => 'Masaże trwają na ogół od 15 do 30 minut, w zależności od wykupionych przez Państwa pakietów abonamentowych.
-                                        W czasię tym zawsze zawiera się czas dla nas na przygotowanie stanowiska po poprzedniej osobie, dla Państwa natomiast, ewntualne rozebranie i ubranie się',
-    'meeting_methodology_fifth_li' => 'Skupiamiy się głównie na plecach, karku, ramionach oraz rękach. 
+                                        W czasie tym zawsze zawiera się czas dla nas na przygotowanie stanowiska po poprzedniej osobie, dla Państwa natomiast, ewntualne rozebranie i ubranie się',
+    'meeting_methodology_fifth_li' => 'Skupiamiy się głównie na plecach, karku, ramionach oraz rękach.
                                        Wynika to z faktu, że są to miejsca które narażamy najbardziej w naszej codziennej pracy',
     'meeting_methodology_sixth_li' => 'Masaż wywołuję rozluźnia, sprawia, że można się odprężyć w przerwie od pracy oraz pomaga w uwolnieniu się od uporczywych 
                                        napięć często towarzyszących na przestrzeni całego dnia. Pozwala na naładowanie mentalnych oraz fizycznych baterii, 

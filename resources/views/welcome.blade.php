@@ -138,20 +138,20 @@
     <div class="welcome">
         <div class="container">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-6" style="padding-bottom: 2rem;">
                     <p class="lead">@lang('welcome.less')</p>
                     <ul>
+                        <li>@lang('welcome.staff_turnover')</li>
                         <li>@lang('welcome.sick_leave')</li>
                         <li>@lang('welcome.health_leave')</li>
-                        <li>@lang('welcome.staff_turnover')</li>
                     </ul>
                 </div>
                 <div class="col-sm-6">
                     <p class="lead">@lang('welcome.more')</p>
                     <ul>
-                        <li>@lang('welcome.productivity_and_profits')</li>
-                        <li>@lang('welcome.concentration_and_motivation')</li>
                         <li>@lang('welcome.employee_satisfaction')</li>
+                        <li>@lang('welcome.concentration_and_motivation')</li>
+                        <li>@lang('welcome.productivity_and_profits')</li>
                     </ul>
                 </div>
             </div>
@@ -166,7 +166,7 @@
         </div>
     </div>
     
-    <div class="container-fluid">
+    <div class="container">
         <div class="row welcome text-center">
             <div class="col-12">
                 <h2>@lang('welcome.our_site_header')</h2>
