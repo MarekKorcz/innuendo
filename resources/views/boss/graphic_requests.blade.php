@@ -4,8 +4,8 @@
 
     @if (count($graphicRequests) > 0)
         <div style="padding: 1rem;">
-            <div class="text-center">
-                <h2>@lang('common.all_graphic_requests')</h2>
+            <div class="text-center" style="padding: 1rem;">
+                <h1>@lang('common.all_graphic_requests')</h1>
             </div>
 
             <table class="table table-striped table-bordered">
@@ -21,7 +21,7 @@
                 <tbody>
                     @foreach($graphicRequests as $graphicRequest)
                         <tr>
-                            <td>{{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</td>
+                            <td>{{$graphicRequest->day->day_number}} {{$graphicRequest->month->month}} {{$graphicRequest->year->year}}</td>
                             <td>{{$graphicRequest->start_time}} - {{$graphicRequest->end_time}}</td>
                             <td>{{$graphicRequest->comment}}</td>
                             <td>{{count($graphicRequest->employees)}}</td>

@@ -6,11 +6,12 @@
 
 <div class="container">
 
-    <h1 class="text-center" style="padding: 2rem;">@lang('common.schedule_in') {{ $property->name }}</h1>
+    <h1 class="text-center" style="padding: 1rem;">@lang('common.schedule_in') {{ $property->name }}</h1>
    
-    <div class="jumbotron">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <div class="jumbotron text-center" style="font-size: 21px;">
                 <h3>@lang('common.description')</h3>
                 <p>@lang('common.label') : <strong>{{$property->name}}</strong></p>
                 <p>@lang('common.creation_date') : <strong>{{ $propertyCreatedAt }}</strong></p>
@@ -19,13 +20,11 @@
                 @endif
                 <p>@lang('common.address') : <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</strong></p>
             </div>
-            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h2>todo: Place to show something??</h2>
-            </div>
         </div>
+        <div class="col-1"></div>
     </div>
     
-    <h2 class="text-center" style="padding: 2rem;">@lang('common.our_employees_schedules') :</h2>
+    <h2 class="text-center" style="padding: 1rem;">@lang('common.our_employees_schedules') :</h2>
     
     <div class="wrapper">
         @if (count($employees) > 0)

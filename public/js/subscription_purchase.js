@@ -16,9 +16,9 @@ $(function() {
             {
                 event.preventDefault();
                                 
-                if ($("input#terms + div.warning > p.field-warning").length == 0)
+                if ($("div.warning > p.field-warning").length == 0)
                 {
-                    $("input#terms + div.warning").append('<p class="field-warning">Zaakceptuj powyższy rególamin</p>');
+                    $("div.warning").append('<p class="field-warning">Zaakceptuj powyższy regulamin</p>');
                 }
             }
             

@@ -14,6 +14,7 @@ use App\Subscription;
 use App\Purchase;
 use App\Interval;
 use App\ChosenProperty;
+use App\Mail\AppointmentStore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -137,14 +138,14 @@ class AppointmentController extends Controller
                                     if ($nextAppointmentAvailable === null)
                                     {
                                         $appointmentLength += 1;
-                                    }
-                                    else
-                                    {
+                                        
+                                    } else {
+                                        
                                         break;
                                     }
-                                }
-                                else
-                                {
+                                    
+                                } else {
+                                    
                                     break;
                                 }
                             }
@@ -507,16 +508,7 @@ class AppointmentController extends Controller
                     
                     $appointment->save();
                     
-                    /**
-                     * 
-                     * 
-                     * 
-                     * email sanding
-                     * 
-                     * 
-                     * 
-                     * 
-                     */
+                    \Mail::to($user)->send(new AppointmentStore($user, $appointment));
                     
                     return redirect()->action(
                         'UserController@appointmentShow', [

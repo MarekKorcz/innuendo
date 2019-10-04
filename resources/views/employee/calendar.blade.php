@@ -8,10 +8,14 @@
 
 <div class="container">
     
-    <div style="padding-top: 1rem;">
-        <a class="btn btn-info" href="{{ URL::to('/employee/' . $employee_slug) }}">
-            @lang('common.back_to_employee')
-        </a>
+    <div style="padding: 1rem;">
+        <div class="col-4">
+            <a class="btn btn-info" href="{{ URL::to('/employee/' . $employee_slug) }}">
+                @lang('common.back_to_employee')
+            </a>
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4"></div>
     </div>
 
     <div id="calendar" class="table-responsive">

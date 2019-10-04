@@ -48,7 +48,7 @@
         <h2 class="text-center" style="padding: 1rem 0 1rem 0;">@lang('common.temp_user_employee_entites') :</h2>
 
         @if (count($tempEmployees) > 0)
-            <table classss="table table-striped table-bordered">
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>                
                         <td>@lang('common.name')</td>

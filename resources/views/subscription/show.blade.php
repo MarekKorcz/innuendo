@@ -22,7 +22,7 @@
         </nav>
         
         <div class="text-center" style="margin-bottom: 40px;">
-            <h2>{{ $subscription->name }}</h2>
+            <h2>{!! $subscription->name !!}</h2>
         </div>
         <div class="text-center">
             <h3>{!! $subscription->description !!}</h3>

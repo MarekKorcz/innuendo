@@ -28,6 +28,7 @@ use App\Mail\BossCreateWithPromoCode;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Session;
 
 class HomeController extends Controller
 {
@@ -198,7 +199,10 @@ class HomeController extends Controller
 //        }
 //    }
     
-    public function test()
-    {   
-    }
+    
+    
+    
+//    public function test()
+//    {
+//    }
 }

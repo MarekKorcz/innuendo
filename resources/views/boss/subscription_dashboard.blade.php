@@ -8,7 +8,7 @@
     
     <div style="padding: 2rem 0 2rem 0">
         <div class="text-center">
-            <h1>@lang('common.your_subscriptions_view')</h1>
+            <h1>@lang('common.subscriptions_view')</h1>
             <h2>@lang('common.pick_subscription_from_property') :</h2>
         </div>
         <div id="properties" class="wrapper cont">
@@ -36,9 +36,11 @@
                         <a class="btn btn-primary" href="{{ URL::to('boss/property/' . $propertyWithSubscriptions['property']->id . '/edit') }}">
                             @lang('common.edit')
                         </a>
-                        <a class="btn btn-primary" href="{{ URL::to('user/property/' . $propertyWithSubscriptions['property']->id) }}">
-                            @lang('common.schedules')
-                        </a>
+                        @if ($substart !== null)
+                            <a class="btn btn-primary" href="{{ URL::to('user/property/' . $propertyWithSubscriptions['property']->id) }}">
+                                @lang('common.schedules')
+                            </a>
+                        @endif
                     </div>
             @endforeach
         </div>
@@ -56,10 +58,15 @@
                             <div class="text-center box" data-subscription_id="{{$subscription->id}}">
                         @endif
                             <div class="data">
-                                <p>@lang('common.label') : <strong>{{$subscription->name}}</strong></p>
-                                {!!$subscription->description!!}
-                                <p>@lang('common.regular_price') : <strong>{{$subscription->old_price}}</strong></p>
-                                <p>@lang('common.price_with_subscription') : <strong>{{$subscription->new_price}}</strong></p>
+                                <p>@lang('common.label') : <strong>{!! $subscription->name !!}</strong></p>
+                                <p>
+                                    @lang('common.description') :
+                                    <strong>
+                                        {!!$subscription->description!!}
+                                    </strong>
+                                </p>
+                                <p>@lang('common.regular_price') : <strong>{{$subscription->old_price}} zł @lang('common.per_person')</strong></p>
+                                <p>@lang('common.price_with_subscription') : <strong>{{$subscription->new_price}} zł @lang('common.per_person')</strong></p>
                                 <p>
                                     @lang('common.number_of_massages_to_use_per_month') : 
                                     <strong>

@@ -43,7 +43,7 @@
                 <ul id="subscriptions" style="margin: 3rem;">
                     @foreach($subscriptions as $subscription)
                         <li class="form-control" style="margin: 3px;" data-active="false" value="{{ $subscription->id }}">
-                            {{ $subscription->name }} 
+                            {!! $subscription->name !!}
                             - {{ $subscription->duration }} @lang('common.months_count')
                             - <strike>{{ $subscription->old_price }} zł</strike>
                             {{ $subscription->new_price }} zł

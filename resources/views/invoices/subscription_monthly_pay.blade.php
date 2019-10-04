@@ -137,7 +137,7 @@
             <tbody>
                 <tr>
                     <td scope="col">1</td>
-                    <td scope="col-3">{{$subscription->name}}</td>
+                    <td scope="col-3">{!! $subscription->name !!}</td>
                     <td scope="col">{{$intervalWorkersCount}}</td>
                     <td scope="col"></td>
                     <td scope="col">{{$subscriptionSingleNetPrice}} zł</td>

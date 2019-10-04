@@ -9,7 +9,7 @@
     <h2 class="text-center">{{ $worker->name }} {{ $worker->surname }}</h2>
     <h4 class="text-center">
         @lang('common.subscription')
-        {{$subscription->name}}
+        {!! $subscription->name !!}
     </h4>
     <h5 id="intervalPeriod" class="text-center">
         @lang('common.for_the_period_from')

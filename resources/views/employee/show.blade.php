@@ -8,30 +8,34 @@
 
     <h1 class="text-center padding">{{ $employee->name }} {{$employee->surname}}</h1>
     
-    <hr>
-    
-    <div class="jumbotron">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h3 style="padding: 9px;">@lang('common.description')</h3>
-                <p>@lang('common.name') : <strong>{{$employee->name}} {{$employee->surname}}</strong></p>
-                <p>@lang('common.email_address') : <strong>{{$employee->email}}</strong></p>
-                <p>@lang('common.working_since') : <strong>{{ $employeeCreatedAt }}</strong></p>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <div class="text-center">
-                    @if (Storage::disk('local')->has($employee->profile_image))
-                        <div style="padding: 1rem;">
-                            <img src="{{ route('account.image', ['fileName' => $employee->profile_image]) }}" 
-                                 alt="{{$employee->name}} {{$employee->surname}}" 
-                                 style="width:100%;"
-                                 border="0"
-                            >
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <div class="jumbotron">
+                <div class="row">
+                    <div class="col-6">
+                        <h3 style="padding: 9px;">@lang('common.description')</h3>
+                        <p>@lang('common.name') : <strong>{{$employee->name}} {{$employee->surname}}</strong></p>
+                        <p>@lang('common.email_address') : <strong>{{$employee->email}}</strong></p>
+                        <p>@lang('common.working_since') : <strong>{{ $employeeCreatedAt }}</strong></p>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center">
+                            @if (Storage::disk('local')->has($employee->profile_image))
+                                <div style="padding: 1rem;">
+                                    <img src="{{ route('account.image', ['fileName' => $employee->profile_image]) }}" 
+                                         alt="{{$employee->name}} {{$employee->surname}}" 
+                                         style="width:100%;"
+                                         border="0"
+                                    >
+                                </div>
+                            @endif
                         </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="col-1"></div>
     </div>
 
     @if ($calendars && count($calendars) == count($properties))

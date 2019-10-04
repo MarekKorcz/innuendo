@@ -48,7 +48,7 @@
                     @foreach ($promoCode->subscriptions as $subscription)
                         <a href="{{ URL::to('/subscription/show/' . $subscription->id) }}">
                             <li class="form-control text-center" style="background-color: lightgreen; margin: 3px;">
-                                {{ $subscription->name }} 
+                                {!! $subscription->name !!}
                                 - {{ $subscription->duration }} @lang('common.months_count')
                                 - <strike>{{ $subscription->old_price }} zł</strike>
                                 {{ $subscription->new_price }} zł

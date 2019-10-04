@@ -548,7 +548,7 @@ class BossController extends Controller
                     }
                 }
                 // <<
-            }            
+            }    
             
             // >> get substarts attached to chosen property and subscription
             $substarts = Substart::where([
@@ -1122,7 +1122,7 @@ class BossController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function workerShow($workerId, $substartId, $intervalId)
-    {
+    {        
         $boss = auth()->user();
         
         $worker = User::where([
@@ -1130,7 +1130,7 @@ class BossController extends Controller
             'boss_id' => $boss->id
         ])->first();
         
-        if ($worker !== null || $boss->id == $workerId)
+        if ($worker !== null || $boss->id == $worker->getBoss()->id)
         {
             if ($worker == null)
             {
@@ -1148,6 +1148,8 @@ class BossController extends Controller
                     'id' => $intervalId,
                     'substart_id' => $substart->id
                 ])->first();
+                
+            dd($substart->id);
                 
                 if ($interval !== null)
                 {
@@ -2511,10 +2513,11 @@ class BossController extends Controller
                             'id' => $propertySubscription->id,
                             'name' => $propertySubscription->name,
                             'name_description' => \Lang::get('common.label'),
+                            'description_description' => \Lang::get('common.description'),
                             'description' => $propertySubscription->description,
-                            'old_price' => $propertySubscription->old_price,
+                            'old_price' => $propertySubscription->old_price . " zł " . \Lang::get('common.per_person'),
                             'old_price_description' => \Lang::get('common.regular_price'),
-                            'new_price' => $propertySubscription->new_price,
+                            'new_price' => $propertySubscription->new_price . " zł " . \Lang::get('common.per_person'),
                             'new_price_description' => \Lang::get('common.price_with_subscription'),
                             'quantity' => $propertySubscription->quantity,
                             'quantity_description' => \Lang::get('common.number_of_massages_to_use_per_month'),

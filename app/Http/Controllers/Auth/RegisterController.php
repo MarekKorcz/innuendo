@@ -282,7 +282,7 @@ class RegisterController extends Controller
             $tempBossPropertyEntity = TempProperty::where('temp_user_id', $tempBossEntity->id)->with('subscriptions')->first();
             
             if ($tempBossEntity !== null && $tempBossPropertyEntity !== null)
-            {
+            {            
                 $boss = User::create([
                     'name' => Input::get('name'),
                     'surname' => Input::get('surname'),

@@ -82,7 +82,7 @@
                 </tr>
                     @foreach ($subscriptions as $subscription)
                         <tr>
-                            <td>{{ $subscription->name }}</td>
+                            <td>{!! $subscription->name !!}</td>
                             <td>{!! $subscription->description !!}</td>
                             <td>{{ $subscription->old_price }}</td>
                             <td>{{ $subscription->new_price }}</td>

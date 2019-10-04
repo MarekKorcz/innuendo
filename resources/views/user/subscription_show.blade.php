@@ -12,8 +12,8 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h3>@lang('common.description')</h3>
-                <p>@lang('common.label') : <strong>{{$subscription->name}}</strong></p>
-                <p>@lang('common.description') : <strong>{{ $subscription->description }}</strong></p>
+                <p>@lang('common.label') : <strong>{!! $subscription->name !!}</strong></p>
+                <p>@lang('common.description') : <strong>{!! $subscription->description !!}</strong></p>
                 <p>
                     @lang('common.price') :  
                     <strike>{{$subscription->old_price}}</strike>

@@ -20,7 +20,7 @@
                         ZDJĘCIE
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title text-center">{{$subscription->name}}</h5>
+                        <h5 class="card-title text-center">{!! $subscription->name !!}</h5>
                         <p class="card-text">
                             {!!$subscription->description!!}
                         </p>

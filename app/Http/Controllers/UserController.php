@@ -16,6 +16,7 @@ use App\ChosenProperty;
 use App\Purchase;
 use App\Interval;
 use App\Substart;
+use App\Mail\AppointmentDestroy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -118,9 +119,12 @@ class UserController extends Controller
                         {
                             foreach ($user->chosenProperties as $chosenProperty)
                             {
-                                if ($calendar->property->id === $chosenProperty->property_id)
+                                if ($calendar->property !== null)
                                 {
-                                    $calendarsAvailableToWorker->push($calendar);
+                                    if ($calendar->property->id === $chosenProperty->property_id)
+                                    {
+                                        $calendarsAvailableToWorker->push($calendar);
+                                    }
                                 }
                             }
                         }
@@ -591,10 +595,15 @@ class UserController extends Controller
      */
     public function appointmentDestroy($id)
     {        
-        $appointment = Appointment::where('id', $id)->with('purchase')->first();
+        $user = auth()->user();
         
-        if ($appointment !== null)
-        {
+        $appointment = Appointment::where('id', $id)->with([
+            'purchase',
+            'user'
+        ])->first();
+        
+        if ($appointment !== null && $appointment->user->id == $user->id || $user->isAdmin || $user->isEmployee)
+        {            
             if ($appointment->status !== 1)
             {
                 if ($appointment->interval_id !== null)
@@ -619,16 +628,7 @@ class UserController extends Controller
                 
                 $appointment->delete();
 
-                /**
-                * 
-                * 
-                * 
-                * todo: email sanding
-                * 
-                * 
-                * 
-                * 
-                */
+                \Mail::to($user)->send(new AppointmentDestroy($user, $appointment));
 
                 return redirect()->action(
                     'UserController@appointmentIndex'

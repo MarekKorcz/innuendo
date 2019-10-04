@@ -9,7 +9,7 @@
     <div class="text-center" style="padding-top: 2rem;">
         <h2>
             @lang('common.subscription_massages')
-            {{$subscription->name}}
+            {!! $subscription->name !!}
         </h2>
     </div>
     @if (count($appointments) > 0)

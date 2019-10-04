@@ -6,21 +6,21 @@
 
 <div class="container">
 
-    <h1 class="text-center" style="padding: 2rem;">{{ $subscription->name }}</h1>
+    <h1 class="text-center" style="padding: 2rem;">{!! $subscription->name !!}</h1>
     
     <div class="jumbotron">
         <div class="row">
             <div class="col-12 col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h3>@lang('common.description')</h3>
-                <p>@lang('common.label') : <strong>{{$subscription->name}}</strong></p>
-                <p>@lang('common.description') : <strong>{{ $subscription->description }}</strong></p>
+                <p>@lang('common.label') : <strong>{!! $subscription->name !!}</strong></p>
+                <p>@lang('common.description') : <strong>{!! $subscription->description !!}</strong></p>
                 <p>
                     @lang('common.price') :
-                    <strike>{{$subscription->old_price}}</strike>
-                    <strong>{{$subscription->new_price}}</strong>
+                    <strike>{{$subscription->old_price}} zł</strike>
+                    <strong>{{$subscription->new_price}} zł @lang('common.per_person')</strong>
                 </p>
                 <p>@lang('common.number_of_massages_to_use_per_month') : <strong>{{$subscription->quantity}}</strong></p>
-                <p>@lang('common.subscription_duration') : <strong>{{$subscription->duration}} @lang('common.months_count')</strong></p>
+                <p>@lang('common.subscription_duration') : <strong>{{$subscription->duration}}</strong></p>
             </div>
             <div class="col-12 col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <img class="img-fluid" src="/img/column2.jpg">
@@ -66,19 +66,28 @@
                                         min="{{Carbon\Carbon::now()->format("Y-m-d")}}"
                                     >
                                 </div>-->
+
+
+                                <!--<label>
+                                    <span style="font-size: 21px;">@lang('common.terms_accept') :</span>
+                                </label>-->
+
+                                <!--todo: jak tu zrobić tłumaczenie?????-->
+                                {!! Html::decode(Form::label('terms','<span style="font-size: 21px;">Akceptuje powyższy regulamin:</span>')) !!}
                             
                                 <div class="form-group">
-                                    <!--                                    <label>
-                                        <span style="font-size: 21px;">@lang('common.terms_accept') :</span>
-                                    </label>-->
-                                    
-                                    
-                                    <!--todo: jak tu zrobić tłumaczenie?????-->
-                                    {!! Html::decode(Form::label('terms','<span style="font-size: 21px;">Akceptuje powyższy regulamin:</span>')) !!}
-                                    
-                                    {{ Form::checkbox('terms', null, null, array('class' => 'form-control')) }}
-                                    <div class="warning"></div>
+                                    <div class="row">
+                                        <div class="col-5"></div>
+                                        <div class="col-2" style="position: relative;">
+                                            <div>
+                                                {{ Form::checkbox('terms', null, null, array('class' => 'form-control', 'style' => 'width: 36px; margin-left: auto; margin-right: auto;')) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-5"></div>
+                                    </div>
                                 </div>
+                                            
+                                <div class="warning" style="padding-bottom: 6px;"></div>
                                 
                                 {{ Form::hidden('subscription_id', $subscription->id) }}
                                 {{ Form::hidden('property_id', $property->id) }}

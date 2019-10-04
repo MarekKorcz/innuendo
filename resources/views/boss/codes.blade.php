@@ -116,7 +116,7 @@
             <div class="text-center" style="padding: 1rem;">
                 <h2 style="padding-bottom: 1rem;">@lang('common.register_codes')</h2>
                 @if ($redirectToSubscriptionPurchaseView)
-                    <h3>@lang('common.go_to_schedule_description_3')</h3>
+                    <h3>@lang('common.go_to_subscription_list_description')</h3>
                     <h4>@lang('common.go_to_schedule_description_4')</h4>
                     <div style="padding: 1rem;">
                         <a class="btn btn-success btn-lg" href="{{ URL::to('/boss/subscription/list/0/0') }}">
