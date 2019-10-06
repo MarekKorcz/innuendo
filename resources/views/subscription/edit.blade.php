@@ -30,6 +30,10 @@
                 <label for="duration">@lang('common.duration_how_many_months')</label>
                 <input id="duration" class="form-control" type="text" name="duration" value="{{ $subscription->duration }}">
             </div>
+            <div class="form-group">
+                <label for="worker_quantity">@lang('common.worker_quantity')</label>
+                <input id="worker_quantity" class="form-control" type="text" name="worker_quantity" value="{{ $subscription->worker_quantity }}">
+            </div>
 
             {{ Form::hidden('subscription_id', $subscription->id) }}
 

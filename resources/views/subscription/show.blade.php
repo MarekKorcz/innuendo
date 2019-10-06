@@ -31,6 +31,15 @@
         <p>@lang('common.new_price') : <strong>{{ $subscription->new_price }}</strong></p>
         <p>@lang('common.quantity_per_month') : <strong>{{ $subscription->quantity }}</strong></p>
         <p>@lang('common.how_many_months_since_start') : <strong>{{ $subscription->duration }}</strong></p>
+        <p>@lang('common.worker_quantity') : 
+            <strong>
+                @if ($subscription->worker_quantity == 0)
+                    @lang('common.infinity')
+                @elseif ($subscription->worker_quantity !== null)
+                    {{ $subscription->worker_quantity }}
+                @endif
+            </strong>
+        </p>
         <div class="form-group">
             @if (count($properties) > 0)
                 <h3 class="text-center">@lang('common.subscriptions_available_for_purchase') :</h3>

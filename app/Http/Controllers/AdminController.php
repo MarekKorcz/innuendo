@@ -785,7 +785,8 @@ class AdminController extends Controller
         {
             $promoCode = PromoCode::where('boss_id', $boss->id)->with([
                 'messages',
-                'promo'
+                'promo',
+                'subscriptions'
             ])->first();
 
             if ($promoCode !== null)

@@ -27,6 +27,7 @@
                 </div>
             </div>
         </div>        
+        
         @if ($showGraphicsView)
             <div class="card">
                 <div class="card-body">
@@ -42,7 +43,9 @@
                 </div>
             </div>
         @endif
-        @if ($showSubscriptionsView)
+        
+        <!--// todo: turn off those routings if they are not needed-->
+    <!--@if ($showSubscriptionsView)
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title text-center">@lang('common.purchased_view')</h4>
@@ -71,7 +74,7 @@
                     </div>
                 </div>
             </div>
-        @endif
+        @endif-->
     </div>
 </div>
 @endsection

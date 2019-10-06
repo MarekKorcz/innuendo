@@ -6,7 +6,7 @@
 
 <div class="container">
 
-    <h1 class="text-center" style="padding: 1rem;">@lang('common.schedule_in') {{ $property->name }}</h1>
+    <h1 class="text-center" style="padding: 1rem;">@lang('common.schedule_in') <strong>{{ $property->name }}</strong></h1>
    
     <div class="row">
         <div class="col-1"></div>

@@ -15,6 +15,7 @@
                         <td>@lang('common.new_price')</td>
                         <td>@lang('common.quantity')</td>
                         <td>@lang('common.duration')</td>
+                        <td>@lang('common.worker_quantity')</td>
                         <td>@lang('common.action')</td>
                     </tr>
                 </thead>
@@ -27,6 +28,13 @@
                             <td>{{$subscription->new_price}}</td>
                             <td>{{$subscription->quantity}}</td>
                             <td>{{$subscription->duration}}</td>
+                            <td>
+                                @if ($subscription->worker_quantity == 0)
+                                    @lang('common.infinity')
+                                @elseif ($subscription->worker_quantity !== null)
+                                    {{ $subscription->worker_quantity }}
+                                @endif
+                            </td>
                             <td>
                                 <a class="btn btn-primary" href="{{ URL::to('/subscription/show/' . $subscription->id) }}">
                                     @lang('common.show')

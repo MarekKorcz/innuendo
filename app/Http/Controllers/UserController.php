@@ -196,43 +196,43 @@ class UserController extends Controller
             }
         }
         
-        $properties = Property::where('boss_id', null)->get();
+//        $properties = Property::where('boss_id', null)->get();
         
-        if ($properties !== null)
-        {
-            if (count($bossProperties) > 0)
-            {
-                foreach ($bossProperties as $bossProperty)
-                {
-                    $properties->push($bossProperty);
-                }
-            }
+//        if ($properties !== null)
+//        {
+//            if (count($bossProperties) > 0)
+//            {
+//                foreach ($bossProperties as $bossProperty)
+//                {
+//                    $properties->push($bossProperty);
+//                }
+//            }
             
-            if (count($properties) == 1)
+            if (count($bossProperties) == 1)
             {
                 return redirect()->action(
                     'UserController@property', [
-                        'id' => $properties->first()->id,
+                        'id' => $bossProperties->first()->id,
                     ]
                 );
             }
 
-            foreach ($properties as $property)
-            {
-                if ($property->boss_id !== null)
-                {
-                    $property['isPurchased'] = true;
-                    
-                } else {
-                    
-                    $property['isPurchased'] = false;
-                }
-            }
+//            foreach ($properties as $property)
+//            {
+//                if ($property->boss_id !== null)
+//                {
+//                    $property['isPurchased'] = true;
+//                    
+//                } else {
+//                    
+//                    $property['isPurchased'] = false;
+//                }
+//            }
 
             return view('user.property_index')->with([
-                'properties' => $properties->sortBy('isPurchased', SORT_REGULAR, true)
+                'properties' => $bossProperties
             ]);
-        }
+//        }
         
         return redirect()->route('welcome');
     }
@@ -617,6 +617,9 @@ class UserController extends Controller
                             $bossMainInterval = Interval::where('id', $appointmentInterval->interval_id)->first();
                             $bossMainInterval->available_units = ($bossMainInterval->available_units + 1);
                             $bossMainInterval->save();
+                            
+                            $appointmentInterval->available_units = ($appointmentInterval->available_units + 1);
+                            $appointmentInterval->save();
 
                         } elseif ($appointmentInterval->substart_id !== null) {
 

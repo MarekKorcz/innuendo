@@ -198,6 +198,7 @@ class CreateModels extends Migration
             $table->decimal('new_price');
             $table->integer('quantity');
             $table->integer('duration');
+            $table->integer('worker_quantity')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

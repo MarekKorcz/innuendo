@@ -32,7 +32,7 @@ class BossController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * return void
      */
     public function __construct()
     {
@@ -855,8 +855,7 @@ class BossController extends Controller
                         $startDate = date('Y-m-d');
                                     
                         $interval = new Interval();
-                        $interval->available_units = $subscription->quantity * $subscription->duration;
-
+                        $interval->available_units = $subscription->quantity;
                         $interval->start_date = $startDate;
                         $startDate = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate)));
 
@@ -2019,7 +2018,9 @@ class BossController extends Controller
                                             }
                                         }
                                         
-                                        return redirect()->route('welcome')->with('success', 'Zapytanie o otwarcie grafiku zostało wysłane');
+                                        return redirect()->action(
+                                            'BossController@graphicRequests'
+                                        )->with('success', 'Zapytanie o otwarcie grafiku zostało wysłane');
                                     }
                                 }
                             }
@@ -2027,6 +2028,7 @@ class BossController extends Controller
                     }
                 }
             }
+            
             
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
@@ -2231,7 +2233,8 @@ class BossController extends Controller
         $boss = auth()->user();
         $promoCode = PromoCode::where('boss_id', $boss->id)->with([
             'messages',
-            'promo'
+            'promo',
+            'subscriptions'
         ])->first();
         
         if ($promoCode !== null)

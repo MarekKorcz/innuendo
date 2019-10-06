@@ -209,7 +209,7 @@ class AppointmentController extends Controller
                                                     // >> purchased subscription worker scenario
                                                     $bossInterval = Interval::where('id', $interval->interval_id)->first();                                                               
 
-                                                    if ($bossInterval !== null && $bossInterval->available_units > 0)
+                                                    if ($bossInterval !== null && $bossInterval->available_units > 0 && $interval->available_units > 0)
                                                     {
                                                         foreach ($subscription->items as $item)
                                                         {
@@ -244,7 +244,7 @@ class AppointmentController extends Controller
                                         }
                                     }
                                     
-                                    if ($userSubscriptionItems !== null)
+                                    if (count($userSubscriptionItems) > 0)
                                     {
                                         $items = $items->merge($userSubscriptionItems);
                                     }
@@ -446,13 +446,14 @@ class AppointmentController extends Controller
                                                 // >> purchased subscription worker scenario
                                                 $bossInterval = Interval::where('id', $interval->interval_id)->first();                                                               
                                                 
-                                                if ($bossInterval !== null && $bossInterval->available_units > 0)
+                                                if ($bossInterval !== null && $bossInterval->available_units > 0 && $interval->available_units > 0)
                                                 {
                                                     $appointment->purchase()->associate($purchase->id);
 
                                                     $bossInterval->available_units = ($bossInterval->available_units - 1);
-                                                    
                                                     $bossInterval->save();
+                                                    
+                                                    $interval->available_units = ($interval->available_units - 1);
                                                     $interval->save();
 
                                                     $appointment->interval_id = $interval->id;

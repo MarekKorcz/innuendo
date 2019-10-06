@@ -17,6 +17,7 @@ use App\Month;
 use App\Day;
 use App\Substart;
 use App\PromoCode;
+use App\Message;
 use App\Mail\AdminTempBossCreate2ndStep;
 use App\Mail\AdminTempEmployeeCreate2ndStep;
 use App\Mail\UserCreateWithPromoCode;
@@ -187,16 +188,22 @@ class RegisterController extends Controller
                                                     'end_date' => $substart->end_date,
                                                     'substart_id' => $substart->id
                                                 ])->first();
+                                                
+                                                if ($bossInterval !== null)
+                                                {  
+                                                    $interval = new Interval();
+                                                    $interval->available_units = $subscription->quantity;
 
-                                                $interval = new Interval();
-                                                $interval->available_units = $subscription->quantity * $subscription->duration;
+                                                    $interval->start_date = $bossInterval->start_date;
+                                                    $interval->end_date = $bossInterval->end_date;
 
-                                                $interval->start_date = $bossInterval->start_date;
-                                                $interval->end_date = $bossInterval->end_date;
-
-                                                $interval->interval_id = $bossInterval->id;
-                                                $interval->purchase_id = $purchase->id;
-                                                $interval->save();
+                                                    $interval->interval_id = $bossInterval->id;
+                                                    $interval->purchase_id = $purchase->id;
+                                                    $interval->save();
+                                                    
+                                                    $bossInterval->available_units = $bossInterval->available_units + $subscription->quantity;
+                                                    $bossInterval->save();
+                                                }
                                             }
                                         }
                                     }
@@ -594,7 +601,7 @@ class RegisterController extends Controller
                                 $bossPurchase->save();
 
                                 $interval = Interval::create([
-                                    'available_units' => $subscription->quantity * $subscription->duration,
+                                    'available_units' => $subscription->quantity,
                                     'start_date' => $substart->start_date,
                                     'end_date' => $substart->end_date,
                                     'substart_id' => $substart->id,
@@ -607,6 +614,21 @@ class RegisterController extends Controller
                         $promoCode->isActive = 1;
                         $promoCode->boss_id = $boss->id;
                         $promoCode->save();
+                        
+                        // send initial message to promocode user
+                        $admin = User::where('isAdmin', 1)->first();
+                        $splitedBossName = str_split($boss->name);
+                        $youUsedPhrase = $splitedBossName[count($splitedBossName) - 1] == "a" ? \Lang::get('common.you_used_female') : \Lang::get('common.you_used_male');
+
+                        $message = new Message();
+                        $message->text = \Lang::get('common.greetings') . ", " . $boss->name . " " . $boss->surname . "! " . 
+                            \Lang::get('common.we_are_very_happy_that') . " " . $youUsedPhrase . " " . 
+                            \Lang::get('common.approve_message_body') . " " . 
+                            config('app.name');
+                        $message->status = 0;
+                        $message->owner_id = $admin->id;
+                        $message->promo_code_id = $promoCode->id;
+                        $message->save();
                         
                         \Mail::to($boss)->send(new BossCreateWithPromoCode($boss));
                         

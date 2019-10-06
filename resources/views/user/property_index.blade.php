@@ -9,21 +9,26 @@
     
     <div class="wrapper">
         @foreach ($properties as $property)
-            @if ($property->isPurchased)
+<!--            @if ($property->isPurchased)
                 <div class="card" style="background-color: lightgreen;">
             @else
                 <div class="card">
-            @endif
+            @endif-->
+            <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-center">{{$property->name}}</h5>
+                    <h3 class="card-title text-center">{{$property->name}}</h3>
                     @if ($property->description)
-                        <p class="card-text">
-                            {!!$property->description!!}
-                        </p>
+                        <div class="text-center" style="padding-bottom: 1rem;">
+                            <p class="card-text">
+                                {!!$property->description!!}
+                            </p>
+                        </div>
                     @endif
-                    <a href="{{ URL::to('user/property/' . $property->id) }}" class="btn btn-success">
-                        @lang('common.show')
-                    </a>
+                    <div class="text-center">
+                        <a href="{{ URL::to('user/property/' . $property->id) }}" class="btn btn-success btn-lg">
+                            @lang('common.show')
+                        </a>
+                    </div>
                 </div>
             </div>
         @endforeach

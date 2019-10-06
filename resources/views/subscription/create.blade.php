@@ -33,6 +33,10 @@
                 <label for="duration">@lang('common.duration_how_many_months') :</label>
                 <input id="duration" class="form-control" type="text" name="duration">
             </div>
+            <div class="form-group">
+                <label for="worker_quantity">@lang('common.worker_quantity') :</label>
+                <input id="worker_quantity" class="form-control" type="text" name="worker_quantity">
+            </div>
             <h4 class="text-center">@lang('common.items') :</h4>
             <div id="items" class="form-group">
                 <ul>

@@ -83,6 +83,7 @@ class SubscriptionController extends Controller
         $new_price = $request->get('new_price');
         $quantity = $request->get('quantity');
         $duration = $request->get('duration');
+        $worker_quantity = $request->get('worker_quantity');
         $property_id = $request->get('property_id');
         $items = $request->get('items');
         
@@ -92,6 +93,7 @@ class SubscriptionController extends Controller
             $new_price !== null && is_integer((int)$new_price) &&
             $quantity !== null && is_integer((int)$quantity) &&
             $duration !== null && is_integer((int)$duration) &&
+            $worker_quantity !== null && is_integer((int)$worker_quantity) &&
             $property_id !== null && is_integer((int)$property_id) &&
             is_array($items) && count($items))
         {            
@@ -100,7 +102,7 @@ class SubscriptionController extends Controller
             $old_price = htmlentities((int)$old_price, ENT_QUOTES, "UTF-8");
             $new_price = htmlentities((int)$new_price, ENT_QUOTES, "UTF-8");
             $quantity = htmlentities((int)$quantity, ENT_QUOTES, "UTF-8");
-            $duration = htmlentities((int)$duration, ENT_QUOTES, "UTF-8");
+            $worker_quantity = htmlentities((int)$worker_quantity, ENT_QUOTES, "UTF-8");
             $property_id = htmlentities((int)$property_id, ENT_QUOTES, "UTF-8");
             
             $subscription = new Subscription();
@@ -111,6 +113,7 @@ class SubscriptionController extends Controller
             $subscription->new_price = $new_price;
             $subscription->quantity = $quantity;
             $subscription->duration = $duration;
+            $subscription->worker_quantity = $worker_quantity;
             $subscription->save();
             
             foreach ($items as $item)
@@ -184,7 +187,7 @@ class SubscriptionController extends Controller
                     'name' => $property->name,
                     'active' => $active
                 ];
-            }   
+            }
             
             if (count($tempProperties) > 0)
             {
@@ -255,11 +258,15 @@ class SubscriptionController extends Controller
                     $itemsArr[] = [
                         'id' => $item->id,
                         'name' => $item->name . " - " . $item->minutes . " min",
+                        'minutes' => $item->minutes,
                         'active' => $active
                     ];
                 }
             }
             
+            $items = array_column($itemsArr, 'minutes');
+            array_multisort($items, SORT_ASC, $itemsArr);
+                        
             return view('subscription.show')->with([
                 'subscription' => $subscription,
                 'properties' => $propertiesArr,
@@ -303,6 +310,7 @@ class SubscriptionController extends Controller
         $new_price = $request->get('new_price');
         $quantity = $request->get('quantity');
         $duration = $request->get('duration');
+        $worker_quantity = $request->get('worker_quantity');
         $subscription_id = $request->get('subscription_id');
         
         if ($name !== null && is_string($name) &&
@@ -311,6 +319,7 @@ class SubscriptionController extends Controller
             $new_price !== null && is_integer((int)$new_price) &&
             $quantity !== null && is_integer((int)$quantity) &&
             $duration !== null && is_integer((int)$duration) &&
+            $worker_quantity !== null && is_integer((int)$worker_quantity) &&
             $subscription_id !== null && is_integer((int)$subscription_id))
         {            
             $name = htmlentities($name, ENT_QUOTES, "UTF-8");
@@ -319,6 +328,7 @@ class SubscriptionController extends Controller
             $new_price = htmlentities((int)$new_price, ENT_QUOTES, "UTF-8");
             $quantity = htmlentities((int)$quantity, ENT_QUOTES, "UTF-8");
             $duration = htmlentities((int)$duration, ENT_QUOTES, "UTF-8");
+            $worker_quantity = htmlentities((int)$worker_quantity, ENT_QUOTES, "UTF-8");
             $subscription_id = htmlentities((int)$subscription_id, ENT_QUOTES, "UTF-8");
             
             // store
@@ -329,7 +339,19 @@ class SubscriptionController extends Controller
             $subscription->new_price   = $new_price;
             $subscription->quantity    = $quantity;
             $subscription->duration    = $duration;
+            $subscription->worker_quantity    = $worker_quantity;
             $subscription->save();
+            
+            
+            
+            
+            
+            
+//            todo: Dodaj modele zniżek...
+            
+            
+            
+            
 
             return redirect('/subscription/show/' . $subscription->id)->with('success', 'Subscription successfully updated!');
         }
