@@ -22,6 +22,6 @@ class Discount extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'description', 'worker_threshold', 'percent'
+        'name', 'name_en', 'slug', 'description', 'description_en', 'worker_threshold', 'percent'
     ];
 }

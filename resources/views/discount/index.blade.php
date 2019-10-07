@@ -23,7 +23,7 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>                
-                        <td>@lang('common.name')</td>
+                        <td>@lang('common.label')</td>
                         <td>@lang('common.description')</td>
                         <td>@lang('common.worker_threshold')</td>
                         <td>@lang('common.percent')</td>
@@ -33,8 +33,20 @@
                 <tbody>
                     @foreach($discounts as $discount)
                         <tr>
-                            <td>{{$discount->name}}</td>
-                            <td>{{$discount->description}}</td>
+                            <td>
+                                @if (Session('locale') == "en")
+                                    {{$discount->name_en}}
+                                @else
+                                    {{$discount->name}}
+                                @endif
+                            </td>
+                            <td>
+                                @if (Session('locale') == "en")
+                                    {{$discount->description_en}}
+                                @else
+                                    {{$discount->description}}
+                                @endif
+                            </td>
                             <td>{{$discount->worker_threshold}}</td>
                             <td>{{$discount->percent}}</td>
                             <td>

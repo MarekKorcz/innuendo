@@ -432,6 +432,8 @@ return [
     'discounts_description' => 'Widok z listą utworzonych zniżek oraz możliwością usunięcia stworzonej lub utworzenia nowej',
     'discount_create' => 'Stwórz zniżkę',
     'discount_index' => 'Lista zniżek',
+    'discount_delete' => 'Usuń zniżke',
+    'discount_error_description' => 'Błąd widoku zniżek',
     'worker_threshold' => 'Min liczba osób',
     'percent' => 'Procent',
 ];

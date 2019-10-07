@@ -18,6 +18,7 @@ use App\ChosenProperty;
 use App\Subscription;
 use App\Property;
 use App\User;
+use App\Discount;
 use App\Item;
 use App\Graphic;
 use App\Calendar;
@@ -166,8 +167,15 @@ class HomeController extends Controller
     }
     
     public function discounts()
-    {
-        return view('discounts');
+    {        
+        $discounts = Discount::where('id', '!=', null)->get();
+        
+        if (count($discounts) == 4)
+        {
+            return view('discounts')->with('discounts', $discounts);
+        }
+        
+        return view('welcome')->with('error', \Lang::get('common.discount_error_description'));
     }
     
 //    {

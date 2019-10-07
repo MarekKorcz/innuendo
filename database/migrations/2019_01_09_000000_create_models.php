@@ -313,8 +313,10 @@ class CreateModels extends Migration
         Schema::create('discounts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('name_en');
             $table->string('slug');
             $table->string('description');
+            $table->string('description_en');
             $table->integer('worker_threshold');
             $table->integer('percent');
             $table->timestamps();

@@ -23,10 +23,18 @@
             <div class="form-group">
                 <label for="name">@lang('common.label'):</label>
                 <input id="name" class="form-control" type="text" name="name">
-            </div>    
+            </div>
+            <div class="form-group">
+                <label for="name_en">@lang('common.label') (en):</label>
+                <input id="name_en" class="form-control" type="text" name="name_en">
+            </div>  
             <div class="form-group">
                 <label for="description">@lang('common.description'):</label>
                 <input id="description" class="form-control" type="text" name="description">
+            </div>
+            <div class="form-group">
+                <label for="description_en">@lang('common.description')(en):</label>
+                <input id="description_en" class="form-control" type="text" name="description_en">
             </div>
             <div class="form-group">
                 <label for="worker_threshold">@lang('common.worker_threshold'):</label>

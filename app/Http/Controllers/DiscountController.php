@@ -28,7 +28,9 @@ class DiscountController extends Controller
     {        
         $rules = array(
             'name'             => 'required',
+            'name_en'          => 'required',
             'description'      => 'required',
+            'description_en'   => 'required',
             'percent'          => 'required',
             'worker_threshold' => 'required'
         );
@@ -41,8 +43,10 @@ class DiscountController extends Controller
             
             $discount = new Discount();
             $discount->name             = Input::get('name');
+            $discount->name_en          = Input::get('name_en');
             $discount->slug             = str_slug(Input::get('name'));
             $discount->description      = Input::get('description');
+            $discount->description_en   = Input::get('description_en');
             $discount->worker_threshold = Input::get('worker_threshold');
             $discount->percent          = Input::get('percent');
             $discount->save();

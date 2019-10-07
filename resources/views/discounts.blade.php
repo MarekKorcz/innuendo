@@ -14,24 +14,54 @@
     <div class="container">
         <h3 class="text-center">@lang('welcome.discount_paragraph')</h3>
         <div class="row text-center padding">
-            <div class="col-xs-12 col-sm-6 col-md-6">
-                @svg('regular/smile-beam')
-                <h3>@lang('welcome.from_five')</h3>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-6">
-                @svg('regular/laugh-beam')
-                <h3>@lang('welcome.from_twenty_five')</h3>
-            </div>
+            @foreach ($discounts as $key => $discount)
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    @if ($key == 0)
+                        @svg('regular/smile-beam')
+                        <h3>
+                            @if (Session('locale') == "en")
+                                {{$discount->description_en}}
+                            @else
+                                {{$discount->description}}
+                            @endif
+                        </h3>
+                    @elseif ($key == 1)
+                        @svg('regular/laugh-beam')
+                        <h3>
+                            @if (Session('locale') == "en")
+                                {{$discount->description_en}}
+                            @else
+                                {{$discount->description}}
+                            @endif
+                        </h3>
+                    @endif
+                </div>
+            @endforeach
         </div>
         <div class="row text-center padding">
-            <div class="col-xs-12 col-sm-6 col-md-6">
-                @svg('regular/grin-hearts')
-                <h3>@lang('welcome.from_fifty')</h3>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-6">
-                @svg('regular/surprise')
-                <h3>@lang('welcome.from_hundred')</h3>
-            </div>
+            @foreach ($discounts as $key => $discount)
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    @if ($key == 2)
+                        @svg('regular/grin-hearts')
+                        <h3>
+                            @if (Session('locale') == "en")
+                                {{$discount->description_en}}
+                            @else
+                                {{$discount->description}}
+                            @endif
+                        </h3>
+                    @elseif ($key == 3)
+                        @svg('regular/surprise')
+                        <h3>
+                            @if (Session('locale') == "en")
+                                {{$discount->description_en}}
+                            @else
+                                {{$discount->description}}
+                            @endif
+                        </h3>
+                    @endif
+                </div>
+            @endforeach
         </div>
     </div>
 
