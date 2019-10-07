@@ -1148,7 +1148,18 @@ class BossController extends Controller
                     'substart_id' => $substart->id
                 ])->first();
                 
-            dd($substart->id);
+                
+                
+                
+                
+//                todo: co to tu robiło??????? chyba miałeś sprawdzić tą metode
+//            dd($substart->id);
+            
+            
+            
+            
+            
+            
                 
                 if ($interval !== null)
                 {

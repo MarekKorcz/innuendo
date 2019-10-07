@@ -436,4 +436,7 @@ return [
     'discount_error_description' => 'Błąd widoku zniżek',
     'worker_threshold' => 'Min liczba osób',
     'percent' => 'Procent',
+    'no_employee_assigned' => 'Nie posiadasz jeszcze żadnego zarejestrowanego do Twojego konta pracownika!',
+    'go_to' => 'Przejdź',
+    'go_to_appointments' => 'Przejdź do wizyt',    
 ];

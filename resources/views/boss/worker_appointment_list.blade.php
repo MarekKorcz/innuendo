@@ -38,12 +38,22 @@
                     </select>
                 @else
                     <h4>@lang('common.subscription_first_time_activation_info')</h4>
+                    <div style="padding: 1rem;">
+                        <a class="btn btn-success" href="{{ URL::to('/appointment/index') }}">
+                            @lang('common.go_to_appointments')
+                        </a>
+                    </div>
                 @endif
             </div>
         </div>
     @else
         <div class="text-center" style="padding: 1rem;">
             <h3>@lang('common.subscription_first_time_activation_info')</h3>
+            <div style="padding: 1rem;">
+                <a class="btn btn-success" href="{{ URL::to('/appointment/index') }}">
+                    @lang('common.go_to_appointments')
+                </a>
+            </div>
         </div>
     @endif
     

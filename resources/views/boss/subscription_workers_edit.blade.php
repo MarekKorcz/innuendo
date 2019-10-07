@@ -43,7 +43,7 @@
     </div>
     
     <div class="col-sm-12 col-md-12 col-lg-12 col-12">
-        <h2 class="text-center">
+        <h2 class="text-center" style="padding-top: 1rem;">
             @lang('common.employees')            
             @if (count($substartIntervals) > 0)
                 @foreach ($substartIntervals as $substartInterval)
@@ -58,155 +58,169 @@
         </h2>
     </div>
 
-    <div id="workers-table">
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <td class="text-center">@lang('common.turn_on')</td>
-                    <td class="text-center">@lang('common.turn_off')</td>
-                    <td>@lang('common.name_and_surname')</td>
-                    <td>@lang('common.email_address')</td>
-                </tr>
-            </thead>
-            <tbody id="workers">
-                {{ Form::open(['id' => 'subscription-workers-update', 'action' => ['BossController@subscriptionWorkersUpdate'], 'method' => 'POST']) }}
+    @foreach($substartIntervals as $substartInterval)
+        @if (count($substartInterval->workers) > 0)
+            <div id="workers-table">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <td class="text-center">@lang('common.turn_on')</td>
+                            <td class="text-center">@lang('common.turn_off')</td>
+                            <td>@lang('common.name_and_surname')</td>
+                            <td>@lang('common.email_address')</td>
+                        </tr>
+                    </thead>
+                    <tbody id="workers">
+                        {{ Form::open(['id' => 'subscription-workers-update', 'action' => ['BossController@subscriptionWorkersUpdate'], 'method' => 'POST']) }}
 
-                    <div class="form-row">
-                        @if ($substart->isActive == 1)
-                            @foreach($substartIntervals as $substartInterval)
-                                @if ($substartInterval->workers)
-                                    @foreach($substartInterval->workers as $worker)
-                                        <tr>
-                                            @if ($today > $substartInterval->start_date && $today > $substartInterval->end_date)
-                                                @if ($worker->withoutSubscription == false)
-                                                    <td>
-                                                        <div class="text-center">
-                                                            @lang('common.had_subscription')
-                                                        </div>
-                                                    </td>
-                                                    <td></td>
-                                                @else
-                                                    <td></td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            @lang('common.did_not_have_subscription')
-                                                        </div>
-                                                    </td>
-                                                @endif
-                                            @elseif ($today >= $substartInterval->start_date && $today <= $substartInterval->end_date)
-                                                @if ($worker->withoutSubscription == false)
-                                                    <td>
-                                                        <div class="text-center">
-                                                            @lang('common.have_subscription')
-                                                        </div>
-                                                    </td>
-                                                    <td></td>
-                                                @else
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <input type="checkbox" name="workers_on[]" value="{{$worker->id}}">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            @lang('common.do_not_have_subscription')
-                                                        </div>
-                                                    </td>
-                                                @endif
-                                            @else
-                                                @if ($worker->withoutSubscription == false)
-                                                    <td>
-                                                        <div class="text-center">
-                                                            @lang('common.have_subscription')
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <input type="checkbox" name="workers_off[]" value="{{$worker->id}}">
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <input type="checkbox" name="workers_on[]" value="{{$worker->id}}">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            @lang('common.do_not_have_subscription')
-                                                        </div>
-                                                    </td>
-                                                @endif
-                                            @endif
-                                            <td>{{$worker->name}} {{$worker->surname}}</td>
-                                            <td>{{$worker->email}}</td>
-                                        </tr>
+                            <div class="form-row">
+                                @if ($substart->isActive == 1)
+                                    @foreach($substartIntervals as $substartInterval)
+                                        @if ($substartInterval->workers)
+                                            @foreach($substartInterval->workers as $worker)
+                                                <tr>
+                                                    @if ($today > $substartInterval->start_date && $today > $substartInterval->end_date)
+                                                        @if ($worker->withoutSubscription == false)
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    @lang('common.had_subscription')
+                                                                </div>
+                                                            </td>
+                                                            <td></td>
+                                                        @else
+                                                            <td></td>
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    @lang('common.did_not_have_subscription')
+                                                                </div>
+                                                            </td>
+                                                        @endif
+                                                    @elseif ($today >= $substartInterval->start_date && $today <= $substartInterval->end_date)
+                                                        @if ($worker->withoutSubscription == false)
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    @lang('common.have_subscription')
+                                                                </div>
+                                                            </td>
+                                                            <td></td>
+                                                        @else
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    <input type="checkbox" name="workers_on[]" value="{{$worker->id}}">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    @lang('common.do_not_have_subscription')
+                                                                </div>
+                                                            </td>
+                                                        @endif
+                                                    @else
+                                                        @if ($worker->withoutSubscription == false)
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    @lang('common.have_subscription')
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    <input type="checkbox" name="workers_off[]" value="{{$worker->id}}">
+                                                                </div>
+                                                            </td>
+                                                        @else
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    <input type="checkbox" name="workers_on[]" value="{{$worker->id}}">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    @lang('common.do_not_have_subscription')
+                                                                </div>
+                                                            </td>
+                                                        @endif
+                                                    @endif
+                                                    <td>{{$worker->name}} {{$worker->surname}}</td>
+                                                    <td>{{$worker->email}}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @else
+                                    @foreach($substartIntervals as $substartInterval)
+                                        @if ($substartInterval->workers)
+                                            @foreach($substartInterval->workers as $worker)
+                                                <tr>
+                                                    @if ($today >= $substartInterval->start_date && $today <= $substartInterval->end_date)
+                                                        @if ($worker->withoutSubscription == false)
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    @lang('common.have_subscription')
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    <input type="checkbox" name="workers_off[]" value="{{$worker->id}}">
+                                                                </div>
+                                                            </td>
+                                                        @else
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    <input type="checkbox" name="workers_on[]" value="{{$worker->id}}">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="text-center">
+                                                                    @lang('common.do_not_have_subscription')
+                                                                </div>
+                                                            </td>
+                                                        @endif                                 
+                                                    @endif
+                                                    <td>{{$worker->name}} {{$worker->surname}}</td>
+                                                    <td>{{$worker->email}}</td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     @endforeach
                                 @endif
-                            @endforeach
-                        @else
+                            </div>
+
                             @foreach($substartIntervals as $substartInterval)
                                 @if ($substartInterval->workers)
-                                    @foreach($substartInterval->workers as $worker)
-                                        <tr>
-                                            @if ($today >= $substartInterval->start_date && $today <= $substartInterval->end_date)
-                                                @if ($worker->withoutSubscription == false)
-                                                    <td>
-                                                        <div class="text-center">
-                                                            @lang('common.have_subscription')
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <input type="checkbox" name="workers_off[]" value="{{$worker->id}}">
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td>
-                                                        <div class="text-center">
-                                                            <input type="checkbox" name="workers_on[]" value="{{$worker->id}}">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-center">
-                                                            @lang('common.do_not_have_subscription')
-                                                        </div>
-                                                    </td>
-                                                @endif                                 
-                                            @endif
-                                            <td>{{$worker->name}} {{$worker->surname}}</td>
-                                            <td>{{$worker->email}}</td>
-                                        </tr>
-                                    @endforeach
+                                    @if ($today > $substartInterval->start_date && $today > $substartInterval->end_date)
+
+
+                                    <!--todo: coś tu? czemu puste?????-->
+
+
+
+                                    @else
+                                        {{ Form::hidden('substart_id', $substart->id) }}
+                                        {{ Form::hidden('interval_id', $substartInterval->id) }}
+
+                                        <div class="text-center" style="margin: 1rem;">
+                                            <input type="submit" value="@lang('common.update')" class="btn btn-primary">                                    
+                                            <div id="submit-warning" class="warning"></div>
+                                        </div>
+                                    @endif
                                 @endif
                             @endforeach
-                        @endif
-                    </div>
 
-                    @foreach($substartIntervals as $substartInterval)
-                        @if ($substartInterval->workers)
-                            @if ($today > $substartInterval->start_date && $today > $substartInterval->end_date)
-
-
-                            <!--todo: coś tu? czemu puste?????-->
-
-
-
-                            @else
-                                {{ Form::hidden('substart_id', $substart->id) }}
-                                {{ Form::hidden('interval_id', $substartInterval->id) }}
-
-                                <div class="text-center" style="margin: 1rem;">
-                                    <input type="submit" value="@lang('common.update')" class="btn btn-primary">                                    
-                                    <div id="submit-warning" class="warning"></div>
-                                </div>
-                            @endif
-                        @endif
-                    @endforeach
-
-                {{ Form::close() }}
-            </tbody>
-        </table>
-    </div>
+                        {{ Form::close() }}
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div class="text-center">
+                <h4>@lang('common.no_employee_assigned')</h4>
+                <h5>@lang('common.go_to_register_code_generation_view')</h5>
+                <div style="padding: 1rem;">
+                    <a class="btn btn-success btn-lg" href="{{ URL::to('boss/codes/') }}">
+                        @lang('common.go_to')
+                    </a>
+                </div>
+            </div>
+        @endif
+    @endforeach
 </div>
 @endsection
