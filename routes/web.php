@@ -65,6 +65,11 @@ Route::get('/admin/approve/messages', 'AdminController@approveMessages');
 Route::get('/admin/approve/messages/{bossId}', 'AdminController@approveMessageShow');
 Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminController@approveMessageStatusChange');
 Route::post('/admin/make-an-approve-message', 'AdminController@makeAnApproveMessage');
+Route::get('/admin/discount/create', 'DiscountController@create');
+Route::post('/admin/discount/store', 'DiscountController@store');
+//Route::get('/admin/discount/{id}', 'DiscountController@show');
+Route::get('/admin/discount/index', 'DiscountController@index');
+Route::delete('/admin/discount/{id}', 'DiscountController@destroy');
 
 Route::get('/userimage/{fileName}', [
    'uses' => 'AdminController@getUserImage',
@@ -203,4 +208,4 @@ Route::post('/boss/get-user-appointments-from-database', 'BossController@getUser
 Route::post('/boss/get-users-appointments-from-database', 'BossController@getUsersAppointmentsFromDatabase');
 Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisplayed');
 
-Route::get('/test', 'HomeController@test');
+//Route::get('/test', 'HomeController@test');

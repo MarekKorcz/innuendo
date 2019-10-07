@@ -309,6 +309,17 @@ class CreateModels extends Migration
             $table->integer('chosen_property_id')->unsigned()->index()->foreign()->references("id")->on("chosen_properties");
             $table->integer('subscription_id')->unsigned()->index()->foreign()->references("id")->on("subscriptions");
         });
+        
+        Schema::create('discounts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('slug');
+            $table->string('description');
+            $table->integer('worker_threshold');
+            $table->integer('percent');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**
@@ -346,5 +357,6 @@ class CreateModels extends Migration
         Schema::dropIfExists('promo_code_subscription');
         Schema::dropIfExists('chosen_properties');
         Schema::dropIfExists('chosen_property_subscription');
+        Schema::dropIfExists('discounts');
     }
 }

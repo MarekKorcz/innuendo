@@ -131,6 +131,19 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">@lang('common.discounts')</h4>
+                <p class="card-text text-center">
+                    @lang('common.discounts_description')
+                </p>
+                <div class="text-center">
+                    <a class="btn btn-success" href="{{ URL::to('admin/discount/index') }}">
+                        @lang('common.show')
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

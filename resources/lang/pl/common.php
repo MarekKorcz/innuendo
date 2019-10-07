@@ -428,4 +428,10 @@ return [
     'promo_subscription' => 'Subskrypcja promocyjna',
     'worker_quantity' => 'Ilość możliwych pracowników',
     'infinity' => 'Nieskończoność',
+    'discounts' => 'Zniżki',
+    'discounts_description' => 'Widok z listą utworzonych zniżek oraz możliwością usunięcia stworzonej lub utworzenia nowej',
+    'discount_create' => 'Stwórz zniżkę',
+    'discount_index' => 'Lista zniżek',
+    'worker_threshold' => 'Min liczba osób',
+    'percent' => 'Procent',
 ];
