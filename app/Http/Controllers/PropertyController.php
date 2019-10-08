@@ -8,6 +8,7 @@ use App\Calendar;
 use App\Year;
 use App\User;
 use App\TempUser;
+use App\Purchase;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -144,7 +145,7 @@ class PropertyController extends Controller
         
         if ($property !== null)
         {
-            $property['boss'] = User::where('id', $property->boss_id)->first();
+            $property['boss'] = User::where('id', $property->boss_id)->with('chosenProperties')->first();            
             $calendars = Calendar::where('property_id', $property->id)->get();
 
             $years = [];
@@ -159,6 +160,36 @@ class PropertyController extends Controller
                     if ($calendar->employee_id != null)
                     {
                         $employees[$calendar->id] = User::where('id', $calendar->employee_id)->first();
+                    }
+                }
+            }
+            
+            if ($property['boss'] !== null && count($property->subscriptions) > 0)
+            {
+                
+                foreach ($property->subscriptions as $subscription)
+                {
+                    
+                    // todo: przetestuj jeśli jest więcej niż jedno purchase dopisane do chosenProperties na tą samą subscription
+                    
+                    $subscriptionPurchases = Purchase::where('subscription_id', $subscription->id)->get();
+                    $subscription['isChosen'] = false;
+                    
+                    if (count($subscriptionPurchases) > 0)
+                    {
+                        foreach ($subscriptionPurchases as $purchase)
+                        {
+                            if (count($property['boss']->chosenProperties) > 0)
+                            {
+                                foreach ($property['boss']->chosenProperties as $bossChosenProperty)
+                                {
+                                    if ($purchase->chosen_property_id == $bossChosenProperty->id)
+                                    {
+                                        $subscription['isChosen'] = true;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

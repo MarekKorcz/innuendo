@@ -579,11 +579,11 @@ class AdminController extends Controller
                 {                    
                     foreach ($graphicRequest->employees as $chosenEmployee)
                     {
-                        if ($employee->id == $chosenEmployee->id)
+                        if ($employee->id == $chosenEmployee->id && !$employee['isChosen'])
                         {
                             $employee['isChosen'] = true;
                             
-                        } else {
+                        } else if (!$employee['isChosen']) {
                             
                             $employee['isChosen'] = false;
                         }

@@ -439,4 +439,6 @@ return [
     'no_employee_assigned' => 'Nie posiadasz jeszcze żadnego zarejestrowanego do Twojego konta pracownika!',
     'go_to' => 'Przejdź',
     'go_to_appointments' => 'Przejdź do wizyt',    
+    'show_publicly' => 'Pokaż publicznie',    
+    'do_not_show_publicly' => 'Nie pokazuj publicznie'
 ];

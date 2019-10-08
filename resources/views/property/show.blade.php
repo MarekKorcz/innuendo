@@ -5,80 +5,94 @@
 {!! Html::script('js/property_show.js') !!}
 
 <div class="container">
-    <div class="jumbotron" style="margin-top: 15px;">
-        <nav class="navbar navbar-inverse">
-            <div class="navbar-header">
-                <div class="text-right" style="padding: 6px;">
-                    <a class="btn btn-danger delete-property" style="color: white;" data-property_id="{{$property->id}}">@lang('common.delete')</a>
-                </div>
-            </div>
-            <ul class="nav navbar-nav">
-                <li>
-                    <a class="btn btn-success" href="{{ URL::to('property/' . $property->id . '/edit') }}">
-                        @lang('common.edit')
+        
+        
+        
+        <div class="jumbotron">
+            <div class="row text-center" style="padding-bottom: 2rem;">
+                <div class="col-4">
+                    <a class="btn btn-danger delete-property" style="color: white;" data-property_id="{{$property->id}}">
+                        @lang('common.delete')
                     </a>
-                </li>
-            </ul>
-        </nav>
-        
-        <h2 class="text-center">@lang('common.property_values') :</h2>
-        
-        <table class="table table-striped">
-            <tr>
-                <th>@lang('common.name') :</th>
-                <th>@lang('common.owner') :</th>
-                <th>@lang('common.description') :</th>
-                <th>@lang('common.street') :</th>
-                <th>@lang('common.street_number') :</th>
-                <th>@lang('common.house_number') :</th>
-                <th>@lang('common.city') :</th>
-                <th>@lang('common.can_show') :</th>
-            </tr>
-            <tr>
-                <td>{{ $property->name }}</td>
-                @if ($property->boss !== null)
-                    <td>{{ $property->boss->name }} {{ $property->boss->surname }}</td>
-                @else
-                    <td>@lang('common.public')</td>
-                @endif
-                <td>{!! $property->description !!}</td>
-                <td>{{ $property->street }}</td>
-                <td>{{ $property->street_number }}</td>
-                <td>{{ $property->house_number }}</td>
-                <td>{{ $property->city }}</td>
-                <td>
+                </div>
+                <div class="col-4">
                     @if ($property->canShow == 0)
                         <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
-                            @lang('common.show')
+                            @lang('common.show_publicly')
                         </a>
                     @else
                         <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
-                            @lang('common.do_not_show')
+                            @lang('common.do_not_show_publicly')
                         </a>
                     @endif
-                </td>
-            </tr>
-        </table>
+                </div>
+                <div class="col-4">
+                    <a class="btn btn-success" href="{{ URL::to('property/' . $property->id . '/edit') }}">
+                        @lang('common.edit')
+                    </a>
+                </div>
+            </div>
+            <div class="text-center">
+                <h1 style="padding-bottom: 1rem;">@lang('common.property_values'):</h1>
+                <p>
+                    @lang('common.owner'):
+                    <strong style="font-size: 21px;">
+                        @if ($property->boss !== null)
+                            {{ $property->boss->name }} {{ $property->boss->surname }}
+                        @else
+                            @lang('common.public')
+                        @endif
+                    </strong>
+                </p>
+                <p>
+                    @lang('common.label'):
+                    <strong style="font-size: 21px;">
+                        {{$property->name}}
+                    </strong>
+                </p>
+                <p>
+                    <strong>
+                        {!! $property->description !!}
+                    </strong>
+                </p>
+                <p>
+                    @lang('common.address') : 
+                    <strong>
+                        {{$property->street}} 
+                        {{$property->street_number}} / 
+                        {{$property->house_number}} 
+                        {{$property->city}}
+                    </strong>
+                </p>
+            </div>
+        </div>
         
-        <h3 class="text-center">@lang('common.subscriptions') :</h3>
-    
-        <ul class="nav navbar-nav">
-            <li>
-                <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('subscription/create/' . $property->id) }}">
+    <div class="jumbotron">
+        
+        <div class="row text-center" style="padding-bottom: 2rem;">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <a class="btn btn-success" href="{{ URL::to('subscription/create/' . $property->id) }}">
                     @lang('common.create_subscription')
                 </a>
-            </li>
-        </ul>
-
+            </div>
+            <div class="col-4"></div>
+        </div>
+        
+        <div class="text-center" style="padding-bottom: 1rem;">
+            <h1>@lang('common.subscriptions'):</h1>
+        </div>
+        
         @if (count($subscriptions) > 0)
-            <table class="table table-striped">
-                <tr>
-                    <th>@lang('common.name') :</th>
-                    <th>@lang('common.description') :</th>
-                    <th>@lang('common.old_price') :</th>
-                    <th>@lang('common.new_price') :</th>
-                    <th>@lang('common.quantity') :</th>
-                    <th>@lang('common.duration') :</th>
+            <table class="table table-striped table-bordered">
+                <tr class="highlight">
+                    <th>@lang('common.name'):</th>
+                    <th>@lang('common.description'):</th>
+                    <th>@lang('common.old_price'):</th>
+                    <th>@lang('common.new_price'):</th>
+                    <th>@lang('common.quantity'):</th>
+                    <th>@lang('common.duration'):</th>
+                    <th>@lang('common.is_active'):</th>
                 </tr>
                     @foreach ($subscriptions as $subscription)
                         <tr>
@@ -88,6 +102,13 @@
                             <td>{{ $subscription->new_price }}</td>
                             <td>{{ $subscription->quantity }}</td>
                             <td>{{ $subscription->duration }}</td>
+                            <td>
+                                @if ($subscription->isChosen == true)
+                                    @lang('common.yes')
+                                @else 
+                                    @lang('common.no')
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
             </table>
@@ -101,31 +122,35 @@
     @if ($calendars)
         @foreach ($calendars as $calendar)
             <div class="jumbotron">
-                <div style="padding: 5px;">
-                    @if ($calendar->isActive)
-                        {!!Form::open(['action' => ['CalendarController@deactivate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                            {{ Form::hidden('property_id', $property->id) }}
-                            {{ Form::hidden('_method', 'POST') }}
-                            <input type="submit" value="@lang('common.deactivate_calendar')" class="btn btn-primary">
-                        {!!Form::close()!!}
-                    @else
-                        {!!Form::open(['action' => ['CalendarController@activate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
-                            {{ Form::hidden('property_id', $property->id) }}
-                            {{ Form::hidden('_method', 'POST') }}
-                            <input type="submit" value="@lang('common.activate_calendar')" class="btn btn-success">
-                        {!!Form::close()!!}
-                    @endif
-                </div>
-                <div style="padding: 5px;">
-                    <a class="btn btn-danger delete-calendar" style="color: white;" data-calendar_id="{{$calendar->id}}">
-                        @lang('common.delete')
-                    </a>
+                
+                <div class="row text-center" style="padding-bottom: 2rem;">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        @if ($calendar->isActive)
+                            {!!Form::open(['action' => ['CalendarController@deactivate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                                {{ Form::hidden('property_id', $property->id) }}
+                                {{ Form::hidden('_method', 'POST') }}
+                                <input type="submit" value="@lang('common.deactivate_calendar')" class="btn btn-primary">
+                            {!!Form::close()!!}
+                        @else
+                            {!!Form::open(['action' => ['CalendarController@activate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
+                                {{ Form::hidden('property_id', $property->id) }}
+                                {{ Form::hidden('_method', 'POST') }}
+                                <input type="submit" value="@lang('common.activate_calendar')" class="btn btn-success">
+                            {!!Form::close()!!}
+                        @endif
+                    </div>
+                    <div class="col-4">
+                        <a class="btn btn-danger delete-calendar" style="color: white;" data-calendar_id="{{$calendar->id}}">
+                            @lang('common.delete')
+                        </a>
+                    </div>
                 </div>
                 
                 @if ($calendar->employee_id != null)
                     <div class="text-center" style="margin-bottom: 40px;">
                         <h2 style="margin-bottom: 15px;">
-                            @lang('common.calendar_assigned_to')
+                            @lang('common.calendar_assigned_to'):
                             <a href="{{ URL::to('employee/' . $employees[$calendar->id]->slug) }}">
                                 {{$employees[$calendar->id]->name}}
                             </a>
