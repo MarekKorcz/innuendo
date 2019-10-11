@@ -80,7 +80,7 @@
                                     </strong>
                                 </p>
                             </div>
-
+                        
                             @if (count($subscription->propertyPurchases) == 0)
                                 <a class="btn btn-primary" href="{{ URL::to('/boss/subscription/purchase/' . $propertyWithSubscriptions['property']->id . '/' . $subscription->id) }}">
                                     @lang('common.purchase_subscription')

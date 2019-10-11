@@ -614,17 +614,21 @@ class UserController extends Controller
                     {
                         if ($appointmentInterval->substart_id === null)
                         {
+                            // >> purchased subscription worker scenario
                             $bossMainInterval = Interval::where('id', $appointmentInterval->interval_id)->first();
-                            $bossMainInterval->available_units = ($bossMainInterval->available_units + 1);
+                            $bossMainInterval->workers_available_units = ($bossMainInterval->workers_available_units + 1);
                             $bossMainInterval->save();
                             
                             $appointmentInterval->available_units = ($appointmentInterval->available_units + 1);
                             $appointmentInterval->save();
+                            // <<
 
-                        } elseif ($appointmentInterval->substart_id !== null) {
+                        } else if ($appointmentInterval->substart_id !== null) {
 
+                            // >> purchased subscription owner scenario
                             $appointmentInterval->available_units = ($appointmentInterval->available_units + 1);
                             $appointmentInterval->save();
+                            // <<
                         }
                     }
                 }

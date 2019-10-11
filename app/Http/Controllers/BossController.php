@@ -440,7 +440,7 @@ class BossController extends Controller
                         if ($chosenProperty !== null && count($chosenProperty->subscriptions) > 0)
                         {
                             foreach ($chosenProperty->subscriptions as $chosenSub)
-                            {      
+                            {
                                 $purchases = new Collection();
                                 
                                 // >> check if subscription is purchased
@@ -450,7 +450,7 @@ class BossController extends Controller
                                         'subscription_id' => $subscription->id,
                                         'chosen_property_id' => $chosenProperty->id
                                     ])->get();
-                                    
+                            
                                     if (count($purchases) > 0)
                                     {
                                         $today = new \DateTime(date('Y-m-d'));
@@ -487,7 +487,10 @@ class BossController extends Controller
                                 }
                                 // <<
                                 
-                                $subscription['propertyPurchases'] = $purchases;
+                                if ($subscription['propertyPurchases'] == null || count($subscription['propertyPurchases']) == 0)
+                                {
+                                    $subscription['propertyPurchases'] = $purchases;
+                                }
                             }
                         }
                         // <<
@@ -1274,7 +1277,7 @@ class BossController extends Controller
                         {
                             if ($chosenInterval->id == $substartInterval->id)
                             {
-                                $workersIntervals = Interval::where('interval_id', $substartInterval->id)->get();
+                                $workersIntervals = Interval::withTrashed()->where('interval_id', $substartInterval->id)->get();
 
                                 if (count($workersIntervals) > 0)
                                 {
@@ -1290,7 +1293,8 @@ class BossController extends Controller
                                             }
 
                                             $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
-                                            $worker['withoutSubscription'] = false;
+                                            
+                                            $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
                                             
                                             $substartInterval['workers']->push($worker);
                                         }
@@ -1305,23 +1309,24 @@ class BossController extends Controller
                         {
                             if ($substartInterval->start_date <= $today && $substartInterval->end_date >= $today)
                             {
-                                $workersIntervals = Interval::where('interval_id', $substartInterval->id)->get();
-
+                                $workersIntervals = Interval::withTrashed()->where('interval_id', $substartInterval->id)->get();
+                                
                                 if (count($workersIntervals) > 0)
                                 {
                                     foreach ($workersIntervals as $workerInterval)
                                     {
                                         $workerIntervalPurchase = Purchase::where('id', $workerInterval->purchase_id)->with('chosenProperty')->first();
-
+                                        
                                         if ($workerIntervalPurchase->chosenProperty->user_id !== null)
                                         {
                                             if ($substartInterval['workers'] == null)
                                             {
                                                 $substartInterval['workers'] = new Collection();
                                             }
-
+                                            
                                             $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
-                                            $worker['withoutSubscription'] = false;
+                                            
+                                            $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
                                             
                                             $substartInterval['workers']->push($worker);
                                         }
@@ -1503,7 +1508,7 @@ class BossController extends Controller
                                         $workerPurchase->save();
                                     }
                                     
-                                    if ($workerPurchase)
+                                    if ($workerPurchase !== null)
                                     {
                                         $bossIntervals = Interval::where('substart_id', $substart->id)->get();
                                         
@@ -1511,20 +1516,31 @@ class BossController extends Controller
                                         {
                                             if (count($bossIntervals) == 1)
                                             {
-                                                $workerInterval = Interval::where([
-                                                    'interval_id' => $bossIntervals->first()->id,
+                                                $bossInterval = Interval::where('id', $bossIntervals->first()->id)->first();
+                                                        
+                                                $workerInterval = Interval::withTrashed()->where([
+                                                    'interval_id' => $bossInterval->id,
                                                     'purchase_id' => $workerPurchase->id
                                                 ])->first();
                                                 
-                                                if ($workerInterval === null)
+                                                if ($workerInterval == null)
                                                 {
                                                     $workerInterval = new Interval();
+                                                    $workerInterval->available_units = $subscription->quantity;
                                                     $workerInterval->start_date = $substart->start_date;
                                                     $workerInterval->end_date = $substart->end_date;
                                                     $workerInterval->interval_id = $bossIntervals->first()->id;
                                                     $workerInterval->purchase_id = $workerPurchase->id;
                                                     $workerInterval->save();
+                                                    
+                                                } else {
+                                                    
+                                                    $workerInterval->deleted_at = null;
+                                                    $workerInterval->save();
                                                 }
+                                                
+                                                $bossInterval->workers_available_units = $bossInterval->workers_available_units + $subscription->quantity;
+                                                $bossInterval->save();
                                                 
                                             } else if (count($bossIntervals) > 1) {
                                                 
@@ -1533,20 +1549,29 @@ class BossController extends Controller
                                                     if ($bossInterval->start_date <= $chosenInterval->start_date && $bossInterval->end_date >= $chosenInterval->end_date ||
                                                         $bossInterval->start_date >= $chosenInterval->start_date)
                                                     {
-                                                        $workerInterval = Interval::where([
+                                                        $workerInterval = Interval::withTrashed()->where([
                                                             'interval_id' => $bossInterval->id,
                                                             'purchase_id' => $workerPurchase->id
                                                         ])->first();
                                                         
-                                                        if ($workerInterval === null)
+                                                        if ($workerInterval == null)
                                                         {
                                                             $workerInterval = new Interval();
+                                                            $workerInterval->available_units = $subscription->quantity;
                                                             $workerInterval->start_date = $bossInterval->start_date;
                                                             $workerInterval->end_date = $bossInterval->end_date;
                                                             $workerInterval->interval_id = $bossInterval->id;
                                                             $workerInterval->purchase_id = $workerPurchase->id;
                                                             $workerInterval->save();
+                                                            
+                                                        } else {
+                                                            
+                                                            $workerInterval->deleted_at = null;
+                                                            $workerInterval->save();
                                                         }
+                                                        
+                                                        $bossInterval->workers_available_units = $bossInterval->workers_available_units + $subscription->quantity;
+                                                        $bossInterval->save();
                                                     }
                                                 }
                                             }
@@ -1596,7 +1621,7 @@ class BossController extends Controller
                                             $workerIntervals = Interval::where([
                                                 'purchase_id' => $workerPurchase->id
                                             ])->get();
-
+                                            
                                             if (count($workerIntervals) > 0)
                                             {
                                                 foreach ($workerIntervals as $workerInterval)
@@ -1604,6 +1629,8 @@ class BossController extends Controller
                                                     if ($workerInterval->start_date <= $chosenInterval->start_date && $workerInterval->end_date >= $chosenInterval->end_date ||
                                                         $workerInterval->start_date >= $chosenInterval->start_date)
                                                     {
+                                                        $bossInterval = Interval::where('id', $workerInterval->interval_id)->first();
+                                                        
                                                         $intervalAppointments = Appointment::where([
                                                             'user_id' => $worker->id,
                                                             'interval_id' => $workerInterval->id,
@@ -1612,22 +1639,25 @@ class BossController extends Controller
                                                         
                                                         if (count($intervalAppointments) > 0)
                                                         {
-                                                            $bossInterval = Interval::where('id', $workerInterval->interval_id)->first();
-
                                                             foreach ($intervalAppointments as $intervalAppointment)
                                                             {
                                                                 if ($intervalAppointment->status == 0) 
                                                                 {
-                                                                    $bossInterval->available_units = $bossInterval->available_units + 1;
-
                                                                     $intervalAppointment->delete();
+                                                                    
+                                                                    $workerInterval->available_units = $workerInterval->available_units + 1;
+                                                                    $workerInterval->save();
+                                                                    
+                                                                    $bossInterval->workers_available_units = $bossInterval->workers_available_units + 1;
+                                                                    $bossInterval->save();
                                                                 }
                                                             }
-
-                                                            $bossInterval->save();
                                                         }
                                                         
                                                         $workerInterval->delete();
+                                                        
+                                                        $bossInterval->workers_available_units = $bossInterval->workers_available_units - $subscription->quantity;
+                                                        $bossInterval->save();
                                                     }
                                                 }
                                             }

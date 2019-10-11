@@ -4,71 +4,68 @@
 {!! Html::style('css/property_show.css') !!}
 {!! Html::script('js/property_show.js') !!}
 
-<div class="container">
-        
-        
-        
-        <div class="jumbotron">
-            <div class="row text-center" style="padding-bottom: 2rem;">
-                <div class="col-4">
-                    <a class="btn btn-danger delete-property" style="color: white;" data-property_id="{{$property->id}}">
-                        @lang('common.delete')
-                    </a>
-                </div>
-                <div class="col-4">
-                    @if ($property->canShow == 0)
-                        <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
-                            @lang('common.show_publicly')
-                        </a>
-                    @else
-                        <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
-                            @lang('common.do_not_show_publicly')
-                        </a>
-                    @endif
-                </div>
-                <div class="col-4">
-                    <a class="btn btn-success" href="{{ URL::to('property/' . $property->id . '/edit') }}">
-                        @lang('common.edit')
-                    </a>
-                </div>
+<div class="container" style="padding-top: 2rem;">
+    
+    <div class="jumbotron">
+        <div class="row text-center" style="padding-bottom: 2rem;">
+            <div class="col-4">
+                <a class="btn btn-danger delete-property" style="color: white;" data-property_id="{{$property->id}}">
+                    @lang('common.delete')
+                </a>
             </div>
-            <div class="text-center">
-                <h1 style="padding-bottom: 1rem;">@lang('common.property_values'):</h1>
-                <p>
-                    @lang('common.owner'):
-                    <strong style="font-size: 21px;">
-                        @if ($property->boss !== null)
-                            {{ $property->boss->name }} {{ $property->boss->surname }}
-                        @else
-                            @lang('common.public')
-                        @endif
-                    </strong>
-                </p>
-                <p>
-                    @lang('common.label'):
-                    <strong style="font-size: 21px;">
-                        {{$property->name}}
-                    </strong>
-                </p>
-                <p>
-                    <strong>
-                        {!! $property->description !!}
-                    </strong>
-                </p>
-                <p>
-                    @lang('common.address') : 
-                    <strong>
-                        {{$property->street}} 
-                        {{$property->street_number}} / 
-                        {{$property->house_number}} 
-                        {{$property->city}}
-                    </strong>
-                </p>
+            <div class="col-4">
+                @if ($property->canShow == 0)
+                    <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
+                        @lang('common.show_publicly')
+                    </a>
+                @else
+                    <a class="btn btn-primary" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
+                        @lang('common.do_not_show_publicly')
+                    </a>
+                @endif
+            </div>
+            <div class="col-4">
+                <a class="btn btn-primary" href="{{ URL::to('property/' . $property->id . '/edit') }}">
+                    @lang('common.edit')
+                </a>
             </div>
         </div>
+        <div class="text-center">
+            <h1 style="padding-bottom: 1rem;">@lang('common.property_values'):</h1>
+            <p>
+                @lang('common.owner'):
+                <strong style="font-size: 21px;">
+                    @if ($property->boss !== null)
+                        {{ $property->boss->name }} {{ $property->boss->surname }}
+                    @else
+                        @lang('common.public')
+                    @endif
+                </strong>
+            </p>
+            <p>
+                @lang('common.label'):
+                <strong style="font-size: 21px;">
+                    {{$property->name}}
+                </strong>
+            </p>
+            <p>
+                <strong>
+                    {!! $property->description !!}
+                </strong>
+            </p>
+            <p>
+                @lang('common.address') : 
+                <strong>
+                    {{$property->street}} 
+                    {{$property->street_number}} / 
+                    {{$property->house_number}} 
+                    {{$property->city}}
+                </strong>
+            </p>
+        </div>
+    </div>
         
     <div class="jumbotron">
-        
         <div class="row text-center" style="padding-bottom: 2rem;">
             <div class="col-4"></div>
             <div class="col-4">

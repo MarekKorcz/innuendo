@@ -114,7 +114,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             <div class="box text-center" data-subscription_id="` + subscription.id + `">
                                 <div class="data">
                                     <p>` + subscription.name_description + ` : <strong>` + subscription.name + `</strong></p>
-                                    ` + subscription.description + `
+                                    <p>` + subscription.description_description + ` : <strong>` + subscription.description + `</strong></p>
                                     <p>` + subscription.old_price_description + ` : <strong>` + subscription.old_price + `</strong></p>
                                     <p>` + subscription.new_price_description + ` : <strong>` + subscription.new_price + `</strong></p>
                                     <p>` + subscription.quantity_description + ` : <strong>` + subscription.quantity + `</strong></p>

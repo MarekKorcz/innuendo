@@ -144,7 +144,12 @@
                                 </div>
                             @else   
                                 <div class="appointment">
-                                    @if ($graphic[$i]['appointment']->minutes == 30)
+                                    @if ($graphic[$i]['appointment']->minutes == 15)
+                                        <div class="box">{{$graphic[$i]['time']}}</div>
+                                        <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
+                                           class="appointment-term box-1" 
+                                           style="background-color: skyblue;">
+                                    @elseif ($graphic[$i]['appointment']->minutes == 30)
                                         <div class="box">{{$graphic[$i]['time']}}</div>
                                         <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
                                            class="appointment-term box-1" 

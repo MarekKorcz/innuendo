@@ -201,7 +201,7 @@ class RegisterController extends Controller
                                                     $interval->purchase_id = $purchase->id;
                                                     $interval->save();
                                                     
-                                                    $bossInterval->available_units = $bossInterval->available_units + $subscription->quantity;
+                                                    $bossInterval->workers_available_units = $bossInterval->workers_available_units + $subscription->quantity;
                                                     $bossInterval->save();
                                                 }
                                             }
@@ -500,7 +500,7 @@ class RegisterController extends Controller
     }
     
     /**
-     * Handle storing new boss
+     * Handle storing new boss with promo code
      */
     public function registerNewBoss()
     {

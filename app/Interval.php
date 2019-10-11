@@ -3,16 +3,26 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Interval extends Model
 {
+    use SoftDeletes;
+    
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+    
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'available_units', 'used_units', 'start_date', 'end_date', 'interval_id', 'substart_id', 'purchase_id'
+        'workers_available_units', 'available_units', 'used_units', 'start_date', 'end_date', 'interval_id', 'substart_id', 'purchase_id'
     ];
     
     /**
@@ -21,6 +31,7 @@ class Interval extends Model
      * @var array
      */
     protected $casts = [
+        'workers_available_units' => 'integer',
         'available_units' => 'integer',
         'used_units' => 'integer',
         'start_date' => 'date',

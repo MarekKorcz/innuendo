@@ -118,13 +118,10 @@
         @else
             @if ($property !== null)
                 <div class="text-center" style="padding: 1rem 0 1rem 0;">
-                    <h3>@lang('common.no_message_appointment')</h3>
-                    <h4>@lang('common.go_to_schedule_description_2')</h4>
-                    <div style="padding: 1rem;">
-                        <a class="btn btn-success" href="{{ URL::to('/user/property/' . $property->id) }}">
-                            @lang('common.go_to_schedule')
-                        </a>
-                    </div>
+                    <h3>
+                        <strong>{{$worker->name}} {{$worker->surname}}</strong>
+                        @lang('common.has_no_appointments_in_this_period')
+                    </h3>
                 </div>
             @endif
         @endif

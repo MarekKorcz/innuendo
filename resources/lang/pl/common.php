@@ -433,6 +433,7 @@ return [
     'discount_create' => 'Stwórz zniżkę',
     'discount_index' => 'Lista zniżek',
     'discount_delete' => 'Usuń zniżke',
+    'appointment_delete' => 'Usuń wizytę',
     'discount_error_description' => 'Błąd widoku zniżek',
     'worker_threshold' => 'Min liczba osób',
     'percent' => 'Procent',
@@ -440,5 +441,6 @@ return [
     'go_to' => 'Przejdź',
     'go_to_appointments' => 'Przejdź do wizyt',    
     'show_publicly' => 'Pokaż publicznie',    
-    'do_not_show_publicly' => 'Nie pokazuj publicznie'
+    'do_not_show_publicly' => 'Nie pokazuj publicznie',
+    'has_no_appointments_in_this_period' => ' nie posiada żadnej zarezerwowanej wizty w tym okresie!'
 ];

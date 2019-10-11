@@ -76,7 +76,7 @@ class WorkerController extends Controller
      * @throws Exception
      */
     public function backendCalendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
-    {
+    {        
         $calendar = Calendar::where([
             'id' => $calendar_id,
             'isActive' => 1

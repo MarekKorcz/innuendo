@@ -446,11 +446,11 @@ class AppointmentController extends Controller
                                                 // >> purchased subscription worker scenario
                                                 $bossInterval = Interval::where('id', $interval->interval_id)->first();                                                               
                                                 
-                                                if ($bossInterval !== null && $bossInterval->available_units > 0 && $interval->available_units > 0)
+                                                if ($bossInterval !== null && $bossInterval->workers_available_units > 0 && $interval->available_units > 0)
                                                 {
                                                     $appointment->purchase()->associate($purchase->id);
 
-                                                    $bossInterval->available_units = ($bossInterval->available_units - 1);
+                                                    $bossInterval->workers_available_units = ($bossInterval->workers_available_units - 1);
                                                     $bossInterval->save();
                                                     
                                                     $interval->available_units = ($interval->available_units - 1);
