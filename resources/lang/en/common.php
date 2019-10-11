@@ -47,7 +47,7 @@ return [
     'write_your_name_and_lastname' => 'Write your name and lastname',
     'subscription_first_time_activation_info' => 'Subscription has not been activated yet. Activation will occur along with the implementation of the first massage',
     'all_massages' => 'All massages',
-    'current_user_massages' => 'All massages of a given user',
+    'current_user_appointments' => 'All user appointments',
     'belonging_to' => 'belonging to',
     'for_the_period_from' => 'for the period from ',
     'date' => 'Date',

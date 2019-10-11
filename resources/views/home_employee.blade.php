@@ -27,6 +27,19 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title text-center">@lang('common.users')</h4>
+                <p class="card-text text-center">
+                    @lang('common.users_description')
+                </p>
+                <div class="text-center">
+                    <a class="btn btn-success btn-lg" href="{{ URL::to('/employee/backend-users/index') }}">
+                        @lang('common.show')
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

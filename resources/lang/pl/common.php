@@ -46,7 +46,7 @@ return [
     'write_your_name_and_lastname' => 'Wpisz imię lub nazwisko',
     'subscription_first_time_activation_info' => 'Subskrypcja nie została jeszcze aktywowana. Aktywacja nastąpi wraz ze zrealizowaniem pierwszego zabiegu',
     'all_massages' => 'Wszystkie masaże',
-    'current_user_massages' => 'Wszystkie masaże danego usera',
+    'current_user_appointments' => 'Wszystkie wizyty danego użytkownika',
     'belonging_to' => 'należące do',
     'for_the_period_from' => 'za okres od ',
     'date' => 'Data',
@@ -442,5 +442,11 @@ return [
     'go_to_appointments' => 'Przejdź do wizyt',    
     'show_publicly' => 'Pokaż publicznie',    
     'do_not_show_publicly' => 'Nie pokazuj publicznie',
-    'has_no_appointments_in_this_period' => ' nie posiada żadnej zarezerwowanej wizty w tym okresie!'
+    'has_no_appointments_in_this_period' => ' nie posiada żadnej zarezerwowanej wizty w tym okresie!',
+    'has_no_appointments' => ' nie posiada żadnej zarezerwowanej wizty',
+    'all_appointments' => 'Wszystkie wizyty',
+    'appointment' => 'Wizyta',
+    'users_description' => 'Lista użytkowników',
+    'no_users_currently_available' => 'Obecnie, nie ma żadnych użytkowników w bazie danych',
+    'property' => 'Lokalizacja'
 ];

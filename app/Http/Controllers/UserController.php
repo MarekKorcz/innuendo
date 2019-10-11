@@ -634,12 +634,22 @@ class UserController extends Controller
                 }
                 
                 $appointment->delete();
+                
+                if ($user->id == $appointment->user->id)
+                {
+                    \Mail::to($user)->send(new AppointmentDestroy($user, $appointment));
 
-                \Mail::to($user)->send(new AppointmentDestroy($user, $appointment));
-
-                return redirect()->action(
-                    'UserController@appointmentIndex'
-                )->with('success', 'Wizyta została usunięta!');
+                    return redirect()->action(
+                        'UserController@appointmentIndex'
+                    )->with('success', 'Wizyta została usunięta!');
+                    
+                } else {
+                    
+                    return redirect()->action(
+                        'WorkerController@backendAppointmentIndex', [
+                            'id' => $appointment->user->id
+                    ])->with('success', 'Wizyta została usunięta!');
+                }
             }
             
             return redirect()->route('welcome')->with('error', 'Nie można usunąć już wykonanej wizyty');

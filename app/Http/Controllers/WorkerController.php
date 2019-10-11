@@ -18,6 +18,7 @@ use App\Subscription;
 use App\Purchase;
 use App\Substart;
 use App\Interval;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -343,31 +344,37 @@ class WorkerController extends Controller
      */
     public function backendAppointmentIndex($id)
     {
-        $appointments = Appointment::where('user_id', $id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+        $user = User::where('id', $id)->first();
         
-        if ($appointments !== null)
+        if ($user !== null)
         {
-            foreach ($appointments as $appointment)
+            $appointments = Appointment::where('user_id', $user->id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+
+            if ($appointments !== null)
             {
-                $day = Day::where('id', $appointment->day_id)->first();
-                $month = Month::where('id', $day->month_id)->first();
-                $year = Year::where('id', $month->year_id)->first();
-                $calendar = Calendar::where('id', $year->calendar_id)->first();
-                $employee = User::where('id', $calendar->employee_id)->first();
-                $property = Property::where('id', $calendar->property_id)->first();
-                
-                $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
-                $appointment['date'] = $date;
-                
-                $appointment['name'] = $property->name;
-                
-                $employee = $employee->name;
-                $appointment['employee'] = $employee;
+                foreach ($appointments as $appointment)
+                {
+                    $day = Day::where('id', $appointment->day_id)->first();
+                    $month = Month::where('id', $day->month_id)->first();
+                    $year = Year::where('id', $month->year_id)->first();
+                    $calendar = Calendar::where('id', $year->calendar_id)->first();
+                    $employee = User::where('id', $calendar->employee_id)->first();
+                    $property = Property::where('id', $calendar->property_id)->first();
+
+                    $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
+                    $appointment['date'] = $date;
+
+                    $appointment['name'] = $property->name;
+
+                    $employee = $employee->name . " " . $employee->surname;
+                    $appointment['employee'] = $employee;
+                }
+
+                return view('employee.backend_appointment_index')->with([
+                    'appointments' => $appointments,
+                    'user' => $user
+                ]);
             }
-            
-            return view('employee.backend_appointment_index')->with([
-                'appointments' => $appointments
-            ]);
         }
         
         return redirect()->route('welcome');
@@ -409,6 +416,50 @@ class WorkerController extends Controller
         }
         
         return redirect()->route('welcome');
+    }
+    
+    /**
+     * Shows backend users list
+     */
+    public function backendUsersIndex()
+    {
+        $users = new Collection();
+        $employee = User::where([
+            'id' => auth()->user()->id,
+            'isEmployee' => 1
+        ])->with('calendars')->first();
+        
+        if ($employee !== null && count($employee->calendars) > 0)
+        {
+            foreach ($employee->calendars as $calendar)
+            {
+                $property = Property::where('id', $calendar->property_id)->first();
+                
+                if ($property !== null && $property->boss() !== null)
+                {
+                    $boss = $property->boss();
+                    $boss['property'] = $property;
+                    
+                    $users->push($boss);
+                    
+                    $bossWorkers = User::where('boss_id', $boss->id)->get();
+                    
+                    if (count($bossWorkers) > 0)
+                    {
+                        foreach ($bossWorkers as $bossWorker)
+                        {
+                            $bossWorker['property'] = $property;
+                            
+                            $users->push($bossWorker);
+                        }
+                    }
+                }
+            }
+        }
+            
+        return view('employee.backend_users_index')->with([
+            'users' => $users
+        ]);
     }
     
     public function setAppointmentStatus(Request $request)

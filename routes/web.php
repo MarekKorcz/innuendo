@@ -84,6 +84,7 @@ Route::get('/employee/backend-calendar/{calendar_id}/{year}/{month_number}/{day_
 Route::get('/employee/backend-appointment/show/{id}', 'WorkerController@backendAppointmentShow');
 Route::get('/employee/backend-appointment/index/{id}', 'WorkerController@backendAppointmentIndex');
 Route::get('/employee/backend-appointment/index/temp-user/{id}', 'WorkerController@backendAppointmentIndexTempUser');
+Route::get('/employee/backend-users/index', 'WorkerController@backendUsersIndex');
 Route::post('/employee/backend-appointment/set-appointment-status', 'WorkerController@setAppointmentStatus');
 Route::post('/employee/backend-appointment/before-show-create-page', 'WorkerController@beforeShowCreatePage');
 Route::post('/employee/backend-appointment/get-user-from-database', 'WorkerController@getUserFromDatabase');
