@@ -124,8 +124,8 @@
         </table>
         <div id="appointments-container" class="container">
             <div class="row">
-                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                <div id="appointments" class="text-center col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                <div class="col-1"></div>
+                <div id="appointments" class="text-center col-10">
                     @if(count($graphic) > 0)
                         @for ($i = 0; $i < count($graphic); $i++)
                             @if ($graphic[$i]['appointment'] == null)
@@ -185,7 +185,7 @@
                         <h3 style="padding: 40px; color: coral;">@lang('common.had_not_sent_graphic_request')</h3>
                     @endif
                 </div>
-                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                <div class="col-1"></div>
             </div>
         </div>
     </div>

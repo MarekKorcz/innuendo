@@ -119,15 +119,15 @@ $(document).ready(function()
         {
             if (surnameInput.val() !== "") 
             {
-                $("div#surname > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning > p.field-warning").remove();
+                $("div#surname > div.col-7 > div.warning > p.field-warning").remove();
 
             } else if (surnameInput.val() === "") {
 
                 event.preventDefault();
                 
-                if ($("div#surname > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning > p.field-warning").length == 0)
+                if ($("div#surname > div.col-7 > div.warning > p.field-warning").length == 0)
                 {
-                    $("div#surname > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning").append('<p class="field-warning">Wpisz nazwisko</p>');
+                    $("div#surname > div.col-7 > div.warning").append('<p class="field-warning">Wpisz nazwisko</p>');
                 }
             }
         }
@@ -138,15 +138,15 @@ $(document).ready(function()
         {
             if (emailInput.val() !== "") 
             {
-                $("div#email > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning > p.field-warning").remove();
+                $("div#email > div.col-7 > div.warning > p.field-warning").remove();
 
             } else if (emailInput.val() === "") {
 
                 event.preventDefault();
                 
-                if ($("div#email > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning > p.field-warning").length == 0)
+                if ($("div#email > div.col-7 > div.warning > p.field-warning").length == 0)
                 {
-                    $("div#email > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning").append('<p class="field-warning">Wpisz email</p>');
+                    $("div#email > div.col-7 > div.warning").append('<p class="field-warning">Wpisz email</p>');
                 }
             }
         }
@@ -157,15 +157,15 @@ $(document).ready(function()
         {
             if (phoneInput.val() !== "") 
             {
-                $("div#phone > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning > p.field-warning").remove();
+                $("div#phone > div.col-7 > div.warning > p.field-warning").remove();
 
             } else if (phoneInput.val() === "") {
 
                 event.preventDefault();
                 
-                if ($("div#phone > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning > p.field-warning").length == 0)
+                if ($("div#phone > div.col-7 > div.warning > p.field-warning").length == 0)
                 {
-                    $("div#phone > div.col-12.col-sm-12.col-md-12.col-lg-12 > div.warning").append('<p class="field-warning">Wpisz telefon</p>');
+                    $("div#phone > div.col-7 > div.warning").append('<p class="field-warning">Wpisz telefon</p>');
                 }
             }
         }
@@ -212,31 +212,37 @@ $(document).ready(function()
             
             $("div#client").append(`
                 <div id="surname" class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-1"></div>
+                    <div class="col-10">
                         <div class="form-group">
                             <label for="surname">Nazwisko</label>
                             <input id="surname" class="form-control" type="text" name="surname" placeholder="Podaj nazwisko">
                         </div>
                         <div class="warning"></div>
                     </div>
+                    <div class="col-1"></div>
                 </div>
                 <div id="email" class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-1"></div>
+                    <div class="col-10">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input id="email" class="form-control" type="text" name="email" placeholder="Podaj email">
                         </div>
                         <div class="warning"></div>
                     </div>
+                    <div class="col-1"></div>
                 </div>
                 <div id="phone" class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-1"></div>
+                    <div class="col-10">
                         <div class="form-group">
                             <label for="phone">Telefon</label>
                             <input id="phone" class="form-control" type="text" name="phone" placeholder="Podaj telefon">
                         </div>
                         <div class="warning"></div>
                     </div>
+                    <div class="col-1"></div>
                 </div>
             `);
             
@@ -249,7 +255,9 @@ $(document).ready(function()
             
             $("div#client > div.row > div#credential-1").html("").append(`
                 <div class="form-group">
-                    <label for="search">Klient</label>
+                    <div class="text-center">
+                        <label for="search">Klient:</label>
+                    </div>
                     <input id="search" class="form-control" type="text" name="search" placeholder="Szukaj klienta" autocomplete="off">
                 </div>
                 <div class="warning"></div>
@@ -317,15 +325,21 @@ $(document).ready(function()
                 if (data.items.length > 0)
                 {
                     $("div#items").append(`
-                        <div class="form-group">
-                            <label for="items">
-                                Zabiegi wybrane dla 
-                                <strong>` + data.user_name + `</strong>
-                            </label>
-                            <select id="item" class="form-control">
-                                <option disabled selected value> --- wybierz rodzaj zabiegu --- </option>
-                            </select>
-                            <div class="warning"></div>
+                        <div class="row">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <div class="form-group">
+                                    <label for="items">
+                                        Zabiegi wybrane dla 
+                                        <strong>` + data.user_name + `</strong>
+                                    </label>
+                                    <select id="item" class="form-control">
+                                        <option disabled selected value> --- wybierz rodzaj zabiegu --- </option>
+                                    </select>
+                                    <div class="warning"></div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
                         </div>
                     `);
 

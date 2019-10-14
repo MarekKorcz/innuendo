@@ -788,7 +788,7 @@ class WorkerController extends Controller
                 
                 $data = [
                     'type'      => 'success',
-                    'user_name' => $user !== null ? $user->name : "Nowego użytkownika",
+                    'user_name' => $user !== null ? $user->name . " " . $user->surname : "Nowego użytkownika",
                     'items'     => $items
                 ];
 
@@ -814,12 +814,12 @@ class WorkerController extends Controller
         $possibleAppointmentLengthInMinutes = htmlentities($request->get('possibleAppointmentLengthInMinutes'), ENT_QUOTES, "UTF-8");
         $purchaseId = htmlentities((int)$request->get('purchase_id'), ENT_QUOTES, "UTF-8");
         $itemId = htmlentities((int)$request->get('item_id'), ENT_QUOTES, "UTF-8");
-        $propertyId = htmlentities((int)$request->get('property_id'), ENT_QUOTES, "UTF-8");
+        $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
         $calendarId = htmlentities((int)$request->get('calendarId'), ENT_QUOTES, "UTF-8");
         $graphicId = htmlentities((int)$request->get('graphicId'), ENT_QUOTES, "UTF-8");
         $year = htmlentities((int)$request->get('year'), ENT_QUOTES, "UTF-8");
         $month = htmlentities((int)$request->get('month'), ENT_QUOTES, "UTF-8");
-        $day = htmlentities((int)$request->get('day'), ENT_QUOTES, "UTF-8");
+        $day = htmlentities((int)$request->get('day'), ENT_QUOTES, "UTF-8");        
         
         $userId = null;
         
@@ -1035,14 +1035,18 @@ class WorkerController extends Controller
                                         if (count($currentInterval) == 1)
                                         {
                                             $interval = $currentInterval->first();
+                                            
+                                            $bossMainInterval = Interval::where('id', $interval->interval_id)->first();
 
-                                            if ($interval->available_units > 0)
+                                            if ($bossMainInterval !== null && $bossMainInterval->workers_available_units > 0 && $interval->available_units > 0)
                                             {
-                                                $appointment->purchase()->associate($purchase->id);
-
+                                                $bossMainInterval->workers_available_units = $bossMainInterval->workers_available_units - 1;
+                                                $bossMainInterval->save();
+                                                        
                                                 $interval->available_units = ($interval->available_units - 1);
                                                 $interval->save();
 
+                                                $appointment->purchase()->associate($purchase->id);
                                                 $appointment->interval_id = $interval->id;
 
                                             } else {
@@ -1080,7 +1084,7 @@ class WorkerController extends Controller
                      * 
                      * 
                      * 
-                     * email sanding
+                     * todo: email sanding
                      * 
                      * 
                      * 
@@ -1339,6 +1343,7 @@ class WorkerController extends Controller
     
     public function activateSubscription($purchaseId, $appointmentId)
     {
+        $allIntervals = new Collection();
         $purchase = Purchase::where('id', $purchaseId)->with('subscription')->first();
         
         if ($purchase !== null)
@@ -1354,10 +1359,11 @@ class WorkerController extends Controller
                     $substartPurchases = Purchase::where('substart_id', $substart->id)->orderBy('id', 'asc')->get();
                    
                     if (count($substartPurchases) > 0)
-                    {
+                    {                        
                         foreach ($substartPurchases as $substartPurchase)
                         {
                             $interval = Interval::where('purchase_id', $substartPurchase->id)->first();
+                            $allIntervals->push($interval);
                             
                             if ($interval !== null)
                             {
@@ -1441,6 +1447,7 @@ class WorkerController extends Controller
                                 $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
                                 $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
                                 $interval->end_date = $endDate;
+                                $interval->available_units = $subscription->quantity;
                                 $interval->purchase_id = $intervalWithAppointments['interval']->purchase_id;
                                 
                                 $bossMainInterval = Interval::where([
@@ -1451,49 +1458,38 @@ class WorkerController extends Controller
                                     'end_date' => $endDate
                                 ])->first();
                                 
-                                if ($bossMainInterval !== null)
-                                {
-                                    $interval->interval_id = $bossMainInterval->id;
-                                }
+                                $bossMainInterval->workers_available_units = $bossMainInterval->workers_available_units + $subscription->quantity;
+                                $bossMainInterval->save();
                                 
+                                $interval->interval_id = $bossMainInterval->id;
                                 $interval->save();
-
-                                if ($interval !== null)
+                                    
+                                foreach ($intervalWithAppointments['appointments'] as $appointment)
                                 {
-                                    foreach ($intervalWithAppointments['appointments'] as $appointment)
-                                    {
-                                        $day = Day::where('id', $appointment->day_id)->first();
-                                        $month = Month::where('id', $day->month_id)->first();
-                                        $year = Year::where('id', $month->year_id)->first();
+                                    $day = Day::where('id', $appointment->day_id)->first();
+                                    $month = Month::where('id', $day->month_id)->first();
+                                    $year = Year::where('id', $month->year_id)->first();
 
-                                        $monthNumber = strlen($month->month_number) == 1 ? '0' . $month->month_number : $month->month_number;
-                                        $dayNumber = strlen($day->day_number) == 1 ? '0' . $day->day_number : $day->day_number;
+                                    $monthNumber = strlen($month->month_number) == 1 ? '0' . $month->month_number : $month->month_number;
+                                    $dayNumber = strlen($day->day_number) == 1 ? '0' . $day->day_number : $day->day_number;
 
-                                        $dateString = $year->year . '-' . $monthNumber . '-' . $dayNumber;
-                                        $appointmentDate = new \DateTime($dateString);
+                                    $dateString = $year->year . '-' . $monthNumber . '-' . $dayNumber;
+                                    $appointmentDate = new \DateTime($dateString);
+
+                                    if ($appointmentDate >= $interval->start_date && $appointmentDate <= $interval->end_date)
+                                    {                     
+                                        $appointment->interval_id = $interval->id;
+                                        $appointment->save();
                                         
-                                        if ($appointmentDate >= $interval->start_date && $appointmentDate <= $interval->end_date)
-                                        {
-                                            $appointment->interval_id = $interval->id;
-                                            $appointment->save();
-                                            
-                                            if ($interval->interval_id !== null)
-                                            {
-                                                $bossMainInterval = Interval::where([
-                                                    'id' => $interval->interval_id
-                                                ])->first();
+                                        $interval->available_units = $interval->available_units - 1;
+                                        $interval->save();
 
-                                                if ($bossMainInterval !== null)
-                                                {
-                                                    $bossMainInterval->available_units = ($bossMainInterval->available_units - 1);
-                                                    $bossMainInterval->save();
-                                                }
-                                            }
-                                        }
+                                        $bossMainInterval->workers_available_units = $bossMainInterval->workers_available_units - 1;
+                                        $bossMainInterval->save();
                                     }
-
-                                    $intervalWithAppointments['interval']->delete();
                                 }
+
+                                $intervalWithAppointments['interval']->delete();
                                 
                                 $bossIntervalStartDate = date('Y-m-d', strtotime("+1 month", strtotime($bossIntervalStartDate)));
                                 $bossIntervalStartDate = date('Y-m-d', strtotime("-1 day", strtotime($bossIntervalStartDate)));
@@ -1504,7 +1500,7 @@ class WorkerController extends Controller
                             for ($i = 1; $i <= $subscription->duration; $i++)
                             {
                                 $interval = new Interval();
-                                $interval->available_units = $subscription->quantity * $subscription->duration;
+                                $interval->available_units = $subscription->quantity;
                                 $interval->start_date = $startDate;
                                 $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
                                 $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
@@ -1514,7 +1510,7 @@ class WorkerController extends Controller
                                 $interval->save();
 
                                 if ($interval !== null)
-                                {
+                                {                                    
                                     foreach ($intervalWithAppointments['appointments'] as $appointment)
                                     {
                                         $day = Day::where('id', $appointment->day_id)->first();
@@ -1532,7 +1528,7 @@ class WorkerController extends Controller
                                             $appointment->interval_id = $interval->id;
                                             $appointment->save();
 
-                                            $interval->available_units = ($interval->available_units - 1);
+                                            $interval->available_units = $interval->available_units - 1;
                                             $interval->save();
                                         }
                                     }
@@ -1542,24 +1538,24 @@ class WorkerController extends Controller
                             }
                         }
                     }
+                }
+            }
+            
+            if (count($allIntervals) > 0)
+            {
+                foreach ($allIntervals as $interval)
+                {
+                    $intervalAppointments = Appointment::where('interval_id', $interval->id)->get();
                     
-                    // >> clear all past appointments to the time subscription become activated
-                    $allAppointments = Appointment::all();
-                    
-                    $allAppointments->map(function ($item) {
-
-                        $appointmentInterval = Interval::where('id', $item->interval_id)->first();
-
-                        if ($appointmentInterval == null)
+                    if (count($intervalAppointments) > 0)
+                    {
+                        foreach ($intervalAppointments as $intervalAppointment)
                         {
-                            $item->delete();
-
-                        } else {
-
-                            return $item;
+                            $intervalAppointment->delete();
                         }
-                    });
-                    // <<
+                    }
+                    
+                    $interval->delete();
                 }
             }
             
@@ -1676,7 +1672,7 @@ class WorkerController extends Controller
     }
     
     private function formatGraphicAndAppointments($graphicTime, $chosenDay, $chosenDayDateTime) 
-    {
+    {        
         $graphic = [];
         
         if ($graphicTime !== null)
@@ -1695,23 +1691,11 @@ class WorkerController extends Controller
                 {
                     if ($appointment->user_id !== null)
                     {
-                        $appointment = Appointment::where([
-                            'day_id' => $chosenDay->id,
-                            'start_time' => $startTime
-                        ])->with([
-                            'user',
-                            'item'
-                        ])->first();
+                        $appointment->loadMissing('user', 'item');
 
                     } else {
 
-                        $appointment = Appointment::where([
-                            'day_id' => $chosenDay->id,
-                            'start_time' => $startTime
-                        ])->with([
-                            'tempUser',
-                            'item'
-                        ])->first();
+                        $appointment->loadMissing('tempUser', 'item');
                     }
                     
                     $limit = $appointment->minutes / 15;
@@ -1725,9 +1709,9 @@ class WorkerController extends Controller
                             $time[] = date('G:i', strtotime("+15 minutes", strtotime($time[count($time) - 1])));
                             $workUnits -= 1;
                         }
-                    }
-                    else
-                    {
+                        
+                    } else {
+                        
                         $time = $startTime;
                     }
                     
@@ -1738,9 +1722,9 @@ class WorkerController extends Controller
                     
                     $timeIncrementedByAppointmentMinutes = strtotime($appointment->end_time, strtotime($startTime));
                     $startTime = date('G:i', $timeIncrementedByAppointmentMinutes);
-                }
-                else
-                {
+                    
+                } else {
+                    
                     $graphic[] = [
                         'time' => $startTime,
                         'appointment' => null

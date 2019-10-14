@@ -725,9 +725,9 @@ class UserController extends Controller
                             $time[] = date('G:i', strtotime("+15 minutes", strtotime($time[count($time) - 1])));
                             $workUnits -= 1;
                         }
-                    }
-                    else
-                    {
+                        
+                    } else {
+                        
                         $time = $startTime;
                     }
                     
@@ -740,9 +740,9 @@ class UserController extends Controller
                     
                     $timeIncrementedByAppointmentMinutes = strtotime($appointment->end_time, strtotime($startTime));
                     $startTime = date('G:i', $timeIncrementedByAppointmentMinutes);
-                }
-                else
-                {
+                    
+                } else {
+                    
                     $graphic[] = [
                         'time' => $startTime,
                         'appointment' => 0,

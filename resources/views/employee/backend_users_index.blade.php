@@ -3,9 +3,9 @@
 <div class="container">
 
     <div class="text-center" style="padding: 2rem;">
-        <h2>
+        <h1>
             @lang('common.users')
-        </h2>
+        </h1>
     </div>
     
     @if (count($users) > 0)

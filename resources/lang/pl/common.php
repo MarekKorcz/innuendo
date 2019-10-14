@@ -105,7 +105,7 @@ return [
     'available' => 'Wolna',
     'where' => 'Gdzie',
     'go_back' => 'Wróć',
-    'back_to_calendar' => 'Powrót do kalendarza',
+    'back_to_calendar' => 'Pokaż kalendarz',
     'back_to_employee' => 'Powrót do pracownika',
     'back_to_property' => 'Powrót do lokalizacji',
     'remove_appointment' => 'Usuń wizytę',
