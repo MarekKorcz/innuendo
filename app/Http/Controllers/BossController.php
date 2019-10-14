@@ -1253,6 +1253,7 @@ class BossController extends Controller
     public function subscriptionWorkersEdit($substartId, $intervalId)
     {
         $substart = Substart::where('id', $substartId)->first();
+        $hasAssignedWorkers = false;
         
         if ($substart !== null)
         {
@@ -1294,9 +1295,17 @@ class BossController extends Controller
 
                                             $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
                                             
-                                            $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
-                                            
-                                            $substartInterval['workers']->push($worker);
+                                            if ($worker !== null)
+                                            {
+                                                $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
+
+                                                if ($hasAssignedWorkers == false)
+                                                {
+                                                    $hasAssignedWorkers = true;
+                                                }
+
+                                                $substartInterval['workers']->push($worker);
+                                            }
                                         }
                                     }
                                 }
@@ -1326,9 +1335,17 @@ class BossController extends Controller
                                             
                                             $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
                                             
-                                            $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
-                                            
-                                            $substartInterval['workers']->push($worker);
+                                            if ($worker !== null)
+                                            {
+                                                $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
+
+                                                if ($hasAssignedWorkers == false)
+                                                {
+                                                    $hasAssignedWorkers = true;
+                                                }
+
+                                                $substartInterval['workers']->push($worker);
+                                            }
                                         }
                                     }
                                 }
@@ -1404,12 +1421,13 @@ class BossController extends Controller
                 }
                 
                 $subscription = Subscription::where('id', $substart->subscription_id)->first();
-                                
+                
                 return view('boss.subscription_workers_edit')->with([
                     'substart' => $substart,
                     'subscription' => $subscription,
                     'substartIntervals' => $substartIntervals,
-                    'today' => $today
+                    'today' => $today,
+                    'hasAssignedWorkers' => $hasAssignedWorkers
                 ]);
             }
             

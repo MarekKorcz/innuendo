@@ -442,7 +442,6 @@ return [
     'go_to_appointments' => 'Przejdź do wizyt',    
     'show_publicly' => 'Pokaż publicznie',    
     'do_not_show_publicly' => 'Nie pokazuj publicznie',
-    'has_no_appointments_in_this_period' => ' nie posiada żadnej zarezerwowanej wizty w tym okresie!',
     'has_no_appointments' => ' nie posiada żadnej zarezerwowanej wizty',
     'all_appointments' => 'Wszystkie wizyty',
     'appointment' => 'Wizyta',

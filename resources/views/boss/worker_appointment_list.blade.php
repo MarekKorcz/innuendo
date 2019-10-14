@@ -57,30 +57,29 @@
         </div>
     @endif
     
-    <hr>
-    
-    <div class="col-sm-12 col-md-12 col-lg-12 col-12">
-        <h2 class="text-center">
-            @lang('common.all_massages')
-            @if ($worker !== null)
-                @lang('common.belonging_to')                
-                {{$worker->name}} {{$worker->surname}}
-            @endif
-            @if ($intervals)
-                @foreach ($intervals as $interval)
-                    @if ($interval->start_date <= $today && $interval->end_date >= $today)
-                        @lang('common.for_the_period_from')
-                        {{$interval->start_date->format('Y-m-d')}}
-                        @lang('common.to')
-                        {{$interval->end_date->format('Y-m-d')}}
-                    @endif
-                @endforeach
-            @endif
-        </h2>
-    </div>
     
     <div id="appointments-table">
         @if (count($appointments) > 0)
+            <hr>
+            <div class="col-12">
+                <h2 class="text-center">
+                    @lang('common.all_massages')
+                    @if ($worker !== null)
+                        @lang('common.belonging_to')                
+                        {{$worker->name}} {{$worker->surname}}
+                    @endif
+                    @if ($intervals)
+                        @foreach ($intervals as $interval)
+                            @if ($interval->start_date <= $today && $interval->end_date >= $today)
+                                @lang('common.for_the_period_from')
+                                {{$interval->start_date->format('Y-m-d')}}
+                                @lang('common.to')
+                                {{$interval->end_date->format('Y-m-d')}}
+                            @endif
+                        @endforeach
+                    @endif
+                </h2>
+            </div>
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>                
@@ -115,15 +114,6 @@
                     @endforeach
                 </tbody>
             </table>
-        @else
-            @if ($property !== null)
-                <div class="text-center" style="padding: 1rem 0 1rem 0;">
-                    <h3>
-                        <strong>{{$worker->name}} {{$worker->surname}}</strong>
-                        @lang('common.has_no_appointments_in_this_period')
-                    </h3>
-                </div>
-            @endif
         @endif
     </div>
 </div>

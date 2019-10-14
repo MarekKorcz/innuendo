@@ -6,15 +6,15 @@
 
 <div class="container" style="padding: 1rem 0 1rem 0;">
     
-    <div class="text-center">
+    <div class="text-center" style="padding: 1rem 0 1rem 0;">
         <h2>
-            @lang('common.people_assigned_to_subscription') : {!! $subscription->name !!}
+            @lang('common.people_assigned_to_subscription'): {!! $subscription->name !!}
         </h2>
     </div>
     <div class="wrapper cont">
         <div class="text-center">
             <div class="row">
-                <div class="offset-sm-3 offset-md-3 offset-lg-3"></div>
+                <div class="col-3"></div>
                     @if (count($substartIntervals) > 1)
                         <div class="col-6">
                             <label for="timePeriod" style="font-size: 24px;">@lang('common.select_a_billing_period') :</label>                        
@@ -37,25 +37,27 @@
                             </ul>
                         </div>
                     @endif
-                <div class="offset-sm-3 offset-md-3 offset-lg-3"></div>
+                <div class="col-3"></div>
             </div>
         </div>
     </div>
     
-    <div class="col-sm-12 col-md-12 col-lg-12 col-12">
-        <h2 class="text-center" style="padding-top: 1rem;">
-            @lang('common.employees')            
-            @if (count($substartIntervals) > 0)
-                @foreach ($substartIntervals as $substartInterval)
-                    @if ($substartInterval->workers)
-                        @lang('common.asigned_from')
-                        {{$substartInterval->start_date->format('Y-m-d')}} 
-                        @lang('common.to')
-                        {{$substartInterval->end_date->format('Y-m-d')}}
-                    @endif
-                @endforeach
-            @endif
-        </h2>
+    <div class="row" style="padding: 1rem 0 1rem 0;">
+        <div class="col-12">
+            <h2 class="text-center" style="padding-top: 1rem;">
+                @lang('common.employees')            
+                @if (count($substartIntervals) > 0)
+                    @foreach ($substartIntervals as $substartInterval)
+                        @if ($substartInterval->workers)
+                            @lang('common.asigned_from')
+                            {{$substartInterval->start_date->format('Y-m-d')}} 
+                            @lang('common.to')
+                            {{$substartInterval->end_date->format('Y-m-d')}}
+                        @endif
+                    @endforeach
+                @endif
+            </h2>
+        </div>
     </div>
 
     @foreach($substartIntervals as $substartInterval)
