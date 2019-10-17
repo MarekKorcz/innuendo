@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name') }}</title>
+    <title>{{ config('app.name') }} {{ config('app.name_2nd_part') }}</title>
     
     <!-- Styles -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -33,14 +33,17 @@
 <body>
 
     <!--Navbar-->
-    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
         
-        <a class="navbar-brand" href="{{ route('welcome') }}">
+<!--        <a class="navbar-brand" href="{{ route('welcome') }}">
             <img src="/img/sacred-geometry.jpg" width="72" height="72" class="d-inline-block align-top">
-        </a>
-        <span id="logo-text" class="logo-text navbar-text mr-auto" style="margin: 0 12px 0 3px;">
+        </a>-->
+        <span id="logo-text" class="logo-text navbar-text mr-auto" style="margin: 0 9px 0 3px;">
             <a href="{{ route('welcome') }}">
                 {{ config('app.name') }}
+                <span style="font-size: 21px;">
+                    {{ config('app.name_2nd_part') }}
+                </span>
             </a>
         </span>
     
@@ -117,6 +120,9 @@
                 <br>
                 <span id="footer-name" class="logo-text">
                     {{ config('app.name') }}
+                    <span style="font-size: 21px;">
+                        {{ config('app.name_2nd_part') }}
+                    </span>
                 </span>
             </div>
             <div class="col-sm-3">

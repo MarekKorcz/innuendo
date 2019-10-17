@@ -58,7 +58,7 @@
             </div>
             
             <div class="col-xs-3" style="text-align: left;">
-                {{config('app.name')}}<br>
+                {{ config('app.name') }} {{ config('app.name_2nd_part') }}<br>
                 :todo ??         !!!!Adres firmy!!!!<br>
                 602-342-396<br>
                 {{$adminInvoiceData->email}}<br>

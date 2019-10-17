@@ -1,6 +1,6 @@
 @component('mail::message')
 
-# @lang('common.subscription_purchased') @lang('common.in') {{ config('app.name') }}
+# @lang('common.subscription_purchased') @lang('common.in') {{ config('app.name') }} {{ config('app.name_2nd_part') }}
 
 @lang('common.greetings'), {{$boss->name}} {{$boss->surname}}!<br>
 
@@ -15,5 +15,5 @@
 @endcomponent
 
 @lang('common.thank_you'), <br>
-{{ config('app.name') }}
+{{ config('app.name') }} {{ config('app.name_2nd_part') }}
 @endcomponent

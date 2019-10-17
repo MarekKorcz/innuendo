@@ -38,6 +38,6 @@
 @endisset
 
 Dziękujemy,<br>
-{{ config('app.name') }}
+{{ config('app.name') }} {{ config('app.name_2nd_part') }}
 @endcomponent
 

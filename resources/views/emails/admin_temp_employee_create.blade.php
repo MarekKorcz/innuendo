@@ -1,6 +1,6 @@
 @component('mail::message')
 
-# @lang('common.registration_to') {{ config('app.name') }}
+# @lang('common.registration_to') {{ config('app.name') }} {{ config('app.name_2nd_part') }}
 
 @lang('common.greetings'), {{$employee->name}} {{$employee->surname}}
 
@@ -11,5 +11,5 @@
 @endcomponent
 
 @lang('common.thank_you'), <br>
-{{ config('app.name') }}
+{{ config('app.name') }} {{ config('app.name_2nd_part') }}
 @endcomponent
