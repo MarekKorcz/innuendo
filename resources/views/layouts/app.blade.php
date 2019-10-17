@@ -55,9 +55,9 @@
                 <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ url('discounts') }}">@lang('navbar.discounts')</a>
                 </li>
-                <li class="nav-item" style="margin-right: 9px;">
+<!--                <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ url('employees') }}">@lang('navbar.employees')</a>
-                </li>
+                </li>-->
                 @guest
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">@lang('navbar.login')</a>
@@ -109,9 +109,9 @@
                 <h4>@lang('footer.contact')</h4>
                 <h5>mark.korcz@gmail.com</h5>
                 <h5>602 342 396</h5>
-                <a id="facebook" href="https://www.facebook.com/Gabinet.Masazu.Mokotow/">
+<!--                <a id="facebook" href="https://www.facebook.com/Gabinet.Masazu.Mokotow/">
                     <i class="fab fa-facebook-square"></i>
-                </a>
+                </a>-->
             </div>
             <div class="col-sm-6">
                 <a class="text-center" href="{{ route('welcome') }}">

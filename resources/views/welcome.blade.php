@@ -76,7 +76,7 @@
     <div class="container-fluid">
         <div class="row welcome">
             <div class="col-12">
-                <p class="display-4 text-center">@lang('welcome.main_header')</p>
+                <h2 class="text-center">@lang('welcome.main_header')</h2>
             </div>
             <hr>
             <div class="col-12">
