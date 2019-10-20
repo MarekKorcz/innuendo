@@ -293,7 +293,7 @@
         </div>
     </div>
     
-    <div class="container" style="padding: 0 1rem 0 1rem;">
+    <div class="container">
         <div class="row welcome text-center">
             <div class="col-12">
                 <ul>

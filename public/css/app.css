@@ -63,3 +63,24 @@ span#footer-name {
     background-color: lightgreen;
     border-radius: 5px;
 }
+
+.footer-3 {
+   height: 10em;
+   position: relative 
+}
+
+.footer-3 div {
+   margin: 0;
+   position: absolute;
+   top: 50%;
+   transform: translate(0, -50%)
+}
+
+.footer-3 a {
+    color: black;
+}
+
+.footer-3 a:hover {
+    text-decoration: none;
+    color: black;
+}

@@ -64,7 +64,7 @@ class Property extends Model
     {
         $boss = User::where('id', $this->boss_id)->first();
         
-        return count($boss) > 0 ? $boss : null;
+        return $boss !== null ? $boss : null;
     }
     
     /**

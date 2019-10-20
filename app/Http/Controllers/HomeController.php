@@ -44,7 +44,8 @@ class HomeController extends Controller
         $this->middleware('auth')->except([
             'welcome',
             'subscriptions',
-            'discounts'
+            'discounts',
+            'cookiesPolicy'
         ]);
     }
     
@@ -176,6 +177,11 @@ class HomeController extends Controller
         }
         
         return view('welcome')->with('error', \Lang::get('common.discount_error_description'));
+    }
+    
+    public function cookiesPolicy()
+    {
+        return view('cookies_policy');
     }
     
 //    {

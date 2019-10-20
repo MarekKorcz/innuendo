@@ -125,7 +125,14 @@
                     </span>
                 </span>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-3 footer-3">
+                <div class="text-center">
+                    <h5>
+                        <a href="{{ route('cookies_policy') }}" target="_blanc">
+                            @lang('cookies.cookies_policy')
+                        </a>
+                    </h5>
+                </div>
             </div>
         </div>
         <div class="row">

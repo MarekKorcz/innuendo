@@ -51,7 +51,11 @@
                         @if ($promoCode->isActive)
                             <a href="{{ URL::to('/admin/promo-code/show/' . $promoCode->id) }}">
                                 <li class="form-control text-center" style="background-color: lightgreen; margin: 3px;">
-                                    {{ $key + 1 }} . @lang('common.used_by') {{ $promoCode->boss->name }} {{ $promoCode->boss->surname }}
+                                    @if ($promoCode->boss !== null)
+                                        {{ $key + 1 }} . @lang('common.used_by') {{ $promoCode->boss->name }} {{ $promoCode->boss->surname }}
+                                    @else
+                                        @lang('common.unknown_boss')
+                                    @endif
                                 </li>
                             </a>
                         @else

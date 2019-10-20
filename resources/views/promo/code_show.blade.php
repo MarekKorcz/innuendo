@@ -30,11 +30,15 @@
             </p>
             @if ($promoCode->isActive == 1)
                 <p>
-                    @lang('common.boss') :
+                    @lang('common.boss'):
                     <strong>
-                        <a href="{{ URL::to('/admin/boss/show/' . $promoCode->boss->id) }}">
-                            {{ $promoCode->boss->name }} {{ $promoCode->boss->surname }}
-                        </a>
+                        @if ($promoCode->boss !== null)
+                            <a href="{{ URL::to('/admin/boss/show/' . $promoCode->boss->id) }}">
+                                {{ $promoCode->boss->name }} {{ $promoCode->boss->surname }}
+                            </a>
+                        @else
+                            @lang('common.unknown_boss')
+                        @endif
                     </strong>
                 </p>
                 <p>@lang('common.activation_date') : <strong>{{ $promoCode->activation_date }}</strong></p>
