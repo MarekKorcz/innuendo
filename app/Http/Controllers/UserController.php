@@ -319,9 +319,9 @@ class UserController extends Controller
                     'calendar_id' => $calendar->id,
                     'year' => $currentDate->format("Y")
                 ])->first();
-            }
-            else if (is_numeric($year) && (int)$year > 0)
-            {
+                
+            } else if (is_numeric($year) && (int)$year > 0) {
+                
                 $year = Year::where([
                     'calendar_id' => $calendar->id,
                     'year' => $year
@@ -336,9 +336,9 @@ class UserController extends Controller
                         'year_id' => $year->id,
                         'month_number' => $currentDate->format("n")
                     ])->first();
-                }
-                else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12)
-                {
+                    
+                } else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12) {
+                    
                     $month = Month::where([
                         'year_id' => $year->id,
                         'month_number' => $month_number
@@ -359,9 +359,9 @@ class UserController extends Controller
                                 'month_id' => $month->id,
                                 'day_number' => $currentDate->format("d")
                             ])->first();
-                        }
-                        else
-                        {
+                            
+                        } else {
+                            
                             $currentDay = Day::where([
                                 'month_id' => $month->id,
                                 'day_number' => $day_number
@@ -375,13 +375,13 @@ class UserController extends Controller
                             $chosenDay = $currentDay;
                             $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
                             $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
-                        }
-                        else
-                        {
+                            
+                        } else {
+                            
                             $graphic = [];
                             $graphicTime = [];
                         }
-
+                        
                         $availablePreviousMonth = false;
 
                         if ($this->checkIfPreviewMonthIsAvailable($calendar, $year, $month))
@@ -434,19 +434,19 @@ class UserController extends Controller
                             'graphicRequest' => $graphicRequest,
                             'employees' => $employees
                         ]);
-                    }
-                    else
-                    {
+                        
+                    } else {
+                        
                         $message = 'Brak otwartego grafiku na ten dzień';
                     }
-                }
-                else
-                {
+                    
+                } else {
+                    
                     $message = 'Brak otwartego grafiku na ten miesiąc';
                 }
-            }
-            else
-            {
+                
+            } else {
+                
                 $message = 'Brak otwartego grafiku na ten rok';
             }
             
@@ -458,9 +458,9 @@ class UserController extends Controller
                     'day_number' => 0
                 ]
             )->with('error', $message);
-        }   
-        else
-        {
+            
+        } else {
+            
             $message = 'Niepoprawny numer id kalendarza!';
         }
         
@@ -700,16 +700,38 @@ class UserController extends Controller
                 $appointment = Appointment::where([
                     'day_id' => $chosenDay->id,
                     'start_time' => $startTime
-                ])->first();
+                ])->with('user')->first();
                 
                 $appointmentId = 0;
+                $bossWorkerAppointment = false;
+                $ownAppointment = false;
                 
                 $explodedStartTime = explode(":", $startTime);
                 $chosenDayDateTime->setTime($explodedStartTime[0], $explodedStartTime[1], 0);
                 
                 if ($appointment !== null && auth()->user() !== null)
                 {
-                    $appointmentId = $appointment->user_id == auth()->user()->id ? $appointment->id  : 0;
+                    $boss = null;
+                    $appointmentId = $appointment->id;
+                    
+                    if (auth()->user()->isBoss !== null)
+                    {
+                        $boss = auth()->user();
+                                    
+                        if (count($boss->getWorkers()) > 0)
+                        {
+                            foreach ($boss->getWorkers() as $worker)
+                            {
+                                if ($appointment->user_id == $worker->id)
+                                {
+                                    $bossWorkerAppointment = true;
+                                }
+                            }
+                        }
+
+                    }
+                    
+                    $ownAppointment = $appointment->user_id == auth()->user()->id ? true : false;
                 }
                 
                 if ($appointment !== null)
@@ -733,8 +755,11 @@ class UserController extends Controller
                     
                     $graphic[] = [
                         'time' => $time,
-                        'appointment' => $limit,
+                        'appointment' => $appointment,
+                        'appointmentLimit' => $limit,
                         'appointmentId' => $appointmentId,
+                        'bossWorkerAppointment' => $bossWorkerAppointment,
+                        'ownAppointment' => $ownAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
                     
@@ -745,8 +770,11 @@ class UserController extends Controller
                     
                     $graphic[] = [
                         'time' => $startTime,
-                        'appointment' => 0,
+                        'appointment' => null,
+                        'appointmentLimit' => 0,
                         'appointmentId' => $appointmentId,
+                        'bossWorkerAppointment' => $bossWorkerAppointment,
+                        'ownAppointment' => $ownAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
                     

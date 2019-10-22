@@ -6,11 +6,11 @@
 {!! Html::script('js/graphic_request.js') !!}
 {!! Html::style('css/calendar.css') !!}
 
-<div class="container">
+<div class="container" style="padding-bottom: 2rem;">
     
     <div style="padding: 1rem;">
         <div class="col-4">
-            <a class="btn btn-info" href="{{ URL::to('/employee/' . $employee_slug) }}">
+            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/employee/' . $employee_slug) }}">
                 @lang('common.back_to_employee')
             </a>
         </div>
@@ -125,98 +125,202 @@
             <div class="row">
                 <div class="col-1"></div>
                 <div id="appointments" class="col-10 text-center">
-                    @if(count($graphic))
+                    @if(count($graphic) > 0)
                         @for ($i = 0; $i < count($graphic); $i++)
-                            @if ($graphic[$i]['appointment'] == 0)
+                            @if ($graphic[$i]['appointmentLimit'] == 0)
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time']}}</div>
                                     @if ($graphic[$i]['canMakeAnAppointment'])
-                                        <a href="#makeAnAppointment" 
-                                           data-toggle="modal" 
-                                           data-id="{{$graphic[$i]['time']}}" 
-                                           title="@lang('common.click_to_make_reservation')" 
-                                           class="appointment-term box-1" 
-                                           style="background-color: lightgreen;">
-                                            <p style="margin-top: 15px;">
-                                                @lang('common.available')
-                                            </p>
-                                        </a>
+                                        <div class="appointment-term box-1 pallet-1-3">
+                                            <div class="appointment-info">
+                                                <a style="color: white;" href="#makeAnAppointment" data-toggle="modal" data-id="{{$graphic[$i]['time']}}" title="@lang('common.click_to_make_reservation')">
+                                                    @lang('common.available')
+                                                </a>
+                                            </div>
+                                        </div>
                                     @else
-                                        <div class="appointment-term box-1" style="background-color: lightgrey;">
-                                            @lang('common.available')
+                                        <div class="appointment-term box-1 pallet-1-4">
+                                            <div class="appointment-info">
+                                                @lang('common.available')
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
-                            @elseif ($graphic[$i]['appointment'] == 1)                            
+                            @elseif ($graphic[$i]['appointmentLimit'] == 1)                            
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time']}}</div>
-                                    @if ($graphic[$i]['appointmentId'] == 0)
-                                        @if ($graphic[$i]['canMakeAnAppointment']) 
-                                            <div class="box-1">
-                                                @lang('common.booked')
+                                    @if ($graphic[$i]['appointmentId'] !== 0)
+                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                            <div class="appointment-term box-1 pallet-1-3">
+                                                <div class="appointment-info">
+                                                    {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
+                                                </div>
+                                            </div>
+                                        @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
+                                            <div class="appointment-term box-1 pallet-1-2">
+                                                <div class="appointment-info">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                        @lang('common.appointment_details')
+                                                    </a>
+                                                </div>
                                             </div>
                                         @else
-                                            <div class="box-1" style="background-color: lightgrey;">
-                                                @lang('common.booked')
+                                            <div class="appointment-term box-1 pallet-2-2">
+                                                <div class="appointment-info">
+                                                    @lang('common.booked')
+                                                </div>
                                             </div>
                                         @endif
-                                    @elseif ($graphic[$i]['appointmentId'] > 0)
-                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" 
-                                           class="appointment-term box-1" 
-                                           style="background-color: skyblue;">
-                                            <p style="margin-top: 15px;">
-                                                @lang('common.appointment_details')
-                                            </p>
-                                        </a>
                                     @endif
                                 </div>
-                            @elseif ($graphic[$i]['appointment'] == 2)
+                            @elseif ($graphic[$i]['appointmentLimit'] == 2)
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][1]}}</div>
-                                    @if ($graphic[$i]['appointmentId'] == 0)
-                                        @if ($graphic[$i]['canMakeAnAppointment']) 
-                                            <div class="box-2">
-                                                @lang('common.booked')
+                                    @if ($graphic[$i]['appointmentId'] !== 0)
+                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                            <div class="appointment-term box-2 pallet-1-3">
+                                                <div class="appointment-info">
+                                                    {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
+                                                </div>
+                                            </div>
+                                        @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
+                                            <div class="appointment-term box-2 pallet-1-2">
+                                                <div class="appointment-info">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                        @lang('common.appointment_details')
+                                                    </a>
+                                                </div>
                                             </div>
                                         @else
-                                            <div class="box-2" style="background-color: lightgrey;">
-                                                @lang('common.booked')
+                                            <div class="appointment-term box-2 pallet-2-2">
+                                                <div class="appointment-info">
+                                                    @lang('common.booked')
+                                                </div>
                                             </div>
                                         @endif
-                                    @elseif ($graphic[$i]['appointmentId'] > 0)
-                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" 
-                                           class="appointment-term box-2" 
-                                           style="background-color: skyblue;">
-                                            <p style="margin-top: 45px;">
-                                                @lang('common.appointment_details')
-                                            </p>
-                                        </a>
                                     @endif
                                 </div>
-                            @elseif ($graphic[$i]['appointment'] == 3)
+                            @elseif ($graphic[$i]['appointmentLimit'] == 3)
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][1]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][2]}}</div>
-                                    @if ($graphic[$i]['appointmentId'] == 0)
-                                        @if ($graphic[$i]['canMakeAnAppointment']) 
-                                            <div class="box-3">
-                                                @lang('common.booked')
+                                    @if ($graphic[$i]['appointmentId'] !== 0)
+                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                            <div class="appointment-term box-3 pallet-1-3">
+                                                <div class="appointment-info">
+                                                    {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
+                                                </div>
+                                            </div>
+                                        @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
+                                            <div class="appointment-term box-3 pallet-1-2">
+                                                <div class="appointment-info">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                        @lang('common.appointment_details')
+                                                    </a>
+                                                </div>
                                             </div>
                                         @else
-                                            <div class="box-3" style="background-color: lightgrey;">
-                                                @lang('common.booked')
+                                            <div class="appointment-term box-3 pallet-2-2">
+                                                <div class="appointment-info">
+                                                    @lang('common.booked')
+                                                </div>
                                             </div>
                                         @endif
-                                    @elseif ($graphic[$i]['appointmentId'] > 0)
-                                        <a href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}" 
-                                           class="appointment-term box-3" 
-                                           style="background-color: skyblue;">
-                                            <p style="margin-top: 72px;">
-                                                @lang('common.appointment_details')
-                                            </p>
-                                        </a>
+                                    @endif
+                                </div>
+                            @elseif ($graphic[$i]['appointmentLimit'] == 4)
+                                <div class="appointment">
+                                    <div class="box">{{$graphic[$i]['time'][0]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][1]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][2]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][3]}}</div>
+                                    @if ($graphic[$i]['appointmentId'] !== 0)
+                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                            <div class="appointment-term box-4 pallet-1-3">
+                                                <div class="appointment-info">
+                                                    {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
+                                                </div>
+                                            </div>
+                                        @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
+                                            <div class="appointment-term box-4 pallet-1-2">
+                                                <div class="appointment-info">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                        @lang('common.appointment_details')
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="appointment-term box-4 pallet-2-2">
+                                                <div class="appointment-info">
+                                                    @lang('common.booked')
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endif
+                                </div>
+                            @elseif ($graphic[$i]['appointmentLimit'] == 5)
+                                <div class="appointment">
+                                    <div class="box">{{$graphic[$i]['time'][0]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][1]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][2]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][3]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][4]}}</div>
+                                    @if ($graphic[$i]['appointmentId'] !== 0)
+                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                            <div class="appointment-term box-5 pallet-1-3">
+                                                <div class="appointment-info">
+                                                    {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
+                                                </div>
+                                            </div>
+                                        @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
+                                            <div class="appointment-term box-5 pallet-1-2">
+                                                <div class="appointment-info">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                        @lang('common.appointment_details')
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="appointment-term box-5 pallet-2-2">
+                                                <div class="appointment-info">
+                                                    @lang('common.booked')
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endif
+                                </div>
+                            @elseif ($graphic[$i]['appointmentLimit'] == 6)
+                                <div class="appointment">
+                                    <div class="box">{{$graphic[$i]['time'][0]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][1]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][2]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][3]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][4]}}</div>
+                                    <div class="box">{{$graphic[$i]['time'][5]}}</div>
+                                    @if ($graphic[$i]['appointmentId'] !== 0)
+                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                            <div class="appointment-term box-6 pallet-1-3">
+                                                <div class="appointment-info">
+                                                    {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
+                                                </div>
+                                            </div>
+                                        @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
+                                            <div class="appointment-term box-6 pallet-1-2">
+                                                <div class="appointment-info">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                        @lang('common.appointment_details')
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="appointment-term box-6 pallet-2-2">
+                                                <div class="appointment-info">
+                                                    @lang('common.booked')
+                                                </div>
+                                            </div>
+                                        @endif
                                     @endif
                                 </div>
                             @endif
@@ -232,10 +336,10 @@
                                     @lang('common.show')
                                 </a>
                             @else
-                                <h2 style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.send_graphic_request')</h2>
+                                <h2 class="pallet-1-4-font" style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.send_graphic_request')</h2>
                                 <a href="#makeAGraphicRequest" 
                                    id="request-btn" 
-                                   class="btn btn-success btn-lg" 
+                                   class="btn btn-lg pallet-1-3" 
                                    style="color: white;"
                                    data-toggle="modal"
                                 >
@@ -243,7 +347,7 @@
                                 </a>
                             @endif
                         @else
-                            <h3 style="padding: 40px; color: coral;">@lang('common.had_not_sent_graphic_request')</h3>
+                            <h3 class="pallet-2-1-font" style="padding: 40px;">@lang('common.had_not_sent_graphic_request')</h3>
                         @endif
                     @endif
                 </div>
@@ -307,7 +411,7 @@
                             <ul id="employees" style="padding: 12px 12px 0 12px;">
                                 @foreach($employees as $employee)
                                     @if(count($employees) == 1)
-                                        <li class="form-control" style="background-color: lightgreen; margin: 3px;" data-active="true" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                        <li class="form-control" style="background-color: #036635; margin: 3px;" data-active="true" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
                                     @else
                                         <li class="form-control" value="{{$employee->id}}" style="margin: 3px;">{{$employee->name}} {{$employee->surname}}</li>
                                     @endif

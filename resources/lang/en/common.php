@@ -106,7 +106,7 @@ return [
     'where' => 'Where',
     'go_back' => 'Go back',
     'back_to_calendar' => 'Go back to calendar',
-    'back_to_employee' => 'Go back to employee',
+    'back_to_employee' => 'Massagist',
     'back_to_property' => 'Go back to property',
     'remove_appointment' => 'Remove appointment',
     'schedules_with_property_description_and_executor' => 'Schedules with a description of the location and those performing the treatments',

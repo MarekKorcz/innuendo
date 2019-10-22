@@ -706,7 +706,7 @@ class BossController extends Controller
         $property = Property::where('id', (int)$propertyId)->first();
         
         $subscriptionId = htmlentities((int)$subscriptionId, ENT_QUOTES, "UTF-8");
-        $subscription = Subscription::where('id', (int)$subscriptionId)->first();
+        $subscription = Subscription::where('id', (int)$subscriptionId)->with('items')->first();
             
         if ($property !== null && $subscription !== null)
         {

@@ -18,6 +18,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/subscriptions', 'HomeController@subscriptions')->name('subscriptions');
 Route::get('/discounts', 'HomeController@discounts')->name('discounts');
 Route::get('/cookies-policy', 'HomeController@cookiesPolicy')->name('cookies_policy');
+Route::get('/private-policy', 'HomeController@privatePolicy')->name('private_policy');
 
 Route::get('locale/{locale}', function($locale) {
     

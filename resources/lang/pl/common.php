@@ -106,7 +106,7 @@ return [
     'where' => 'Gdzie',
     'go_back' => 'Wróć',
     'back_to_calendar' => 'Pokaż kalendarz',
-    'back_to_employee' => 'Powrót do pracownika',
+    'back_to_employee' => 'Masażysta',
     'back_to_property' => 'Powrót do lokalizacji',
     'remove_appointment' => 'Usuń wizytę',
     'schedules_with_property_description_and_executor' => 'Grafiki wraz z opisem lokalizacji oraz wykonujących zabiegi',
@@ -447,5 +447,7 @@ return [
     'appointment' => 'Wizyta',
     'users_description' => 'Lista użytkowników',
     'no_users_currently_available' => 'Obecnie, nie ma żadnych użytkowników w bazie danych',
-    'property' => 'Lokalizacja'
+    'property' => 'Lokalizacja',
+    'unknown_boss' => 'Nieznany szef',
+    'length_of_the_massage' => 'Długość masażu'
 ];

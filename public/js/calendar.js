@@ -1,9 +1,13 @@
 $(document).ready(function() 
 {
-    $(document).on("click", ".appointment-term", function () 
+    $(document).on("click", ".appointment-term", function (event) 
     {
-        var myAppointmentTerm = $(this).data('id');        
-        $(".modal-body #appointmentTerm").val(myAppointmentTerm);
-        $( "label[name='appointmentTerm']" ).text("Godzina wizyty: " + myAppointmentTerm);
+        var id = $(event.target).data('id');
+        
+        if (id !== undefined)
+        {
+            $(".modal-body #appointmentTerm").val(id);
+            $( "label[name='appointmentTerm']" ).text("Godzina wizyty: " + id);
+        }
    });
 });

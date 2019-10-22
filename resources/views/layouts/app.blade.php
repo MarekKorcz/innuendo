@@ -132,6 +132,11 @@
                             @lang('cookies.cookies_policy')
                         </a>
                     </h5>
+                    <h5>
+                        <a href="{{ route('private_policy') }}" target="_blanc">
+                            @lang('private_policy.private_policy')
+                        </a>
+                    </h5>
                 </div>
             </div>
         </div>

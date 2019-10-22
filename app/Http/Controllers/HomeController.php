@@ -45,7 +45,8 @@ class HomeController extends Controller
             'welcome',
             'subscriptions',
             'discounts',
-            'cookiesPolicy'
+            'cookiesPolicy',
+            'privatePolicy'
         ]);
     }
     
@@ -182,6 +183,11 @@ class HomeController extends Controller
     public function cookiesPolicy()
     {
         return view('cookies_policy');
+    }
+    
+    public function privatePolicy()
+    {
+        return view('private_policy');
     }
     
 //    {

@@ -12,10 +12,11 @@
         <div class="row">
             <div class="col-12 col-xs-12 col-sm-12 col-lg-6 col-md-6">
                 <h3>@lang('common.description')</h3>
-                <p>@lang('common.label') : <strong>{!! $subscription->name !!}</strong></p>
-                <p>@lang('common.description') : <strong>{!! $subscription->description !!}</strong></p>
+                <p>@lang('common.label'): <strong>{!! $subscription->name !!}</strong></p>
+                <p>@lang('common.description'): <strong>{!! $subscription->description !!}</strong></p>
+                <p>@lang('common.length_of_the_massage'): <strong>{!! $subscription->items->first()->minutes !!} @lang('common.minutes')</strong></p>
                 <p>
-                    @lang('common.price') :
+                    @lang('common.price'):
                     <strike>{{$subscription->old_price}} zł</strike>
                     <strong>{{$subscription->new_price}} zł @lang('common.per_person')</strong>
                 </p>
