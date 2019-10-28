@@ -6,7 +6,7 @@
         <div class="navbar-header"></div>
         <ul class="nav navbar-nav">
             <li>
-                <a href="{{ URL::to('/property/index') }}" class="btn btn-primary">
+                <a href="{{ URL::to('/property/index') }}" class="btn pallet-1-3" style="color: white;">
                     @lang('common.all_properties')
                 </a>
             </li>
@@ -42,7 +42,7 @@
             {{ Form::text('city', Input::old('city'), array('class' => 'form-control')) }}
         </div>
         <div class="form-group">
-            <label for="user">@lang('common.users') :</label>
+            <label for="user">@lang('common.users'):</label>
             <select id="user" name="user" class="form-control">
                 <option value="0"></option>
                 @foreach ($users as $user)
@@ -51,7 +51,7 @@
             </select>
         </div>
 
-        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
+        <input type="submit" value="@lang('common.create')" class="btn pallet-1-3" style="color: white;">
 
     {{ Form::close() }}
 

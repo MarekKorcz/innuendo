@@ -9,7 +9,7 @@
 
     <div class="row text-center" style="padding: 1rem 0 1rem 0;">
         <div class="col-4">
-            <a href="{{ URL::to('/employee/backend-calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn btn-primary">
+            <a href="{{ URL::to('/employee/backend-calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
                 @lang('common.back_to_calendar')
             </a>
         </div>
@@ -104,7 +104,7 @@
             @endif
 
             <div class="text-center">
-                <input type="submit" value="@lang('common.reserve')" class="btn btn-primary">
+                <input type="submit" value="@lang('common.reserve')" class="btn pallet-1-3" style="color: white;">
             </div>
 
         {{ Form::close() }}

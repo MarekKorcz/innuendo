@@ -23,3 +23,8 @@
 .list-group-item:hover {
     background-color: lightgreen;
 }
+
+.list-styling {
+    position: absolute;
+    z-index: 10;
+}

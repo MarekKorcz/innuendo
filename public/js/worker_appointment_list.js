@@ -7,21 +7,45 @@ $(document).ready(function() {
         
         $("#result").html('');
         
-        if (searchFieldValue !== "" && substartId !== 0) 
+        if (substartId !== 0) 
         {
-            getSubscriptionUsersFromDatabase(searchFieldValue, substartId);
+            if (searchFieldValue !== "") 
+            {
+                getSubscriptionUsersFromDatabase(searchFieldValue, substartId);
+                
+            } else {
+                
+                let searchField = document.getElementById("search");
+                searchField.setAttribute('data-user_id', '');
+                searchField.setAttribute('value', '');
+                
+                let timePeriod = $("#timePeriod");
+                let intervalId = timePeriod.children("option:selected").val();
+                let substartId = timePeriod.data("substart_id");
+                
+                getUsersAppointmentsFromDatabase(intervalId, substartId);
+            }
         }
     });
     
     $(window).click(function(event) 
     {
         let element = $(event.target);
+        let listResultElement = $("#result");
+        
+        if (listResultElement.children().length > 0 && !element.hasClass("list-group-item"))
+        {
+            listResultElement.html('');
+        }
         
         if (element.hasClass('list-group-item'))
         {
             let userName = element.data('name');
             let userId = element.val();
-            $("#search").val(userName).data('userId', userId);
+            
+            let searchField = document.getElementById("search");
+            searchField.setAttribute('data-user_id', userId);
+            searchField.setAttribute('value', userName);
             
             let substartId = $("#timePeriod").data("substart_id");
             
@@ -36,18 +60,18 @@ $(document).ready(function() {
             
             getUserAppointmentsFromDatabase(userId, substartId, intervalId);
             
-            $("#result").html('');
+            listResultElement.html('');
         }
     });
     
     $('#timePeriod').change(function() 
     {
-        let userId = $("#search").data('userId');
+        let userId = document.getElementById('search').dataset.user_id;
         
         let intervalId = $(this).children("option:selected").val();
         let substartId = $(this).data("substart_id");
 
-        if (userId == undefined)
+        if (userId == undefined || userId == '')
         {
             getUsersAppointmentsFromDatabase(intervalId, substartId);
             

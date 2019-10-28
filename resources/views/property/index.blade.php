@@ -7,7 +7,7 @@
             <div class="navbar-header"></div>
             <ul class="nav navbar-nav">
                 <li style="padding: 5px;">
-                    <a href="{{ URL::to('property/create') }}" class="btn btn-primary">
+                    <a href="{{ URL::to('property/create') }}" class="btn pallet-1-3" style="color: white;">
                         @lang('common.create_property')
                     </a>
                 </li>
@@ -47,10 +47,10 @@
                             <td>@lang('common.public')</td>
                         @endif
                         <td>
-                            <a class="btn btn-small btn-success" href="{{ URL::to('property/' . $value->id) }}" style="margin-bottom: 5px;">
+                            <a class="btn btn-small pallet-1-3" style="color: white; margin-bottom: 5px;" href="{{ URL::to('property/' . $value->id) }}">
                                 @lang('common.show')
                             </a>
-                            <a class="btn btn-small btn-info" href="{{ URL::to('property/' . $value->id . '/edit') }}" style="margin-bottom: 5px;">
+                            <a class="btn btn-small pallet-2-1" style="color: white; margin-bottom: 5px;" href="{{ URL::to('property/' . $value->id . '/edit') }}">
                                 @lang('common.edit')
                             </a>
                         </td>
@@ -89,10 +89,10 @@
                             <td>@lang('common.none')</td>
                         @endif
                         <td>
-                            <a class="btn btn-small btn-success" href="{{ URL::to('temp-property/' . $value->id) }}" style="margin-bottom: 5px;">
+                            <a class="btn btn-small pallet-1-3" style="color: white; margin-bottom: 5px;" href="{{ URL::to('temp-property/' . $value->id) }}">
                                 @lang('common.show')
                             </a>
-                            <a class="btn btn-small btn-info" href="{{ URL::to('temp-property/' . $value->id . '/edit') }}" style="margin-bottom: 5px;">
+                            <a class="btn btn-small pallet-2-1" style="color: white; margin-bottom: 5px;" href="{{ URL::to('temp-property/' . $value->id . '/edit') }}">
                                 @lang('common.edit')
                             </a>
                         </td>

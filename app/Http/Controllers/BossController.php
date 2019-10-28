@@ -1090,19 +1090,8 @@ class BossController extends Controller
             
             $intervals = Interval::where('purchase_id', $substart->purchase_id)->get();
             
-            $property = null;
-            
-            if (count($appointmentsCollection) == 0)
-            {
-                if (count($boss->chosenProperties) > 0)
-                {
-                    $property = Property::where('id', $boss->chosenProperties->first()->property_id)->first();
-                }
-            }
-            
             return view('boss.worker_appointment_list')->with([
                 'appointments' => $appointmentsCollection,
-                'property' => $property,
                 'worker' => (int)$userId !== 0 ? $worker : null,
                 'subscription' => $subscription,
                 'substart' => $substart,
@@ -1128,112 +1117,66 @@ class BossController extends Controller
         $boss = auth()->user();
         
         $worker = User::where([
-            'id' => $workerId,
-            'boss_id' => $boss->id
+            'id' => $workerId
         ])->first();
         
-        if ($worker !== null || $boss->id == $worker->getBoss()->id)
+        if ($worker !== null)
         {
-            if ($worker == null)
+            if ($worker->isBoss !== null)
             {
                 $worker = $boss;
             }
             
             $substart = Substart::where([
-                'id' => $substartId,
-                'boss_id' => $boss->id
+                'id' => $substartId
             ])->first();
             
             if ($substart !== null)
             {
-                $interval = Interval::where([
-                    'id' => $intervalId,
-                    'substart_id' => $substart->id
-                ])->first();
-                
-                
-                
-                
-                
-//                todo: co to tu robiło??????? chyba miałeś sprawdzić tą metode
-//            dd($substart->id);
-            
-            
-            
-            
-            
-            
+                if ($worker->isBoss !== null)
+                {
+                    $interval = Interval::where([
+                        'id' => $intervalId,
+                        'substart_id' => $substart->id
+                    ])->first();
+                    
+                } else {
+                    
+                    $interval = Interval::where([
+                        'id' => $intervalId
+                    ])->first();
+                }
                 
                 if ($interval !== null)
                 {
+                    $appointments = Appointment::where([
+                        'interval_id' => $interval->id,
+                        'user_id' => $worker->id
+                    ])->get();
+
+                    if (count($appointments) > 0)
+                    {
+                        foreach ($appointments as $appointment)
+                        {
+                            $day = Day::where('id', $appointment->day_id)->first();
+                            $month = Month::where('id', $day->month_id)->first();
+                            $year = Year::where('id', $month->year_id)->first();
+                            $calendar = Calendar::where('id', $year->calendar_id)->first();
+                            $employee = User::where('id', $calendar->employee_id)->first();
+
+                            $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
+                            $appointment['date'] = $date;
+
+                            $appointment['employee'] = $employee->name . " " . $employee->surname;
+                            $appointment['employee_slug'] = $employee->slug;
+                        }
+                    }
+                    
                     $substartIntervals = Interval::where([
                         'substart_id' => $substart->id
                     ])->get();
                     
                     $subscription = Subscription::where('id', $substart->subscription_id)->first();
-                    
-                    $appointments = new Collection();
-                    
-                    if ($boss->id == $workerId)
-                    {
-                        $appointments = Appointment::where([
-                            'interval_id' => $interval->id,
-                            'user_id' => $boss->id
-                        ])->get();
-                        
-                        if (count($appointments) > 0)
-                        {
-                            foreach ($appointments as $appointment)
-                            {
-                                $day = Day::where('id', $appointment->day_id)->first();
-                                $month = Month::where('id', $day->month_id)->first();
-                                $year = Year::where('id', $month->year_id)->first();
-                                $calendar = Calendar::where('id', $year->calendar_id)->first();
-                                $employee = User::where('id', $calendar->employee_id)->first();
-
-                                $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
-                                $appointment['date'] = $date;
-
-                                $appointment['employee'] = $employee->name . " " . $employee->surname;
-                                $appointment['employee_slug'] = $employee->slug;
-                            }
-                        }
-                        
-                    } else {
-                        
-                        $usersIntervals = Interval::where('interval_id', $interval->id)->get();
-                        
-                        if (count($usersIntervals) > 0)
-                        {
-                            foreach ($usersIntervals as $userInterval)
-                            {
-                                $userAppointments = Appointment::where([
-                                    'interval_id' => $userInterval->id,
-                                    'user_id' => $worker->id
-                                ])->get();
-                                
-                                if (count($userAppointments) > 0)
-                                {
-                                    foreach ($userAppointments as $userAppointment)
-                                    {
-                                        $day = Day::where('id', $userAppointment->day_id)->first();
-                                        $month = Month::where('id', $day->month_id)->first();
-                                        $year = Year::where('id', $month->year_id)->first();
-                                        $calendar = Calendar::where('id', $year->calendar_id)->first();
-                                        $employee = User::where('id', $calendar->employee_id)->first();
-
-                                        $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
-                                        $appointment['date'] = $date;
-
-                                        $appointment['employee'] = $employee->name . " " . $employee->surname;
-                                        $appointment['employee_slug'] = $employee->slug;
-                            
-                                        $appointments->push($userAppointment);
-                                    }
-                                }
-                            }
-                        }
-                    }
                     
                     return view('boss.worker_show')->with([
                         'worker' => $worker,
@@ -1253,7 +1196,6 @@ class BossController extends Controller
     public function subscriptionWorkersEdit($substartId, $intervalId)
     {
         $substart = Substart::where('id', $substartId)->first();
-        $hasAssignedWorkers = false;
         
         if ($substart !== null)
         {
@@ -1273,9 +1215,11 @@ class BossController extends Controller
                 if (count($substartIntervals) > 0)
                 {
                     if ($chosenInterval !== null)
-                    {                        
+                    {                       
                         foreach ($substartIntervals as $substartInterval)
                         {
+                            $substartInterval['allWorkers'] = User::where('boss_id', $boss->id)->get();
+                            
                             if ($chosenInterval->id == $substartInterval->id)
                             {
                                 $workersIntervals = Interval::withTrashed()->where('interval_id', $substartInterval->id)->get();
@@ -1286,7 +1230,7 @@ class BossController extends Controller
                                     {
                                         $workerIntervalPurchase = Purchase::where('id', $workerInterval->purchase_id)->with('chosenProperty')->first();
 
-                                        if ($workerIntervalPurchase->chosenProperty->user_id !== null)
+                                        if ($workerIntervalPurchase && $workerIntervalPurchase->chosenProperty->user_id !== null)
                                         {
                                             if ($substartInterval['workers'] == null)
                                             {
@@ -1297,12 +1241,16 @@ class BossController extends Controller
                                             
                                             if ($worker !== null)
                                             {
-                                                $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
-
-                                                if ($hasAssignedWorkers == false)
+                                                if ($substartInterval['allWorkers']->contains('id', $worker->id))
                                                 {
-                                                    $hasAssignedWorkers = true;
+                                                    $key = $substartInterval['allWorkers']->search(function($worker) {
+                                                        return $worker->id;
+                                                    });
+
+                                                    $substartInterval['allWorkers']->pull($key);
                                                 }
+                                                
+                                                $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
 
                                                 $substartInterval['workers']->push($worker);
                                             }
@@ -1316,6 +1264,8 @@ class BossController extends Controller
                         
                         foreach ($substartIntervals as $substartInterval)
                         {
+                            $substartInterval['allWorkers'] = User::where('boss_id', $boss->id)->get();
+                            
                             if ($substartInterval->start_date <= $today && $substartInterval->end_date >= $today)
                             {
                                 $workersIntervals = Interval::withTrashed()->where('interval_id', $substartInterval->id)->get();
@@ -1326,7 +1276,7 @@ class BossController extends Controller
                                     {
                                         $workerIntervalPurchase = Purchase::where('id', $workerInterval->purchase_id)->with('chosenProperty')->first();
                                         
-                                        if ($workerIntervalPurchase->chosenProperty->user_id !== null)
+                                        if ($workerIntervalPurchase !== null && $workerIntervalPurchase->chosenProperty->user_id !== null)
                                         {
                                             if ($substartInterval['workers'] == null)
                                             {
@@ -1337,18 +1287,40 @@ class BossController extends Controller
                                             
                                             if ($worker !== null)
                                             {
-                                                $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
-
-                                                if ($hasAssignedWorkers == false)
+                                                if ($substartInterval['allWorkers']->contains('id', $worker->id))
                                                 {
-                                                    $hasAssignedWorkers = true;
+                                                    $key = $substartInterval['allWorkers']->search(function($worker) {
+                                                        return $worker->id;
+                                                    });
+
+                                                    $substartInterval['allWorkers']->pull($key);
                                                 }
+                                                
+                                                $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
 
                                                 $substartInterval['workers']->push($worker);
                                             }
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
+                    
+                    foreach ($substartIntervals as $substartInterval)
+                    {
+                        if (count($substartInterval['allWorkers']) > 0)
+                        {
+                            if ($substartInterval['workers'] == null)
+                            {
+                                $substartInterval['workers'] = new Collection();
+                            }
+                            
+                            foreach ($substartInterval['allWorkers'] as $unsetWorker)
+                            {
+                                $unsetWorker['withoutSubscription'] = true;
+                                
+                                $substartInterval['workers']->push($unsetWorker);
                             }
                         }
                     }
@@ -1420,14 +1392,12 @@ class BossController extends Controller
                     }
                 }
                 
-                $subscription = Subscription::where('id', $substart->subscription_id)->first();
-                
                 return view('boss.subscription_workers_edit')->with([
                     'substart' => $substart,
-                    'subscription' => $subscription,
+                    'subscription' => Subscription::where('id', $substart->subscription_id)->first(),
                     'substartIntervals' => $substartIntervals,
                     'today' => $today,
-                    'hasAssignedWorkers' => $hasAssignedWorkers
+                    'hasAnyWorkerAtAll' => User::where('boss_id', $boss->id)->get()
                 ]);
             }
             
@@ -2394,7 +2364,7 @@ class BossController extends Controller
             $chosenPropertyId = htmlentities((int)$request->get('chosenPropertyId'), ENT_QUOTES, "UTF-8");
             $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
             
-            if ($chosenPropertyId !== null && $subscriptionId !== null)
+            if ($chosenPropertyId !== 0 && $subscriptionId !== 0)
             {
                 $chosenProperty = ChosenProperty::where('id', $chosenPropertyId)->with('subscriptions')->first();
                 $subscription = Subscription::where('id', $subscriptionId)->first();
@@ -2453,14 +2423,14 @@ class BossController extends Controller
         if ($request->request->all())
         {
             $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
-            $codeId = htmlentities((int)$request->get('codeId'), ENT_QUOTES, "UTF-8");
             $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
+            $codeId = htmlentities((int)$request->get('codeId'), ENT_QUOTES, "UTF-8");
             
             $message = "Błąd zapytania";
             $type = "error";
             $newChosenPropertyId = 0;
             
-            if ($codeId > 0 && $propertyId > 0)
+            if ($codeId > 0 && $propertyId > 0 && $codeId !== 0)
             {
                 $chosenProperty = new ChosenProperty();
                 $chosenProperty->property_id = $propertyId;
@@ -2750,7 +2720,12 @@ class BossController extends Controller
                                 {
                                     if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
                                     {
-                                        $workersCollection->push($worker);
+                                        $interval = Interval::where('purchase_id', $purchase->id)->get();
+                                        
+                                        if (count($interval) > 0)
+                                        {
+                                            $workersCollection->push($worker);
+                                        }
                                     }
                                 }
                             }

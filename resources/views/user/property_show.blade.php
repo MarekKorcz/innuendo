@@ -13,18 +13,18 @@
         <div class="col-10">
             <div class="jumbotron text-center" style="font-size: 21px;">
                 <h3>@lang('common.description')</h3>
-                <p>@lang('common.label') : <strong>{{$property->name}}</strong></p>
-                <p>@lang('common.creation_date') : <strong>{{ $propertyCreatedAt }}</strong></p>
+                <p>@lang('common.label'): <strong>{{$property->name}}</strong></p>
+                <p>@lang('common.creation_date'): <strong>{{ $propertyCreatedAt }}</strong></p>
                 @if ($property->description)
-                    <span>@lang('common.description') : {!! $property->description !!}</span>
+                    <span>@lang('common.description'): {!! $property->description !!}</span>
                 @endif
-                <p>@lang('common.address') : <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</strong></p>
+                <p>@lang('common.address'): <strong>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</strong></p>
             </div>
         </div>
         <div class="col-1"></div>
     </div>
     
-    <h2 class="text-center" style="padding: 1rem;">@lang('common.our_employees_schedules') :</h2>
+    <h2 class="text-center" style="padding: 1rem;">@lang('common.our_employees_schedules'):</h2>
     
     <div class="wrapper">
         @if (count($employees) > 0)

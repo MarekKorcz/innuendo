@@ -2,7 +2,7 @@
 @section('content')
 <div class="container" style="padding: 18px;">
     
-    <h2>@lang('common.temp_user_boss_values') :</h2>
+    <h2>@lang('common.temp_user_boss_values'):</h2>
     
     <table class="table table-striped table-bordered">
         <thead>
@@ -23,7 +23,7 @@
         </tbody>
     </table>
 
-    <h2>@lang('common.temp_user_boss_properties') :</h2>
+    <h2>@lang('common.temp_user_boss_properties'):</h2>
     
     <table class="table table-striped table-bordered">
         <thead>
@@ -40,10 +40,10 @@
                 <td>{{$tempProperty->street}} {{$tempProperty->street_number}} / {{$tempProperty->house_number}}</td>
                 <td>{{$tempProperty->created_at}}</td>
                 <td>
-                    <a class="btn btn-success" href="{{ URL::to('/temp-property/' . $tempProperty->id) }}">
+                    <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/temp-property/' . $tempProperty->id) }}">
                         @lang('common.show')
                     </a>
-                    <a class="btn btn-primary" href="{{ URL::to('temp-property/' . $tempProperty->id . '/edit') }}">
+                    <a class="btn pallet-2-4" style="color: white;" href="{{ URL::to('temp-property/' . $tempProperty->id . '/edit') }}">
                         @lang('common.edit')
                     </a>
                 </td>

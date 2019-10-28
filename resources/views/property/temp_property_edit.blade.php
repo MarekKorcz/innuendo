@@ -29,7 +29,9 @@
 
             {{ Form::hidden('_method', 'PUT') }}
            
-            <input type="submit" value="@lang('common.update')" class="btn btn-primary">
+            <div class="text-center">
+                <input type="submit" value="@lang('common.update')" class="btn pallet-1-3" style="color: white;">
+            </div>
 
         {{ Form::close() }}
     </div>

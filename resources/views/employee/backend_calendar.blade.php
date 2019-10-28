@@ -9,7 +9,7 @@
 <div class="container">
     
     <div style="padding: 1rem 0 0 2rem;">
-        <a class="btn btn-primary" href="{{ URL::to('/employee/backend-graphic') }}">
+        <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/employee/backend-graphic') }}">
             @lang('common.go_back')
         </a>
     </div>
@@ -131,58 +131,127 @@
                             @if ($graphic[$i]['appointment'] == null)
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time']}}</div>
-                                        <a href="#makeAnAppointment" 
-                                           data-toggle="modal" 
-                                           data-id="{{$graphic[$i]['time']}}" 
-                                           title="@lang('common.click_to_make_reservation')" 
-                                           class="appointment-term box-1" 
-                                           style="background-color: lightgreen;">
-                                            <p style="margin-top: 15px;">
+                                    <div class="appointment-term box-1 pallet-1-3">
+                                        <div class="appointment-info">
+                                            <a style="color: white;" href="#makeAnAppointment" data-toggle="modal" data-id="{{$graphic[$i]['time']}}" title="@lang('common.click_to_make_reservation')">
                                                 @lang('common.available')
-                                            </p>
-                                        </a>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             @else   
                                 <div class="appointment">
                                     @if ($graphic[$i]['appointment']->minutes == 15)
                                         <div class="box">{{$graphic[$i]['time']}}</div>
-                                        <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
-                                           class="appointment-term box-1" 
-                                           style="background-color: skyblue;">
+                                        <div class="appointment-term box-1 pallet-1-2">
+                                            <div class="appointment-info">
+                                                <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" style="color: white;">
+                                                    @if ($graphic[$i]['appointment']->user)
+                                                        {{$graphic[$i]['appointment']->user->name}} -
+                                                    @else
+                                                        {{$graphic[$i]['appointment']->tempUser->name}} -
+                                                    @endif
+                                                    {{$graphic[$i]['appointment']->item->name}} -
+                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
+                                                </a>
+                                            </div>
+                                        </div>
                                     @elseif ($graphic[$i]['appointment']->minutes == 30)
-                                        <div class="box">{{$graphic[$i]['time']}}</div>
-                                        <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
-                                           class="appointment-term box-1" 
-                                           style="background-color: skyblue;">
+                                        <div class="box">{{$graphic[$i]['time'][0]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][1]}}</div>
+                                        <div class="appointment-term box-2 pallet-1-2">
+                                            <div class="appointment-info">
+                                                <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" style="color: white;">
+                                                    @if ($graphic[$i]['appointment']->user)
+                                                        {{$graphic[$i]['appointment']->user->name}} -
+                                                    @else
+                                                        {{$graphic[$i]['appointment']->tempUser->name}} -
+                                                    @endif
+                                                    {{$graphic[$i]['appointment']->item->name}} -
+                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @elseif ($graphic[$i]['appointment']->minutes == 45)
+                                        <div class="box">{{$graphic[$i]['time'][0]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][1]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][2]}}</div>
+                                        <div class="appointment-term box-3 pallet-1-2">
+                                            <div class="appointment-info">
+                                                <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" style="color: white;">
+                                                    @if ($graphic[$i]['appointment']->user)
+                                                        {{$graphic[$i]['appointment']->user->name}} -
+                                                    @else
+                                                        {{$graphic[$i]['appointment']->tempUser->name}} -
+                                                    @endif
+                                                    {{$graphic[$i]['appointment']->item->name}} -
+                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
+                                                </a>
+                                            </div>
+                                        </div>
                                     @elseif ($graphic[$i]['appointment']->minutes == 60)
                                         <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                         <div class="box">{{$graphic[$i]['time'][1]}}</div>
-                                        <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
-                                           class="appointment-term box-2" 
-                                           style="background-color: skyblue;">
+                                        <div class="box">{{$graphic[$i]['time'][2]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][3]}}</div>
+                                        <div class="appointment-term box-4 pallet-1-2">
+                                            <div class="appointment-info">
+                                                <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" style="color: white;">
+                                                    @if ($graphic[$i]['appointment']->user)
+                                                        {{$graphic[$i]['appointment']->user->name}} -
+                                                    @else
+                                                        {{$graphic[$i]['appointment']->tempUser->name}} -
+                                                    @endif
+                                                    {{$graphic[$i]['appointment']->item->name}} -
+                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @elseif ($graphic[$i]['appointment']->minutes == 75)
+                                        <div class="box">{{$graphic[$i]['time'][0]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][1]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][2]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][3]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][4]}}</div>
+                                        <div class="appointment-term box-5 pallet-1-2">
+                                            <div class="appointment-info">
+                                                <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" style="color: white;">
+                                                    @if ($graphic[$i]['appointment']->user)
+                                                        {{$graphic[$i]['appointment']->user->name}} -
+                                                    @else
+                                                        {{$graphic[$i]['appointment']->tempUser->name}} -
+                                                    @endif
+                                                    {{$graphic[$i]['appointment']->item->name}} -
+                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
+                                                </a>
+                                            </div>
+                                        </div>
                                     @elseif ($graphic[$i]['appointment']->minutes == 90)
                                         <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                         <div class="box">{{$graphic[$i]['time'][1]}}</div>
                                         <div class="box">{{$graphic[$i]['time'][2]}}</div>
-                                        <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" 
-                                           class="appointment-term box-3" 
-                                           style="background-color: skyblue;">
-                                    @endif
-                                            <p style="margin-top: 15px;">
-                                                @if ($graphic[$i]['appointment']->user)
-                                                    {{$graphic[$i]['appointment']->user->name}} -
-                                                @else
-                                                    {{$graphic[$i]['appointment']->tempUser->name}} -
-                                                @endif
-                                                {{$graphic[$i]['appointment']->item->name}} -
-                                                {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
-                                            </p>
-                                        </a>
+                                        <div class="box">{{$graphic[$i]['time'][3]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][4]}}</div>
+                                        <div class="box">{{$graphic[$i]['time'][5]}}</div>
+                                        <div class="appointment-term box-6 pallet-1-2">
+                                            <div class="appointment-info">
+                                                <a href="{{ URL::to('/employee/backend-appointment/show/' . $graphic[$i]['appointment']->id) }}" style="color: white;">
+                                                    @if ($graphic[$i]['appointment']->user)
+                                                        {{$graphic[$i]['appointment']->user->name}} -
+                                                    @else
+                                                        {{$graphic[$i]['appointment']->tempUser->name}} -
+                                                    @endif
+                                                    {{$graphic[$i]['appointment']->item->name}} -
+                                                    {{config('appointment-status.' . $graphic[$i]['appointment']->status)}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @endif          
                                 </div>
                             @endif
                         @endfor
                     @else
-                        <h3 style="padding: 40px; color: coral;">@lang('common.had_not_sent_graphic_request')</h3>
+                        <h3 class="pallet-2-1-font" style="padding: 40px;">@lang('common.had_not_sent_graphic_request')</h3>
                     @endif
                 </div>
                 <div class="col-1"></div>
@@ -212,7 +281,7 @@
                         <input type="hidden" name="day" value="{{$current_day}}"/>
                     </div>
                  
-                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn btn-primary">
+                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
 
                 {{ Form::close() }}
                  

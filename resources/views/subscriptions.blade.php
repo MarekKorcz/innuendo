@@ -44,7 +44,8 @@
             <div class="col-12">
                 <div class="text-center" style="padding: 1rem;">
                     <h4>@lang('welcome.discount_button_paragraph')</h4>
-                    <a href="{{ URL::to('discounts') }}" class="btn btn-lg btn-success">
+                    
+                    <a href="{{ URL::to('discounts') }}" class="btn pallet-1-3 btn-lg" style="color: white; margin-top: 1rem;">
                         @lang('welcome.all_discounts')
                     </a>
                 </div>
@@ -85,7 +86,7 @@
             <div class="col-12">
                 <div class="text-center" style="padding: 1rem;">
                     <h4>@lang('welcome.discount_button_paragraph')</h4>
-                    <a href="{{ URL::to('discounts') }}" class="btn btn-lg btn-success">
+                    <a href="{{ URL::to('discounts') }}" class="btn pallet-1-3 btn-lg" style="color: white; margin-top: 1rem;">
                         @lang('welcome.all_discounts')
                     </a>
                 </div>

@@ -77,7 +77,7 @@ class WorkerController extends Controller
      * @throws Exception
      */
     public function backendCalendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
-    {        
+    {                
         $calendar = Calendar::where([
             'id' => $calendar_id,
             'isActive' => 1
@@ -93,9 +93,9 @@ class WorkerController extends Controller
                     'calendar_id' => $calendar->id,
                     'year' => $currentDate->format("Y")
                 ])->first();
-            }
-            else if (is_numeric($year) && (int)$year > 0)
-            {
+                
+            } else if (is_numeric($year) && (int)$year > 0) {
+                
                 $year = Year::where([
                     'calendar_id' => $calendar->id,
                     'year' => $year
@@ -110,9 +110,9 @@ class WorkerController extends Controller
                         'year_id' => $year->id,
                         'month_number' => $currentDate->format("n")
                     ])->first();
-                }
-                else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12)
-                {
+                    
+                } else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12) {
+                    
                     $month = Month::where([
                         'year_id' => $year->id,
                         'month_number' => $month_number
@@ -141,7 +141,7 @@ class WorkerController extends Controller
                                 'day_number' => $day_number
                             ])->first();
                         }
-
+                            
                         if ($currentDay !== null)
                         {
                             $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
@@ -179,7 +179,7 @@ class WorkerController extends Controller
                         ])->first();
                         
                         $property = Property::where('id', $calendar->property_id)->first();
-
+                        
                         return view('employee.backend_calendar')->with([
                             'property' => $property,
                             'calendar_id' => $calendar->id,
@@ -321,7 +321,7 @@ class WorkerController extends Controller
                 return view('employee.backend_appointment_show')->with([
                     'appointment' => $appointment,
                     'day' => $day->day_number,
-                    'month' => $month->month,
+                    'month' => $month->month_number,
                     'year' => $year->year,
                     'calendarId' => $calendar->id,
                     'employee' => $employee,
@@ -366,8 +366,8 @@ class WorkerController extends Controller
 
                     $appointment['name'] = $property->name;
 
-                    $employee = $employee->name . " " . $employee->surname;
-                    $appointment['employee'] = $employee;
+                    $appointment['employee'] = $employee->name . " " . $employee->surname;
+                    $appointment['employee_slug'] = $employee->slug;
                 }
 
                 return view('employee.backend_appointment_index')->with([
@@ -1101,9 +1101,9 @@ class WorkerController extends Controller
                 return redirect()->action(
                     'WorkerController@backendCalendar', [
                         'calendarId' => $calendarId,
-                        'year' => $year,
-                        'month_number' => $month,
-                        'day_number' => $day
+                        'year' => $year->year,
+                        'month_number' => $month->month_number,
+                        'day_number' => $day->day_number
                     ]
                 )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
 
@@ -1691,11 +1691,11 @@ class WorkerController extends Controller
                 {
                     if ($appointment->user_id !== null)
                     {
-                        $appointment->loadMissing('user', 'item');
+                        $appointment->load('user', 'item');
 
                     } else {
 
-                        $appointment->loadMissing('tempUser', 'item');
+                        $appointment->load('tempUser', 'item');
                     }
                     
                     $limit = $appointment->minutes / 15;

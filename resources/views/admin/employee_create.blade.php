@@ -23,7 +23,9 @@
                 {{ Form::number('phone_number', Input::old('phone_number'), array('class' => 'form-control')) }}
             </div>
 
-            <input type="submit" value="@lang('common.create')" class="btn btn-primary">
+            <div class="text-center">
+                <input type="submit" value="@lang('common.create')" class="btn pallet-2-4" style="color: white;">
+            </div>
 
         {{ Form::close() }}
     </div>

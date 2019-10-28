@@ -9,23 +9,23 @@
     <div class="jumbotron">
         <div class="row text-center" style="padding-bottom: 2rem;">
             <div class="col-4">
-                <a class="btn btn-danger delete-property" style="color: white;" data-property_id="{{$property->id}}">
+                <a class="btn pallet-2-2 delete-property" style="color: white;" data-property_id="{{$property->id}}">
                     @lang('common.delete')
                 </a>
             </div>
             <div class="col-4">
                 @if ($property->canShow == 0)
-                    <a class="btn btn-success" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
+                    <a class="btn pallet-1-3" style="margin: 9px; color: white;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
                         @lang('common.show_publicly')
                     </a>
                 @else
-                    <a class="btn btn-primary" style="margin: 9px;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
+                    <a class="btn pallet-2-4" style="margin: 9px; color: white;" href="{{ URL::to('property/can-show/change/' . $property->id) }}">
                         @lang('common.do_not_show_publicly')
                     </a>
                 @endif
             </div>
             <div class="col-4">
-                <a class="btn btn-primary" href="{{ URL::to('property/' . $property->id . '/edit') }}">
+                <a class="btn pallet-2-4" style="color: white;" href="{{ URL::to('property/' . $property->id . '/edit') }}">
                     @lang('common.edit')
                 </a>
             </div>
@@ -54,7 +54,7 @@
                 </strong>
             </p>
             <p>
-                @lang('common.address') : 
+                @lang('common.address'): 
                 <strong>
                     {{$property->street}} 
                     {{$property->street_number}} / 
@@ -69,7 +69,7 @@
         <div class="row text-center" style="padding-bottom: 2rem;">
             <div class="col-4"></div>
             <div class="col-4">
-                <a class="btn btn-success" href="{{ URL::to('subscription/create/' . $property->id) }}">
+                <a class="btn pallet-1-2" style="color: white;" href="{{ URL::to('subscription/create/' . $property->id) }}">
                     @lang('common.create_subscription')
                 </a>
             </div>
@@ -127,18 +127,18 @@
                             {!!Form::open(['action' => ['CalendarController@deactivate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                                 {{ Form::hidden('property_id', $property->id) }}
                                 {{ Form::hidden('_method', 'POST') }}
-                                <input type="submit" value="@lang('common.deactivate_calendar')" class="btn btn-primary">
+                                <input type="submit" value="@lang('common.deactivate_calendar')" class="btn pallet-2-4" style="color: white;">
                             {!!Form::close()!!}
                         @else
                             {!!Form::open(['action' => ['CalendarController@activate', $calendar->id], 'method' => 'POST', 'class' => 'pull-right'])!!}
                                 {{ Form::hidden('property_id', $property->id) }}
                                 {{ Form::hidden('_method', 'POST') }}
-                                <input type="submit" value="@lang('common.activate_calendar')" class="btn btn-success">
+                                <input type="submit" value="@lang('common.activate_calendar')" class="btn pallet-2-4" style="color: white;">
                             {!!Form::close()!!}
                         @endif
                     </div>
                     <div class="col-4">
-                        <a class="btn btn-danger delete-calendar" style="color: white;" data-calendar_id="{{$calendar->id}}">
+                        <a class="btn pallet-2-2 delete-calendar" style="color: white;" data-calendar_id="{{$calendar->id}}">
                             @lang('common.delete')
                         </a>
                     </div>
@@ -149,11 +149,11 @@
                         <h2 style="margin-bottom: 15px;">
                             @lang('common.calendar_assigned_to'):
                             <a href="{{ URL::to('employee/' . $employees[$calendar->id]->slug) }}">
-                                {{$employees[$calendar->id]->name}}
+                                {{$employees[$calendar->id]->name}} {{$employees[$calendar->id]->surname}}
                             </a>
                         </h2>
                         @if (count($years[$calendar->id]) > 0)
-                            <h3>@lang('common.years') :</h3>
+                            <h3>@lang('common.years'):</h3>
                         @endif
                     </div>
                     @if (count($years[$calendar->id]) > 0)
@@ -166,14 +166,14 @@
                         </div>
                     @endif
                     <div class="text-center" style="padding-top: 30px;">
-                        <a class="btn btn-success" href="{{ action('YearController@create', $calendar->id) }}">
+                        <a class="btn pallet-2-3" style="color: white;" href="{{ action('YearController@create', $calendar->id) }}">
                             @lang('common.add_year')
                         </a>
                     </div>
                 @else
                     <h1 class="text-center">@lang('common.new_calendar')</h1>
                     <div class="text-center" style="padding-top: 30px;">
-                        <a class="btn btn-primary" href="{{ action('EmployeeController@assign', $calendar->id) }}">
+                        <a class="btn pallet-2-4" style="color: white;" href="{{ action('EmployeeController@assign', $calendar->id) }}">
                             @lang('common.assign_calendar_to_employee')
                         </a>
                     </div>
@@ -183,7 +183,7 @@
     @endif
 
     <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
-        <a class="btn btn-success" href="{{ action('CalendarController@create', $property->id) }}">
+        <a class="btn pallet-1-3" style="color: white;" href="{{ action('CalendarController@create', $property->id) }}">
             @lang('common.create_calendar')
         </a>
     </div>
@@ -199,7 +199,7 @@
                     <form method="POST" accept-charset="UTF-8">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                        <input type="submit" value="@lang('common.delete')" class="btn pallet-2-2" style="color: white;">
                     </form>
                 </div>
             </div>
@@ -217,7 +217,7 @@
                     <form method="POST" accept-charset="UTF-8">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                        <input type="submit" value="@lang('common.delete')" class="btn pallet-2-2" style="color: white;">
                     </form>
                 </div>
             </div>

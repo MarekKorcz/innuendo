@@ -5,39 +5,39 @@
 {!! Html::script('js/graphic_request_show.js') !!}
 
     <div class="container">
-        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from') : {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
+        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from'): {{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</h2>
         <p class="text-center">{{$graphicRequest->property->name}} - {{$graphicRequest->boss->name}} {{$graphicRequest->boss->surname}}</p>
     </div>
 
     <div class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <p>@lang('common.start_time') : <strong>{{$graphicRequest->start_time}}</strong></p>
-                <p>@lang('common.end_time') : <strong>{{$graphicRequest->end_time}}</strong></p>
+                <p>@lang('common.start_time'): <strong>{{$graphicRequest->start_time}}</strong></p>
+                <p>@lang('common.end_time'): <strong>{{$graphicRequest->end_time}}</strong></p>
                 @if ($graphicRequest->comment)
-                    <p>@lang('common.comment') : <strong>{{$graphicRequest->comment}}</strong></p>
+                    <p>@lang('common.comment'): <strong>{{$graphicRequest->comment}}</strong></p>
                 @endif
                 <div id="employees" style="margin-top: 2rem;">
-                    <p class="text-center">@lang('common.chosen_employees') :</p>
+                    <p class="text-center">@lang('common.chosen_employees'):</p>
                     <ul style="padding: 12px;">
                         @foreach($graphicRequest->allEmployees as $employee)
                             @if ($employee->isChosen == true)
                                 <li class="form-control" style="background-color: lightgreen;" data-active="true" value="{{$employee->id}}">
                                     {{$employee->name}} {{$employee->surname}}
                                     @if ($employee->showProperty !== false)
-                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/property/' . $graphicRequest->property_id) }}">
+                                        <a class="btn pallet-2-4 btn-sm" style="padding: 1px; color: white;" href="{{ URL::to('/property/' . $graphicRequest->property_id) }}">
                                             @lang('common.create_calendar')
                                         </a>
                                     @elseif ($employee->yearId)
-                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/year/show/' . $employee->yearId) }}">
+                                        <a class="btn pallet-2-4 btn-sm" style="padding: 1px; color: white;" href="{{ URL::to('/year/show/' . $employee->yearId) }}">
                                             @lang('common.add_month')
                                         </a>
                                     @elseif ($employee->monthId)
-                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/month/show/' . $employee->monthId) }}">
+                                        <a class="btn pallet-2-4 btn-sm" style="padding: 1px; color: white;" href="{{ URL::to('/month/show/' . $employee->monthId) }}">
                                             @lang('common.add_day')
                                         </a>
                                     @elseif ($employee->dayId)
-                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/day/show/' . $employee->dayId) }}">
+                                        <a class="btn pallet-2-4 btn-sm" style="padding: 1px; color: white;" href="{{ URL::to('/day/show/' . $employee->dayId) }}">
                                             @lang('common.add_schedule')
                                         </a>
                                     @endif
@@ -46,19 +46,19 @@
                                 <li class="form-control" value="{{$employee->id}}">
                                     {{$employee->name}} {{$employee->surname}}
                                     @if ($employee->showProperty !== false)
-                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/property/' . $graphicRequest->property_id) }}">
+                                        <a class="btn pallet-2-4 btn-sm" style="padding: 1px; color: white;" href="{{ URL::to('/property/' . $graphicRequest->property_id) }}">
                                             @lang('common.create_calendar')
                                         </a>
                                     @elseif ($employee->yearId)
-                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/year/show/' . $employee->yearId) }}">
+                                        <a class="btn pallet-2-4 btn-sm" style="padding: 1px; color: white;" href="{{ URL::to('/year/show/' . $employee->yearId) }}">
                                             @lang('common.add_month')
                                         </a>
                                     @elseif ($employee->monthId)
-                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/month/show/' . $employee->monthId) }}">
+                                        <a class="btn pallet-2-4 btn-sm" style="padding: 1px; color: white;" href="{{ URL::to('/month/show/' . $employee->monthId) }}">
                                             @lang('common.add_day')
                                         </a>
                                     @elseif ($employee->dayId)
-                                        <a class="btn btn-primary btn-sm" style="padding: 1px;" href="{{ URL::to('/day/show/' . $employee->dayId) }}">
+                                        <a class="btn pallet-2-4 btn-sm" style="padding: 1px; color: white;" href="{{ URL::to('/day/show/' . $employee->dayId) }}">
                                             @lang('common.add_schedule')
                                         </a>
                                     @endif
@@ -67,7 +67,7 @@
                         @endforeach
                     </ul>
                 </div>
-                <p>@lang('common.last_update') : 
+                <p>@lang('common.last_update'): 
                     <strong>
                         {{$graphicRequest->updated_at}}
                     </strong>
@@ -80,7 +80,7 @@
     </div>
 
     <div class="jumbotron" style="margin-left: 2rem; margin-right: 2rem;">
-        <h3 class="text-center">@lang('common.messages') :</h3>
+        <h3 class="text-center">@lang('common.messages'):</h3>
         <hr style="margin-bottom: 2rem;">
         @if (count($graphicRequestMessages) > 0)
             @foreach ($graphicRequestMessages as $message)
@@ -107,7 +107,7 @@
                                 </div>
                                 <p>{{$message->text}}</p>
                                 <div class="text-right" style="padding-right: 3rem;">
-                                    <a class="btn btn-success btn-sm" href="{{ URL::to('/admin/graphic-request/message/change-status/' . $graphicRequest->id . '/' . $message->id) }}">
+                                    <a class="btn pallet-1-3 btn-sm" style="color: white;" href="{{ URL::to('/admin/graphic-request/message/change-status/' . $graphicRequest->id . '/' . $message->id) }}">
                                         @if ($message->status == 0)
                                             @lang('common.mark_as_written')
                                         @elseif ($message->status == 1)
@@ -135,7 +135,7 @@
                 {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}
             
                 <div class="text-center">
-                    <input type="submit" value="@lang('common.send')" class="btn btn-primary">
+                    <input type="submit" value="@lang('common.send')" class="btn pallet-2-4" style="color: white;">
                 </div>
 
             {{ Form::close() }}

@@ -1,7 +1,7 @@
 .clicked {
     color: white;
-    background-color: #55cc55;
-    border-color: green;
+    background-color: #A1D6AC;
+    border-color: #A1D6AC;
 }
 
 a:hover > li {

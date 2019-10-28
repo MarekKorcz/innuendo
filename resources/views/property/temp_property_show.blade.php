@@ -9,12 +9,12 @@
         <nav class="navbar navbar-inverse">
             <div class="navbar-header">
                 <div class="text-right" style="padding: 6px;">
-                    <a class="btn btn-danger delete" style="color: white;" data-temp_property_id="{{$tempProperty->id}}">@lang('common.delete')</a>
+                    <a class="btn pallet-2-2 delete" style="color: white;" data-temp_property_id="{{$tempProperty->id}}">@lang('common.delete')</a>
                 </div>
             </div>
             <ul class="nav navbar-nav">
                 <li>
-                    <a class="btn btn-success" href="{{ URL::to('temp-property/' . $tempProperty->id . '/edit') }}">
+                    <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('temp-property/' . $tempProperty->id . '/edit') }}">
                         @lang('common.edit')
                     </a>
                 </li>
@@ -25,12 +25,12 @@
     
         <table class="table table-striped">
             <tr>
-                <th>@lang('common.name') :</th>
-                <th>@lang('common.street') :</th>
-                <th>@lang('common.street_number') :</th>
-                <th>@lang('common.house_number') :</th>
-                <th>@lang('common.city') :</th>
-                <th>@lang('common.owner') :</th>
+                <th>@lang('common.name'):</th>
+                <th>@lang('common.street'):</th>
+                <th>@lang('common.street_number'):</th>
+                <th>@lang('common.house_number'):</th>
+                <th>@lang('common.city'):</th>
+                <th>@lang('common.owner'):</th>
             </tr>
             <tr>
                 <td>{{ $tempProperty->name }}</td>
@@ -51,12 +51,12 @@
         @if (count($subscriptions) > 0)
             <table class="table table-striped">
                 <tr>
-                    <th>@lang('common.name') :</th>
-                    <th>@lang('common.description') :</th>
-                    <th>@lang('common.old_price') :</th>
-                    <th>@lang('common.new_price') :</th>
-                    <th>@lang('common.quantity') :</th>
-                    <th>@lang('common.duration') :</th>
+                    <th>@lang('common.name'):</th>
+                    <th>@lang('common.description'):</th>
+                    <th>@lang('common.old_price'):</th>
+                    <th>@lang('common.new_price'):</th>
+                    <th>@lang('common.quantity'):</th>
+                    <th>@lang('common.duration'):</th>
                 </tr>
                     @foreach ($subscriptions as $subscription)
                         <tr>
@@ -85,7 +85,7 @@
                     <form method="POST" accept-charset="UTF-8">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                        <input type="submit" value="@lang('common.delete')" class="btn pallet-2-2" style="color: white;">
                     </form>
                 </div>
             </div>

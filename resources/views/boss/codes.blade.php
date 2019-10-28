@@ -18,7 +18,7 @@
                         <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
                             <div class="card">
                                 <div class="text-right" style="padding: 6px;">
-                                    <a class="btn btn-danger delete" style="color: white;" data-code_id="{{$codes[$i]['code_id']}}">@lang('common.delete')</a>
+                                    <a class="btn pallet-2-2 delete" style="color: white;" data-code_id="{{$codes[$i]['code_id']}}">@lang('common.delete')</a>
                                 </div>
                                 <div class="text-center">
                                     {{ Form::open(['id' => 'register-code', 'action' => 'BossController@setCode', 'method' => 'POST']) }}
@@ -28,11 +28,10 @@
                                                     <h4>@lang('common.properties')</h4>
                                                     <ul class="property" style="padding: 0 2rem 0 2rem;">
                                                         @if ($property['chosen_property_id'] != 0)
-                                                            <li class="form-control" 
+                                                            <li class="form-control property-highlight" 
                                                                 data-active="true" 
                                                                 data-property_id="{{$property['property_id']}}" 
-                                                                data-chosen_property_id="{{$property['chosen_property_id']}}" 
-                                                                style="background-color: lightskyblue;"
+                                                                data-chosen_property_id="{{$property['chosen_property_id']}}"
                                                             >
                                                                 {{$property['property_name']}}
                                                             </li>
@@ -50,12 +49,11 @@
                                                     <ul class="subscriptions" data-chosen_property_id="{{$property['chosen_property_id']}}" style="padding: 0 2rem 0 2rem;">
                                                         @foreach ($property['subscriptions'] as $subscription)
                                                             @if ($subscription['isChosen'])
-                                                                <li class="form-control" 
+                                                                <li class="form-control subscription-highlight" 
                                                                     data-subscription_id="{{$subscription['subscription_id']}}" 
-                                                                    data-active="true" 
-                                                                    style="background-color: lightgreen;"
+                                                                    data-active="true"
                                                                 >
-                                                                    {{$subscription['subscription_name']}}
+                                                                    {!! $subscription['subscription_name'] !!}
                                                                     @if ($subscription['isSubscriptionStarted'] !== null)
                                                                         {{$subscription['isSubscriptionStarted']}}
                                                                     @endif
@@ -65,7 +63,7 @@
                                                                     data-subscription_id="{{$subscription['subscription_id']}}" 
                                                                     data-active="false"
                                                                 >
-                                                                    {{$subscription['subscription_name']}}
+                                                                    {!! $subscription['subscription_name'] !!}
                                                                     @if ($subscription['isSubscriptionStarted'] !== null)
                                                                         {{$subscription['isSubscriptionStarted']}}
                                                                     @endif
@@ -87,16 +85,16 @@
                                                 <p>
                                                     @lang('common.registration_code') :
                                                     <input class="code-text" name="code-text" type="text" value="{{$codes[$i]['code']}}" style="margin: 0px 12px 0px 12px;">
-                                                    <a class="btn btn-info copy-button">
+                                                    <a class="btn pallet-1-3 copy-button" style="color: white;">
                                                         @lang('common.registration_code_copy')
                                                     </a>
                                                 </p>
 
                                                 <input name="code" type="hidden" value="false">
-                                                <input type="submit" value="@lang('common.turn_registration_off')" class="btn btn-warning">
+                                                <input type="submit" value="@lang('common.turn_registration_off')" class="btn pallet-2-4" style="color: white;">
                                             @else
                                                 <input name="code" type="hidden" value="true">
-                                                <input type="submit" value="@lang('common.turn_registration_on')" class="btn btn-success">
+                                                <input type="submit" value="@lang('common.turn_registration_on')" class="btn pallet-1-3" style="color: white;">
                                             @endif
                                         </div>
                                     {{ Form::close() }}
@@ -107,7 +105,7 @@
                 @endfor
 
                 <div class="col-lg-12 text-center" style="margin-bottom: 30px;">
-                    <a class="btn btn-success" href="{{ action('BossController@addCode') }}">
+                    <a class="btn pallet-2-1" style="color: white;" href="{{ action('BossController@addCode') }}">
                         @lang('common.add_new_code')
                     </a>
                 </div>
@@ -119,14 +117,14 @@
                     <h3>@lang('common.go_to_subscription_list_description')</h3>
                     <h4>@lang('common.go_to_schedule_description_4')</h4>
                     <div style="padding: 1rem;">
-                        <a class="btn btn-success btn-lg" href="{{ URL::to('/boss/subscription/list/0/0') }}">
+                        <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/boss/subscription/list/0/0') }}">
                             @lang('common.subscriptions_list')
                         </a>
                     </div>
                 @else
                     <h4>@lang('common.register_codes_description')</h4>
                     <div style="padding: 1rem;">
-                        <a class="btn btn-success btn-lg" href="{{ action('BossController@addCode') }}">
+                        <a class="btn pallet-2-1 btn-lg" style="color: white;" href="{{ action('BossController@addCode') }}">
                             @lang('common.add_new_code')
                         </a>
                     </div>
@@ -143,7 +141,7 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <a id="addPropertyButton" class="btn btn-success" style="color: white;">@lang('common.turn_on')</a>
+                    <a id="addPropertyButton" class="btn pallet-1-3" style="color: white;">@lang('common.turn_on')</a>
                 </div>
             </div>
         </div>
@@ -157,7 +155,7 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <a id="removePropertyButton" class="btn btn-success" style="color: white;">@lang('common.turn_off')</a>
+                    <a id="removePropertyButton" class="btn pallet-1-3" style="color: white;">@lang('common.turn_off')</a>
                 </div>
             </div>
         </div>
@@ -171,7 +169,7 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <a id="addSubscriptionButton" class="btn btn-success" style="color: white;">@lang('common.turn_on')</a>
+                    <a id="addSubscriptionButton" class="btn pallet-1-3" style="color: white;">@lang('common.turn_on')</a>
                 </div>
             </div>
         </div>
@@ -185,7 +183,7 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <a id="removeSubscriptionButton" class="btn btn-success" style="color: white;">@lang('common.turn_off')</a>
+                    <a id="removeSubscriptionButton" class="btn pallet-1-3" style="color: white;">@lang('common.turn_off')</a>
                 </div>
             </div>
         </div>
@@ -202,7 +200,7 @@
                     <form method="POST" accept-charset="UTF-8">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" value="@lang('common.delete')" class="btn btn-danger">
+                        <input type="submit" value="@lang('common.delete')" class="btn pallet-2-2" style="color: white;">
                     </form>
                 </div>
             </div>

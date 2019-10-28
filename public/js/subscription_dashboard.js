@@ -247,10 +247,10 @@ window.addEventListener('DOMContentLoaded', () => {
                         <div class="text-center">                        
                             <div id="button-space" style="padding: 1rem;">
                                 <h2> ` + data.header_workers + ` :</h2>
-                                <a class="btn btn-primary" href="` + data.subscription_workers_edit_button + `">
+                                <a class="btn pallet-1-3" style="color: white;" href="` + data.subscription_workers_edit_button + `">
                                     ` + data.subscription_workers_edit_button_description + `
                                 </a>
-                                <a class="btn btn-primary" href="` + data.worker_appointment_list_button + `">
+                                <a class="btn pallet-2-2" style="color: white;" href="` + data.worker_appointment_list_button + `">
                                     ` + data.worker_appointment_list_button_description + `
                                 </a>
                             </div>
@@ -282,7 +282,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <td>` + worker.email + `</td>
                                 <td>` + worker.phone_number + `</td>
                                 <td>
-                                    <a class="btn btn-primary" href="` + worker.workers_appointment_show_button + `">
+                                    <a class="btn pallet-2-2" style="color: white;" href="` + worker.workers_appointment_show_button + `">
                                         ` + data.show_button_description + `
                                     </a>
                                 </td>
@@ -333,10 +333,10 @@ window.addEventListener('DOMContentLoaded', () => {
                     <div class="text-center">                        
                         <div id="button-space" style="padding: 1rem;">
                             <h2>` + data.header_workers + ` :</h2>
-                            <a class="btn btn-primary" href="` + data.subscription_workers_edit_button + `">
+                            <a class="btn pallet-1-3" style="color: white;" href="` + data.subscription_workers_edit_button + `">
                                 ` + data.subscription_workers_edit_button_description + `
                             </a>
-                            <a class="btn btn-primary" href="` + data.worker_appointment_list_button + `">
+                            <a class="btn pallet-2-2" style="color: white;" href="` + data.worker_appointment_list_button + `">
                                 ` + data.worker_appointment_list_button_description + `
                             </a>
                         </div>
@@ -368,7 +368,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             <td>` + worker.email + `</td>
                             <td>` + worker.phone_number + `</td>
                             <td>
-                                <a class="btn btn-primary" href="` + worker.workers_appointment_show_button + `">
+                                <a class="btn pallet-2-2" style="color: white;" href="` + worker.workers_appointment_show_button + `">
                                     ` + data.show_button_description + `
                                 </a>
                             </td>

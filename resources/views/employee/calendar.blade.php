@@ -377,7 +377,7 @@
                         <input type="hidden" name="day" value="{{$current_day}}"/>
                     </div>
                  
-                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn btn-primary">
+                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
 
                 {{ Form::close() }}
             </div>
@@ -436,7 +436,7 @@
                         @endif
                  
                         <div class="text-center">
-                            <input type="submit" value="@lang('common.go_to_reservation')" class="btn btn-success">
+                            <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-2">
                         </div>
 
                 {{ Form::close() }}

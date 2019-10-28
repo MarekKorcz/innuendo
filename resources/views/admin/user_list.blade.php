@@ -4,7 +4,7 @@
     
     <div style="padding: 1rem 0 1rem 0">
         
-        <h2 class="text-center" style="padding-bottom: 1rem;">@lang('common.active_users') :</h2>
+        <h2 class="text-center" style="padding-bottom: 1rem;">@lang('common.active_users'):</h2>
 
         @if (count($users) > 0)
             <table class="table table-striped table-bordered">
@@ -21,7 +21,7 @@
                             <td>{{$user->name}} {{$user->surname}}</td>
                             <td>{{$user->created_at}}</td>
                             <td>
-                                <a class="btn btn-primary" href="{{ URL::to('/admin/user/show/' . $user->id) }}">
+                                <a class="btn pallet-2-4" style="color: white;" href="{{ URL::to('/admin/user/show/' . $user->id) }}">
                                     @lang('common.show')
                                 </a>
                             </td>
@@ -35,7 +35,7 @@
             </div>
         @endif
         
-        <h2 class="text-center" style="padding: 1rem 0 1rem 0;">@lang('common.temp_user_user_entites') :</h2>
+        <h2 class="text-center" style="padding: 1rem 0 1rem 0;">@lang('common.temp_user_user_entites'):</h2>
 
         @if (count($tempUsers) > 0)
             <table class="table table-striped table-bordered">
@@ -52,7 +52,7 @@
                             <td>{{$tempUser->name}} {{$tempUser->surname}}</td>
                             <td>{{$tempUser->created_at}}</td>
                             <td>
-                                <a class="btn btn-primary" href="{{ URL::to('/admin/temp-user/user/show/' . $tempUser->id) }}">
+                                <a class="btn pallet-2-4" style="color: white;" href="{{ URL::to('/admin/temp-user/user/show/' . $tempUser->id) }}">
                                     @lang('common.show')
                                 </a>
                             </td>

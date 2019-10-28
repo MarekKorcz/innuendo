@@ -40,7 +40,9 @@
                 
                     {{ Form::hidden('id', $employee->id) }}
 
-                    <input type="submit" value="@lang('common.update')" class="btn btn-primary">
+                    <div class="text-center">
+                        <input type="submit" value="@lang('common.update')" class="btn pallet-2-4" style="color: white;">
+                    </div>                    
 
                 {{ Form::close() }}
             </div>
@@ -64,7 +66,7 @@
 
     @if ($calendars && count($calendars) == count($properties))
     
-        <h2 class="text-center padding-top">@lang('common.schedule_in') :</h2>
+        <h2 class="text-center padding-top">@lang('common.schedule_in'):</h2>
     
         @for ($i = 1; $i <= count($calendars); $i++)
             @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
@@ -80,7 +82,7 @@
                                     {!!$properties[$i - 1]->description!!}
                                 </p>
                                 <div class="text-center">
-                                    <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                    <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
                                         @lang('common.show')
                                     </a>
                                 </div>
@@ -99,7 +101,7 @@
                                     {!!$properties[$i - 1]->description!!}
                                 </p>
                                 <div class="text-center">
-                                    <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                    <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
                                         @lang('common.show')
                                     </a>
                                 </div>
@@ -119,7 +121,7 @@
                                 {!!$properties[$i - 1]->description!!}
                             </p>
                             <div class="text-center">
-                                <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
                                     @lang('common.show')
                                 </a>
                             </div>

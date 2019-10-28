@@ -15,12 +15,13 @@
                 <div class="row">
                     <div class="col-6">
                         <h3 style="padding: 9px;">@lang('common.description')</h3>
-                        <p>@lang('common.name') : <strong>{{$employee->name}} {{$employee->surname}}</strong></p>
-                        <p>@lang('common.email_address') : <strong>{{$employee->email}}</strong></p>
-                        <p>@lang('common.working_since') : <strong>{{ $employeeCreatedAt }}</strong></p>
+                        <p>@lang('common.name'): <strong>{{$employee->name}} {{$employee->surname}}</strong></p>
+                        <p>@lang('common.email_address'): <strong>{{$employee->email}}</strong></p>
+                        <p>@lang('common.working_since'): <strong>{{ $employeeCreatedAt }}</strong></p>
                     </div>
                     <div class="col-6">
                         <div class="text-center">
+                            <!--todo: dodaj zdjęcie-->
                             @if (Storage::disk('local')->has($employee->profile_image))
                                 <div style="padding: 1rem;">
                                     <img src="{{ route('account.image', ['fileName' => $employee->profile_image]) }}" 
@@ -57,7 +58,7 @@
                                             {!!$properties[$i - 1]->description!!}
                                         </p>
                                     <div class="text-center">
-                                        <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                        <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
                                             @lang('common.show')
                                         </a>
                                     </div>
@@ -78,7 +79,7 @@
                                         {!!$properties[$i - 1]->description!!}
                                     </p>
                                     <div class="text-center">
-                                        <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                        <a class="btn btn-pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
                                             @lang('common.show')
                                         </a>
                                     </div>
@@ -100,7 +101,7 @@
                                     {!!$properties[$i - 1]->description!!}
                                 </p>
                                 <div class="text-center">
-                                    <a class="btn btn-success" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                    <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
                                         @lang('common.show')
                                     </a>
                                 </div>

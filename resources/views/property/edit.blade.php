@@ -2,16 +2,15 @@
 @section('content')
 <div class="container">
 
-    <nav class="navbar navbar-inverse">
-        <div class="navbar-header"></div>
-        <ul class="nav navbar-nav">
-            <li>
-                <a href="{{ URL::to('/property/index') }}" class="btn btn-primary">
-                    @lang('common.all_properties')
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <div class="row" style="padding: 1rem 0 1rem 0;">
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+        <div class="col-4 text-center">
+            <a href="{{ URL::to('/property/index') }}" class="btn pallet-1-3" style="color: white;">
+                @lang('common.all_properties')
+            </a>
+        </div>
+    </div>
 
     <div class="jumbotron">
         <div class="text-center">
@@ -65,7 +64,7 @@
             {{ Form::hidden('_method', 'PUT') }}
 
             <div class="text-center">
-                <input type="submit" value="@lang('common.update')" class="btn btn-primary">
+                <input type="submit" value="@lang('common.update')" class="btn pallet-1-3" style="color: white;">
             </div>
 
         {{ Form::close() }}
