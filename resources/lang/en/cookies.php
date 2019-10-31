@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'cookies_policy' => 'Cookies policy',
+    'terms_info' => 'The above cookie policy model is protected by copyright which IAB Polska is entitled to.',
+    'first_paragraph_1' => 'The website does not automatically collect any information, except for the information contained in cookies.',
+    'first_paragraph_2' => 'Cookie files (so-called "cookies") are IT data, in particular text files, which are stored on the Website User\'s end device and are intended for using the Website\'s pages. Cookies usually contain the name of the website from which they originate, their storage time on the end device and a unique number.',
+    'first_paragraph_3_1' => 'The entity placing cookies on the Website User\'s end device and accessing them is the Website operator ',
+    'first_paragraph_3_2' => ' with its registered office at ',
+    'first_paragraph_4' => 'Cookies are used for the purpose:',
+    'first_paragraph_4_a' => 'adapt the content of the Website pages to the User\'s preferences and optimize the use of websites, in particular these files allow to recognize the device of the Website User and properly display the website, tailored to his individual needs;',
+    'first_paragraph_4_b' => 'creating statistics that help understand how Website Users use websites, which allows improving their structure and content;',
+    'first_paragraph_4_c' => 'maintaining the Website User\'s session (after logging in), thanks to which the User does not have to re-enter the login and password on each subpage of the Website;',
+    'first_paragraph_5' => 'The Website uses two basic types of cookies: "session" cookies and "persistent" cookies. Session cookies are temporary files that are stored on the User\'s end device until logging out, leaving the website or turning off the software (web browser). Persistent cookies are stored on the User\'s end device for the time specified in the cookie parameters or until they are deleted by the User.',
+    'first_paragraph_6' => 'The Website uses the following types of cookies:',
+    'first_paragraph_6_a' => '"necessary" cookies, enabling the use of services available on the Website, e.g. authentication cookies used for services that require authentication on the Website;',
+    'first_paragraph_6_b' => 'cookies used to ensure security, e.g. used to detect fraud in the field of authentication on the Website;',
+    'first_paragraph_6_c' => '"performance" cookies, enabling the collection of information on how to use the Website\'s pages;',
+    'first_paragraph_6_d' => '"functional" cookies, enabling "remembering" the settings selected by the User and personalizing the User\'s interface, eg in terms of the language or region of the User\'s origin, font size, appearance of the website, etc;',
+    'first_paragraph_6_e' => '"advertising" cookies, enabling users to provide advertising content more tailored to their interests.',
+    'first_paragraph_7' => 'In many cases, the software used for browsing websites (web browser) by default allows cookies to be stored on the User\'s end device. Website Users can change cookie settings at any time. These settings can be changed in particular in such a way as to block the automatic handling of cookies in the web browser settings or to inform about them every time they are placed on the Website User\'s device. Detailed information about the possibilities and ways of handling cookies are available in the software (web browser) settings.',
+    'first_paragraph_8' => 'The Website operator informs that restrictions on the use of cookies may affect some of the functionalities available on the Website.',
+    'first_paragraph_9' => 'Cookies placed on the Website User\'s end device can also be used by advertisers and partners cooperating with the Website operator.',
+    'first_paragraph_10_1' => 'More information on cookies is available at ',
+    'first_paragraph_10_2' => ' or in the "Help" section of the web browser menu.',
+];
