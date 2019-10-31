@@ -30,6 +30,9 @@ use App\Mail\BossCreateWithPromoCode;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Redirect;
 use Session;
 
 class HomeController extends Controller
@@ -46,7 +49,9 @@ class HomeController extends Controller
             'subscriptions',
             'discounts',
             'cookiesPolicy',
-            'privatePolicy'
+            'privatePolicy',
+            'contactPageShow',
+            'contactPageUpdate'
         ]);
     }
     
@@ -188,6 +193,35 @@ class HomeController extends Controller
     public function privatePolicy()
     {
         return view('private_policy');
+    }
+    
+    public function contactPageShow()
+    {
+        return view('contact_page');
+    }
+    
+    public function contactPageUpdate()
+    {
+        $rules = array(
+            'topic'   => 'required|string',
+            'email'   => 'required|email',
+            'message' => 'required|string'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('contact')
+                ->withErrors($validator);
+        } else {
+            
+            $message = new Message();
+            $message->topic = Input::get('topic');
+            $message->email = Input::get('email');
+            $message->text  = Input::get('message');     
+            $message->save();
+
+            return redirect()->route('welcome')->with('succes', 'Wiadomość została wysłana!');
+        }
     }
     
 //    {

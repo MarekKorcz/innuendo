@@ -19,6 +19,8 @@ Route::get('/subscriptions', 'HomeController@subscriptions')->name('subscription
 Route::get('/discounts', 'HomeController@discounts')->name('discounts');
 Route::get('/cookies-policy', 'HomeController@cookiesPolicy')->name('cookies_policy');
 Route::get('/private-policy', 'HomeController@privatePolicy')->name('private_policy');
+Route::get('/contact', 'HomeController@contactPageShow')->name('contact_page');
+Route::post('/contact-update', 'HomeController@contactPageUpdate');
 
 Route::get('locale/{locale}', function($locale) {
     

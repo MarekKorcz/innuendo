@@ -137,9 +137,11 @@ class CreateModels extends Migration
         
         Schema::create('messages', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('text');
-            $table->integer('status');
-            $table->integer('owner_id');
+            $table->string('topic')->nullable();
+            $table->string('email')->nullable();
+            $table->text('text')->nullable();
+            $table->integer('status')->nullable();
+            $table->integer('owner_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->integer('graphic_request_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("graphic_requests");

@@ -104,14 +104,13 @@
     @yield('content')
     
     <footer class="container-fluid text-center">
-        <div class="row">
-            <div class="col-sm-3" style="padding: 15px;">
+<!--            <div class="col-sm-3" style="padding: 15px;">
                 <h4>@lang('footer.contact')</h4>
                 <h5>mark.korcz@gmail.com</h5>
                 <h5>602 342 396</h5>
-<!--                <a id="facebook" href="https://www.facebook.com/Gabinet.Masazu.Mokotow/">
+                <a id="facebook" href="https://www.facebook.com/Gabinet.Masazu.Mokotow/">
                     <i class="fab fa-facebook-square"></i>
-                </a>-->
+                </a>
             </div>
             <div class="col-sm-6">
                 <a class="text-center" href="{{ route('welcome') }}">
@@ -128,6 +127,11 @@
             <div class="col-sm-3 footer-3">
                 <div class="text-center">
                     <h5>
+                        <a href="{{ route('contact_page') }}" target="_blanc">
+                            @lang('contact.contact_page')
+                        </a>
+                    </h5>
+                    <h5>
                         <a href="{{ route('cookies_policy') }}" target="_blanc">
                             @lang('cookies.cookies_policy')
                         </a>
@@ -138,7 +142,41 @@
                         </a>
                     </h5>
                 </div>
+            </div>-->
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-5">
+                <div class="position-center">
+                    <p>
+                        <span id="footer-name" class="logo-text">
+                            {{ config('app.name') }}
+                            <span style="font-size: 21px;">
+                                {{ config('app.name_2nd_part') }}
+                            </span>
+                        </span>
+                    </p>
+                </div>
             </div>
+            <div class="col-5">
+                <ul>
+                    <li>
+                        <a href="{{ route('contact_page') }}" target="_blanc">
+                            @lang('contact.contact_page')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cookies_policy') }}" target="_blanc">
+                            @lang('cookies.cookies_policy')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('private_policy') }}" target="_blanc">
+                            @lang('private_policy.private_policy')
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-1"></div>
         </div>
         <div class="row">
             <div class="col-sm-12">

@@ -172,3 +172,25 @@ a {
 .pallet-2-3-font {
     color: #325D7F;
 }
+
+ul {
+    list-style-type:none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+div.position-center {
+    height: 5em;
+    position: relative 
+}
+
+div.position-center p {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%) 
+}

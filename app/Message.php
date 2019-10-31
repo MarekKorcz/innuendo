@@ -19,7 +19,7 @@ class Message extends Model
      * @var array
      */
     protected $fillable = [
-        'text', 'status', 'owner_id', 'graphic_request_id', 'promo_code_id'
+        'topic', 'email', 'text', 'status', 'owner_id', 'graphic_request_id', 'promo_code_id'
     ];
     
     /**
