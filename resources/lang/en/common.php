@@ -443,5 +443,9 @@ return [
     'no_users_currently_available' => 'Currently, there are no users in the database',
     'property' => 'Location',
     'unknown_boss' => 'Unknown boss',
-    'length_of_the_massage' => 'Length of massage'
+    'length_of_the_massage' => 'Length of massage',
+    'contact_messages' => 'Contact messages',
+    'contact_messages_description' => 'View with contact message list',
+    'topic' => 'Topic',
+    'text' => 'Text',
 ];

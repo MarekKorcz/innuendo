@@ -449,5 +449,9 @@ return [
     'no_users_currently_available' => 'Obecnie, nie ma żadnych użytkowników w bazie danych',
     'property' => 'Lokalizacja',
     'unknown_boss' => 'Nieznany szef',
-    'length_of_the_massage' => 'Długość masażu'
+    'length_of_the_massage' => 'Długość masażu',
+    'contact_messages' => 'Wiadomości kontaktowe',
+    'contact_messages_description' => 'Widok z listą pytań kontaktowych',
+    'topic' => 'Temat',
+    'text' => 'Treść',
 ];

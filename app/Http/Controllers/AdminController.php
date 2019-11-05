@@ -804,6 +804,18 @@ class AdminController extends Controller
         return redirect()->route('welcome');
     }
     
+    public function contactMessages()
+    {
+        $contactMessages = Message::where([
+            'graphic_request_id' => null,
+            'promo_code_id' => null
+        ])->get();
+        
+        return view('admin.contact_messages')->with([
+            'contactMessages' => $contactMessages
+        ]);
+    }
+    
     public function approveMessageStatusChange($promoCodeId)
     {
         $promoCode = PromoCode::where('id', $promoCodeId)->first();

@@ -67,6 +67,7 @@ Route::get('/admin/promo-code/message/change-status/{promoId}/{messageId}', 'Adm
 Route::get('/admin/promo/activation/toggle/{promoId}', 'AdminController@promoActivationToggle');
 Route::get('/admin/approve/messages', 'AdminController@approveMessages');
 Route::get('/admin/approve/messages/{bossId}', 'AdminController@approveMessageShow');
+Route::get('/admin/contact/messages', 'AdminController@contactMessages');
 Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminController@approveMessageStatusChange');
 Route::post('/admin/make-an-approve-message', 'AdminController@makeAnApproveMessage');
 Route::get('/admin/discount/create', 'DiscountController@create');
