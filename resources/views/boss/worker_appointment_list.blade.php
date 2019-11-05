@@ -17,17 +17,17 @@
             </div>
             @if (count($appointments) > 0)
                 <div id="workers-panel" class="wrapper cont">
-                    <div class="text-center">
-                        <label for="search">@lang('common.write_your_name_and_lastname'):</label>
-                        @if($worker !== null)
-                            <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" data-user_id="{{$worker->id}}" autocomplete="off">
-                        @else
-                            <input id="search" class="form-control" type="text" value="" autocomplete="off">          
-                        @endif
-                        <ul id="result" class="list-group list-styling"></ul>
-                    </div>
-                    <div class="text-center">
-                        @if ($substart->isActive)
+                    @if ($substart->isActive)
+                        <div class="text-center">
+                            <label for="search">@lang('common.write_your_name_and_lastname'):</label>
+                            @if($worker !== null)
+                                <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" data-user_id="{{$worker->id}}" autocomplete="off">
+                            @else
+                                <input id="search" class="form-control" type="text" value="" autocomplete="off">          
+                            @endif
+                            <ul id="result" class="list-group list-styling"></ul>
+                        </div>
+                        <div class="text-center">
                             <label for="timePeriod">@lang('common.select_a_billing_period') :</label>
                             <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
                                 @foreach ($intervals as $key => $interval)
@@ -39,15 +39,8 @@
                                     @endif
                                 @endforeach
                             </select>
-                        @else
-                            <h4>@lang('common.subscription_first_time_activation_info')</h4>
-                            <div style="padding: 1rem;">
-                                <a class="btn btn-success" href="{{ URL::to('/appointment/index') }}">
-                                    @lang('common.go_to_appointments')
-                                </a>
-                            </div>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                 </div>
             @else
                 <div class="text-center" style="padding: 1rem;">
@@ -58,12 +51,12 @@
                         </a>
                     </div>
                 </div>
+                <hr>
             @endif
 
 
             <div id="appointments-table">
                 @if (count($appointments) > 0)
-                    <hr>
                     <div class="col-12">
                         <h2 class="text-center">
                             @lang('common.all_massages')
@@ -117,6 +110,17 @@
                             @endforeach
                         </tbody>
                     </table>
+                @else
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h4>@lang('common.subscription_first_time_activation_info')</h4>
+                            <div style="padding: 1rem;">
+                                <a class="btn btn-success" href="{{ URL::to('/appointment/index') }}">
+                                    @lang('common.go_to_appointments')
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>

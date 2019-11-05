@@ -1204,24 +1204,38 @@ class BossController extends Controller
             if ($substart->boss_id === $boss->id)
             {
                 $today = new \DateTime(date('Y-m-d'));
-//                $today = date('Y-m-d', strtotime("+1 month", strtotime($today->format("Y-m-d"))));
+//                $today = date('Y-m-d', strtotime("+3 month", strtotime($today->format("Y-m-d"))));
                 
                 $substartIntervals = Interval::where('substart_id', $substart->id)->get();
-                $chosenInterval = Interval::where([
-                    'id' => $intervalId,
-                    'substart_id' => $substart->id
-                ])->first();
                 
                 if (count($substartIntervals) > 0)
                 {
+                    foreach ($substartIntervals as $substartInterval)
+                    {
+                        $substartInterval['workers'] = User::where('boss_id', $boss->id)->get();
+                        $substartInterval['isChecked'] = false;
+
+                        if (count($substartInterval['workers']) > 0)
+                        {
+                            foreach ($substartInterval['workers'] as $worker)
+                            {
+                                $worker['withSubscription'] = false;
+                            }
+                        }
+                    }
+                    
+                    $chosenInterval = Interval::where([
+                        'id' => $intervalId,
+                        'substart_id' => $substart->id
+                    ])->first();
+                    
                     if ($chosenInterval !== null)
-                    {                       
+                    {                                    
                         foreach ($substartIntervals as $substartInterval)
                         {
-                            $substartInterval['allWorkers'] = User::where('boss_id', $boss->id)->get();
-                            
                             if ($chosenInterval->id == $substartInterval->id)
                             {
+                                $substartInterval['isChecked'] = true;
                                 $workersIntervals = Interval::withTrashed()->where('interval_id', $substartInterval->id)->get();
 
                                 if (count($workersIntervals) > 0)
@@ -1232,31 +1246,23 @@ class BossController extends Controller
 
                                         if ($workerIntervalPurchase && $workerIntervalPurchase->chosenProperty->user_id !== null)
                                         {
-                                            if ($substartInterval['workers'] == null)
-                                            {
-                                                $substartInterval['workers'] = new Collection();
-                                            }
-
                                             $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
                                             
                                             if ($worker !== null)
                                             {
-                                                if ($substartInterval['allWorkers']->contains('id', $worker->id))
+                                                foreach ($substartInterval['workers'] as $key => $intervalWorker)
                                                 {
-                                                    $key = $substartInterval['allWorkers']->search(function($worker) {
-                                                        return $worker->id;
-                                                    });
-
-                                                    $substartInterval['allWorkers']->pull($key);
+                                                    if ($intervalWorker->id == $worker->id)
+                                                    {
+                                                        $substartInterval['workers'][$key]['withSubscription'] = $workerInterval->deleted_at == null ? true : false;
+                                                    }
                                                 }
-                                                
-                                                $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
-
-                                                $substartInterval['workers']->push($worker);
                                             }
                                         }
                                     }
                                 }
+                                
+                                $chosenInterval = $substartInterval;
                             }
                         }
                         
@@ -1264,12 +1270,10 @@ class BossController extends Controller
                         
                         foreach ($substartIntervals as $substartInterval)
                         {
-                            $substartInterval['allWorkers'] = User::where('boss_id', $boss->id)->get();
-                            
                             if ($substartInterval->start_date <= $today && $substartInterval->end_date >= $today)
                             {
                                 $workersIntervals = Interval::withTrashed()->where('interval_id', $substartInterval->id)->get();
-                                
+                                                                                        
                                 if (count($workersIntervals) > 0)
                                 {
                                     foreach ($workersIntervals as $workerInterval)
@@ -1277,28 +1281,18 @@ class BossController extends Controller
                                         $workerIntervalPurchase = Purchase::where('id', $workerInterval->purchase_id)->with('chosenProperty')->first();
                                         
                                         if ($workerIntervalPurchase !== null && $workerIntervalPurchase->chosenProperty->user_id !== null)
-                                        {
-                                            if ($substartInterval['workers'] == null)
-                                            {
-                                                $substartInterval['workers'] = new Collection();
-                                            }
-                                            
+                                        {                                            
                                             $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
                                             
                                             if ($worker !== null)
                                             {
-                                                if ($substartInterval['allWorkers']->contains('id', $worker->id))
+                                                foreach ($substartInterval['workers'] as $key => $intervalWorker)
                                                 {
-                                                    $key = $substartInterval['allWorkers']->search(function($worker) {
-                                                        return $worker->id;
-                                                    });
-
-                                                    $substartInterval['allWorkers']->pull($key);
+                                                    if ($intervalWorker->id == $worker->id)
+                                                    {
+                                                        $substartInterval['workers'][$key]['withSubscription'] = $workerInterval->deleted_at == null ? true : false;
+                                                    }
                                                 }
-                                                
-                                                $worker['withoutSubscription'] = $workerInterval->deleted_at == null ? false : true;
-
-                                                $substartInterval['workers']->push($worker);
                                             }
                                         }
                                     }
@@ -1307,87 +1301,39 @@ class BossController extends Controller
                         }
                     }
                     
-                    foreach ($substartIntervals as $substartInterval)
-                    {
-                        if (count($substartInterval['allWorkers']) > 0)
-                        {
-                            if ($substartInterval['workers'] == null)
-                            {
-                                $substartInterval['workers'] = new Collection();
-                            }
-                            
-                            foreach ($substartInterval['allWorkers'] as $unsetWorker)
-                            {
-                                $unsetWorker['withoutSubscription'] = true;
-                                
-                                $substartInterval['workers']->push($unsetWorker);
-                            }
-                        }
-                    }
-                    
                     $hasIntervalBeenChosen = false;
-                    
+                                        
                     foreach ($substartIntervals as $substartInterval)
                     {
-                        if ($substartInterval['workers'] !== null)
+                        if ($substartInterval['isChecked'] == true)
                         {
                             $hasIntervalBeenChosen = true;
-                            // uncomment if wanna display boss too
-//                            $substartInterval['workers']->prepend($boss);
+                            break;
                         }
                     }
                     
                     if ($hasIntervalBeenChosen == false)
                     {
-                        $workersIntervals = Interval::where('interval_id', $substartIntervals->last()->id)->get();
-
-                        if (count($workersIntervals) > 0)
+                        foreach ($substartIntervals as $substartInterval)
                         {
-                            foreach ($workersIntervals as $workerInterval)
+                            if ($substartInterval->start_date <= $today && $substartInterval->end_date >= $today)
                             {
-                                $workerIntervalPurchase = Purchase::where('id', $workerInterval->purchase_id)->with('chosenProperty')->first();
-
-                                if ($workerIntervalPurchase->chosenProperty->user_id !== null)
+                                $substartInterval['isChecked'] = true;
+                                $hasIntervalBeenChosen = true;
+                                
+                                if ($chosenInterval == null)
                                 {
-                                    if ($substartIntervals->last()['workers'] == null)
-                                    {
-                                        $substartIntervals->last()['workers'] = new Collection();
-                                    }
-
-                                    $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
-                                    $worker['withoutSubscription'] = false;
-
-                                    $substartIntervals->last()['workers']->push($worker);
+                                    $chosenInterval = $substartInterval;
                                 }
+                                
+                                break;
                             }
-                            
-                            // uncomment if wanna display boss too
-//                            if ($substartIntervals->last()['workers'] == null)
-//                            {
-//                                $substartIntervals->last()['workers'] = new Collection();
-//                            }
-//                            
-//                            $substartIntervals->last()['workers']->prepend($boss);
                         }
-                    }
-                }
-                
-                $bossWorkers = User::where('boss_id', $boss->id)->get();
-                
-                if (count($substartIntervals) > 0)
-                {
-                    foreach ($substartIntervals as $substartInterval)
-                    {
-                        if ($substartInterval['workers'] !== null)
+                        
+                        if ($hasIntervalBeenChosen == false)
                         {
-                            foreach ($bossWorkers as $bossWorker)
-                            {
-                                if (!$substartInterval['workers']->contains('id', $bossWorker->id))
-                                {
-                                    $bossWorker['withoutSubscription'] = true;
-                                    $substartInterval['workers']->push($bossWorker);
-                                }
-                            }
+                            $chosenInterval = $substartIntervals->last();
+                            $substartIntervals->last()['isChecked'] = true;
                         }
                     }
                 }
@@ -1396,8 +1342,8 @@ class BossController extends Controller
                     'substart' => $substart,
                     'subscription' => Subscription::where('id', $substart->subscription_id)->first(),
                     'substartIntervals' => $substartIntervals,
-                    'today' => $today,
-                    'hasAnyWorkerAtAll' => User::where('boss_id', $boss->id)->get()
+                    'chosenInterval' => $chosenInterval,
+                    'today' => $today
                 ]);
             }
             

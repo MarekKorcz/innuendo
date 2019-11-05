@@ -207,9 +207,9 @@ class AppointmentController extends Controller
                                                 if ($interval->substart_id == null)
                                                 {
                                                     // >> purchased subscription worker scenario
-                                                    $bossInterval = Interval::where('id', $interval->interval_id)->first();                                                               
+                                                    $bossInterval = Interval::where('id', $interval->interval_id)->first();
 
-                                                    if ($bossInterval !== null && $bossInterval->available_units > 0 && $interval->available_units > 0)
+                                                    if ($bossInterval !== null && $bossInterval->workers_available_units > 0 && $interval->available_units > 0)
                                                     {
                                                         foreach ($subscription->items as $item)
                                                         {
