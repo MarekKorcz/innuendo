@@ -32,6 +32,45 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
+                        <h4 class="card-title text-center">@lang('common.contact_messages')</h4>
+                        <p class="card-text text-center">
+                            @lang('common.contact_messages_description')
+                        </p>
+                        <div class="text-center">
+                            <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('admin/contact/messages') }}">
+                                @lang('common.show')
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">@lang('common.approval_messages')</h4>
+                        <p class="card-text text-center">
+                            @lang('common.approved_messages_description')
+                        </p>
+                        <div class="text-center">
+                            <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('admin/approve/messages') }}">
+                                @lang('common.show')
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">@lang('common.all_graphic_requests')</h4>
+                        <p class="card-text text-center">
+                            @lang('common.all_graphic_requests_description')
+                        </p>
+                        <div class="text-center">
+                            <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('admin/graphic-requests') }}">
+                                @lang('common.show')
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
                         <h4 class="card-title text-center">@lang('common.bosses_list')</h4>
                         <p class="card-text text-center">
                             @lang('common.bosses_list_description')
@@ -97,19 +136,6 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title text-center">@lang('common.all_graphic_requests')</h4>
-                        <p class="card-text text-center">
-                            @lang('common.all_graphic_requests_description')
-                        </p>
-                        <div class="text-center">
-                            <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('admin/graphic-requests') }}">
-                                @lang('common.show')
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
                         <h4 class="card-title text-center">@lang('common.promos_list')</h4>
                         <p class="card-text text-center">
                             @lang('common.promos_list_description')
@@ -123,38 +149,12 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title text-center">@lang('common.approval_messages')</h4>
-                        <p class="card-text text-center">
-                            @lang('common.approved_messages_description')
-                        </p>
-                        <div class="text-center">
-                            <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('admin/approve/messages') }}">
-                                @lang('common.show')
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
                         <h4 class="card-title text-center">@lang('common.discounts')</h4>
                         <p class="card-text text-center">
                             @lang('common.discounts_description')
                         </p>
                         <div class="text-center">
                             <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('admin/discount/index') }}">
-                                @lang('common.show')
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title text-center">@lang('common.contact_messages')</h4>
-                        <p class="card-text text-center">
-                            @lang('common.contact_messages_description')
-                        </p>
-                        <div class="text-center">
-                            <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('admin/contact/messages') }}">
                                 @lang('common.show')
                             </a>
                         </div>

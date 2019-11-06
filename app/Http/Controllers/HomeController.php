@@ -210,7 +210,7 @@ class HomeController extends Controller
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('contact')
+            return Redirect::to('/contact')
                 ->withErrors($validator);
         } else {
             
@@ -220,7 +220,7 @@ class HomeController extends Controller
             $message->text  = Input::get('message');     
             $message->save();
 
-            return redirect()->route('welcome')->with('succes', 'Wiadomość została wysłana!');
+            return redirect()->route('welcome')->with('success', 'Wiadomość została wysłana!');
         }
     }
     
