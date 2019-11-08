@@ -1638,28 +1638,7 @@ class BossController extends Controller
                 $substartIntervals = Interval::where('substart_id', $substart->id)->get();
                 
                 $today = new \DateTime(date('Y-m-d'));
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                $today = date('Y-m-d', strtotime("+1 month", strtotime($today->format("Y-m-d"))));
-                
-                
-                
-                
-                
-                
-                
-                
-                
+                //$today = date('Y-m-d', strtotime("+1 month", strtotime($today->format("Y-m-d"))));
                 
                 foreach ($substartIntervals as $interval)
                 {
