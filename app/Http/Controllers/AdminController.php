@@ -12,6 +12,7 @@ use App\Property;
 use App\Subscription;
 use App\Promo;
 use App\PromoCode;
+use App\InvoiceData;
 use App\Year;
 use App\Month;
 use App\Mail\AdminTempBossCreate;
@@ -1173,6 +1174,93 @@ class AdminController extends Controller
             $promo->save();
             
             return redirect('/admin/promo/show/' . $promo->id)->with('success', 'Promo activation has been changed!');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Something went wrong');
+    }
+    
+    public function invoiceDataCreate()
+    {
+        return view('admin.invoice_data_create');
+    }
+    
+    public function invoiceDataStore()
+    {
+        $rules = array(
+            'company_name' => 'required',
+            'email'        => 'required',
+            'phone_number' => 'required',
+            'nip'          => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('admin/invoice-data/create')
+                ->withErrors($validator);
+        } else {
+                       
+            $invoiceData = new InvoiceData();
+            $invoiceData->company_name  = Input::get('company_name');
+            $invoiceData->email         = Input::get('email');
+            $invoiceData->phone_number  = Input::get('phone_number');
+            $invoiceData->nip           = Input::get('nip');          
+            $invoiceData->owner_id      = auth()->user()->id;          
+            $invoiceData->save();
+
+            return redirect('/admin/invoice-data/list')->with('success', 'Invoice data has been created!');
+        }
+    }
+    
+    public function invoiceDataList()
+    {
+        $invoiceDatas = InvoiceData::withTrashed()->where([
+            'owner_id' => auth()->user()->id,
+            'property_id' => null
+        ])->get();
+        
+        return view('admin.invoice_data_list')->with([
+            'invoiceDatas' => $invoiceDatas
+        ]);
+    }
+    
+    public function invoiceDataSoftDelete($id)
+    {
+        $invoiceData = InvoiceData::where('id', $id)->first();
+        
+        if ($invoiceData !== null)
+        {
+            $invoiceData->delete();
+                    
+            return redirect()->action('AdminController@invoiceDataList');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Something went wrong');
+    }
+    
+    public function invoiceDataUndelete($id)
+    {
+        $invoiceData = InvoiceData::withTrashed()->where('id', $id)->first();
+        
+        if ($invoiceData !== null && $invoiceData->deleted_at !== null)
+        {
+            $invoiceData->deleted_at = null;
+            $invoiceData->save();
+                    
+            return redirect()->action('AdminController@invoiceDataList');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'Something went wrong');
+    }
+    
+    public function invoiceDataHardDelete($id)
+    {
+        $invoiceData = InvoiceData::withTrashed()->where('id', $id)->first();
+        
+        if ($invoiceData !== null && $invoiceData->deleted_at !== null)
+        {
+            $invoiceData->forceDelete();
+                    
+            return redirect()->action('AdminController@invoiceDataList');
         }
         
         return redirect()->route('welcome')->with('error', 'Something went wrong');

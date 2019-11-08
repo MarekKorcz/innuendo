@@ -6,7 +6,7 @@
 
 <div class="container">
 
-    <h1 class="text-center" style="padding: 2rem;">{{ $subscription->name }}</h1>
+    <h1 class="text-center" style="padding: 2rem;">{!! $subscription->name !!}</h1>
     
     <div class="jumbotron">
         <div class="row">

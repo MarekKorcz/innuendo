@@ -3,9 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InvoiceData extends Model
 {
+    use SoftDeletes;
+    
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+    
     /**
      * The table associated with the model.
      *
@@ -19,7 +29,7 @@ class InvoiceData extends Model
      * @var array
      */
     protected $fillable = [
-        'company_name', 'email', 'phone_number', 'nip', 'bank_name', 'account_number', 'property_id', 'owner_id' 
+        'company_name', 'address', 'email', 'phone_number', 'nip', 'bank_name', 'account_number', 'property_id', 'owner_id' 
     ];
     
     /**

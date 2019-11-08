@@ -50,28 +50,28 @@
         
         <div class="row">
             <div class="col-xs-2" style="text-align: right;">
-                <strong>@lang('common.executor') : </strong><br>
-                <strong>@lang('common.address') : </strong><br>
+                <strong>@lang('common.executor'): </strong><br>
+                <strong>@lang('common.address'): </strong><br>
                 <strong>@lang('common.phone_number'): </strong><br>
-                <strong>@lang('common.email_address') : </strong><br>
+                <strong>@lang('common.email_address'): </strong><br>
                 <strong>Nip: </strong><br>
             </div>
             
             <div class="col-xs-3" style="text-align: left;">
                 {{ config('app.name') }} {{ config('app.name_2nd_part') }}<br>
-                :todo ??         !!!!Adres firmy!!!!<br>
-                602-342-396<br>
+                {{$adminInvoiceData->address}}<br>
+                {{$adminInvoiceData->phone_number}}<br>
                 {{$adminInvoiceData->email}}<br>
                 {{$adminInvoiceData->nip}}<br>
             </div>
             
             <div class="col-xs-2" style="text-align: right;">
-                <strong>@lang('common.receiver') :</strong><br>
-                <strong>@lang('common.address') :</strong><br>
+                <strong>@lang('common.receiver'):</strong><br>
+                <strong>@lang('common.address'):</strong><br>
                 @if ($bossInvoiceData->phone_number)
-                    <strong>@lang('common.phone_number') :</strong><br>
+                    <strong>@lang('common.phone_number'):</strong><br>
                 @endif
-                <strong>@lang('common.email_address') : </strong><br>
+                <strong>@lang('common.email_address'):</strong><br>
                 <strong>Nip :</strong><br>
             </div>
 
@@ -94,8 +94,8 @@
 
         <div class="row">
             <div class="col-xs-2" style="text-align: right;">
-                <strong>@lang('common.date_of_issue') :</strong><br>
-                <strong>@lang('common.payment_deadline') :</strong><br>
+                <strong>@lang('common.date_of_issue'):</strong><br>
+                <strong>@lang('common.payment_deadline'):</strong><br>
             </div>
             
             <div class="col-xs-3" style="text-align: left;">
@@ -104,9 +104,9 @@
             </div>
             
             <div class="col-xs-2" style="text-align: right;">
-                <strong>@lang('common.payment_method') :</strong><br>
-                <strong>Bank :</strong><br>
-                <strong>@lang('common.account_number') :</strong><br>
+                <strong>@lang('common.payment_method'):</strong><br>
+                <strong>Bank:</strong><br>
+                <strong>@lang('common.account_number'):</strong><br>
             </div>
             
             <div class="col-xs-3" style="text-align: left;">
@@ -178,7 +178,7 @@
             <div class="col-xs-8"></div>
             <div class="col-xs-4">
                 <div class="bottom-tile">
-                    @lang('common.together_to_pay') : <br>
+                    @lang('common.together_to_pay'): <br>
                     <strong>{{$subscriptionAllGrossPrice}} zł</strong>
                 </div>
             </div>

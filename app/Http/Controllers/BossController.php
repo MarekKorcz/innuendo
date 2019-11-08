@@ -1635,15 +1635,35 @@ class BossController extends Controller
                 }
         
                 $subscription = Subscription::where('id', $substart->subscription_id)->first();
-                $substartIntervals = Interval::where('substart_id', $substart->id)->get();      
+                $substartIntervals = Interval::where('substart_id', $substart->id)->get();
                 
                 $today = new \DateTime(date('Y-m-d'));
-//                $today = date('Y-m-d', strtotime("+6 month", strtotime($today->format("Y-m-d"))));
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                $today = date('Y-m-d', strtotime("+1 month", strtotime($today->format("Y-m-d"))));
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 
                 foreach ($substartIntervals as $interval)
                 {
-                    if ($today > $interval->start_date && $today >= $interval->end_date ||
-                        $today >= $interval->start_date && $today <= $interval->end_date) 
+                    if ($today > $interval->start_date && $today >= $interval->end_date) 
                     {
                         $interval['state'] = 'existing';
                         
@@ -1845,9 +1865,8 @@ class BossController extends Controller
                 
                 if ($admin !== null)
                 {
-                    $adminInvoiceData = InvoiceData::where([
-                        'owner_id' => $admin->id,
-                        'property_id' => null
+                    $adminInvoiceData = InvoiceData::withTrashed()->where([
+                        'owner_id' => $admin->id
                     ])->first();
                     
                     $bossInvoiceData = InvoiceData::where([
@@ -1858,8 +1877,26 @@ class BossController extends Controller
                     $bossProperty = Property::where('id', $substart->property_id)->first();
                     
                     $workersIntervals = Interval::where('interval_id', $interval->id)->get();
-                    $workersIntervals->push($boss);
-                    $intervalWorkersCount = count($workersIntervals);
+                    $workersIntervals->push($interval);
+                    
+                    $intervalWorkersCount = 0;
+                    
+                    foreach ($workersIntervals as $interval)
+                    {  
+                        $intervalAppointments = Appointment::where('interval_id', $interval->id)->get();
+                        
+                        if (count($intervalAppointments) > 0)
+                        {
+                            foreach ($intervalAppointments as $appointment)
+                            {
+                                if ($appointment->status == 1)
+                                {
+                                    $intervalWorkersCount++;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     
                     $VAT = 23;
                     $VATMultiplier = (1  - ($VAT / 100));

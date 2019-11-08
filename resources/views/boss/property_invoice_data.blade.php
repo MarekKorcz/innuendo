@@ -54,7 +54,7 @@
                 <input type="hidden" id="substart_id" name="substart_id" value="{{$substart->id}}">
 
                 <div class="text-center">
-                    <input type="submit" value="@lang('common.add')" class="btn btn-primary">
+                    <input type="submit" value="@lang('common.add')" class="btn pallet-1-3" style="color: white;">
                 </div>
 
             {{ Form::close() }}

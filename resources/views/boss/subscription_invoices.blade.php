@@ -9,12 +9,12 @@
         <div class="text-center">
             <h2>
                 @lang('common.subscription_capital') 
-                {{$subscription->name}}
+                {!! $subscription->name !!}
             </h2>
         </div>
         
         <div class="text-center" style="margin: 1rem;">
-            <a href="{{ URL::to('/boss/subscription/invoice/edit/' . $invoiceData->id . '/' . $substart->id) }}" class="btn btn-success">
+            <a href="{{ URL::to('/boss/subscription/invoice/edit/' . $invoiceData->id . '/' . $substart->id) }}" class="btn pallet-1-3" style="color: white;">
                 @lang('common.edit_invoice_data')
             </a> 
         </div>

@@ -31,6 +31,7 @@ class CreateModels extends Migration
         Schema::create('invoice_datas', function (Blueprint $table) {
             $table->increments('id');
             $table->text('company_name');
+            $table->text('address');
             $table->text('email');
             $table->text('phone_number')->nullable();
             $table->text('nip');

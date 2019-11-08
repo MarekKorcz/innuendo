@@ -4,36 +4,37 @@ namespace App\Http\Controllers;
 
 
 // to tests
-use App\Appointment;
-use App\Promo;
-use App\PromoCode;
+//use App\Appointment;
+//use App\Promo;
+//use App\PromoCode;
+//use App\Category;
+//use App\Interval;
+//use App\InvoiceData;
+//use App\GraphicRequest;
+//use App\Substart;
+//use App\Purchase;
+//use App\ChosenProperty;
+//use App\Subscription;
+//use App\Item;
+//use App\Graphic;
+//use App\Calendar;
+//use App\Day;
+//use App\Month;
+//use App\Year;
+//use App\TempUser;
+//use App\Mail\BossCreateWithPromoCode;
+//use Illuminate\Support\Collection;
+//use Illuminate\Support\Facades\Hash;
+//use Illuminate\Support\Facades\File;
+//use Session;
+
 use App\Message;
-use App\Category;
-use App\Interval;
-use App\InvoiceData;
-use App\GraphicRequest;
-use App\Substart;
-use App\Purchase;
-use App\ChosenProperty;
-use App\Subscription;
 use App\Property;
 use App\User;
 use App\Discount;
-use App\Item;
-use App\Graphic;
-use App\Calendar;
-use App\Day;
-use App\Month;
-use App\Year;
-use App\TempUser;
-use App\Mail\BossCreateWithPromoCode;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
-use Session;
 
 class HomeController extends Controller
 {
