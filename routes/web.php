@@ -220,4 +220,4 @@ Route::post('/boss/get-user-appointments-from-database', 'BossController@getUser
 Route::post('/boss/get-users-appointments-from-database', 'BossController@getUsersAppointmentsFromDatabase');
 Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisplayed');
 
-//Route::get('/test', 'HomeController@test');
+Route::get('/test', 'HomeController@test');

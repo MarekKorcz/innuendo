@@ -225,6 +225,11 @@ class HomeController extends Controller
         }
     }
     
+    private function showPolicyBanner()
+    {
+        dd($_SERVER);
+    }
+    
 //    {
 //        $filesDirPath = storage_path('app/notes');
 //        $filesDir = scandir($filesDirPath);
@@ -258,7 +263,10 @@ class HomeController extends Controller
     
     
     
-//    public function test()
-//    {           
-//    }
+    public function test()
+    {      
+        
+        $this->showPolicyBanner();
+        
+    }
 }
