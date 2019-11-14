@@ -19,8 +19,10 @@ Route::get('/subscriptions', 'HomeController@subscriptions')->name('subscription
 Route::get('/discounts', 'HomeController@discounts')->name('discounts');
 Route::get('/cookies-policy', 'HomeController@cookiesPolicy')->name('cookies_policy');
 Route::get('/private-policy', 'HomeController@privatePolicy')->name('private_policy');
+Route::get('/rodo', 'HomeController@rodo')->name('rodo');
 Route::get('/contact', 'HomeController@contactPageShow')->name('contact_page');
 Route::post('/contact-update', 'HomeController@contactPageUpdate');
+Route::post('/accept-terms', 'HomeController@acceptTerms');
 
 Route::get('locale/{locale}', function($locale) {
     
@@ -220,4 +222,4 @@ Route::post('/boss/get-user-appointments-from-database', 'BossController@getUser
 Route::post('/boss/get-users-appointments-from-database', 'BossController@getUsersAppointmentsFromDatabase');
 Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisplayed');
 
-Route::get('/test', 'HomeController@test');
+//Route::get('/test', 'HomeController@test');

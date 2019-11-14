@@ -459,4 +459,8 @@ return [
     'no_invoice_datas' => 'Brak danych do faktur',
     'create_invoice_data' => 'Dodaj dane do faktur',
     'canceled' => 'Anulowana',
+    'terms_banner_description' => 'Korzystając z naszej witryny, potwierdzasz, że przeczytałeś i rozumiesz naszą',
+    'terms_banner_description_2' => 'i naszą',
+    'understand' => 'Rozumiem',
+    'rodo_policy' => 'Polityka rodo',
 ];

@@ -194,3 +194,19 @@ div.position-center p {
     margin-right: -50%;
     transform: translate(-50%, -50%) 
 }
+
+div#banner {
+    position: fixed;
+    background-color: grey;
+    color: white;
+    left: 0;
+    width: 100%;
+    font-size: 18px;
+    z-index: 1000;
+    padding: 6px 3px 6px 3px;
+    opacity: 0.9;
+}
+
+div#banner-text {
+    font-size: 15px;
+}

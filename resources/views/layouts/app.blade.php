@@ -174,6 +174,11 @@
                             @lang('private_policy.private_policy')
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('rodo') }}" target="_blanc">
+                            @lang('common.rodo_policy')
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="col-1"></div>

@@ -32,6 +32,7 @@ use App\Message;
 use App\Property;
 use App\User;
 use App\Discount;
+use App\PolicyConfirmation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -51,6 +52,7 @@ class HomeController extends Controller
             'discounts',
             'cookiesPolicy',
             'privatePolicy',
+            'rodo',
             'contactPageShow',
             'contactPageUpdate'
         ]);
@@ -65,8 +67,11 @@ class HomeController extends Controller
     {
         $canShowProperties = Property::where('canShow', 1)->get();
         
+        $showBanner = $this->showPolicyBanner();
+        
         return view('welcome')->with([
-            'canShowProperties' => $canShowProperties
+            'canShowProperties' => $canShowProperties,
+            'showBanner' => $showBanner
         ]);
     }
 
@@ -77,6 +82,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $showBanner = $this->showPolicyBanner();
+        
         $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
         
         if ($user->isAdmin !== null)
@@ -160,45 +167,79 @@ class HomeController extends Controller
                 'user' => $user,
                 'showGraphicsView' => $showGraphics,
                 'showSubscriptionsView' => count($user->chosenProperties) > 0 ? true : false,
-                'showPurchaseSubscriptionsView' => $showPurchaseSubscriptions
+                'showPurchaseSubscriptionsView' => $showPurchaseSubscriptions,
+                'showBanner' => $showBanner
             ]);
         }
         
         return view($route)->with([
-            'user' => $user
+            'user' => $user,
+            'showBanner' => $showBanner
         ]);
     }
     
     public function subscriptions()
     {
-        return view('subscriptions');
+        $showBanner = $this->showPolicyBanner();
+        
+        return view('subscriptions')->with([
+            'showBanner' => $showBanner
+        ]);
     }
     
     public function discounts()
     {        
+        $showBanner = $this->showPolicyBanner();
         $discounts = Discount::where('id', '!=', null)->get();
         
         if (count($discounts) == 4)
         {
-            return view('discounts')->with('discounts', $discounts);
+            return view('discounts')->with([
+                'discounts' => $discounts,
+                'showBanner' => $showBanner
+            ]);
         }
         
-        return view('welcome')->with('error', \Lang::get('common.discount_error_description'));
+        return view('welcome')->with([
+            'error' => \Lang::get('common.discount_error_description'),
+            'showBanner' => $showBanner
+        ]);
     }
     
     public function cookiesPolicy()
     {
-        return view('cookies_policy');
+        $showBanner = $this->showPolicyBanner();
+        
+        return view('cookies_policy')->with([
+            'showBanner' => $showBanner
+        ]);
     }
     
     public function privatePolicy()
     {
-        return view('private_policy');
+        $showBanner = $this->showPolicyBanner();
+        
+        return view('private_policy')->with([
+            'showBanner' => $showBanner
+        ]);
     }
+    
+    public function rodo()
+    {
+        $showBanner = $this->showPolicyBanner();
+        
+        return view('rodo')->with([
+            'showBanner' => $showBanner
+        ]);
+    } 
     
     public function contactPageShow()
     {
-        return view('contact_page');
+        $showBanner = $this->showPolicyBanner();
+        
+        return view('contact_page')->with([
+            'showBanner' => $showBanner
+        ]);
     }
     
     public function contactPageUpdate()
@@ -227,7 +268,33 @@ class HomeController extends Controller
     
     private function showPolicyBanner()
     {
-        dd($_SERVER);
+        $showBanner = true;
+        $confirmation = PolicyConfirmation::where('ip_address', $_SERVER['REMOTE_ADDR'])->first();
+        
+        if ($confirmation !== null)
+        {
+            $showBanner = false;
+        }
+        
+        return $showBanner; 
+    }
+    
+    public function acceptTerms()
+    {        
+        $clientIP = $_SERVER['REMOTE_ADDR'];
+        $policyConfirm = PolicyConfirmation::where('ip_address', $clientIP)->first();
+        
+        if ($policyConfirm == null)
+        {
+            $policyConfirm = new PolicyConfirmation();
+            $policyConfirm->ip_address = $clientIP;
+            $policyConfirm->confirm = true;
+            $policyConfirm->save();
+        }
+        
+        return new JsonResponse([
+            'type' => 'success'
+        ], 200, array(), true);
     }
     
 //    {
@@ -261,12 +328,7 @@ class HomeController extends Controller
 //    }
     
     
-    
-    
-    public function test()
-    {      
-        
-        $this->showPolicyBanner();
-        
-    }
+//    public function test()
+//    {
+//    }
 }

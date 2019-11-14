@@ -327,6 +327,13 @@ class CreateModels extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        
+        Schema::create('policy_confirmations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('ip_address');
+            $table->boolean('confirm');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -365,5 +372,6 @@ class CreateModels extends Migration
         Schema::dropIfExists('chosen_properties');
         Schema::dropIfExists('chosen_property_subscription');
         Schema::dropIfExists('discounts');
+        Schema::dropIfExists('policy_confirmations');
     }
 }

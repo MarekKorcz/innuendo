@@ -453,4 +453,8 @@ return [
     'no_invoice_datas' => 'No invoice datas',
     'create_invoice_data' => 'Create invoice data',
     'canceled' => 'Canceled',
+    'terms_banner_description' => 'By using our site, you acknowledge that you have read and understand our',
+    'terms_banner_description_2' => 'and our',
+    'understand' => 'Understand',
+    'rodo_policy' => 'Rodo policy',
 ];

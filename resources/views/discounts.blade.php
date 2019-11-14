@@ -65,4 +65,8 @@
         </div>
     </div>
 
+    @if ($showBanner)
+        @include('layouts.banner')
+    @endif
+
 @endsection

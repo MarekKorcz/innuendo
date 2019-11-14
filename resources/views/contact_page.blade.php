@@ -39,5 +39,9 @@
         </div>
         <div class="col-1 col-sm-1 col-md-2 col-lg-3 col-xl-3"></div>
     </div>
+    
+    @if ($showBanner)
+        @include('layouts.banner')
+    @endif
 </div>
 @endsection
