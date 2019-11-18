@@ -463,4 +463,12 @@ return [
     'terms_banner_description_2' => 'i naszą',
     'understand' => 'Rozumiem',
     'rodo_policy' => 'Polityka rodo',
+    'categories_and_items' => 'Kategorie i masaże',
+    'categories_and_items_description' => 'Widok listy kategorii wraz z masażami przypisanymi do nich',
+    'create_category' => 'Stwórz kategorie',
+    'category_edit' => 'Edytuj kategorie',
+    'category_index' => 'Lista kategorii',
+    'category' => 'Kategoria',
+    'create_item' => 'Stwórz masaż',
+    'item_edit' => 'Edytuj masaż',
 ];

@@ -54,7 +54,8 @@ class HomeController extends Controller
             'privatePolicy',
             'rodo',
             'contactPageShow',
-            'contactPageUpdate'
+            'contactPageUpdate',
+            'acceptTerms'
         ]);
     }
     

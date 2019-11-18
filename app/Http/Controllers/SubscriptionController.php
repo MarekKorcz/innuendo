@@ -340,18 +340,7 @@ class SubscriptionController extends Controller
             $subscription->quantity    = $quantity;
             $subscription->duration    = $duration;
             $subscription->worker_quantity    = $worker_quantity;
-            $subscription->save();
-            
-            
-            
-            
-            
-            
-//            todo: Dodaj modele zniżek...
-            
-            
-            
-            
+            $subscription->save();            
 
             return redirect('/subscription/show/' . $subscription->id)->with('success', 'Subscription successfully updated!');
         }

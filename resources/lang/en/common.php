@@ -457,4 +457,12 @@ return [
     'terms_banner_description_2' => 'and our',
     'understand' => 'Understand',
     'rodo_policy' => 'Rodo policy',
+    'categories_and_items' => 'Categories and items',
+    'categories_and_items_description' => 'View the list of categories with massages assigned to them',
+    'create_category' => 'Create category',
+    'category_edit' => 'Edit category',
+    'category_index' => 'Category list',
+    'category' => 'Category',
+    'create_item' => 'Item create',
+    'item_edit' => 'Item edit',
 ];

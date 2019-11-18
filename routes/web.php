@@ -157,6 +157,19 @@ Route::get('/appointment/show/{id}', 'UserController@appointmentShow');
 Route::get('/appointment/index', 'UserController@appointmentIndex');
 Route::delete('/appointment/{id}', 'UserController@appointmentDestroy');
 
+Route::get('/category/create', 'CategoryController@create');
+Route::post('/category/store', 'CategoryController@store');
+Route::get('/category/show/{id}', 'CategoryController@show');
+Route::get('/category/{id}/edit', 'CategoryController@edit');
+Route::put('/category/update', 'CategoryController@update');
+Route::get('/category/index', 'CategoryController@index');
+
+Route::get('/item/create/{id}', 'ItemController@create');
+Route::post('/item/store', 'ItemController@store');
+Route::get('/item/show/{id}', 'ItemController@show');
+Route::get('/item/{id}/edit', 'ItemController@edit');
+Route::put('/item/update', 'ItemController@update');
+
 Route::get('/subscription/create/{id}', 'SubscriptionController@create');
 Route::post('/subscription/store', 'SubscriptionController@store');
 Route::get('/subscription/show/{id}', 'SubscriptionController@show');
