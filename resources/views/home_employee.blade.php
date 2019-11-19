@@ -13,7 +13,9 @@
                 </span> 
                 - @lang('common.logged_in_as') 
                 <strong>
-                    {{$user->name}} {{$user->surname}}
+                    <a href="{{ URL::to('/employee/' . $user->slug) }}">
+                        {{$user->name}} {{$user->surname}}
+                    </a>
                 </strong>
             </div>
             <div class="wrapper">

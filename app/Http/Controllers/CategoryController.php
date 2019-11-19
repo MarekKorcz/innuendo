@@ -44,7 +44,9 @@ class CategoryController extends Controller
     
     public function show($id)
     {        
-        $category = Category::where('id', $id)->with('items')->first();
+        $category = Category::where('id', $id)->with(array('items' => function($query) {
+            $query->orderBy('minutes', 'ASC');
+        }))->first();
         
         if ($category !== null)
         {

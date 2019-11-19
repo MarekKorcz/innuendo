@@ -41,7 +41,8 @@ class WorkerController extends Controller
      */
     public function graphicList()
     {
-        $calendars = Calendar::where('employee_id', auth()->user()->id)->with('property')->get();
+        $employee = User::where('id', auth()->user()->id)->first();
+        $calendars = Calendar::where('employee_id', $employee->id)->with('property')->get();
         
         if (count($calendars) > 0)
         {            
@@ -62,7 +63,16 @@ class WorkerController extends Controller
             }
         }
         
-        return redirect()->route('welcome');
+        if (substr($employee->name, -1) == "a")
+        {
+            $message = \Lang::get('common.no_schedule_yet_female');
+            
+        } else {
+            
+            $message = \Lang::get('common.no_schedule_yet_male');
+        }
+        
+        return redirect()->route('home')->with('success', $message);
     }
 
     /**

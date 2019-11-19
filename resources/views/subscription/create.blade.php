@@ -10,34 +10,34 @@
         {{ Form::open(['id' => 'subscriptionForm', 'action' => 'SubscriptionController@store', 'method' => 'POST']) }}
 
             <div class="form-group">
-                <label for="name">@lang('common.label') :</label>
+                <label for="name">@lang('common.label'):</label>
                 <input id="name" class="form-control" type="text" name="name">
             </div>    
             <div class="form-group">
-                <label for="description">@lang('common.description') :</label>
+                <label for="description">@lang('common.description'):</label>
                 <input id="description" class="form-control" type="text" name="description">
             </div>
             <div class="form-group">
-                <label for="old_price">@lang('common.old_price') :</label>
+                <label for="old_price">@lang('common.old_price'):</label>
                 <input id="old_price" class="form-control" type="text" name="old_price">
             </div>
             <div class="form-group">
-                <label for="new_price">@lang('common.new_price') :</label>
+                <label for="new_price">@lang('common.new_price'):</label>
                 <input id="new_price" class="form-control" type="text" name="new_price">
             </div>
             <div class="form-group">
-                <label for="quantity">@lang('common.quantity_per_month') :</label>
+                <label for="quantity">@lang('common.quantity_per_month'):</label>
                 <input id="quantity" class="form-control" type="text" name="quantity">
             </div>
             <div class="form-group">
-                <label for="duration">@lang('common.duration_how_many_months') :</label>
+                <label for="duration">@lang('common.duration_how_many_months'):</label>
                 <input id="duration" class="form-control" type="text" name="duration">
             </div>
             <div class="form-group">
-                <label for="worker_quantity">@lang('common.worker_quantity') :</label>
+                <label for="worker_quantity">@lang('common.worker_quantity'):</label>
                 <input id="worker_quantity" class="form-control" type="text" name="worker_quantity">
             </div>
-            <h4 class="text-center">@lang('common.items') :</h4>
+            <h4 class="text-center">@lang('common.items'):</h4>
             <div id="items" class="form-group">
                 <ul>
                     @foreach($items as $item)

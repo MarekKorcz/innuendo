@@ -17,7 +17,7 @@
             </div>            
         </div>
         
-        <div class="text-center">
+        <div class="text-center" style="padding-top: 1rem;">
             <h2>
                 @lang('common.label'):
                 <strong>
@@ -37,7 +37,8 @@
                 </strong>
             </h4>
         </div>
-        <div id="items">
+        
+        <div id="items" style="padding-top: 1rem;">
             <h3 class="text-center">@lang('common.items'):</h3>
             @if (count($category->items) > 0)
                 <div class="row">

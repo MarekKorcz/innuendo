@@ -61,7 +61,7 @@
                     <h3>@lang('common.go_to_schedule_description_1')</h3>
                     <h4>@lang('common.go_to_schedule_description_2')</h4>
                     <div style="padding: 1rem;">
-                        <a class="btn btn-success btn-lg" href="{{ URL::to('/user/property/' . $property->id) }}">
+                        <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/user/property/' . $property->id) }}">
                             @lang('common.go_to_schedule')
                         </a>
                     </div>
@@ -70,7 +70,7 @@
                         <h3>@lang('common.go_to_schedule_description_3')</h3>
                         <h4>@lang('common.go_to_schedule_description_4')</h4>
                         <div style="padding: 1rem;">
-                            <a class="btn btn-success btn-lg" href="{{ URL::to('/boss/subscription/list/0/0') }}">
+                            <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/boss/subscription/list/0/0') }}">
                                 @lang('common.subscriptions_list')
                             </a>
                         </div>

@@ -465,4 +465,7 @@ return [
     'category' => 'Category',
     'create_item' => 'Item create',
     'item_edit' => 'Item edit',
+    'no_contact_messages' => 'There is no messages from contact form',
+    'no_schedule_yet_female' => 'You have not yet been assigned to any schedule',
+    'no_schedule_yet_male' => 'You have not yet been assigned to any schedule',
 ];

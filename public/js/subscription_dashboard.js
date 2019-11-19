@@ -95,12 +95,12 @@ window.addEventListener('DOMContentLoaded', () => {
                         subscriptionNode = `
                             <div class="box text-center" data-subscription_id="` + subscription.id + `">
                                 <div class="data">
-                                    <p>` + subscription.name_description + ` : <strong>` + subscription.name + `</strong></p>
-                                    <p>` + subscription.description_description + ` : <strong>` + subscription.description + `</strong></p> 
-                                    <p>` + subscription.old_price_description + ` : <strong>` + subscription.old_price + `</strong></p>
-                                    <p>` + subscription.new_price_description + ` : <strong>` + subscription.new_price + `</strong></p>
-                                    <p>` + subscription.quantity_description + ` : <strong>` + subscription.quantity + `</strong></p>
-                                    <p>` + subscription.duration_description + ` : <strong>` + subscription.duration + `</strong></p>
+                                    <p>` + subscription.name_description + `: <strong>` + subscription.name + `</strong></p>
+                                    <p>` + subscription.description_description + `: <strong>` + subscription.description + `</strong></p> 
+                                    <p>` + subscription.old_price_description + `: <strong>` + subscription.old_price + `</strong></p>
+                                    <p>` + subscription.new_price_description + `: <strong>` + subscription.new_price + `</strong></p>
+                                    <p>` + subscription.quantity_description + `: <strong>` + subscription.quantity + `</strong></p>
+                                    <p>` + subscription.duration_description + `: <strong>` + subscription.duration + `</strong></p>
                                 </div>
                                 <a class="btn btn-primary" href="` + subscription.button + `">
                                     ` + subscription.button_description + `
@@ -113,12 +113,12 @@ window.addEventListener('DOMContentLoaded', () => {
                         subscriptionNode = `
                             <div class="box text-center" data-subscription_id="` + subscription.id + `">
                                 <div class="data">
-                                    <p>` + subscription.name_description + ` : <strong>` + subscription.name + `</strong></p>
-                                    <p>` + subscription.description_description + ` : <strong>` + subscription.description + `</strong></p>
-                                    <p>` + subscription.old_price_description + ` : <strong>` + subscription.old_price + `</strong></p>
-                                    <p>` + subscription.new_price_description + ` : <strong>` + subscription.new_price + `</strong></p>
-                                    <p>` + subscription.quantity_description + ` : <strong>` + subscription.quantity + `</strong></p>
-                                    <p>` + subscription.duration_description + ` : <strong>` + subscription.duration + `</strong></p>
+                                    <p>` + subscription.name_description + `: <strong>` + subscription.name + `</strong></p>
+                                    <p>` + subscription.description_description + `: <strong>` + subscription.description + `</strong></p>
+                                    <p>` + subscription.old_price_description + `: <strong>` + subscription.old_price + `</strong></p>
+                                    <p>` + subscription.new_price_description + `: <strong>` + subscription.new_price + `</strong></p>
+                                    <p>` + subscription.quantity_description + `: <strong>` + subscription.quantity + `</strong></p>
+                                    <p>` + subscription.duration_description + `: <strong>` + subscription.duration + `</strong></p>
                                 </div>
                             </div>
                         `;
@@ -159,7 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
             if (data.type === "success")
             {
                 substartsHeader.append(`
-                    <h2>` + data.header +` :</h2>
+                    <h2>` + data.header +`:</h2>
                 `);
                 
                 // >> adding substarts
@@ -175,8 +175,8 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id + `">
                                     <div class="data">
                                         <p>
-                                            ` + substart.start_date_description + ` : <strong>` + substart.start_date + `</strong> 
-                                            ` + substart.end_date_description + ` : <strong>` + substart.end_date + `</strong>
+                                            ` + substart.start_date_description + `: <strong>` + substart.start_date + `</strong> 
+                                            ` + substart.end_date_description + `: <strong>` + substart.end_date + `</strong>
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
@@ -192,8 +192,8 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <div class="substart text-center highlighted" data-substart_id="` + data.newestSubstart[0].id +`">
                                     <div class="data">
                                         <p>
-                                            ` + substart.start_date_description + ` : <strong>` + substart.start_date + `</strong> 
-                                            ` + substart.end_date_description + ` : <strong>` + substart.end_date + `</strong>
+                                            ` + substart.start_date_description + `: <strong>` + substart.start_date + `</strong> 
+                                            ` + substart.end_date_description + `: <strong>` + substart.end_date + `</strong>
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
@@ -209,8 +209,8 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <div class="substart text-center" data-substart_id="` + substart.id +`">
                                     <div class="data">
                                         <p>
-                                            ` + substart.start_date_description + ` : <strong>` + substart.start_date + `</strong> 
-                                            ` + substart.end_date_description + ` : <strong>` + substart.end_date + `</strong>
+                                            ` + substart.start_date_description + `: <strong>` + substart.start_date + `</strong> 
+                                            ` + substart.end_date_description + `: <strong>` + substart.end_date + `</strong>
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
@@ -226,8 +226,8 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <div class="substart text-center" data-substart_id="` + substart.id +`">
                                     <div class="data">
                                         <p>
-                                            ` + substart.start_date_description + ` : <strong>` + substart.start_date + `</strong> 
-                                            ` + substart.end_date_description + ` : <strong>` + substart.end_date + `</strong>
+                                            ` + substart.start_date_description + `: <strong>` + substart.start_date + `</strong> 
+                                            ` + substart.end_date_description + `: <strong>` + substart.end_date + `</strong>
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
@@ -246,7 +246,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     let workersTab = `
                         <div class="text-center">                        
                             <div id="button-space" style="padding: 1rem;">
-                                <h2> ` + data.header_workers + ` :</h2>
+                                <h2> ` + data.header_workers + `:</h2>
                                 <a class="btn pallet-1-3" style="color: white;" href="` + data.subscription_workers_edit_button + `">
                                     ` + data.subscription_workers_edit_button_description + `
                                 </a>
@@ -332,7 +332,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 let workersTab = `
                     <div class="text-center">                        
                         <div id="button-space" style="padding: 1rem;">
-                            <h2>` + data.header_workers + ` :</h2>
+                            <h2>` + data.header_workers + `:</h2>
                             <a class="btn pallet-1-3" style="color: white;" href="` + data.subscription_workers_edit_button + `">
                                 ` + data.subscription_workers_edit_button_description + `
                             </a>

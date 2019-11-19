@@ -27,11 +27,11 @@
         <div class="text-center">
             <h3>{!! $subscription->description !!}</h3>
         </div>
-        <p>@lang('common.old_price') : <strong>{{ $subscription->old_price }}</strong></p>
-        <p>@lang('common.new_price') : <strong>{{ $subscription->new_price }}</strong></p>
-        <p>@lang('common.quantity_per_month') : <strong>{{ $subscription->quantity }}</strong></p>
-        <p>@lang('common.how_many_months_since_start') : <strong>{{ $subscription->duration }}</strong></p>
-        <p>@lang('common.worker_quantity') : 
+        <p>@lang('common.old_price'): <strong>{{ $subscription->old_price }}</strong></p>
+        <p>@lang('common.new_price'): <strong>{{ $subscription->new_price }}</strong></p>
+        <p>@lang('common.quantity_per_month'): <strong>{{ $subscription->quantity }}</strong></p>
+        <p>@lang('common.how_many_months_since_start'): <strong>{{ $subscription->duration }}</strong></p>
+        <p>@lang('common.worker_quantity'): 
             <strong>
                 @if ($subscription->worker_quantity == 0)
                     @lang('common.infinity')
@@ -42,7 +42,7 @@
         </p>
         <div class="form-group">
             @if (count($properties) > 0)
-                <h3 class="text-center">@lang('common.subscriptions_available_for_purchase') :</h3>
+                <h3 class="text-center">@lang('common.subscriptions_available_for_purchase'):</h3>
                 <ul id="properties" data-subscription_id="{{ $subscription->id }}">
                     @foreach($properties as $property)
                         @if($property['active'])
@@ -54,7 +54,7 @@
                 </ul>
             @endif
             @if (count($tempProperties) > 0)
-                <h3 class="text-center">@lang('common.subscriptions_available_for_purchase_in_temp_properties') :</h3>
+                <h3 class="text-center">@lang('common.subscriptions_available_for_purchase_in_temp_properties'):</h3>
                 <ul id="tempProperties" data-subscription_id="{{ $subscription->id }}">
                     @foreach($tempProperties as $tempProperty)
                         @if($tempProperty['active'])
@@ -66,7 +66,7 @@
                 </ul>
             @endif
         </div>
-        <h3 class="text-center">@lang('common.items_in_subscription') :</h3>
+        <h3 class="text-center">@lang('common.items_in_subscription'):</h3>
         <div class="form-group">
             <ul id="items" data-subscription_id="{{ $subscription->id }}">
                 @foreach($items as $item)

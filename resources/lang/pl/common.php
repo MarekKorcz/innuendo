@@ -471,4 +471,7 @@ return [
     'category' => 'Kategoria',
     'create_item' => 'Stwórz masaż',
     'item_edit' => 'Edytuj masaż',
+    'no_contact_messages' => 'Brak wiadomości z formularza kontaktowego',
+    'no_schedule_yet_female' => 'Nie zostałaś jeszcze przydzielona do żadnego grafiku',
+    'no_schedule_yet_male' => 'Nie zostałeś jeszcze przydzielony do żadnego grafiku',
 ];

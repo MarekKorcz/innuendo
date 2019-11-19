@@ -251,6 +251,7 @@ class AdminController extends Controller
         $rules = array(
             'name'           => 'required',
             'surname'        => 'required',
+            'phone_number'   => 'required',
             'email'          => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -263,6 +264,7 @@ class AdminController extends Controller
             $employee = new TempUser();
             $employee->name = Input::get('name');
             $employee->surname = Input::get('surname');
+            $employee->phone_number = Input::get('phone_number');
             $employee->email = Input::get('email');
             
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

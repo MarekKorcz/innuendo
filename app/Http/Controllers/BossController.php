@@ -475,7 +475,7 @@ class BossController extends Controller
                                                 }
                                                 // <<
                                                 
-                                                // get workers assigned to boss purchsed subsription
+                                                // get workers assigned to boss purchsed subscription
                                                 $substart['workers'] = $this->getWorkersFrom($substart->id);
                                                 
                                                 // set substart to purchase
@@ -551,7 +551,7 @@ class BossController extends Controller
                     }
                 }
                 // <<
-            }    
+            }
             
             // >> get substarts attached to chosen property and subscription
             $substarts = Substart::where([

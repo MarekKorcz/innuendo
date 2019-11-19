@@ -18,7 +18,7 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">@lang('common.name') :</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">@lang('common.name'):</label>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
@@ -34,7 +34,7 @@
                         </div>
                         
                         <div class="form-group row">
-                            <label for="surname" class="col-md-4 col-form-label text-md-right">@lang('common.surname') :</label>
+                            <label for="surname" class="col-md-4 col-form-label text-md-right">@lang('common.surname'):</label>
 
                             <div class="col-md-6">
                                 <input id="surname" type="text" class="form-control{{ $errors->has('surname') ? ' is-invalid' : '' }}" name="surname" value="{{ old('surname') }}" required autofocus>
@@ -50,7 +50,7 @@
                         </div>
                         
                         <div class="form-group row">
-                            <label for="phone_number" class="col-md-4 col-form-label text-md-right">@lang('common.phone_number') :</label>
+                            <label for="phone_number" class="col-md-4 col-form-label text-md-right">@lang('common.phone_number'):</label>
 
                             <div class="col-md-6">
                                 <input id="phone_number" type="text" class="form-control{{ $errors->has('phone_number') ? ' is-invalid' : '' }}" name="phone_number" value="{{ old('phone_number') }}" required autofocus>
@@ -66,7 +66,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">@lang('common.email_address') :</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-right">@lang('common.email_address'):</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
@@ -82,7 +82,7 @@
                         </div>
                         
                         <div class="form-group row">
-                            <label for="code" class="col-md-4 col-form-label text-md-right">@lang('common.registration_code') :</label>
+                            <label for="code" class="col-md-4 col-form-label text-md-right">@lang('common.registration_code'):</label>
 
                             <div class="col-md-6">
                                 <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" required>
@@ -99,7 +99,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">@lang('common.password') :</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">@lang('common.password'):</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
@@ -115,7 +115,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">@lang('common.password_confirm') :</label>
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">@lang('common.password_confirm'):</label>
 
                             <div class="col-md-6">
                                 <input id="password_confirm" type="password" class="form-control" name="password_confirm" required>
@@ -145,27 +145,27 @@
                     <h3 class="text-center">@lang('common.report_your_company')</h3>
 
                     <div class="form-group">
-                        <label for="property_name">@lang('common.company_name') :</label>
+                        <label for="property_name">@lang('common.company_name'):</label>
                         {{ Form::text('property_name', Input::old('property_name'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        <label for="street">@lang('common.street') :</label>
+                        <label for="street">@lang('common.street'):</label>
                         {{ Form::text('street', Input::old('street'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        <label for="street_number">@lang('common.street_number') :</label>
+                        <label for="street_number">@lang('common.street_number'):</label>
                         {{ Form::text('street_number', Input::old('street_number'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        <label for="house_number">@lang('common.house_number') :</label>
+                        <label for="house_number">@lang('common.house_number'):</label>
                         {{ Form::text('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        <label for="city">@lang('common.city') :</label>
+                        <label for="city">@lang('common.city'):</label>
                         {{ Form::text('city', Input::old('city'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
