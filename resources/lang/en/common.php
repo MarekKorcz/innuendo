@@ -468,4 +468,8 @@ return [
     'no_contact_messages' => 'There is no messages from contact form',
     'no_schedule_yet_female' => 'You have not yet been assigned to any schedule',
     'no_schedule_yet_male' => 'You have not yet been assigned to any schedule',
+    'go_to_codes_view' => 'None of your employees are currently assigned to the subscription',
+    'go_to_codes_view_description' => 'Use the registration code generation view to allow your employees to join the subscription',
+    'go_to_codes_view_description_2' => 'Also, use the registration code generation view to allow your employees to join the subscription',
+    'registered_workers' => 'Registered workers',
 ];

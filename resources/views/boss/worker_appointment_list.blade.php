@@ -42,21 +42,8 @@
                         </div>
                     @endif
                 </div>
-            @else
-                <div class="text-center" style="padding: 1rem;">
-                    <h3>@lang('common.subscription_first_time_activation_info')</h3>
-                    <div style="padding: 1rem;">
-                        <a class="btn btn-success" href="{{ URL::to('/appointment/index') }}">
-                            @lang('common.go_to_appointments')
-                        </a>
-                    </div>
-                </div>
-                <hr>
-            @endif
-
-
-            <div id="appointments-table">
-                @if (count($appointments) > 0)
+            
+                <div id="appointments-table">
                     <div class="col-12">
                         <h2 class="text-center">
                             @lang('common.all_massages')
@@ -110,19 +97,28 @@
                             @endforeach
                         </tbody>
                     </table>
-                @else
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <h4>@lang('common.subscription_first_time_activation_info')</h4>
-                            <div style="padding: 1rem;">
-                                <a class="btn btn-success" href="{{ URL::to('/appointment/index') }}">
-                                    @lang('common.go_to_appointments')
-                                </a>
-                            </div>
-                        </div>
+                </div>
+            @else
+                <div class="text-center" style="padding: 1rem 1rem 0 1rem;">
+                    <h3>@lang('common.subscription_first_time_activation_info')</h3>
+                    <div style="padding: 1rem;">
+                        <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/appointment/index') }}">
+                            @lang('common.go_to_appointments')
+                        </a>
                     </div>
-                @endif
-            </div>
+                </div>
+                </hr>
+                <div class="text-center" style="padding: 1rem;">
+                    <h3>
+                        @lang('common.go_to_codes_view_description_2')
+                    </h3>
+                    <div style="padding: 1rem;">
+                        <a class="btn pallet-2-1" style="color: white;" href="{{ URL::to('/boss/codes') }}">
+                            @lang('common.register_codes')
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
         <div class="col-1"></div>
     </div>

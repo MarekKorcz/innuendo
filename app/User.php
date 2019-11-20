@@ -45,7 +45,7 @@ class User extends Authenticatable
     
     public function getWorkers()
     {
-        $workers = User::where('boss_id', $this->id)->get();
+        $workers = User::where('boss_id', $this->id)->with('chosenProperties')->get();
         
         return count($workers) > 0 ? $workers : null;
     }

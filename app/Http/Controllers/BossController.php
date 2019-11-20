@@ -334,13 +334,6 @@ class BossController extends Controller
             
             $boss = auth()->user();
             
-            $validatedProperty = Property::where('email', Input::get('email'))->first();
-            
-            if ($validatedProperty !== null && $validatedProperty->boss_id !== $boss->id)
-            {
-                return redirect('/boss/property/' . Input::get('property_id') . '/edit')->with('error', 'Istnieje już lokalizacja z takim adresem email');
-            }
-            
             $property = Property::where('id', Input::get('property_id'))->first();
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
@@ -351,7 +344,7 @@ class BossController extends Controller
             $property->boss_id       = $boss->id;
             $property->save();
 
-            return redirect('boss/property/' . $property->id)->with('success', 'Lokalizacja została zaktualizowana');
+            return redirect('boss/subscription/list/' . $property->id . '/0')->with('success', 'Lokalizacja została zaktualizowana');
         }
     }
     
@@ -365,6 +358,7 @@ class BossController extends Controller
     public function subscriptionList($propertyId = 0, $subscriptionId = 0)
     {        
         $boss = auth()->user();
+        $allBossWorkers = $boss->getWorkers();
         $givenProperty = null;
         
         $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
@@ -406,8 +400,29 @@ class BossController extends Controller
         if (count($properties) > 0)
         {
             foreach ($properties as $property)
-            {
-                // >> check if property is checked
+            {                    
+                // >> checks how many workers belongs to property
+                $property['howManyWorkersBelongToProperty'] = 0;
+                
+                if ($allBossWorkers !== null)
+                {
+                    foreach ($allBossWorkers as $worker)
+                    {
+                        if (count($worker->chosenProperties) > 0)
+                        {
+                            foreach ($worker->chosenProperties as $chosenProperty)
+                            {
+                                if ($chosenProperty->property_id == $property->id)
+                                {
+                                    $property['howManyWorkersBelongToProperty'] = $property['howManyWorkersBelongToProperty'] + 1;
+                                }
+                            }
+                        }
+                    }
+                }
+                // <<                
+                
+                // >> checks if property is checked
                 $property['isChecked'] = false;
                 
                 if ($givenProperty !== null && $givenProperty->id === $property->id)
@@ -1027,8 +1042,6 @@ class BossController extends Controller
                                             // todo: co jeśli dana subskrypcja zostanie już zużyta (czas jej trwania dobiegnie końca)?
                                             // w substart mam end_date więc po tym mogę sprawdzić. Pomyśl jeszcze jak to ogarnąć w innych widokach 
                                             // żeby działało też jeśli subskrypcja się skończy i ktoś nową weżmie
-                                            
-                                            // todo: sprawdz czy kiedy boss robi purchase to czy dobrze dodaje subskrypcje do chosen_property_subscription
                                             
                                             $substart = Substart::where('id', $purchase->substart_id)->first();
                                                                                         

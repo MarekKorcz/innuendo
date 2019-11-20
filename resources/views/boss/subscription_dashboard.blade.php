@@ -35,6 +35,12 @@
                                             {{$propertyWithSubscriptions['property']->city}}
                                         </strong>
                                     </p>
+                                    <p>
+                                        @lang('common.registered_workers'):
+                                        <strong>
+                                            {{ $propertyWithSubscriptions['property']['howManyWorkersBelongToProperty'] }}
+                                        </strong>
+                                    </p>
                                 </div>
                                 <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('boss/property/' . $propertyWithSubscriptions['property']->id . '/edit') }}">
                                     @lang('common.edit')

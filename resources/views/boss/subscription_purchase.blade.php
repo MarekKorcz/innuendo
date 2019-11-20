@@ -5,8 +5,20 @@
 {!! Html::script('js/subscription_purchase.js') !!}
 
 <div class="container">
+    
+    <div class="row text-center" style="padding: 1rem 0 1rem 0;">
+        <div class="col-4">
+            <a href="{{ URL::to('/boss/subscription/list/' . $property->id . '/' . $subscription->id) }}" class="btn pallet-1-3" style="color: white;">
+                @lang('common.go_back')
+            </a> 
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+    </div>
 
-    <h1 class="text-center" style="padding: 2rem;">{!! $subscription->name !!}</h1>
+    <div class="text-center" style="padding: 2rem;">
+        <h1>{!! $subscription->name !!}</h1>
+    </div>
     
     <div class="row">
         <div class="col-1"></div>

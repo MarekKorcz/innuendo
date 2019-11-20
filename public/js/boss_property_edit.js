@@ -1,7 +1,7 @@
 $(document).ready(function()
-{        
+{          
     $("#property-edit").submit(function(event) 
-    {        
+    {                 
         let propertyNameInput = $("input#name");
         
         if (propertyNameInput.length == 1)
@@ -22,60 +22,60 @@ $(document).ready(function()
                 
                 if ($("input#name + div.warning > p.field-warning").length == 0)
                 {
-                    $("input#name + div.warning").append('<p class="field-warning">Wpisz nazwę lokalizacji</p>');
+                    $("input#name + div.warning").append('<p class="field-warning">Wpisz nazwę firmy</p>');
                 }
             }
         }
         
-        let propertyEmailInput = $("input#email");
-        
-        if (propertyEmailInput.length == 1)
-        {
-            if (propertyEmailInput.val() !== "") 
-            {
-                $("input#email + div.warning > p.field-warning").remove();
-                
-                if (!validateEmail(propertyEmailInput.val()))
-                {
-                    event.preventDefault();
-                    $("input#email + div.warning").append('<p class="field-warning">Niepoprawny email</p>');
-                }
-
-            } else if (propertyEmailInput.val() === "") {
-
-                event.preventDefault();
-                
-                if ($("input#email + div.warning > p.field-warning").length == 0)
-                {
-                    $("input#email + div.warning").append('<p class="field-warning">Wpisz email lokalizacji</p>');
-                }
-            }
-        }
-        
-        let propertyPhoneNumberInput = $("input#phone_number");
-        
-        if (propertyPhoneNumberInput.length == 1)
-        {
-            if (propertyPhoneNumberInput.val() !== "") 
-            {
-                $("input#phone_number + div.warning > p.field-warning").remove();
-                
-                if (propertyPhoneNumberInput.val().length < 7)
-                {
-                    event.preventDefault();
-                    $("input#phone_number + div.warning").append('<p class="field-warning">Podany numer telefonu jest za krótki</p>');
-                }
-
-            } else if (propertyPhoneNumberInput.val() === "") {
-
-                event.preventDefault();
-                
-                if ($("input#phone_number + div.warning > p.field-warning").length == 0)
-                {
-                    $("input#phone_number + div.warning").append('<p class="field-warning">Wpisz numer telefonu lokalizacji</p>');
-                }
-            }
-        }
+//        let propertyEmailInput = $("input#email");
+//        
+//        if (propertyEmailInput.length == 1)
+//        {
+//            if (propertyEmailInput.val() !== "") 
+//            {
+//                $("input#email + div.warning > p.field-warning").remove();
+//                
+//                if (!validateEmail(propertyEmailInput.val()))
+//                {
+//                    event.preventDefault();
+//                    $("input#email + div.warning").append('<p class="field-warning">Niepoprawny email</p>');
+//                }
+//
+//            } else if (propertyEmailInput.val() === "") {
+//
+//                event.preventDefault();
+//                
+//                if ($("input#email + div.warning > p.field-warning").length == 0)
+//                {
+//                    $("input#email + div.warning").append('<p class="field-warning">Wpisz email lokalizacji</p>');
+//                }
+//            }
+//        }
+//        
+//        let propertyPhoneNumberInput = $("input#phone_number");
+//        
+//        if (propertyPhoneNumberInput.length == 1)
+//        {
+//            if (propertyPhoneNumberInput.val() !== "") 
+//            {
+//                $("input#phone_number + div.warning > p.field-warning").remove();
+//                
+//                if (propertyPhoneNumberInput.val().length < 7)
+//                {
+//                    event.preventDefault();
+//                    $("input#phone_number + div.warning").append('<p class="field-warning">Podany numer telefonu jest za krótki</p>');
+//                }
+//
+//            } else if (propertyPhoneNumberInput.val() === "") {
+//
+//                event.preventDefault();
+//                
+//                if ($("input#phone_number + div.warning > p.field-warning").length == 0)
+//                {
+//                    $("input#phone_number + div.warning").append('<p class="field-warning">Wpisz numer telefonu lokalizacji</p>');
+//                }
+//            }
+//        }
         
         let streetInput = $("input#street");
         
@@ -121,24 +121,24 @@ $(document).ready(function()
             }
         }
         
-        let houseNumberInput = $("input#house_number");
-        
-        if (houseNumberInput.length == 1)
-        {
-            if (houseNumberInput.val() !== "") 
-            {
-                $("input#house_number + div.warning > p.field-warning").remove();
-
-            } else if (houseNumberInput.val() === "") {
-
-                event.preventDefault();
-                
-                if ($("input#house_number + div.warning > p.field-warning").length == 0)
-                {
-                    $("input#house_number + div.warning").append('<p class="field-warning">Wpisz numer budynku pod którym znajduje się lokalizacja</p>');
-                }
-            }
-        }
+//        let houseNumberInput = $("input#house_number");
+//        
+//        if (houseNumberInput.length == 1)
+//        {
+//            if (houseNumberInput.val() !== "") 
+//            {
+//                $("input#house_number + div.warning > p.field-warning").remove();
+//
+//            } else if (houseNumberInput.val() === "") {
+//
+//                event.preventDefault();
+//                
+//                if ($("input#house_number + div.warning > p.field-warning").length == 0)
+//                {
+//                    $("input#house_number + div.warning").append('<p class="field-warning">Wpisz numer budynku pod którym znajduje się lokalizacja</p>');
+//                }
+//            }
+//        }
         
         let cityInput = $("input#city");
         
@@ -166,10 +166,10 @@ $(document).ready(function()
         }
     });
     
-    function validateEmail(email) 
-    {
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        
-        return re.test(String(email).toLowerCase());
-    }
+//    function validateEmail(email) 
+//    {
+//        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//        
+//        return re.test(String(email).toLowerCase());
+//    }
 });

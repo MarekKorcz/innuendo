@@ -474,4 +474,8 @@ return [
     'no_contact_messages' => 'Brak wiadomości z formularza kontaktowego',
     'no_schedule_yet_female' => 'Nie zostałaś jeszcze przydzielona do żadnego grafiku',
     'no_schedule_yet_male' => 'Nie zostałeś jeszcze przydzielony do żadnego grafiku',
+    'go_to_codes_view' => 'Żaden z Twoich pracowników nie jest obecnie przypisany do danej subskrypcji',
+    'go_to_codes_view_description' => 'Skorzystaj z widoku generacji kodów rejestracyjnych by umożliwić swoim pracownikom dołączenie do pakietu',
+    'go_to_codes_view_description_2' => 'Skorzystaj również z widoku generacji kodów rejestracyjnych by umożliwić swoim pracownikom dołączenie do pakietu',
+    'registered_workers' => 'Zarejestrowanych pracowników',
 ];
