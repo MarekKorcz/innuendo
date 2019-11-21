@@ -8,13 +8,13 @@
 
 <div class="container" style="padding-bottom: 2rem;">
     
-    <div style="padding: 1rem;">
+    <div class="row text-center" style="padding-top: 2rem;">
+        <div class="col-4"></div>
         <div class="col-4">
-            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/employee/' . $employee_slug) }}">
+            <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('/employee/' . $employee_slug) }}">
                 @lang('common.back_to_employee')
             </a>
         </div>
-        <div class="col-4"></div>
         <div class="col-4"></div>
     </div>
 
@@ -72,7 +72,7 @@
                     @if ($i == 0 || $i == 6 || $i == 12 || $i == 18 || $i == 24 || $i == 30 || $i == 36)
                         <tr>
                             <td class="text-center">
-                                @if (count($days[$i]) > 0)
+                                @if (is_object($days[$i]) && $days[$i] !== null)
                                     <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                         @if ($days[$i]->day_number == $current_day)
                                             <h4 class="marked">
@@ -86,7 +86,7 @@
                             </td>
                     @elseif ($i == 5 || $i == 11 || $i == 17 || $i == 23 || $i == 29 || $i == 35)
                             <td class="text-center">
-                                @if (count($days[$i]) > 0)
+                                @if (is_object($days[$i]) && $days[$i] !== null)
                                     <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                         @if ($days[$i]->day_number == $current_day)
                                             <h4 class="marked">
@@ -101,7 +101,7 @@
                         </tr>
                     @else
                         <td class="text-center">
-                            @if (count($days[$i]) > 0)
+                            @if (is_object($days[$i]) && $days[$i] !== null)
                                 <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                     @if ($days[$i]->day_number == $current_day)
                                         <h4 class="marked">
@@ -411,9 +411,13 @@
                             <ul id="employees" style="padding: 12px 12px 0 12px;">
                                 @foreach($employees as $employee)
                                     @if(count($employees) == 1)
-                                        <li class="form-control" style="background-color: #036635; margin: 3px;" data-active="true" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                        <li class="form-control text-center" style="background-color: #A1D6AC; margin: 3px;" data-active="true" value="{{$employee->id}}">
+                                            {{$employee->name}} {{$employee->surname}}
+                                        </li>
                                     @else
-                                        <li class="form-control" value="{{$employee->id}}" style="margin: 3px;">{{$employee->name}} {{$employee->surname}}</li>
+                                        <li class="form-control" value="{{$employee->id}}" style="margin: 3px;">
+                                            {{$employee->name}} {{$employee->surname}}
+                                        </li>
                                     @endif
                                 @endforeach
                             </ul>
@@ -436,7 +440,7 @@
                         @endif
                  
                         <div class="text-center">
-                            <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-2">
+                            <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
                         </div>
 
                 {{ Form::close() }}

@@ -74,7 +74,7 @@ return [
     'subscription_duration' => 'Subscription duration (in months)',
     'months_count' => 'months',
     'regulations' => 'Regulations',
-    'our_employees_schedules' => 'Our employees schedules',
+    'our_employees_schedules' => 'Our employees assigned to the schedule',
     'schedule' => 'Schedule',
     'schedules' => 'Schedules',
     'available_massages_in_current_month' => 'Massages available in current month (since',

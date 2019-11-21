@@ -82,15 +82,15 @@ class UserController extends Controller
             
             $employeeCreatedAt = $employee->created_at->format('d.m.Y');
             $calendars = new Collection();
-            $properties = [];
-            
+            $properties = [];        
+        
             if ($user !== null)
             {
                 $calendars = Calendar::where([
                     'employee_id' => $employee->id,
                     'isActive' => 1
                 ])->with('property')->get();
-
+                
                 if ($user->isBoss) 
                 {                
                     if (count($calendars) > 0)
@@ -108,9 +108,9 @@ class UserController extends Controller
                     }
 
                 } else if ($user->boss_id !== null) {
-
-                    $user = User::where('id', $user->id)->with('chosenProperties')->first();
-
+                    
+                    $user->load('chosenProperties');
+                    
                     $calendarsAvailableToWorker = new Collection();
 
                     if (count($user->chosenProperties) > 0 && count($calendars) > 0)
@@ -119,17 +119,14 @@ class UserController extends Controller
                         {
                             foreach ($user->chosenProperties as $chosenProperty)
                             {
-                                if ($calendar->property !== null)
+                                if ($calendar->property !== null && $calendar->property->id === $chosenProperty->property_id)
                                 {
-                                    if ($calendar->property->id === $chosenProperty->property_id)
-                                    {
-                                        $calendarsAvailableToWorker->push($calendar);
-                                    }
+                                    $calendarsAvailableToWorker->push($calendar);
                                 }
                             }
                         }
                     }
-
+                    
                     if (count($calendarsAvailableToWorker) > 0)
                     {
                         $calendars = new Collection();
@@ -244,48 +241,45 @@ class UserController extends Controller
      * @return type
      */
     public function property($id)
-    {        
-        if (is_integer((int)$id) && $id !== null)
-        {
-            $property = Property::where('id', $id)->first();
-            
-            if ($property !== null)
-            {
-                $propertyCreatedAt = $property->created_at->format('d.m.Y');
-                $calendars = Calendar::where([
-                    'property_id' => $property->id,
-                    'isActive' => 1
-                ])->get();
-                $employees = new Collection();
+    {      
+        $property = Property::where('id', $id)->first();
 
-                if (count($calendars) > 0)
+        if ($property !== null)
+        {
+            $propertyCreatedAt = $property->created_at->format('d.m.Y');
+            $calendars = Calendar::where([
+                'property_id' => $property->id,
+                'isActive' => 1
+            ])->get();
+            $employees = new Collection();
+
+            if (count($calendars) > 0)
+            {
+                foreach ($calendars as $calendar)
                 {
-                    foreach ($calendars as $calendar)
+                    $employee = User::where('id', $calendar->employee_id)->first();
+
+                    if ($employee !== null)
                     {
-                        $employee = User::where('id', $calendar->employee_id)->first();
-                        
-                        if ($employee !== null)
-                        {
-                            $employee['calendar'] = $calendar->id;
-                            
-                            $employees->push($employee);
-                        }
+                        $employee['calendar'] = $calendar->id;
+
+                        $employees->push($employee);
                     }
                 }
-                
-                $today = [
-                    'year' => date('Y'),
-                    'month' => date('n'),
-                    'day' => date('j')
-                ];
-                
-                return view('user.property_show')->with([
-                    'property' => $property,
-                    'propertyCreatedAt' => $propertyCreatedAt,
-                    'employees' => $employees,
-                    'today' => $today
-                ]);
             }
+
+            $today = [
+                'year' => date('Y'),
+                'month' => date('n'),
+                'day' => date('j')
+            ];
+
+            return view('user.property_show')->with([
+                'property' => $property,
+                'propertyCreatedAt' => $propertyCreatedAt,
+                'employees' => $employees,
+                'today' => $today
+            ]);
         }
         
         return redirect()->route('welcome');

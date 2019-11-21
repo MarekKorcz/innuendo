@@ -18,7 +18,7 @@ $(document).ready(function()
 
         } else {
 
-            element.css("background-color", "lightgreen").attr("data-active", "true");
+            element.css("background-color", "#A1D6AC").attr("data-active", "true");
                         
             $("form#request-form").append(`
                 <input type="hidden" name="employees[]" value="` + employeeId + `">

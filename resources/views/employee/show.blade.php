@@ -41,33 +41,14 @@
 
     @if ($calendars && count($calendars) == count($properties))
     
-        <h2 class="text-center padding-top">@lang('common.schedule_in') :</h2>
+        <div class="text-center padding-top">
+            <h2>@lang('common.schedule_in'):</h2>
+        </div>
     
         @for ($i = 1; $i <= count($calendars); $i++)
             @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
                 <div class="row padding">
-                    @if (count($properties[$i - 1]) > 0)
-                        <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
-                            <div class="card">
-                                <div class="text-center">
-                                    @svg('solid/home')
-                                </div>
-                                <div class="card-body">
-                                        <h5 class="card-title text-center">{{$properties[$i - 1]->name}}</h5>
-                                        <p class="card-text">
-                                            {!!$properties[$i - 1]->description!!}
-                                        </p>
-                                    <div class="text-center">
-                                        <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
-                                            @lang('common.show')
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-            @elseif ($i % 3 == 0)
-                    @if (count($properties[$i - 1]) > 0)
+                    @if ($properties[$i - 1] !== null || count($properties[$i - 1]) > 0)
                         <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                             <div class="card">
                                 <div class="text-center">
@@ -79,7 +60,28 @@
                                         {!!$properties[$i - 1]->description!!}
                                     </p>
                                     <div class="text-center">
-                                        <a class="btn btn-pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                        <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                            @lang('common.show')
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+            @elseif ($i % 3 == 0)
+                    @if ($properties[$i - 1] !== null || count($properties[$i - 1]) > 0)
+                        <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
+                            <div class="card">
+                                <div class="text-center">
+                                    @svg('solid/home')
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">{{$properties[$i - 1]->name}}</h5>
+                                    <p class="card-text">
+                                        {!!$properties[$i - 1]->description!!}
+                                    </p>
+                                    <div class="text-center">
+                                        <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('employee/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
                                             @lang('common.show')
                                         </a>
                                     </div>
@@ -89,7 +91,7 @@
                     @endif
                 </div>
             @else
-                @if (count($properties[$i - 1]) > 0)
+                @if ($properties[$i - 1] !== null || count($properties[$i - 1]) > 0)
                     <div class="col-xs-12 col-sm-6 col-lg-4 col-md-4">
                         <div class="card">
                             <div class="text-center">

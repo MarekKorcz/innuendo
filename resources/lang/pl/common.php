@@ -74,7 +74,7 @@ return [
     'subscription_duration' => 'Czas trwania pakietu (w miesiącach)',
     'months_count' => 'miesięcy',
     'regulations' => 'Regulamin',
-    'our_employees_schedules' => 'Grafiki naszych pracowników',
+    'our_employees_schedules' => 'Nasi pracownicy przypisani do grafiku',
     'schedule' => 'Grafik',
     'schedules' => 'Grafiki',
     'available_massages_in_current_month' => 'Dostępne zabiegi w obecnym miesiącu (od',
