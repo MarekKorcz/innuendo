@@ -132,7 +132,11 @@
                                                         </td>
                                                     @endif
                                                 @endif
-                                                <td>{{$worker->name}} {{$worker->surname}}</td>
+                                                <td>
+                                                    <a href="{{ URL::to('/boss/worker/appointment/list/' . $substart->id . '/' . $worker->id) }}">
+                                                        {{$worker->name}} {{$worker->surname}}
+                                                    </a>                                                    
+                                                </td>
                                                 <td>{{$worker->email}}</td>
                                             </tr>
                                         @endforeach
@@ -164,7 +168,11 @@
                                                         </td>
                                                     @endif                                 
                                                 @endif
-                                                <td>{{$worker->name}} {{$worker->surname}}</td>
+                                                <td>
+                                                    <a href="{{ URL::to('/boss/worker/appointment/list/' . $substart->id . '/' . $worker->id) }}">
+                                                        {{$worker->name}} {{$worker->surname}}
+                                                    </a> 
+                                                </td>
                                                 <td>{{$worker->email}}</td>
                                             </tr>
                                         @endforeach

@@ -472,4 +472,5 @@ return [
     'go_to_codes_view_description' => 'Use the registration code generation view to allow your employees to join the subscription',
     'go_to_codes_view_description_2' => 'Also, use the registration code generation view to allow your employees to join the subscription',
     'registered_workers' => 'Registered workers',
+    'no_discounts_info' => 'Currently, there are no discounts',
 ];

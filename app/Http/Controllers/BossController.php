@@ -1405,7 +1405,7 @@ class BossController extends Controller
                     
                     if ($chosenInterval !== null && !($chosenInterval->start_date < $today && $chosenInterval->end_date < $today))
                     {
-                        if (count(Input::get('workers_on')) > 0)
+                        if (Input::get('workers_on') !== null && count(Input::get('workers_on')) > 0)
                         {
                             $workersOn = new Collection();
                         
@@ -1528,7 +1528,7 @@ class BossController extends Controller
                             }
                         }
                         
-                        if (count(Input::get('workers_off')) > 0)
+                        if (Input::get('workers_off') !== null && count(Input::get('workers_off')) > 0)
                         {
                             $workersOff = new Collection();
                         
@@ -2052,17 +2052,8 @@ class BossController extends Controller
         
         $property = null;
 
-        if (count($graphicRequests) > 0)
+        if (count($graphicRequests) == 0)
         {
-            foreach ($graphicRequests as $graphicRequest)
-            {                
-                if ($graphicRequest->comment !== null && strlen($graphicRequest->comment) > 24)
-                {
-                    $graphicRequest->comment = substr($graphicRequest->comment, 0, 24).'...';
-                }
-            }
-        } else {
-            
             if (count($boss->chosenProperties) > 0)
             {
                 $property = Property::where('id', $boss->chosenProperties->first()->property_id)->first();

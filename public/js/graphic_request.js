@@ -1,5 +1,13 @@
 $(document).ready(function() 
 {
+    $('.timepicker').timepicker({
+        timeFormat: 'H:i',
+        step: 15,
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+
     $("ul#employees > li.form-control").click(function (event) {
 
         let element = $(event.target);
@@ -29,7 +37,7 @@ $(document).ready(function()
     let startTimeInput = $("input[name='start_time']");
     let endTimeInput = $("input[name='end_time']");
     let appointmentQuantityCounter = $("#appointment-quantity-counter");
-    
+        
     $("input[name='start_time']").change(function() 
     {
         displayAppointmentQuantityInfo();
@@ -41,9 +49,9 @@ $(document).ready(function()
     });
     
     $("#request-form").submit(function(event) 
-    {        
+    {          
         if (startTimeInput.length == 1)
-        {            
+        {        
             if (startTimeInput.val() === "") {
 
                 event.preventDefault();
@@ -55,7 +63,7 @@ $(document).ready(function()
                 }
                 
             } else {
-                
+            
                 $("input[name='start_time']").removeClass('input-warning');
                 $("input[name='start_time'] + div.warning > p.field-warning").remove();
             }
@@ -81,7 +89,7 @@ $(document).ready(function()
         }
         
         if (startTimeInput.length == 1 && endTimeInput.length == 1)
-        {
+        {            
             if (startTimeInput.val() !== "" && endTimeInput.val() !== "")
             {
                 if (startTimeInput.val() > endTimeInput.val())

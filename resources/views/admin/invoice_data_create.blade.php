@@ -15,8 +15,13 @@
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
+                        <label for="address">@lang('common.address'):</label>
+                        {{ Form::text('address', Input::old('address'), array('class' => 'form-control')) }}
+                        <div class="warning"></div>
+                    </div>
+                    <div class="form-group">
                         <label for="email">@lang('common.email_address'):</label>
-                        {{ Form::email('email', Input::old('email_address'), array('class' => 'form-control')) }}
+                        {{ Form::email('email', Input::old('email'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">

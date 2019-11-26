@@ -548,12 +548,7 @@ class AdminController extends Controller
         ])->get();
 
         foreach ($graphicRequests as $graphicRequest)
-        {                
-            if ($graphicRequest->comment !== null && strlen($graphicRequest->comment) > 24)
-            {
-                $graphicRequest->comment = substr($graphicRequest->comment, 0, 24).'...';
-            }
-                
+        {                   
             $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
         }
         
@@ -1190,6 +1185,7 @@ class AdminController extends Controller
     {
         $rules = array(
             'company_name' => 'required',
+            'address'      => 'required',
             'email'        => 'required',
             'phone_number' => 'required',
             'nip'          => 'required'
@@ -1203,6 +1199,7 @@ class AdminController extends Controller
                        
             $invoiceData = new InvoiceData();
             $invoiceData->company_name  = Input::get('company_name');
+            $invoiceData->address       = Input::get('address');
             $invoiceData->email         = Input::get('email');
             $invoiceData->phone_number  = Input::get('phone_number');
             $invoiceData->nip           = Input::get('nip');          

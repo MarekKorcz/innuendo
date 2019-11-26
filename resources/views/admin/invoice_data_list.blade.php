@@ -14,7 +14,8 @@
                         <thead>
                             <tr>                
                                 <td>@lang('common.name')</td>
-                                <td>@lang('common.email')</td>
+                                <td>@lang('common.address')</td>
+                                <td>@lang('common.email_address')</td>
                                 <td>NIP</td>
                                 <td>@lang('common.created_at')</td>
                                 <td>@lang('common.canceled')</td>
@@ -25,6 +26,7 @@
                             @foreach($invoiceDatas as $invoice)
                                 <tr>
                                     <td>{{$invoice->company_name}}</td>
+                                    <td>{{$invoice->address}}</td>
                                     <td>{{$invoice->email}}</td>
                                     <td>{{$invoice->nip}}</td>
                                     <td>{{$invoice->created_at}}</td>
