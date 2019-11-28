@@ -36,7 +36,8 @@ $(function() {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-type': 'application/json',
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+            },
+            mode: 'cors'
         })
         .then((res) => res.json())
         .then((data) => {

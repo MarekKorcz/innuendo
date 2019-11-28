@@ -35,6 +35,7 @@ use App\Discount;
 use App\PolicyConfirmation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Http\JsonResponse;
 use Redirect;
 
 class HomeController extends Controller
