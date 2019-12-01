@@ -293,7 +293,7 @@ return [
     'day' => 'Dzień',
     'assign_an_employee' => 'Przypisz pracownika',
     'create_property' => 'Stwórz lokalizacje',
-    'created_properties' => 'Stwórzone lokalizacje',
+    'created_properties' => 'Stworzone lokalizacje',
     'temporary_properties' => 'Encje TempProperty lokalizacji',
     'edit_temporary_property' => 'Edytuj encje TempProperty lokalizacji',
     'temporary_property' => 'Encja TempProperty lokalizacji',

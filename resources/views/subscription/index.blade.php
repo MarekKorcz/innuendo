@@ -36,12 +36,16 @@
                                 @endif
                             </td>
                             <td>
-                                <a class="btn btn-primary" href="{{ URL::to('/subscription/show/' . $subscription->id) }}">
-                                    @lang('common.show')
-                                </a>
-                                <a class="btn btn-success" href="{{ URL::to('/subscription/' . $subscription->id . '/edit') }}">
-                                    @lang('common.edit')
-                                </a>
+                                <div style="padding: 1px;">
+                                    <a class="btn btn-primary" href="{{ URL::to('/subscription/show/' . $subscription->id) }}">
+                                        @lang('common.show')
+                                    </a>
+                                </div>
+                                <div style="padding: 1px;">
+                                    <a class="btn btn-success" href="{{ URL::to('/subscription/' . $subscription->id . '/edit') }}">
+                                        @lang('common.edit')
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
