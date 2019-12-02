@@ -360,6 +360,8 @@ class HomeController extends Controller
         $boss = auth()->user();
         $subscription = \App\Subscription::all();
         
+        $boss->email = "mark.korcz@gmail.com";
+        
         \Mail::to($boss)->send(new SubscriptionPurchased($boss, $subscription->first()));
     }
 }
