@@ -38,6 +38,22 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Http\JsonResponse;
 use Redirect;
 
+
+
+
+
+
+
+
+
+
+use App\Mail\SubscriptionPurchased;
+
+
+
+
+
+
 class HomeController extends Controller
 {
     /**
@@ -333,4 +349,17 @@ class HomeController extends Controller
 //    public function test()
 //    {
 //    }
+    
+    
+    
+    
+    
+    public function mailTest()
+    {
+        
+        $boss = auth()->user();
+        $subscription = \App\Subscription::all();
+        
+        \Mail::to($boss)->send(new SubscriptionPurchased($boss, $subscription->first()));
+    }
 }
