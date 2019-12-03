@@ -83,12 +83,12 @@ class HomeController extends Controller
      */
     public function welcome()
     {
-        $canShowProperties = Property::where('canShow', 1)->get();
+//        $canShowProperties = Property::where('canShow', 1)->get();
         
         $showBanner = $this->showPolicyBanner();
         
         return view('welcome')->with([
-            'canShowProperties' => $canShowProperties,
+//            'canShowProperties' => $canShowProperties,
             'showBanner' => $showBanner
         ]);
     }
