@@ -236,9 +236,3 @@ Route::post('/boss/get-users-appointments-from-database', 'BossController@getUse
 Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisplayed');
 
 //Route::get('/test', 'HomeController@test');
-
-
-
-
-
-Route::get('/mail-test', 'HomeController@mailTest');

@@ -27,6 +27,11 @@ class SubscriptionPurchased extends Mailable
         $this->boss = $boss;
         $this->subscription = $subscription;
         $this->loginUrl = route('login');
+        $this->subject(
+            \Lang::get('common.subscription_purchased') . ' ' . 
+            \Lang::get('common.in') . ' ' . 
+            config('app.name') . ' ' . config('app.name_2nd_part')
+        );
     }
 
     /**

@@ -24,6 +24,11 @@ class BossCreateWithPromoCode extends Mailable
     {
         $this->boss = $boss;
         $this->loginUrl = route('login');
+        
+        $this->subject(
+            \Lang::get('common.completing_registration_in') . ' ' .
+            config('app.name') . ' ' . config('app.name_2nd_part')
+        );
     }
 
     /**

@@ -71,6 +71,12 @@ class AppointmentDestroy extends Mailable
                 }
             }
         }
+        
+        $this->subject(
+            \Lang::get('common.appointment_removal') . ' ' .
+            \Lang::get('common.in') . ' ' .
+            config('app.name') . ' ' . config('app.name_2nd_part')
+        );
     }
 
     /**

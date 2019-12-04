@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 // to tests
 //use App\Appointment;
 //use App\Promo;
@@ -37,22 +36,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\JsonResponse;
 use Redirect;
-
-
-
-
-
-
-
-
-
-
-use App\Mail\SubscriptionPurchased;
-
-
-
-
-
 
 class HomeController extends Controller
 {
@@ -345,23 +328,7 @@ class HomeController extends Controller
 //        }
 //    }
     
-    
 //    public function test()
 //    {
 //    }
-    
-    
-    
-    
-    
-    public function mailTest()
-    {
-        
-        $boss = auth()->user();
-        $subscription = \App\Subscription::all();
-        
-        $boss->email = "mark.korcz@gmail.com";
-        
-        \Mail::to($boss)->send(new SubscriptionPurchased($boss, $subscription->first()));
-    }
 }

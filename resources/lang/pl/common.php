@@ -479,4 +479,5 @@ return [
     'go_to_codes_view_description_2' => 'Skorzystaj również z widoku generacji kodów rejestracyjnych by umożliwić swoim pracownikom dołączenie do pakietu',
     'registered_workers' => 'Zarejestrowanych pracowników',
     'no_discounts_info' => 'Obecnie nie ma żadnych zniżek',
+    'register_1st_step' => 'Rejestracja - pierwszy etap - '
 ];

@@ -1,4 +1,4 @@
-@component('mail::message')
+@component('vendor.mail.html.message')
 
 # @lang('common.booking_an_appointment_on_the_day') {{$appointment->day}} {{$appointment->month}} {{$appointment->year}}
 

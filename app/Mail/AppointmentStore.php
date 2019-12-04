@@ -71,6 +71,12 @@ class AppointmentStore extends Mailable
                 }
             }
         }
+        
+        $this->subject(
+            \Lang::get('common.appointment_reservation') . ' ' .
+            \Lang::get('common.in') . ' ' .
+            config('app.name') . ' ' . config('app.name_2nd_part')
+        );
     }
 
     /**

@@ -1,4 +1,4 @@
-@component('mail::message')
+@component('vendor.mail.html.message')
 
 # @lang('common.removal_of_reservation_from') {{$appointment->day}} {{$appointment->month}} {{$appointment->year}}
 

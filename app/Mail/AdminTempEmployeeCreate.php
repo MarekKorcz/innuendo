@@ -30,6 +30,11 @@ class AdminTempEmployeeCreate extends Mailable
                 'code' => $this->employee->register_code
             ]);
         }
+        
+        $this->subject(
+            \Lang::get('common.register_1st_step') .
+            config('app.name') . ' ' . config('app.name_2nd_part')
+        );
     }
 
     /**

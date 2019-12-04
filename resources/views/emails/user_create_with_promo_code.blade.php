@@ -1,4 +1,4 @@
-@component('mail::message')
+@component('vendor.mail.html.message')
 
 # @lang('common.completing_registration_in') {{ config('app.name') }} {{ config('app.name_2nd_part') }}!
 
