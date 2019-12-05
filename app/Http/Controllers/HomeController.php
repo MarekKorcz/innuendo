@@ -50,9 +50,8 @@ class HomeController extends Controller
             'welcome',
             'subscriptions',
             'discounts',
-            'cookiesPolicy',
             'privatePolicy',
-            'rodo',
+            'regulations',
             'contactPageShow',
             'contactPageUpdate',
             'acceptTerms'
@@ -207,15 +206,6 @@ class HomeController extends Controller
         ]);
     }
     
-    public function cookiesPolicy()
-    {
-        $showBanner = $this->showPolicyBanner();
-        
-        return view('cookies_policy')->with([
-            'showBanner' => $showBanner
-        ]);
-    }
-    
     public function privatePolicy()
     {
         $showBanner = $this->showPolicyBanner();
@@ -223,13 +213,13 @@ class HomeController extends Controller
         return view('private_policy')->with([
             'showBanner' => $showBanner
         ]);
-    }
+    } 
     
-    public function rodo()
+    public function regulations()
     {
         $showBanner = $this->showPolicyBanner();
         
-        return view('rodo')->with([
+        return view('regulations')->with([
             'showBanner' => $showBanner
         ]);
     } 

@@ -126,13 +126,8 @@
                         </a>
                     </h5>
                     <h5>
-                        <a href="{{ route('cookies_policy') }}" target="_blanc">
-                            @lang('cookies.cookies_policy')
-                        </a>
-                    </h5>
-                    <h5>
                         <a href="{{ route('private_policy') }}" target="_blanc">
-                            @lang('private_policy.private_policy')
+                            @lang('common.private_policy')
                         </a>
                     </h5>
                 </div>
@@ -159,18 +154,13 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('cookies_policy') }}" target="_blanc">
-                            @lang('cookies.cookies_policy')
-                        </a>
-                    </li>
-                    <li>
                         <a href="{{ route('private_policy') }}" target="_blanc">
-                            @lang('private_policy.private_policy')
+                            @lang('common.private_policy')
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('rodo') }}" target="_blanc">
-                            @lang('common.rodo_policy')
+                        <a href="{{ route('regulations') }}" target="_blanc">
+                            @lang('common.regulations')
                         </a>
                     </li>
                 </ul>
@@ -179,7 +169,9 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <p id="copyright">{{ now()->year }} &copy; @lang('footer.all_rights')</p>
+                <p id="copyright">
+                    &copy; {{ now()->year }} {{ config('app.name') }} {{ config('app.name_2nd_part') }}. @lang('footer.all_rights')
+                </p>
             </div>
         </div>
     </footer>

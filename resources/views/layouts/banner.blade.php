@@ -1,17 +1,13 @@
 <div id="banner" class="text-center">
     <div id="banner-text">
         <p>
-            @lang('common.terms_banner_description') &nbsp;
-            <a target="_blank" href="{{ URL::to('cookies-policy') }}">
-                @lang('cookies.cookies_policy')
-            </a>
-            &nbsp; , &nbsp; 
+            @lang('common.terms_banner_description')
             <a target="_blank" href="{{ URL::to('private-policy') }}">
-                @lang('private_policy.private_policy')
+                @lang('common.private_policy_banner')
             </a>
-            &nbsp; @lang('common.terms_banner_description_2') &nbsp;
-            <a target="_blank" href="{{ URL::to('rodo') }}">
-                @lang('common.rodo_policy')
+            @lang('common.and_banner')
+            <a target="_blank" href="{{ URL::to('regulations') }}">
+                @lang('common.regulations')
             </a>
             .
         </p>
