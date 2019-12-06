@@ -70,7 +70,7 @@ return [
     'price_with_subscription' => 'Price with subscription',
     'net_price' => 'Net price',
     'net_price_after_discount' => 'Net price after discount',
-    'number_of_massages_to_use_per_month' => 'Number of massages to use per month',
+    'number_of_massages_to_use_per_month' => 'Number of massages to use in month (per person)',
     'subscription_duration' => 'Subscription duration (in months)',
     'months_count' => 'months',
     'regulations' => 'Regulations',

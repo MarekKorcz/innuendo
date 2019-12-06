@@ -233,7 +233,7 @@
         <div class="row">
             <div class="col-12">
                 <h2 class="text-center" style="padding: 1rem;">
-                    <a href="{{ URL::to('subscriptions') }}" class="btn btn-lg btn-success">
+                    <a href="{{ URL::to('subscriptions') }}" class="btn btn-lg pallet-1-3" style="color: white;">
                         @lang('welcome.all_subscriptions')
                     </a>
                 </h2>
@@ -277,7 +277,7 @@
         <div class="row">
             <div class="col-12">
                 <h2 class="text-center" style="padding: 1rem;">
-                    <a href="{{ URL::to('discounts') }}" class="btn btn-lg btn-success">
+                    <a href="{{ URL::to('discounts') }}" class="btn btn-lg pallet-1-3" style="color: white;">
                         @lang('welcome.all_discounts')
                     </a>
                 </h2>

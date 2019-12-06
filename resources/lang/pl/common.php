@@ -70,7 +70,7 @@ return [
     'price_with_subscription' => 'Cena z subskrypcją',
     'net_price' => 'Cena netto',
     'net_price_after_discount' => 'Cena netto po rabacie',
-    'number_of_massages_to_use_per_month' => 'Ilość masaży do wykorzystania w miesiącu',
+    'number_of_massages_to_use_per_month' => 'Ilość masaży do wykorzystania w miesiącu (na osobę)',
     'subscription_duration' => 'Czas trwania pakietu (w miesiącach)',
     'months_count' => 'miesięcy',
     'regulations' => 'Regulamin',

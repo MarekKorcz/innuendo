@@ -82,8 +82,8 @@
                     <ol>
                         <li>Użytkownik dokonuje zakupu usługi poprzez rejestrację, wybór jednej lub
                             wielu opcji masażu lub ich pakietów dostępnych w serwisie oraz
-                            potwierdzenie zakupu.</li>
-                        <li>Rejestracja jest możliwa także poprzez jej zlecenie administratorowi
+                            potwierdzenie zakupu (zaznaczenie checkbox'u, następnie kliknięcie przycisku 'Wykup').</li>
+                        <li>Rejestracja jest możliwa poprzez jej zlecenie administratorowi
                             serwisu lub przy pomocy kodu rejestracyjnego otrzymanego od
                             administratora lub osób trzecich w ramach akcji promocyjnych
                             prowadzonych przez Masaż+.</li>

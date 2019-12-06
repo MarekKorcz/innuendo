@@ -188,9 +188,9 @@ Route::get('/user/subscription/purchased/property/list', 'UserController@purchas
 Route::get('/user/subscription/list/purchased/{propertyId}', 'UserController@purchasedSubscriptionList');
 // po co ten routing??
 Route::get('/user/subscription/show/{propertyId}/{subscriptionId}', 'UserController@subscriptionShow');
-Route::get('/user/subscription/purchase/{propertyId}/{subscriptionId}', 'UserController@subscriptionPurchase');
-Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
-Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow');
+//Route::get('/user/subscription/purchase/{propertyId}/{subscriptionId}', 'UserController@subscriptionPurchase');
+//Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
+//Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow');
 
 Route::get('/boss/codes', 'BossController@codes');
 Route::post('/boss/set-code', 'BossController@setCode');
