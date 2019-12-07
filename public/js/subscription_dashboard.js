@@ -258,7 +258,6 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <thead>
                                     <tr>                
                                         <td>` + data.name_description + `</td>
-                                        <td>` + data.surname_description + `</td>
                                         <td>` + data.email_description + `</td>
                                         <td>` + data.phone_number_description + `</td>
                                         <td>` + data.appointments_description + `</td>
@@ -277,8 +276,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     {
                         let workerNode = `
                             <tr>
-                                <td>` + worker.name + `</td>
-                                <td>` + worker.surname + `</td>
+                                <td>` + worker.name + ` ` + worker.surname + `</td>
                                 <td>` + worker.email + `</td>
                                 <td>` + worker.phone_number + `</td>
                                 <td>
@@ -344,7 +342,6 @@ window.addEventListener('DOMContentLoaded', () => {
                             <thead>
                                 <tr>                
                                     <td>` + data.name_description + `</td>
-                                    <td>` + data.surname_description + `</td>
                                     <td>` + data.email_description + `</td>
                                     <td>` + data.phone_number_description + `</td>
                                     <td>` + data.appointments_description + `</td>
@@ -363,8 +360,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 {
                     let workerNode = `
                         <tr>
-                            <td>` + worker.name + `</td>
-                            <td>` + worker.surname + `</td>
+                            <td>` + worker.name + ` ` + worker.surname + `</td>
                             <td>` + worker.email + `</td>
                             <td>` + worker.phone_number + `</td>
                             <td>

@@ -73,7 +73,7 @@
                     @if ($i == 0 || $i == 6 || $i == 12 || $i == 18 || $i == 24 || $i == 30 || $i == 36)
                         <tr>
                             <td class="text-center">
-                                @if (count($days[$i]) > 0)
+                                @if (is_object($days[$i]) && $days[$i] !== null)
                                     <a href="{{ URL::to('employee/backend-calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                         @if ($days[$i]->day_number == $current_day)
                                             <h4 class="marked">
@@ -87,7 +87,7 @@
                             </td>
                     @elseif ($i == 5 || $i == 11 || $i == 17 || $i == 23 || $i == 29 || $i == 35)
                             <td class="text-center">
-                                @if (count($days[$i]) > 0)
+                                @if (is_object($days[$i]) && $days[$i] !== null)
                                     <a href="{{ URL::to('employee/backend-calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                         @if ($days[$i]->day_number == $current_day)
                                             <h4 class="marked">
@@ -102,7 +102,7 @@
                         </tr>
                     @else
                         <td class="text-center">
-                            @if (count($days[$i]) > 0)
+                            @if (is_object($days[$i]) && $days[$i] !== null)
                                 <a href="{{ URL::to('employee/backend-calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                     @if ($days[$i]->day_number == $current_day)
                                         <h4 class="marked">

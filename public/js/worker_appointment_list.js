@@ -1,7 +1,7 @@
 $(document).ready(function() {
     
     $("input#search").on('keyup', function(event) 
-    {        
+    {              
         let searchFieldValue = event.target.value;
         let substartId = $("#timePeriod").data("substart_id");
         
@@ -32,14 +32,14 @@ $(document).ready(function() {
     {
         let element = $(event.target);
         let listResultElement = $("#result");
-        
+                
         if (listResultElement.children().length > 0 && !element.hasClass("list-group-item"))
         {
             listResultElement.html('');
         }
         
         if (element.hasClass('list-group-item'))
-        {
+        {            
             let userName = element.data('name');
             let userId = element.val();
             
@@ -61,6 +61,11 @@ $(document).ready(function() {
             getUserAppointmentsFromDatabase(userId, substartId, intervalId);
             
             listResultElement.html('');
+        }
+        
+        if (element.attr('id') == "search")
+        {
+            element.val("");
         }
     });
     
@@ -98,9 +103,13 @@ $(document).ready(function() {
         .then((res) => res.json())
         .then((data) => {            
             if (data.type === "success")
-            {                
+            {      
+                let resultList = $("#result");
+                
+                resultList.width($("input#search.form-control").outerWidth());
+                
                 $.each(data.users, function(key, value){
-                    $("#result").append('<li class="list-group-item" data-name="' + value.name + ' ' + value.surname + '" value="' + value.id + '">'+ value.name + " " + value.surname + " | " + value.email + '</li>');
+                    resultList.append('<li class="list-group-item" data-name="' + value.name + ' ' + value.surname + '" value="' + value.id + '">'+ value.name + " " + value.surname + " | " + value.email + '</li>');
                 });
             }
         });
@@ -149,18 +158,16 @@ $(document).ready(function() {
             $("div#appointments-table").append(appointmentsTable);
                 
             if (data.type === "success")
-            {                         
+            {       
+                $("#search").val(data.worker_name + " " + data.worker_surname);
+                
                 $.each(data.appointments, function(key, value) 
                 {
                     $("div#appointments-table > table > tbody#appointments").append(`
                         <tr>
                             <td>` + value.date + `</td>
                             <td>` + value.time + `</td>
-                            <td>
-                                <a href="http://localhost:8000/boss/worker/show/` + value.worker_id + `/` + value.substart_id + `/` + value.interval_id + `" target="_blanc">
-                                    ` + value.worker + `
-                                </a>
-                            </td>
+                            <td>` + value.worker + `</td>
                             <td>` + value.item + `</td>
                             <td> 
                                 <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blanc">
@@ -223,11 +230,7 @@ $(document).ready(function() {
                         <tr>
                             <td>` + value.date + `</td>
                             <td>` + value.time + `</td>
-                            <td>
-                                <a href="http://localhost:8000/boss/worker/show/` + value.worker_id + `/` + value.substart_id + `/` + value.interval_id + `" target="_blanc">
-                                    ` + value.worker + `
-                                </a>
-                            </td>
+                            <td>` + value.worker + `</td>
                             <td>` + value.item + `</td>
                             <td>
                                 <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blanc">

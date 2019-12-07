@@ -48,7 +48,7 @@
                         @if (($i + 1) == 1 || ($i + 1) == 8 || ($i + 1) == 15 || ($i + 1) == 22 || ($i + 1) == 29)
                             <tr>
                                 <td>
-                                    @if (count($days[$i]) > 0)
+                                    @if (is_object($days[$i]) && $days[$i] !== null)
                                         <a class="list-group-item text-center" href="{{ URL::to('day/show/' . $days[$i]->id) }}">
                                             <h4>{{$days[$i]->day_number}}</h4>
                                         </a>
@@ -56,7 +56,7 @@
                                 </td>
                         @elseif (($i + 1) == 7 || ($i + 1) == 14 || ($i + 1) == 21 || ($i + 1) == 28 || ($i + 1) == 35)
                                 <td>
-                                    @if (count($days[$i]) > 0)
+                                    @if (is_object($days[$i]) && $days[$i] !== null)
                                         <a class="list-group-item text-center" href="{{ URL::to('day/show/' . $days[$i]->id) }}">
                                             <h4>{{$days[$i]->day_number}}</h4>
                                         </a>
@@ -65,7 +65,7 @@
                             </tr>
                         @else
                             <td>
-                                @if (count($days[$i]) > 0)
+                                @if (is_object($days[$i]) && $days[$i] !== null)
                                     <a class="list-group-item text-center" href="{{ URL::to('day/show/' . $days[$i]->id) }}">
                                         <h4>{{$days[$i]->day_number}}</h4>
                                     </a>

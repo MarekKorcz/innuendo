@@ -1223,6 +1223,18 @@ class UserController extends Controller
             'chosenProperty'
         ])->first();
         
+        $user = auth()->user();
+        
+        if ($user->isBoss)
+        {            
+            return redirect()->action(
+                'BossController@workerAppointmentList', [
+                    'substartId' => $purchase->substart_id,
+                    'userId' => $user->id
+                ]
+            );
+        }
+        
         if ($purchase !== null && $purchase->chosenProperty->user_id == auth()->user()->id)
         {
             $expirationDate = null;
@@ -1246,35 +1258,38 @@ class UserController extends Controller
             
                 if ($substartInterval !== null)
                 {
-                    $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-                    
-                    if ($user !== null && $user->boss_id !== null && count($user->chosenProperties) > 0)
+                    if ($user !== null && $user->boss_id !== null)
                     {
-                        foreach ($user->chosenProperties as $chosenProperty)
-                        {                            
-                            if ($purchase->chosenProperty->property_id == $chosenProperty->property_id)
-                            {
-                                $userPurchase = Purchase::where([
-                                    'chosen_property_id' => $chosenProperty->id,
-                                    'substart_id' => $substart->id
-                                ])->first();
-                                
-                                if ($userPurchase !== null)
-                                {                                    
-                                    $userInterval = Interval::where([
-                                        'interval_id' => $substartInterval->id,
-                                        'purchase_id' => $userPurchase->id
+                        $user->load('chosenProperties');
+                        
+                        if (count($user->chosenProperties) > 0)
+                        {
+                            foreach ($user->chosenProperties as $chosenProperty)
+                            {                            
+                                if ($purchase->chosenProperty->property_id == $chosenProperty->property_id)
+                                {
+                                    $userPurchase = Purchase::where([
+                                        'chosen_property_id' => $chosenProperty->id,
+                                        'substart_id' => $substart->id
                                     ])->first();
-                                    
-                                    if ($userInterval !== null)
-                                    {
-                                        $intervalAvailableUnits = $purchase->subscription->quantity;
-                                                
-                                        $userAppointments = Appointment::where('interval_id', $userInterval->id)->get();
-                                        
-                                        if (count($userAppointments) > 0)
+
+                                    if ($userPurchase !== null)
+                                    {                                    
+                                        $userInterval = Interval::where([
+                                            'interval_id' => $substartInterval->id,
+                                            'purchase_id' => $userPurchase->id
+                                        ])->first();
+
+                                        if ($userInterval !== null)
                                         {
-                                            $intervalAvailableUnits = $intervalAvailableUnits - count($userAppointments);
+                                            $intervalAvailableUnits = $purchase->subscription->quantity;
+
+                                            $userAppointments = Appointment::where('interval_id', $userInterval->id)->get();
+
+                                            if (count($userAppointments) > 0)
+                                            {
+                                                $intervalAvailableUnits = $intervalAvailableUnits - count($userAppointments);
+                                            }
                                         }
                                     }
                                 }

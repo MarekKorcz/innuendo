@@ -188,9 +188,9 @@ Route::get('/user/subscription/purchased/property/list', 'UserController@purchas
 Route::get('/user/subscription/list/purchased/{propertyId}', 'UserController@purchasedSubscriptionList');
 // po co ten routing??
 Route::get('/user/subscription/show/{propertyId}/{subscriptionId}', 'UserController@subscriptionShow');
-//Route::get('/user/subscription/purchase/{propertyId}/{subscriptionId}', 'UserController@subscriptionPurchase');
-//Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
-//Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow');
+Route::get('/user/subscription/purchase/{propertyId}/{subscriptionId}', 'UserController@subscriptionPurchase');
+Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
+Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow');
 
 Route::get('/boss/codes', 'BossController@codes');
 Route::post('/boss/set-code', 'BossController@setCode');
@@ -206,7 +206,7 @@ Route::get('/boss/properties/subscription/purchase', 'BossController@propertiesS
 Route::get('/boss/subscription/purchase/{propertyId}/{subscriptionId}', 'BossController@subscriptionPurchase')->name('subscriptionPurchaseView');
 Route::post('/boss/subscription/purchased', 'BossController@subscriptionPurchased');
 Route::get('/boss/worker/appointment/list/{substartId}/{userId}', 'BossController@workerAppointmentList')->name('workerAppointmentList');
-Route::get('/boss/worker/show/{workerId}/{substartId?}/{intervalId?}', 'BossController@workerShow');
+//Route::get('/boss/worker/show/{workerId}/{substartId?}/{intervalId?}', 'BossController@workerShow');
 Route::get('/boss/subscription/workers/edit/{substartId}/{intervalId}', 'BossController@subscriptionWorkersEdit')->name('subscriptionWorkersEdit');
 Route::post('/boss/subscription/workers/update', 'BossController@subscriptionWorkersUpdate');
 Route::get('/boss/subscription/invoices/{substartId}', 'BossController@subscriptionInvoices')->name('subscriptionInvoices');

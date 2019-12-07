@@ -6,6 +6,16 @@
 
 <div class="container">
     
+    <div class="row text-center" style="padding-top: 2rem;">
+        <div class="col-4">
+            <a class="btn pallet-1-3" style="color: white;" href="{{ url()->previous() }}">
+                @lang('common.go_back')
+            </a>
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+    </div>
+    
     <div class="row" style="padding: 1rem 0 1rem 0;">
         <div class="col-1"></div>
         <div class="col-10">
@@ -44,25 +54,27 @@
                 </div>
             
                 <div id="appointments-table">
-                    <div class="col-12">
-                        <h2 class="text-center">
-                            @lang('common.all_massages')
-                            @if ($worker !== null)
-                                @lang('common.belonging_to')                
-                                {{$worker->name}} {{$worker->surname}}
-                            @endif
-                            @if ($intervals)
-                                @foreach ($intervals as $interval)
-                                    @if ($interval->start_date <= $today && $interval->end_date >= $today)
-                                        @lang('common.for_the_period_from')
-                                        {{$interval->start_date->format('Y-m-d')}}
-                                        @lang('common.to')
-                                        {{$interval->end_date->format('Y-m-d')}}
-                                    @endif
-                                @endforeach
-                            @endif
-                        </h2>
-                    </div>
+                    @if ($substart->isActive == 0)
+                        <div class="col-12">
+                            <h2 class="text-center">
+                                @lang('common.items')
+                                @if ($worker !== null)
+                                    @lang('common.belonging_to')                
+                                    {{$worker->name}} {{$worker->surname}}
+                                @endif
+                                @if ($intervals)
+                                    @foreach ($intervals as $interval)
+                                        @if ($interval->start_date <= $today && $interval->end_date >= $today)
+                                            @lang('common.for_the_period_from')
+                                            {{$interval->start_date->format('Y-m-d')}}
+                                            @lang('common.to')
+                                            {{$interval->end_date->format('Y-m-d')}}
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </h2>
+                        </div>
+                    @endif
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>                
@@ -80,9 +92,9 @@
                                     <td>{{$appointment->date}}</td>
                                     <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
                                     <td>
-                                        <a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blanc">
+                                        <!--<a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blanc">-->
                                             {{$appointment->user->name}} {{$appointment->user->surname}}
-                                        </a>
+                                        <!--</a>-->
                                     </td>
                                     <td>{{$appointment->item->name}}</td>
                                     <td>

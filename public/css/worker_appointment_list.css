@@ -21,7 +21,8 @@
 }
 
 .list-group-item:hover {
-    background-color: lightgreen;
+    background-color: #37AEA8;
+    color: white;
 }
 
 .list-styling {

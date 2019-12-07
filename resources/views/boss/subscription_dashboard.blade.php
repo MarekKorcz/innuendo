@@ -178,17 +178,15 @@
                                                             <thead>
                                                                 <tr>                
                                                                     <td>@lang('common.name')</td>
-                                                                    <td>@lang('common.surname')</td>
                                                                     <td>@lang('common.email_address')</td>
                                                                     <td>@lang('common.phone_number')</td>
-                                                                    <td>@lang('common.appointments')</td>
+                                                                    <td>@lang('common.items')</td>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="workersTable">
                                                             @foreach ($purchase->substart->workers as $worker)
                                                                 <tr>
-                                                                    <td>{{$worker['name']}}</td>
-                                                                    <td>{{$worker['surname']}}</td>
+                                                                    <td>{{$worker['name']}} {{$worker['surname']}}</td>
                                                                     <td>{{$worker['email']}}</td>
                                                                     <td>{{$worker['phone_number']}}</td>
                                                                     <td>

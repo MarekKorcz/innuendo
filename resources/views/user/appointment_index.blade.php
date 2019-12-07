@@ -47,7 +47,7 @@
                                 {{config('appointment-status.' . $appointment->status)}}
                             </td>
                             <td>
-                                <a class="btn btn-primary" href="{{ URL::to('/appointment/show/' . $appointment->id) }}">
+                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/appointment/show/' . $appointment->id) }}">
                                     @lang('common.show')
                                 </a>
                             </td>
