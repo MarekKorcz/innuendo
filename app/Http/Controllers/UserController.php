@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
 use Illuminate\Support\Collection;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {    
@@ -1384,56 +1385,464 @@ class UserController extends Controller
     }
     
     /**
-     * Shows a list of purchased subscriptions assigned to passed user's property.
+     * Shows list of subscriptions
      * 
-     * @param type $propertyId
+     * @param type $substartId
      * @return type
      */
-    public function purchasedSubscriptionList($propertyId) 
-    {
-        $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
-        $propertyId = (int)$propertyId;
+    public function subscriptionList($substartId = 0)
+    {     
+        $user = auth()->user();
         
-        $property = Property::where('id', $propertyId)->first();
-        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-        
-        if ($property !== null && 
-           ($property->boss_id == null || ($property->boss_id !== null && $user->getBoss() !== null && $user->getBoss()->id == $property->boss_id)))
+        if ($user->boss_id !== null)
         {
-            if ($user->chosenProperties)
-            {
-                $subscriptions = new Collection();
-                
-                foreach ($user->chosenProperties as $chosenProperty)
-                {
-                    if ($chosenProperty->property_id == $property->id)
-                    {
-                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-                        
-                        if ($chosenProperty->purchases)
-                        {
-                            foreach ($chosenProperty->purchases as $purchase)
-                            {
-                                $purchase = Purchase::where('id', $purchase->id)->with('subscription')->first();
+            $boss = User::where('id', $user->boss_id)->first();
 
-                                $subscription = $purchase->subscription;
-                                $subscription['purchase_id'] = $purchase->id;
-                                $subscriptions = $subscriptions->push($subscription);
-                            }
-                        }
+            $chosenSubstart = new Collection();
+            $substartProperty = null;
+            $substartSubscription = null;
+
+            $substartId = htmlentities((int)$substartId, ENT_QUOTES, "UTF-8");
+            $substartId = (int)$substartId;
+
+            if ($substartId !== 0)
+            {
+                $chosenSubstart = Substart::where([
+                    'id' => $substartId,
+                    'boss_id' => $boss->id
+                ])->get();
+                
+                if (count($chosenSubstart) == 1)
+                {
+                    $substartProperty = Property::where('id', $chosenSubstart->first()->property_id)->first();
+                    $substartSubscription = Subscription::where('id', $chosenSubstart->first()->subscription_id)->first();
+                }
+            }
+
+            $propertiesWithSubscriptions = [];
+            $properties = Property::where('boss_id', $boss->id)->with('subscriptions')->get();
+
+            if (count($properties) > 0)
+            {
+                foreach ($properties as $property)
+                {
+                    // >> checks if property is checked
+                    $property['isChecked'] = false;
+
+                    if ($substartProperty !== null && $substartProperty->id === $property->id)
+                    {
+                        $property['isChecked'] = true;
                     }
+                    // <<
+
+                    $subscriptions = new Collection();
+
+                    if (count($property->subscriptions) > 0)
+                    {
+                        foreach ($property->subscriptions as $subscription)
+                        {
+                            // >> check if subscription is checked
+                            $subscription['isChecked'] = false;
+
+                            if ($substartSubscription !== null && $substartSubscription->id === $subscription->id)
+                            {
+                                $subscription['isChecked'] = true;
+                            }
+                            // <<
+                            
+                            $chosenProperty = ChosenProperty::where([
+                                'user_id' => $user->id,
+                                'property_id' => $property->id
+                            ])->first();
+                            
+                            // >> check if subscription is purchased already
+                            if ($chosenProperty !== null)
+                            {                                
+                                // >> check if subscription is purchased already
+                                $purchases = Purchase::where([
+                                    'subscription_id' => $subscription->id,
+                                    'chosen_property_id' => $chosenProperty->id
+                                ])->get();
+                                
+                                if (count($purchases) > 0)
+                                {
+                                    $today = new \DateTime(date('Y-m-d'));
+    //                                $today = date('Y-m-d', strtotime("+3 month", strtotime($today->format("Y-m-d"))));
+
+                                    foreach ($purchases as $purchase)
+                                    {
+                                        // >> when purchased, look for substart
+                                        $substart = Substart::where([
+                                            'id' => $purchase->substart_id,
+                                            'boss_id' => $boss->id
+                                        ])->first();
+
+                                        if ($substart !== null)
+                                        {                                                
+                                            // >> check whether substart is current or not
+                                            $substart['isCurrent'] = false;
+
+                                            if ($substart->start_date <= $today && $substart->end_date >= $today)
+                                            {
+                                                $substart['isCurrent'] = true;
+                                            }
+                                            // <<
+
+                                            // set substart to purchase
+                                            $purchase['substart'] = $substart;
+                                        }
+                                        // <<
+                                    }
+                                }
+                                // <<
+                                
+                                $subscription['purchases'] = $purchases;
+                            }
+                            // <<
+                            
+                            $subscriptions->push($subscription);
+                        }
+                    }         
+
+                    $propertiesWithSubscriptions[] = [
+                        'property' => $property,
+                        'subscriptions' => $subscriptions
+                    ];
                 }
                 
-                if (count($subscriptions) > 0 && $property !== null)
-                {            
-                    return view('user.subscription_purchased_list')->with([
-                        'subscriptions' => $subscriptions,
-                        'property' => $property
-                    ]);
+                if (count($propertiesWithSubscriptions) > 0)
+                {
+                    if (count($chosenSubstart) == 0)
+                    {
+                        $propertyId = null;
+                        $subscriptionId = null;
+                        
+                        // >> if not set, mark one property as checked
+                        $checkedPropertyCount = 0;
+
+                        foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
+                        {
+                            if ($propertyWithSubscriptions['property']->isChecked === true)
+                            {
+                                $checkedPropertyCount++;
+                            }
+                        }
+
+                        if ($checkedPropertyCount === 0)
+                        {
+                            $propertiesWithSubscriptions[0]['property']->isChecked = true;
+                            $propertyId = $propertiesWithSubscriptions[0]['property']->id;
+                        }
+                        // <<
+
+                        // >> if not set, mark one subscription as checked
+                        $checkedSubscriptionCount = 0;
+
+                        foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
+                        {
+                            if ($propertyWithSubscriptions['property']->isChecked == true)
+                            {
+                                if (count($propertyWithSubscriptions['subscriptions']) > 0)
+                                {
+                                    foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
+                                    {
+                                        if ($subscription->isChecked == true)
+                                        {
+                                            $checkedSubscriptionCount++;
+                                        }
+                                    }
+                                }
+
+                                if ($checkedSubscriptionCount === 0)
+                                {
+                                    $propertyWithSubscriptions['subscriptions']->first()->isChecked = true;
+                                    $subscriptionId = $propertyWithSubscriptions['subscriptions']->first()->id;
+                                }
+                            }
+                        }
+                        // <<
+                    
+                        // >> if not set, get substarts attached to chosen property and subscription
+                        $chosenSubstart = Substart::where([
+                            'property_id' => $propertyId,
+                            'subscription_id' => $subscriptionId
+                        ])->get();
+                        // <<
+                    }
+                    
+                    if (count($propertiesWithSubscriptions) > 0 && count($chosenSubstart) > 0)
+                    {         
+                        return view('user.subscription_dashboard')->with([
+                            'propertiesWithSubscriptions' => $propertiesWithSubscriptions,
+                            'substart' => $chosenSubstart->last()
+                        ]);
+                        
+                    } else {
+                        
+                        return redirect()->route('home')->with('error', 'Coś poszło nie tak');
+                    }
+                    
+                } else {
+                    
+                    return redirect()->route('home')->with('error', 'Coś poszło nie tak');
+                }
+
+            } else {
+
+                return redirect()->route('home')->with('error', 'Ta lokalizacja nie należy do Ciebie');
+            }
+        }
+        
+        return redirect()->route('home')->with('error', 'Twoje konto nie jest przydzielone do żadnego szefa');
+    }
+    
+    public function getPropertySubscriptions(Request $request)
+    {
+        if ($request->request->all())
+        {
+            $user = auth()->user();
+            $boss = User::where('id', $user->boss_id)->first();
+        
+            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
+            $property = Property::where([
+                'id' => $propertyId,
+                'boss_id' => $boss->id
+            ])->with([
+                'subscriptions',
+                'chosenProperties'
+            ])->first();
+
+            $message = "Błąd zapytania";
+            $type = "error";
+
+            if ($property !== null)
+            {
+                $chosenProperty = ChosenProperty::where([
+                    'user_id' => $user->id,
+                    'property_id' => $property->id
+                ])->first();
+                
+                if ($chosenProperty !== null)
+                {
+                    $purchaseEntities = Purchase::where('chosen_property_id', $chosenProperty->id)->get();
+                    
+                    if (count($purchaseEntities) > 0)
+                    {
+                        // >> get all purchased subscriptions attached to property 
+                        $propertySubscriptions = new Collection();
+
+                        foreach ($purchaseEntities as $purchaseEntity)
+                        {
+                            $subscription = Subscription::where('id', $purchaseEntity->subscription_id)->first();
+                            
+                            if ($propertySubscriptions->count() == 0)
+                            {
+                                $propertySubscriptions->push($subscription);
+                                
+                            } else if (!$propertySubscriptions->contains('id', $subscription->id)) {
+                                
+                                $propertySubscriptions->push($subscription);
+                            }
+                        }
+                        // <<
+                        
+                        if ($propertySubscriptions->count() > 0)
+                        {
+                            $subscriptions = [];
+                            
+                            foreach ($propertySubscriptions as $subscription)
+                            {
+                                $subscriptions[] = [
+                                    'id' => $subscription->id,
+                                    'name' => $subscription->name,
+                                    'name_description' => \Lang::get('common.label'),
+                                    'description_description' => \Lang::get('common.description'),
+                                    'description' => $subscription->description,
+                                    'old_price' => $subscription->old_price . " zł " . \Lang::get('common.per_person'),
+                                    'old_price_description' => \Lang::get('common.regular_price'),
+                                    'new_price' => $subscription->new_price . " zł " . \Lang::get('common.per_person'),
+                                    'new_price_description' => \Lang::get('common.price_with_subscription'),
+                                    'quantity' => $subscription->quantity,
+                                    'quantity_description' => \Lang::get('common.number_of_massages_to_use_per_month'),
+                                    'duration' => $subscription->duration,
+                                    'duration_description' => \Lang::get('common.subscription_duration'),
+                                ];
+                            }
+                            
+                            $message = "Subskrypcje danej lokalizacji zostały wczytane";
+                            $type = "success";
+
+                            $data = [
+                                'type'    => $type,
+                                'message' => $message,
+                                'subscriptions' => $subscriptions
+                            ];
+                        }
+                    }
+
+                } else {
+
+                    $message = "Dana lokalizacja nie posiada żadnego wykupionego pakietu";
+                    $type = "error";
+
+                    $data = [
+                        'type'    => $type,
+                        'message' => $message
+                    ];
+                }
+
+                return new JsonResponse($data, 200, array(), true);
+            }
+            
+        } else {
+            
+            $message = "Pusty request";
+            $type = "error";
+        }
+        
+        return new JsonResponse(array(
+            'type'    => $type,
+            'message' => $message            
+        ));
+    }
+    
+    public function getSubscriptionSubstarts (Request $request)
+    {
+        if ($request->get('propertyId') && $request->get('subscriptionId'))
+        {
+            $propertyId = htmlentities($request->get('propertyId'), ENT_QUOTES, "UTF-8");
+            $subscriptionId = htmlentities($request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
+            
+            $user = auth()->user();
+            $boss = User::where('id', $user->boss_id)->first();
+        
+            $property = Property::where([
+                'id' => $propertyId,
+                'boss_id' => $boss->id
+            ])->first();
+
+            $subscription = Subscription::where('id', $subscriptionId)->first();
+
+            if ($property !== null && $subscription !== null)
+            {
+                $userChosenProperty = ChosenProperty::where([
+                    'user_id' => $user->id,
+                    'property_id' => $property->id
+                ])->first();
+
+                if ($userChosenProperty !== null)
+                {
+                    $userPurchases = Purchase::where([
+                        'chosen_property_id' => $userChosenProperty->id
+                    ])->with('substart')->get();
+
+                    $substarts = new \Illuminate\Database\Eloquent\Collection();
+
+                    if (count($userPurchases) > 0)
+                    {
+                        foreach ($userPurchases as $userPurchase)
+                        {
+                            $bossSubstart = Substart::where([
+                                'id' => $userPurchase->substart_id,
+                                'boss_id' => $boss->id,
+                                'property_id' => $property->id,
+                                'subscription_id' => $subscription->id
+                            ])->first();
+
+                            if ($bossSubstart !== null)
+                            {
+                                $bossSubstart['purchase'] = $userPurchase;
+                                $substarts->push($bossSubstart);
+                            }
+                        }
+                    }                       
+
+                    $substarts = $substarts->sortBy('end_date');
+                    $newestSubstart = $substarts->last();
+
+                    $data = [
+                        'type'    => 'success',
+                        'header'    => \Lang::get('common.subscription_duration_period'),
+                        'substarts' => $this->turnSubstartObjectsToArrays($substarts),
+                        'newestSubstart' => $this->turnSubstartObjectsToArrays($newestSubstart),
+                        'lastSubstartId' => $substarts->last()->id,
+                    ];
+
+                    return new JsonResponse($data, 200, array(), true);
                 }
             }
         }
         
-        return redirect()->route('welcome');
+        return new JsonResponse(array(
+            'type'    => 'error',
+            'message' => 'Pusty request',
+            'no_people_assigned_to_subscription' => \Lang::get('common.no_people_assigned_to_subscription'),
+        )); 
+    }
+    
+    private function turnSubstartObjectsToArrays($substarts)
+    {
+        $substartArray = [];
+        $today = new \DateTime(date('Y-m-d'));
+        
+        if (!is_a($substarts, 'Illuminate\Database\Eloquent\Collection') && $substarts !== null)
+        {
+            $isActiveMessage = "";
+            
+            if ($substarts->end_date < $today)
+            {
+                $isActiveMessage = \Lang::get('common.duration_is_over');
+            
+            } elseif ($substarts->start_date <= $today && $today <= $substarts->end_date) {
+                
+                $isActiveMessage = $substarts->isActive == 1 ? \Lang::get('common.activated') : \Lang::get('common.not_activated');
+            }
+                                        
+            $substartArray[] = [
+                'id' => $substarts->id,
+                'start_date' => $substarts->start_date->format('Y-m-d'),
+                'start_date_description' => \Lang::get('common.from'),
+                'end_date' => $substarts->end_date->format('Y-m-d'),
+                'end_date_description' => \Lang::get('common.to'),
+                'button' => route('subscriptionPurchasedShow', [
+                    'id' => $substarts->purchase->id
+                ]),
+                'button_description' => \Lang::get('common.appointments'),
+                'isActiveMessage' => $isActiveMessage,
+                'isActive' => $substarts->isActive,
+            ];
+            
+        } else if (is_a($substarts, 'Illuminate\Database\Eloquent\Collection') && count($substarts) > 0) {
+            
+            foreach ($substarts as $substart)
+            {
+                $isActiveMessage = "";
+                
+                if ($substart->end_date < $today)
+                {
+                    $isActiveMessage = \Lang::get('common.duration_is_over');
+
+                } elseif ($substart->start_date <= $today && $today <= $substart->end_date) {
+
+                    $isActiveMessage = $substart->isActive == 1 ? \Lang::get('common.activated') : \Lang::get('common.not_activated');
+                }
+            
+                $substartArray[] = [
+                    'id' => $substart->id,
+                    'start_date' => $substart->start_date->format('Y-m-d'),
+                    'start_date_description' => \Lang::get('common.from'),
+                    'end_date' => $substart->end_date->format('Y-m-d'),
+                    'end_date_description' => \Lang::get('common.to'),
+                    'button' => route('subscriptionPurchasedShow', [
+                        'id' => $substart->purchase->id
+                    ]),
+                    'button_description' => \Lang::get('common.appointments'),
+                    'isActiveMessage' => $isActiveMessage,
+                    'isActive' => $substart->isActive
+                ];
+            }
+        }
+        
+        return $substartArray;
     }
 }

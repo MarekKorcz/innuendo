@@ -183,14 +183,23 @@ Route::put('/subscription/update', 'SubscriptionController@update');
 Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
 Route::get('/user/property/{id}', 'UserController@property')->name('property');
 Route::get('/user/properties/subscription', 'UserController@propertiesSubscription');
+
+
+
 Route::get('/user/property/subscription/list/{id}', 'UserController@propertySubscriptionList');
 Route::get('/user/subscription/purchased/property/list', 'UserController@purchasedSubscriptionPropertyList');
-Route::get('/user/subscription/list/purchased/{propertyId}', 'UserController@purchasedSubscriptionList');
+
+
+
+Route::get('/user/subscription/list/{substartId}', 'UserController@subscriptionList');
+Route::post('/user/get/property/subscription', 'UserController@getPropertySubscriptions');
+Route::post('/user/get/subscription/substarts', 'UserController@getSubscriptionSubstarts');
+
 // po co ten routing??
 Route::get('/user/subscription/show/{propertyId}/{subscriptionId}', 'UserController@subscriptionShow');
 Route::get('/user/subscription/purchase/{propertyId}/{subscriptionId}', 'UserController@subscriptionPurchase');
 Route::post('/user/subscription/purchased', 'UserController@subscriptionPurchased');
-Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow');
+Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow')->name('subscriptionPurchasedShow');
 
 Route::get('/boss/codes', 'BossController@codes');
 Route::post('/boss/set-code', 'BossController@setCode');

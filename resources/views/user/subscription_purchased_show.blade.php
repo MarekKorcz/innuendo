@@ -3,6 +3,16 @@
 @section('content')
 
 <div class="container">
+    
+    <div class="row text-center" style="padding-top: 1rem;">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('user/subscription/list/' . $purchase->substart_id) }}">
+                @lang('common.subscriptions')
+            </a>
+        </div>
+        <div class="col-4"></div>
+    </div>
 
     <h1 class="text-center" style="padding: 2rem;">{!! $purchase->subscription->name !!}</h1>
     

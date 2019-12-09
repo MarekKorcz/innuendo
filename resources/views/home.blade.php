@@ -47,23 +47,23 @@
                     </div>
                 @endif
 
-                <!--// todo: turn off those routings if they are not needed-->
-            <!--@if ($showSubscriptionsView)
+                @if ($showSubscriptionsView)
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title text-center">@lang('common.purchased_view')</h4>
+                            <h4 class="card-title text-center">@lang('common.subscriptions_view')</h4>
                             <p class="card-text text-center">
                                 @lang('common.purchased_subscriptions_attached_to_properties')
                             </p>
                             <div class="text-center">
-                                <a class="btn btn-success btn-lg" href="{{ URL::to('user/subscription/purchased/property/list/') }}">
+                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/user/subscription/list/0') }}">
                                     @lang('common.show')
                                 </a>
                             </div>
                         </div>
                     </div>
                 @endif
-                @if ($showPurchaseSubscriptionsView)
+                <!--// todo: turn off this routing if it is not needed-->
+                <!--@if ($showPurchaseSubscriptionsView)
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title text-center">@lang('common.purchase_subscription')</h4>

@@ -109,7 +109,7 @@ return [
     'back_to_property' => 'Go back to property',
     'remove_appointment' => 'Remove appointment',
     'schedules_with_property_description_and_executor' => 'Schedules with a description of the location and those performing the treatments',
-    'purchased_subscriptions_attached_to_properties' => 'View with your purchased subscriptions assigned to the location',
+    'purchased_subscriptions_attached_to_properties' => 'View with purchased subscriptions assigned to your account',
     'subscriptions_available_for_purchase' => 'List of locations with access to a given subscription',
     'subscriptions_available_for_purchase_in_temp_properties' => 'List of TempProperty locations with access to a given subscription',
     'property_and_subscription_management_panel' => 'Location and subscription management panel',

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::script('js/subscription_dashboard.js') !!}
-{!! Html::style('css/subscription_dashboard.css') !!}
+{!! Html::script('js/user_subscription_dashboard.js') !!}
+{!! Html::style('css/user_subscription_dashboard.css') !!}
 
 <div class="container">
     
@@ -24,7 +24,7 @@
                                 <div class="data">
                                     <p>
                                         <strong>
-                                            {!!$propertyWithSubscriptions['property']->name!!}
+                                            {!! $propertyWithSubscriptions['property']->name !!}
                                         </strong>
                                     </p>
                                     @if ($propertyWithSubscriptions['property']->description)
@@ -39,16 +39,7 @@
                                             {{$propertyWithSubscriptions['property']->city}}
                                         </strong>
                                     </p>
-                                    <p>
-                                        @lang('common.registered_workers'):
-                                        <strong>
-                                            {{ $propertyWithSubscriptions['property']['howManyWorkersBelongToProperty'] }}
-                                        </strong>
-                                    </p>
                                 </div>
-                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('boss/property/' . $propertyWithSubscriptions['property']->id . '/edit') }}">
-                                    @lang('common.edit')
-                                </a>
                                 @if ($substart !== null)
                                     <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('user/property/' . $propertyWithSubscriptions['property']->id) }}">
                                         @lang('common.schedules')
@@ -73,7 +64,10 @@
                                     <div class="data">
                                         <p>
                                             @lang('common.label'): 
-                                            <strong>{!!$subscription->name!!}</strong></p>
+                                            <strong>
+                                                {!!$subscription->name!!}
+                                            </strong>
+                                        </p>
                                         <p>
                                             @lang('common.description'):
                                             <strong>
@@ -105,12 +99,6 @@
                                             </strong>
                                         </p>
                                     </div>
-
-                                    @if ($subscription->propertyPurchases == null || count($subscription->propertyPurchases) == 0)
-                                        <a class="btn btn-primary" target="_blanc" href="{{ URL::to('/boss/subscription/purchase/' . $propertyWithSubscriptions['property']->id . '/' . $subscription->id) }}">
-                                            @lang('common.purchase_subscription')
-                                        </a>
-                                    @endif
                                 </div>
                             @endforeach
                         @endif
@@ -120,7 +108,7 @@
                 @foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
                     @if ($propertyWithSubscriptions['property']->isChecked == true)
                         @foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
-                            @if ($subscription->propertyPurchases && $subscription->isChecked && count($subscription->propertyPurchases) > 0)
+                            @if ($subscription->isChecked && count($subscription->purchases) > 0)
                                 <div id="substarts-header" class="text-center">
                                     <h2>
                                         @lang('common.subscription_duration_period'):
@@ -134,8 +122,8 @@
                     @foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
                         @if ($propertyWithSubscriptions['property']->isChecked == true)
                             @foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
-                                @if ($subscription->propertyPurchases && $subscription->isChecked && count($subscription->propertyPurchases) > 0)
-                                    @foreach ($subscription->propertyPurchases as $purchase)
+                                @if ($subscription->isChecked && count($subscription->purchases) > 0)
+                                    @foreach ($subscription->purchases as $purchase)
                                         @if ($purchase->substart !== null)
                                             @if ($purchase->substart->isCurrent)
                                                 <div class="substart text-center highlighted" data-substart_id="{{$purchase->substart->id}}">
@@ -144,8 +132,14 @@
                                             @endif
                                                 <div class="data">
                                                     <p>
-                                                        @lang('common.from'): <strong>{{$purchase->substart->start_date->format('Y-m-d')}}</strong> 
-                                                        @lang('common.to'): <strong>{{$purchase->substart->end_date->format('Y-m-d')}}</strong>
+                                                        @lang('common.from'): 
+                                                        <strong>
+                                                            {{$purchase->substart->start_date->format('Y-m-d')}}
+                                                        </strong> 
+                                                        @lang('common.to'): 
+                                                        <strong>
+                                                            {{$purchase->substart->end_date->format('Y-m-d')}}
+                                                        </strong>
                                                     </p>
                                                     @if ($purchase->substart->isCurrent)
                                                         @if ($purchase->substart->isActive == 1)
@@ -157,66 +151,10 @@
                                                         <p>@lang('common.subscription_duration_has_come_to_an_end')</p>
                                                     @endif
                                                 </div>
-                                                @if ($purchase->substart->isActive == 1)
-                                                    <a class="btn btn-primary" target="_blanc" href="{{ URL::to('/boss/subscription/invoices/' . $purchase->substart->id) }}">
-                                                        @lang('common.invoices')
-                                                    </a>
-                                                @endif
+                                                <a class="btn pallet-1-3" style="color: white;" target="_blanc" href="{{ URL::to('/user/subscription/purchased/show/' . $purchase->id) }}">
+                                                    @lang('common.appointments')
+                                                </a>
                                             </div>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        @endif
-                    @endforeach
-                </div>
-
-                <div id="workers">
-                    @foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
-                        @if ($propertyWithSubscriptions['property']->isChecked == true)
-                            @foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
-                                @if ($subscription->propertyPurchases && $subscription->isChecked && count($subscription->propertyPurchases) > 0)
-                                    @foreach ($subscription->propertyPurchases as $purchase)
-                                        @if ($purchase->substart !== null)
-                                            @if ($purchase->substart->isCurrent)
-                                                @if (count($purchase->substart->workers) > 0)
-                                                    <div class="text-center">
-                                                        <div id="button-space" style="padding: 1rem;">
-                                                            <h2>@lang('common.people_assigned_to_subscription'):</h2>
-                                                            <a class="btn pallet-1-3" style="color: white;" target="_blanc" href="{{ URL::to('boss/subscription/workers/edit/' . $substart->id . '/0') }}">
-                                                                @lang('common.edit')
-                                                            </a>
-                                                            <a class="btn pallet-2-2" style="color: white;" target="_blanc" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/0') }}">
-                                                                @lang('common.all_massages')
-                                                            </a>
-                                                        </div>
-                                                        <table class="table table-striped table-bordered">
-                                                            <thead>
-                                                                <tr>                
-                                                                    <td>@lang('common.name')</td>
-                                                                    <td>@lang('common.email_address')</td>
-                                                                    <td>@lang('common.phone_number')</td>
-                                                                    <td>@lang('common.items')</td>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody id="workersTable">
-                                                            @foreach ($purchase->substart->workers as $worker)
-                                                                <tr>
-                                                                    <td>{{$worker['name']}} {{$worker['surname']}}</td>
-                                                                    <td>{{$worker['email']}}</td>
-                                                                    <td>{{$worker['phone_number']}}</td>
-                                                                    <td>
-                                                                        <a class="btn pallet-2-2" style="color: white;" target="_blanc" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/' . $worker['id']) }}">
-                                                                            @lang('common.show')
-                                                                        </a>
-                                                                    </td>
-                                                                </tr>                 
-                                                            @endforeach
-                                                            </tbody> 
-                                                        </table>
-                                                    </div>
-                                                @endif
-                                            @endif
                                         @endif
                                     @endforeach
                                 @endif
