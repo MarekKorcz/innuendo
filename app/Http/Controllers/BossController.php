@@ -223,72 +223,6 @@ class BossController extends Controller
         return redirect()->route('welcome');
     }
     
-//    /**
-//     * Shows list of properties
-//     * 
-//     * @param Request $request
-//     * @return type
-//     */
-//    public function propertyList()
-//    {
-//        $boss = auth()->user();
-//        
-//        if ($boss !== null)
-//        {
-//            $properties = Property::where('boss_id', auth()->user()->id)->get();
-//
-//            if ($properties !== null)
-//            {
-//                if (count($properties) == 1)
-//                {
-//                    return redirect()->action(
-//                        'BossController@property', [
-//                            'id' => $properties->first()->id
-//                        ]
-//                    );
-//                
-//                } else {
-//
-//                    return view('boss.property_list')->with('properties', $properties);
-//                }
-//            }
-//        }
-//        
-//        return redirect()->route('welcome');
-//    }
-    
-//    /**
-//     * Shows property.
-//     * 
-//     * @param integer $id
-//     * @return type
-//     */
-//    public function property($id)
-//    {        
-//        if ($id !== null)
-//        {
-//            $propertyId = htmlentities((int)$id, ENT_QUOTES, "UTF-8");
-//            $property = Property::where([
-//                'id' => $propertyId,
-//                'boss_id' => auth()->user()->id
-//            ])->first();
-//            
-//            if ($property !== null)
-//            {
-//                $workers = auth()->user()->getWorkers();                
-//                $propertyCreatedAt = $property->created_at->format('d.m.Y');
-//                
-//                return view('boss.property_show')->with([
-//                    'property' => $property,
-//                    'workers' => $workers,
-//                    'propertyCreatedAt' => $propertyCreatedAt
-//                ]);
-//            }
-//        }
-//        
-//        return redirect()->route('welcome')->with('error', 'Ta lokalizacja nie należy do Ciebie');
-//    }
-    
     /**
      * Show the form for editing the specified resource.
      *
@@ -586,129 +520,7 @@ class BossController extends Controller
             return redirect()->route('welcome')->with('error', 'Ta lokalizacja nie należy do Ciebie');
         }
     }
-    
-    /**
-     * Subscriptions purchase view (shown differently depending on whether boss owns one or more then one properties)
-     * 
-     * @return type
-     */
-    public function propertiesSubscriptionPurchase()
-    {
-        $boss = auth()->user();
         
-        if ($boss !== null)
-        {
-            $properties = new Collection();
-            $ownProperties = Property::where('boss_id', $boss->id)->get();
-            $otherProperties = Property::where('boss_id', null)->get();
-            
-            if ($ownProperties !== null)
-            {
-                foreach ($ownProperties as $ownProperty)
-                {
-                    $ownProperty['isOwn'] = true;
-                    $properties->push($ownProperty);
-                }
-            }
-            
-            if ($otherProperties !== null)
-            {
-                foreach ($otherProperties as $otherProperty)
-                {
-                    $otherProperty['isOwn'] = false;
-                    $properties->push($otherProperty);
-                }
-            }
-
-            if ($properties !== null)
-            {
-                if (count($properties) == 1)
-                {
-                    // turned off with propertySubscriptionsPurchase method
-//                    return redirect()->action(
-//                        'BossController@propertySubscriptionsPurchase', [
-//                            'id' => $properties->first()->id
-//                        ]
-//                    );
-                    
-                    return redirect()->action(
-                        'BossController@subscriptionList', [
-                            'propertyId' => $properties->first()->id,
-                            'subscriptionId' => 0
-                        ]
-                    );
-                
-                } else {
-
-                    return view('boss.properties_subscription_purchase')->with([
-                        'properties' => $properties
-                    ]);
-                }
-            }
-        }
-        
-        return redirect()->route('welcome');
-    }
-    
-//    /**
-//     * Get subscriptions assigned to passed property.
-//     * 
-//     * @param type $id
-//     */
-//    public function propertySubscriptionsPurchase($id)
-//    {
-//        $boss = auth()->user();
-//        
-//        $property = Property::where([
-//            'id' => $id,
-//            'boss_id' => $boss->id
-//        ])->with('subscriptions')->first();
-//        
-//        if ($property !== null)
-//        {
-//            $subscriptionsCollection = new Collection();
-//            
-//            $chosenProperty = ChosenProperty::where([
-//                'user_id' => $boss->id,
-//                'property_id' => $property->id
-//            ])->with('purchases')->first();
-//            
-//            foreach ($property->subscriptions as $subscription)
-//            {
-//                $isPurchased = false;
-//                
-//                if ($chosenProperty !== null && $chosenProperty->purchases)
-//                {
-//                    foreach ($chosenProperty->purchases as $purchase)
-//                    {
-//                        $substart = Substart::where([
-//                            'boss_id' => $boss->id,
-//                            'property_id' => $property->id,
-//                            'subscription_id' => $subscription->id,
-//                            'purchase_id' => $purchase->id
-//                        ])->first();
-//                        
-//                        if ($substart !== null)       
-//                        {
-//                            $isPurchased = true;
-//                        }
-//                    }
-//                    
-//                    $subscription['isPurchased'] = $isPurchased;
-//                    $subscriptionsCollection->push($subscription);
-//                }
-//            }
-//            
-//            return view('boss.property_subscriptions_purchase')->with([
-//                'property' => $property,
-//                'subscriptions' => $subscriptionsCollection
-//            ]);
-//            
-//        }
-//        
-//        return redirect()->route('welcome');        
-//    }
-    
     /**
      * Shows subscription's purchase view.
      * 
@@ -1123,33 +935,19 @@ class BossController extends Controller
         
         return redirect()->route('welcome');
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        
     /**
+     * Shows boss worker.
+     * 
+     * 
      * 
      * 
      * todo: Czasowo usunięte, czeka aż powstanie widok z jakimiś dodatkowymi info których nie ma w worker_appointment_list??
-     * 
-     * 
-     * 
-     */
-    
-    
-    
-    
-    
-    
-    /**
-     * Shows boss worker.
      *
+     * 
+     * 
+     * 
+     * 
      * @param type $workerId
      * @param type $substartId
      * @param type $intervalId
@@ -1236,34 +1034,6 @@ class BossController extends Controller
 //        
 //        return redirect()->route('welcome');
 //    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     public function subscriptionWorkersEdit($substartId, $intervalId)
     {

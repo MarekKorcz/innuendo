@@ -55,18 +55,6 @@ class DiscountController extends Controller
         }
     }
     
-//    public function show($id)
-//    {        
-//        $discount = Discount::where('id', $id)->first();
-//        
-//        if ($discount !== null)
-//        {
-//            return view('discount.show')->with('discount', $discount);
-//        }
-//        
-//        return redirect()->route('welcome')->with('error', 'Such discount doesn\'t exist');
-//    }
-    
     public function index()
     {
         return view('discount.index')->with([
