@@ -1069,7 +1069,6 @@ class UserController extends Controller
                                 'property_id' => $property->id
                             ])->first();
                             
-                            // >> check if subscription is purchased already
                             if ($chosenProperty !== null)
                             {                                
                                 // >> check if subscription is purchased already
@@ -1107,14 +1106,12 @@ class UserController extends Controller
                                         }
                                         // <<
                                     }
+                                    
+                                    $subscription['purchases'] = $purchases;
+                                    $subscriptions->push($subscription);
                                 }
                                 // <<
-                                
-                                $subscription['purchases'] = $purchases;
                             }
-                            // <<
-                            
-                            $subscriptions->push($subscription);
                         }
                     }         
 

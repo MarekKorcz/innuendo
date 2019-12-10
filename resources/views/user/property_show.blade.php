@@ -6,12 +6,15 @@
 
 <div class="container">
 
-    <h2 class="text-center" style="padding-top: 1rem;">
-        @lang('common.schedule_in') 
-        <strong>
-            {!! $property->name !!}
-        </strong>
-    </h2>
+    <div class="text-center" style="padding-top: 1rem;">
+        <h2>
+            @lang('common.schedule_in') 
+            <strong>
+                {!! $property->name !!}
+            </strong>
+        </h2>
+        <p>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</p>
+    </div>
    
 <!--    <div class="row">
         <div class="col-1"></div>
