@@ -155,7 +155,8 @@ class UserController extends Controller
                 'employee' => $employee,
                 'employeeCreatedAt' => $employeeCreatedAt,
                 'calendars' => $calendarsArray,
-                'properties' => $properties
+                'properties' => $properties,
+                'user' => $user
             ]);
         }
         
@@ -302,6 +303,29 @@ class UserController extends Controller
      */
     public function calendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
     {
+        $user = auth()->user();
+        $boss = null;
+        
+        if ($user->boss_id !== null)
+        {
+            $boss = User::where('id', $user->boss_id)->first();
+            
+        } else if ($user->isBoss) {
+            
+            return redirect()->action(
+                'BossController@calendar', [
+                    'calendar_id' => $calendar_id,
+                    'year' => $year,
+                    'month_number' => $month_number,
+                    'day_number' => $day_number
+                ]
+            );
+            
+        } else {
+            
+            return redirect()->route('welcome')->with('error', 'Użyj widoku kalendarza dla admina');
+        }
+        
         $calendar = Calendar::where([
             'id' => $calendar_id,
             'isActive' => 1
@@ -309,6 +333,13 @@ class UserController extends Controller
         
         if ($calendar !== null)
         {
+            $property = Property::where('id', $calendar->property_id)->first();
+            
+            if (!$property->boss_id == $boss->id)
+            {
+                return redirect()->route('welcome')->with('error', 'Dostęp do kalendarza zabroniony');
+            }
+            
             $currentDate = new \DateTime();
             
             if ($year == 0)
@@ -394,30 +425,12 @@ class UserController extends Controller
                             $availableNextMonth = true;
                         }
                         
-                        $property = Property::where('id', $calendar->property_id)->first();
-                        
-                        $canSendRequest = $property->boss_id == auth()->user()->id ? true : false;
-                        $graphicRequest = null;
-                        
-                        if ($canSendRequest)
-                        {
-                            $graphicRequest = GraphicRequest::where([
-                                'property_id' => $property->id,
-                                'year_number' => $year->year,
-                                'month_number' => $month->month_number,
-                                'day_number' => $currentDay !== null ? $currentDay->day_number : $day_number,
-                                'boss_id' => auth()->user()->id
-                            ])->first();
-                        }
-                        
-                        $employees = User::where('isEmployee', 1)->get();
-                        
                         $employee = User::where([
                             'isEmployee' => 1,
                             'id' => $calendar->employee_id
                         ])->first();
                         
-                        return view('employee.calendar')->with([
+                        return view('user.calendar')->with([
                             'calendar_id' => $calendar->id,
                             'employee_slug' => $employee->slug,
                             'availablePreviousMonth' => $availablePreviousMonth,
@@ -428,9 +441,6 @@ class UserController extends Controller
                             'current_day' => is_object($currentDay) ? $currentDay->day_number : 0,
                             'graphic' => $graphic,
                             'graphic_id' => $graphicTime ? $graphicTime->id : null,
-                            'canSendRequest' => $currentDay !== null ? $canSendRequest : false,
-                            'graphicRequest' => $graphicRequest,
-                            'employees' => $employees
                         ]);
                         
                     } else {
@@ -548,6 +558,11 @@ class UserController extends Controller
                 $employee = User::where('id', $calendar->employee_id)->first();
                 $property = Property::where('id', $calendar->property_id)->first();
                 
+                $appointment['calendar'] = $calendar;
+                $appointment['year'] = $year->year;
+                $appointment['month'] = $month->month_number;
+                $appointment['day'] = $day->day_number;
+                
                 $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
                 $appointment['date'] = $date;
                 
@@ -557,12 +572,18 @@ class UserController extends Controller
                 $appointmentMonth = (string)$month->month_number;
                 $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
                 $appointment['date_time'] = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
+                $appointment['date_timestamps'] = strtotime($appointment['date_time']->format('Y-m-d H:i:s'));
                 
                 $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
                 $appointment['address'] = $address;
                 
                 $appointment['employee'] = $employee->name . " " . $employee->surname;
                 $appointment['employee_slug'] = $employee->slug;
+                
+                // get property and subscription info
+                $purchase = Purchase::where('id', $appointment->purchase_id)->first();
+                $substart = Substart::where('id', $purchase->substart_id)->first();
+                $appointment['substart'] = $substart;
             }
             
             $property = null;
@@ -576,7 +597,7 @@ class UserController extends Controller
             }
             
             return view('user.appointment_index')->with([
-                'appointments' => $appointments->sortByDesc('date_time'),
+                'appointments' => $appointments->sortByDesc('date_timestamps'),
                 'property' => $property,
                 'user' => $user
             ]);
@@ -657,7 +678,7 @@ class UserController extends Controller
     }
 
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
-    {
+    {        
         $daysArray = [];
         
         for ($i = 0; $i < count($days); $i++)
@@ -675,6 +696,9 @@ class UserController extends Controller
                 }
             }
             
+            $dayGraphicCount = Graphic::where('day_id', $days[$i]->id)->get();
+            $days[$i]['dayGraphicCount'] = count($dayGraphicCount);
+            
             $daysArray[] = $days[$i];
         }
         
@@ -684,56 +708,34 @@ class UserController extends Controller
     private function formatGraphicAndAppointments($graphicTime, $chosenDay, $chosenDayDateTime) 
     {
         $graphic = [];
+        $user = auth()->user();
         
         if ($graphicTime !== null)
         {
             $timeZone = new \DateTimeZone("Europe/Warsaw");
             $now = new \DateTime(null, $timeZone);
-            
+                        
             $workUnits = ($graphicTime->total_time / 15);
             $startTime = date('G:i', strtotime($graphicTime->start_time));
-            
+                        
             for ($i = 0; $i < $workUnits; $i++) 
-            {
-                $appointment = Appointment::where([
-                    'day_id' => $chosenDay->id,
-                    'start_time' => $startTime
-                ])->with('user')->first();
-                
+            {     
                 $appointmentId = 0;
-                $bossWorkerAppointment = false;
                 $ownAppointment = false;
                 
                 $explodedStartTime = explode(":", $startTime);
                 $chosenDayDateTime->setTime($explodedStartTime[0], $explodedStartTime[1], 0);
                 
-                if ($appointment !== null && auth()->user() !== null)
-                {
-                    $boss = null;
-                    $appointmentId = $appointment->id;
-                    
-                    if (auth()->user()->isBoss !== null)
-                    {
-                        $boss = auth()->user();
-                                    
-                        if (count($boss->getWorkers()) > 0)
-                        {
-                            foreach ($boss->getWorkers() as $worker)
-                            {
-                                if ($appointment->user_id == $worker->id)
-                                {
-                                    $bossWorkerAppointment = true;
-                                }
-                            }
-                        }
-
-                    }
-                    
-                    $ownAppointment = $appointment->user_id == auth()->user()->id ? true : false;
-                }
+                $appointment = Appointment::where([
+                    'day_id' => $chosenDay->id,
+                    'start_time' => $startTime
+                ])->with('user')->first();
                 
                 if ($appointment !== null)
                 {
+                    $appointmentId = $appointment->id;
+                    $ownAppointment = $appointment->user_id == $user->id ? true : false;
+                    
                     $limit = $appointment->minutes / 15;
                     
                     if ($limit > 1)
@@ -756,7 +758,6 @@ class UserController extends Controller
                         'appointment' => $appointment,
                         'appointmentLimit' => $limit,
                         'appointmentId' => $appointmentId,
-                        'bossWorkerAppointment' => $bossWorkerAppointment,
                         'ownAppointment' => $ownAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
@@ -771,7 +772,6 @@ class UserController extends Controller
                         'appointment' => null,
                         'appointmentLimit' => 0,
                         'appointmentId' => $appointmentId,
-                        'bossWorkerAppointment' => $bossWorkerAppointment,
                         'ownAppointment' => $ownAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
@@ -779,7 +779,7 @@ class UserController extends Controller
                     $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
                     $startTime = date('G:i', $timeIncrementedBy15Minutes);
                 }
-            }            
+            }         
         }
         
         return $graphic;

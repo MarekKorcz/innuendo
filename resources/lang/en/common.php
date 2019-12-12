@@ -477,5 +477,6 @@ return [
     'private_policy' => 'Private policy',
     'private_policy_banner' => 'Private policy',
     'and_banner' => ' and ',
-    'regulations' => 'Regulations'
+    'regulations' => 'Regulations',
+    'no_schedule' => 'No schedule'
 ];

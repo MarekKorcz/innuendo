@@ -63,12 +63,12 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn pallet-1-3" style="color: white;">
                                     @lang('common.login')
                                 </button>
 
                                 @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                    <a class="btn btn-link pallet-1-3-font" href="{{ route('password.request') }}">
                                         @lang('common.remind_password')
                                     </a>
                                 @endif

@@ -11,11 +11,15 @@
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>
         <div class="col-4">
+            <a class="btn btn-primary" href="{{ URL::to('/appointment/index') }}">
+                @lang('common.all_massages')
+            </a>
+        </div>
+        <div class="col-4">
             <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('/employee/' . $employee_slug) }}">
                 @lang('common.back_to_employee')
             </a>
         </div>
-        <div class="col-4"></div>
     </div>
 
     <div id="calendar" class="table-responsive">
@@ -79,7 +83,13 @@
                                         @else
                                             <h4>
                                         @endif
-                                                {{$days[$i]->day_number}}
+                                                @if ($days[$i]->dayGraphicCount > 0)
+                                                    <span class="pallet-2-2-font">
+                                                       {{$days[$i]->day_number}}
+                                                    </span>
+                                                @else
+                                                    {{$days[$i]->day_number}}
+                                                @endif
                                             </h4>
                                     </a>
                                 @endif
@@ -93,7 +103,13 @@
                                         @else
                                             <h4>
                                         @endif
-                                                {{$days[$i]->day_number}}
+                                                @if ($days[$i]->dayGraphicCount > 0)
+                                                    <span class="pallet-2-2-font">
+                                                       {{$days[$i]->day_number}}
+                                                    </span>
+                                                @else
+                                                    {{$days[$i]->day_number}}
+                                                @endif
                                             </h4>
                                     </a>
                                 @endif
@@ -108,7 +124,13 @@
                                     @else
                                         <h4>
                                     @endif
-                                            {{$days[$i]->day_number}}
+                                            @if ($days[$i]->dayGraphicCount > 0)
+                                                <span class="pallet-2-2-font">
+                                                   {{$days[$i]->day_number}}
+                                                </span>
+                                            @else
+                                                {{$days[$i]->day_number}}
+                                            @endif
                                         </h4>
                                 </a>
                             @endif
@@ -151,7 +173,7 @@
                                     <div class="box">{{$graphic[$i]['time']}}</div>
                                     @if ($graphic[$i]['appointmentId'] !== 0)
                                         @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
-                                            <div class="appointment-term box-1 pallet-1-3">
+                                            <div class="appointment-term box-1 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
                                                 </div>
@@ -179,7 +201,7 @@
                                     <div class="box">{{$graphic[$i]['time'][1]}}</div>
                                     @if ($graphic[$i]['appointmentId'] !== 0)
                                         @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
-                                            <div class="appointment-term box-2 pallet-1-3">
+                                            <div class="appointment-term box-2 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
                                                 </div>
@@ -208,7 +230,7 @@
                                     <div class="box">{{$graphic[$i]['time'][2]}}</div>
                                     @if ($graphic[$i]['appointmentId'] !== 0)
                                         @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
-                                            <div class="appointment-term box-3 pallet-1-3">
+                                            <div class="appointment-term box-3 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
                                                 </div>
@@ -238,7 +260,7 @@
                                     <div class="box">{{$graphic[$i]['time'][3]}}</div>
                                     @if ($graphic[$i]['appointmentId'] !== 0)
                                         @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
-                                            <div class="appointment-term box-4 pallet-1-3">
+                                            <div class="appointment-term box-4 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
                                                 </div>
@@ -269,7 +291,7 @@
                                     <div class="box">{{$graphic[$i]['time'][4]}}</div>
                                     @if ($graphic[$i]['appointmentId'] !== 0)
                                         @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
-                                            <div class="appointment-term box-5 pallet-1-3">
+                                            <div class="appointment-term box-5 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
                                                 </div>
@@ -301,7 +323,7 @@
                                     <div class="box">{{$graphic[$i]['time'][5]}}</div>
                                     @if ($graphic[$i]['appointmentId'] !== 0)
                                         @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
-                                            <div class="appointment-term box-6 pallet-1-3">
+                                            <div class="appointment-term box-6 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
                                                 </div>

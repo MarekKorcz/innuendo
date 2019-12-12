@@ -483,5 +483,6 @@ return [
     'private_policy' => 'Polityka prywatności',
     'private_policy_banner' => 'Politykę prywatności',
     'and_banner' => ' oraz ',
-    'regulations' => 'Regulamin'
+    'regulations' => 'Regulamin',
+    'no_schedule' => 'Brak grafiku'
 ];

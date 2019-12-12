@@ -13,7 +13,7 @@
                 {!! $property->name !!}
             </strong>
         </h2>
-        <p>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}</p>
+        <p>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}, {{$property->city}}</p>
     </div>
    
 <!--    <div class="row">
@@ -60,7 +60,7 @@
                                 <a href="{{ URL::to('employee/' . $employee->slug) }}" class="btn pallet-1-3 btn-lg" style="color: white;">
                                     @lang('common.profile')
                                 </a>
-                                <a href="{{ URL::to('employee/calendar/' . $employee->calendar . '/' . $today['year'] . '/' . $today['month'] . '/' . $today['day'] ) }}" class="btn pallet-2-3 btn-lg" style="color: white;">
+                                <a href="{{ URL::to('user/calendar/' . $employee->calendar . '/' . $today['year'] . '/' . $today['month'] . '/' . $today['day'] ) }}" class="btn pallet-2-3 btn-lg" style="color: white;">
                                     @lang('common.schedule')
                                 </a>
                             </div>
@@ -90,7 +90,7 @@
                             <a href="{{ URL::to('employee/' . $employee->slug) }}" class="btn pallet-1-3 btn-lg" style="color: white;">
                                 @lang('common.profile')
                             </a>
-                            <a href="{{ URL::to('employee/calendar/' . $employee->calendar . '/' . $today['year'] . '/' . $today['month'] . '/' . $today['day'] ) }}" class="btn pallet-2-3 btn-lg" style="color: white;">
+                            <a href="{{ URL::to('user/calendar/' . $employee->calendar . '/' . $today['year'] . '/' . $today['month'] . '/' . $today['day'] ) }}" class="btn pallet-2-3 btn-lg" style="color: white;">
                                 @lang('common.schedule')
                             </a>
                         </div>

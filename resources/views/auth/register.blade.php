@@ -126,7 +126,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button id="register-worker" type="submit" class="btn btn-primary">
+                                <button id="register-worker" type="submit" class="btn pallet-1-3" style="color: white;">
                                     @lang('common.register')
                                 </button>
                             </div>
@@ -171,7 +171,7 @@
                     </div>
 
                     <div class="text-center">
-                        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
+                        <input type="submit" value="@lang('common.create')" class="btn pallet-1-3" style="color: white;">
                     </div>
 
                 {{ Form::close() }}

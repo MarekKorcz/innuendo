@@ -184,6 +184,9 @@ Route::get('/subscription/{id}/edit', 'SubscriptionController@edit');
 Route::put('/subscription/update', 'SubscriptionController@update');
 
 // user >> routings
+// user calendar
+Route::get('/user/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
+
 // show employees to user
 Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
 Route::get('/user/property/{id}', 'UserController@property')->name('property');
@@ -197,6 +200,9 @@ Route::post('/user/get/subscription/substarts', 'UserController@getSubscriptionS
 Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow')->name('subscriptionPurchasedShow');
 
 // >> boss routings
+// calendars routing
+Route::get('/boss/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'BossController@calendar');
+
 // code routings
 Route::get('/boss/codes', 'BossController@codes');
 Route::post('/boss/set-code', 'BossController@setCode');

@@ -7,7 +7,7 @@
     
     <div class="row text-center" style="padding: 2rem;">
         <div class="col-4">
-            <a href="{{ URL::to('/employee/calendar/'. $calendarId . '/' . $year . '/' . $month_number . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
+            <a href="{{ URL::to('/user/calendar/'. $calendarId . '/' . $year . '/' . $month_number . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
                 @lang('common.back_to_calendar')
             </a>
         </div>

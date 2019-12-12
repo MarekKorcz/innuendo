@@ -15,15 +15,7 @@ $(document).ready(function() {
                 
             } else {
                 
-                let searchField = document.getElementById("search");
-                searchField.setAttribute('data-user_id', '');
-                searchField.setAttribute('value', '');
-                
-                let timePeriod = $("#timePeriod");
-                let intervalId = timePeriod.children("option:selected").val();
-                let substartId = timePeriod.data("substart_id");
-                
-                getUsersAppointmentsFromDatabase(intervalId, substartId);
+                clearSearchInputAndShowAllAppointments();
             }
         }
     });
@@ -63,9 +55,9 @@ $(document).ready(function() {
             listResultElement.html('');
         }
         
-        if (element.attr('id') == "search")
+        if (element.attr('id') == "search" || element.attr('id') == "showAllWorkers")
         {
-            element.val("");
+            clearSearchInputAndShowAllAppointments();
         }
     });
     
@@ -136,36 +128,40 @@ $(document).ready(function() {
         .then((res) => res.json())
         .then((data) => {
             
-            $("#appointments-table").html('');
-                
-            let appointmentsTable = `
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>                
-                            <td>Data</td>
-                            <td>Godzina</td>
-                            <td>Imię i Nazwisko</td>
-                            <td>Zabieg</td>
-                            <td>Wykonawca</td>
-                            <td>Status</td>
-                        </tr>
-                    </thead>
-                    <tbody id="appointments">
-                    </tbody>
-                </table>
-            `;
-
-            $("div#appointments-table").append(appointmentsTable);
-                
             if (data.type === "success")
             {       
+                $("#appointments-table").html('');
+
+                let appointmentsTable = `
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>                
+                                <td>` + data.date_description + `</td>
+                                <td>` + data.hour_description + `</td>
+                                <td>` + data.name_and_surname_description + `</td>
+                                <td>` + data.massage_description + `</td>
+                                <td>` + data.executor_description + `</td>
+                                <td>` + data.status_description + `</td>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments">
+                        </tbody>
+                    </table>
+                `;
+
+                $("div#appointments-table").append(appointmentsTable);
+                
                 $("#search").val(data.worker_name + " " + data.worker_surname);
                 
                 $.each(data.appointments, function(key, value) 
                 {
                     $("div#appointments-table > table > tbody#appointments").append(`
                         <tr>
-                            <td>` + value.date + `</td>
+                            <td>
+                                <a href="http://localhost:8000/boss/calendar/` + value.calendar_id + `/` + value.year + `/` + value.month + `/` + value.day + `" target="_blanc">
+                                    ` + value.date + `
+                                </a>
+                            </td>
                             <td>` + value.time + `</td>
                             <td>` + value.worker + `</td>
                             <td>` + value.item + `</td>
@@ -201,34 +197,38 @@ $(document).ready(function() {
         .then((res) => res.json())
         .then((data) => {
             
-            $("#appointments-table").html('');
-                
-            let appointmentsTable = `
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>                
-                            <td>Data</td>
-                            <td>Godzina</td>
-                            <td>Imię i Nazwisko</td>
-                            <td>Zabieg</td>
-                            <td>Wykonawca</td>
-                            <td>Status</td>
-                        </tr>
-                    </thead>
-                    <tbody id="appointments">
-                    </tbody>
-                </table>
-            `;
-
-            $("div#appointments-table").append(appointmentsTable);
-                
             if (data.type === "success")
             {          
+                $("#appointments-table").html('');
+
+                let appointmentsTable = `
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <td>` + data.date_description + `</td>
+                                <td>` + data.hour_description + `</td>
+                                <td>` + data.name_and_surname_description + `</td>
+                                <td>` + data.massage_description + `</td>
+                                <td>` + data.executor_description + `</td>
+                                <td>` + data.status_description + `</td>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments">
+                        </tbody>
+                    </table>
+                `;
+
+                $("div#appointments-table").append(appointmentsTable);
+                
                 $.each(data.appointments, function(key, value) 
                 {
                     $("div#appointments-table > table > tbody#appointments").append(`
                         <tr>
-                            <td>` + value.date + `</td>
+                            <td>
+                                <a href="http://localhost:8000/boss/calendar/` + value.calendar_id + `/` + value.year + `/` + value.month + `/` + value.day + `" target="_blanc">
+                                    ` + value.date + `
+                                </a>
+                            </td>
                             <td>` + value.time + `</td>
                             <td>` + value.worker + `</td>
                             <td>` + value.item + `</td>
@@ -243,5 +243,18 @@ $(document).ready(function() {
                 });                
             }
         });
+    }
+    
+    function clearSearchInputAndShowAllAppointments()
+    {
+        let searchField = document.getElementById("search");
+        searchField.setAttribute('data-user_id', '');
+        searchField.value = '';
+
+        let timePeriod = $("#timePeriod");
+        let intervalId = timePeriod.children("option:selected").val();
+        let substartId = timePeriod.data("substart_id");
+
+        getUsersAppointmentsFromDatabase(intervalId, substartId);
     }
 });

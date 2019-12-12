@@ -33,10 +33,26 @@
                 <tbody>
                     @foreach($appointments as $appointment)
                         <tr>
-                            <td>{{$appointment->date}}</td>
+                            <td>
+                                @if ($user->isBoss)
+                                    <a href="{{ URL::to('boss/calendar/' . $appointment['calendar']->id . '/' . $appointment['year'] . '/' . $appointment['month'] . '/' . $appointment['day']) }}">
+                                @else
+                                    <a href="{{ URL::to('user/calendar/' . $appointment['calendar']->id . '/' . $appointment['year'] . '/' . $appointment['month'] . '/' . $appointment['day']) }}">
+                                @endif
+                                        {{$appointment->date}}
+                                    </a>
+                            </td>
                             <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
                             <td>{{$appointment->address}}</td>
-                            <td>{{$appointment->item->name}}</td>
+                            <td>
+                                @if ($user->isBoss)
+                                    <a href="{{ URL::to('/boss/subscription/list/' . $appointment->substart->property_id . '/' . $appointment->substart->subscription_id) }}" target="_blanc">  
+                                @else
+                                    <a href="{{ URL::to('/user/subscription/list/' . $appointment->substart->id) }}" target="_blanc">                     
+                                @endif
+                                        {{$appointment->item->name}}
+                                    </a>
+                            </td>
                             <td>{{$appointment->minutes}}</td>
                             <td>
                                 <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">

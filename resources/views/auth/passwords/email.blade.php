@@ -35,7 +35,7 @@
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn pallet-1-3" style="color: white;">
                                     @lang('common.send_password_reset_link')
                                 </button>
                             </div>

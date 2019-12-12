@@ -7,12 +7,12 @@
 <div class="container">
     
     <div class="row text-center" style="padding-top: 2rem;">
+        <div class="col-4"></div>
         <div class="col-4">
-            <a class="btn pallet-1-3" style="color: white;" href="{{ url()->previous() }}">
-                @lang('common.go_back')
+            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('boss/subscription/list/' . $substart->property_id . '/' . $substart->subscription_id) }}">
+                @lang('common.subscriptions')
             </a>
         </div>
-        <div class="col-4"></div>
         <div class="col-4"></div>
     </div>
     
@@ -24,6 +24,9 @@
                     @lang('common.subscription_massages')
                     {!! $subscription->name !!}
                 </h2>
+                <a id="showAllWorkers" class="btn pallet-2-3" style="color: white;">
+                    @lang('common.all_appointments')
+                </a>
             </div>
             @if (count($appointments) > 0)
                 <div id="workers-panel" class="wrapper cont">
@@ -89,14 +92,22 @@
                         <tbody id="appointments">
                             @foreach($appointments as $appointment)
                                 <tr>
-                                    <td>{{$appointment->date}}</td>
+                                    <td>
+                                        <a href="{{ URL::to('/boss/calendar/' . $appointment->calendar_id . '/' . $appointment->year . '/' . $appointment->month . '/' . $appointment->day) }}" target="_blanc">
+                                            {{$appointment->date}}
+                                        </a>
+                                    </td>
                                     <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
                                     <td>
                                         <!--<a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blanc">-->
                                             {{$appointment->user->name}} {{$appointment->user->surname}}
                                         <!--</a>-->
                                     </td>
-                                    <td>{{$appointment->item->name}}</td>
+                                    <td>
+                                        <a href="{{ URL::to('/boss/subscription/list/' . $substart->property_id . '/' . $substart->subscription_id) }}" target="_blanc">
+                                            {{$appointment->item->name}}
+                                        </a>
+                                    </td>
                                     <td>
                                         <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
                                             {{$appointment->employee}}
