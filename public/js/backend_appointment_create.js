@@ -4,23 +4,31 @@ $(document).ready(function()
     {
         $("#result").html('');
         let searchField = document.getElementById("search");
+        let calendarInput = $("input[name=calendarId]");
         
         if (searchField !== null && searchField.value !== "") 
         {
-            getUserFromDatabase(searchField.value);
+            getUserFromDatabase(searchField.value, calendarInput.val());
         }
     });    
     
     $(window).click(function(event) 
     {
+        if (event.target.id == "search")
+        {
+            event.target.value = '';
+        }
+        
         if (event.target.parentElement !== null && event.target.parentElement.id == 'result')
         {
             let userId = event.target.value;
             let name = $(event.target).data('name');
+            let surname = $(event.target).data('surname');
+            
             let possibleAppointmentLengthInMinutes = $("input[name='possibleAppointmentLengthInMinutes']").val();
             let propertyId = $("input[name='propertyId']").val();
 
-            $("#search").val(name);
+            $("#search").val(name + " " + surname);
             $("#userId").val(userId);
 
             $("#result").html('');
@@ -259,9 +267,9 @@ $(document).ready(function()
                         <label for="search">Klient:</label>
                     </div>
                     <input id="search" class="form-control" type="text" name="search" placeholder="Szukaj klienta" autocomplete="off">
+                    <ul id="result" class="list-group"></ul>
                 </div>
                 <div class="warning"></div>
-                <ul id="result" class="list-group"></ul>
                 <input id="userId" type="hidden" name="userId" value="">
             `);
             
@@ -273,7 +281,7 @@ $(document).ready(function()
         }
     });   
     
-    function getUserFromDatabase(searchField)
+    function getUserFromDatabase(searchField, calendarId)
     {
         return fetch('http://localhost:8000/employee/backend-appointment/get-user-from-database', {
             method: 'POST',
@@ -283,7 +291,8 @@ $(document).ready(function()
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             body: JSON.stringify({
-                searchField: searchField
+                searchField: searchField,
+                calendarId: calendarId
             })
         })
         .then((res) => res.json())
@@ -295,8 +304,12 @@ $(document).ready(function()
                     $("div#credential-1 > div.warning > p.field-warning").remove();
                 }
                 
+                let resultList = $("#result");
+                
+                resultList.width($("input#search.form-control").outerWidth());
+                
                 $.each(data.users, function(key, value){
-                    $("#result").append('<li class="list-group-item" data-name="' + value.name + '" value="' + value.id + '">'+ value.name + ' | ' + value.email +'</li>');
+                    resultList.append('<li class="list-group-item" data-name="' + value.name + '" data-surname="' + value.surname + '" value="' + value.id + '">'+ value.name + ` ` + value.surname + ' | ' + value.email +'</li>');
                 });
             }
         });

@@ -5,9 +5,16 @@
 #properties {
     border: 3px #37AEA8 solid; 
     border-radius: 6px;
+    margin: 6px 0 6px 0;
 }
 
 #properties li {
     color: #37AEA8; 
+    padding: 6px 0 6px 0;
+}
+
+#properties li:hover {
+    color: white; 
+    background-color: #37AEA8; 
     padding: 6px 0 6px 0;
 }

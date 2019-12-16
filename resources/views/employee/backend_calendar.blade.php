@@ -80,7 +80,13 @@
                                         @else
                                             <h4>
                                         @endif
-                                                {{$days[$i]->day_number}}
+                                                @if ($days[$i]->dayGraphicCount > 0)
+                                                    <span class="pallet-2-2-font">
+                                                       {{$days[$i]->day_number}}
+                                                    </span>
+                                                @else
+                                                    {{$days[$i]->day_number}}
+                                                @endif
                                             </h4>
                                     </a>
                                 @endif
@@ -94,7 +100,13 @@
                                         @else
                                             <h4>
                                         @endif
-                                                {{$days[$i]->day_number}}
+                                                @if ($days[$i]->dayGraphicCount > 0)
+                                                    <span class="pallet-2-2-font">
+                                                       {{$days[$i]->day_number}}
+                                                    </span>
+                                                @else
+                                                    {{$days[$i]->day_number}}
+                                                @endif
                                             </h4>
                                     </a>
                                 @endif
@@ -109,7 +121,13 @@
                                     @else
                                         <h4>
                                     @endif
-                                            {{$days[$i]->day_number}}
+                                            @if ($days[$i]->dayGraphicCount > 0)
+                                                <span class="pallet-2-2-font">
+                                                   {{$days[$i]->day_number}}
+                                                </span>
+                                            @else
+                                                {{$days[$i]->day_number}}
+                                            @endif
                                         </h4>
                                 </a>
                             @endif

@@ -665,7 +665,7 @@ class WorkerController extends Controller
                             
                             return view('employee.backend_appointment_create')->with([
                                 'appointmentTerm' => $appointmentTerm,
-                                'calendarId' => $calendar->id,
+                                'calendar' => $calendar,
                                 'propertyId' => $calendar->property_id,
                                 'graphicId' => $graphic->id,
                                 'year' => $year,
@@ -674,19 +674,19 @@ class WorkerController extends Controller
                                 'possibleAppointmentLengthInMinutes' => $possibleAppointmentLengthInMinutes,
                                 'users' => $users
                             ]);
-                        }
-                        else
-                        {
+                            
+                        } else {
+                            
                             $message = 'Wizyta jest już zajęta';
                         }
-                    }
-                    else
-                    {
+                        
+                    } else {
+                        
                         $message = 'Niepoprawny termin wizyty';
                     }
-                }
-                else
-                {
+                    
+                } else {
+                    
                     $message = 'Grafik nie istnieje';
                 }
 
@@ -706,25 +706,108 @@ class WorkerController extends Controller
     
     public function getUserFromDatabase(Request $request)
     {        
-        if ($request->get('searchField'))
-        {
-            $users = User::where('name', 'like', $request->get('searchField') . '%')->orWhere('surname', 'like', $request->get('searchField') . '%')->where([
-                'isEmployee' => null,
-                'isAdmin' => null,
-                'isBoss' => null
-            ])->get();
+        $message = 'Pusty request';
+        
+        if ($request->get('searchField') && $request->get('calendarId'))
+        {          
+            $searchField = $request->get('searchField');
+            $calendarId = $request->get('calendarId');
             
-            $data = [
-                'type'    => 'success',
-                'users'  => $users !== null ? $users : ""
-            ];
+            $calendar = Calendar::where('id', $calendarId)->with('property')->first();
+            
+            if ($calendar !== null)
+            {
+                $usersFromDBWithNameRelatedToSearchQuery = User::where(function ($query) use ($searchField) {
+                $query->where('name', 'like', $searchField . '%')
+                        ->where([
+                            'isEmployee' => null,
+                            'isAdmin' => null
+                        ]);
+                })->orWhere(function ($query) use ($searchField) {
+                    $query->where('surname', 'like', $searchField . '%')
+                        ->where([
+                            'isEmployee' => null,
+                            'isAdmin' => null
+                        ]);
+                })->get();
 
-            return new JsonResponse($data, 200, array(), true);
+                if (count($usersFromDBWithNameRelatedToSearchQuery) > 0)
+                {
+                    // get calendar property
+                    $property = Property::where('id', $calendar->property_id)->first();
+
+                    // get property owner and its workers
+                    $propertyOwner = User::where('id', $property->boss_id)->first();
+                    $ownerWorkers = $propertyOwner->getWorkers();
+
+                    // create users collection and add property owner as a first one to collect
+                    $ownerAndOwnersWorkersWithPurchasedSubscription = new Collection();
+                    $ownerAndOwnersWorkersWithPurchasedSubscription->push($propertyOwner);
+
+                    // >> look for workers with purchased subscription
+                    if (count($ownerAndOwnersWorkersWithPurchasedSubscription) > 0)
+                    {
+                        if ($ownerWorkers !== null && count($ownerWorkers) > 0)
+                        {
+                            foreach($ownerWorkers as $worker)
+                            {
+                                $worker->load('chosenProperties');
+
+                                if (count($worker->chosenProperties) > 0)
+                                {
+                                    foreach ($worker->chosenProperties as $chosenProperty)
+                                    {
+                                        if ($chosenProperty->property_id == $calendar->property->id)
+                                        {
+                                            $chosenProperty->load('purchases');
+
+                                            if (count($chosenProperty->purchases) > 0)
+                                            {
+                                                if (!$ownerAndOwnersWorkersWithPurchasedSubscription->contains('id', $worker->id))
+                                                {
+                                                    $ownerAndOwnersWorkersWithPurchasedSubscription->push($worker);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // >> create users collection with entities satisfying query phrase and subscription purchase condition
+                        $users = new Collection();
+
+                        foreach ($ownerAndOwnersWorkersWithPurchasedSubscription as $userWithPurchasedSubscription)
+                        {
+                            foreach ($usersFromDBWithNameRelatedToSearchQuery as $userFromDBRelatedToSearchQuery)
+                            {
+                                if ($userWithPurchasedSubscription->id == $userFromDBRelatedToSearchQuery->id)
+                                {
+                                    $users->push($userFromDBRelatedToSearchQuery);
+                                }
+                            }
+                        }
+                        // <<
+
+                        $data = [
+                            'type'    => 'success',
+                            'users'  => $users !== null ? $users : ""
+                        ];
+                        
+                        return new JsonResponse($data, 200, array(), true);
+                    }
+                    // <<
+
+                    $message = 'Nie ma userow z wykupiona subskrypcja i podana fraza';
+                }
+
+                $message = 'Fraza nie zwrocila zadnego wyniku';
+            }
         }
         
         return new JsonResponse(array(
             'type'    => 'error',
-            'message' => 'Pusty request'            
+            'message' => $message           
         ));
     }
     
@@ -1674,6 +1757,9 @@ class WorkerController extends Controller
                     }
                 }
             }
+            
+            $dayGraphicCount = Graphic::where('day_id', $days[$i]->id)->get();
+            $days[$i]['dayGraphicCount'] = count($dayGraphicCount);
             
             $daysArray[] = $days[$i];
         }

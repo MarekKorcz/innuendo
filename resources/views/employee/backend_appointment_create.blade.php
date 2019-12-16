@@ -9,7 +9,7 @@
 
     <div class="row text-center" style="padding: 1rem 0 1rem 0;">
         <div class="col-4">
-            <a href="{{ URL::to('/employee/backend-calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
+            <a href="{{ URL::to('/employee/backend-calendar/'. $calendar->id . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
                 @lang('common.back_to_calendar')
             </a>
         </div>
@@ -43,9 +43,9 @@
                             <div class="form-group">
                                 <label for="search">@lang('common.client'):</label>
                                 <input id="search" class="form-control" type="text" name="search" placeholder="@lang('common.look_for_client')" autocomplete="off">
+                                <ul id="result" class="list-group"></ul>
                             </div>
                             <div class="warning"></div>
-                            <ul id="result" class="list-group"></ul>
                             <input id="userId" type="hidden" name="userId" value="">
                         </div>
                     </div>
@@ -61,10 +61,10 @@
 
             <div class="text-center" id="items"></div>
 
-            @if ($calendarId)
-                {{ Form::hidden('calendarId', $calendarId) }}
+            @if ($calendar->id)
+                {{ Form::hidden('calendarId', $calendar->id) }}
             @else
-                {{ Form::hidden('calendarId', Input::old('calendarId')) }}
+                {{ Form::hidden('calendarId', Input::old('$calendar->id')) }}
             @endif
 
             @if ($graphicId)
