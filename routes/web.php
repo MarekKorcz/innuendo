@@ -198,6 +198,7 @@ Route::post('/user/get/subscription/substarts', 'UserController@getSubscriptionS
 
 // user show purchased subscription and its appointment
 Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow')->name('subscriptionPurchasedShow');
+Route::post('/user/get-user-appointments-from-database', 'UserController@getUserAppointmentsFromDatabase');
 
 // >> boss routings
 // calendars routing

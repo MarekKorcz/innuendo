@@ -107,7 +107,7 @@
                                     </div>
 
                                     @if ($subscription->propertyPurchases == null || count($subscription->propertyPurchases) == 0)
-                                        <a class="btn btn-primary" target="_blanc" href="{{ URL::to('/boss/subscription/purchase/' . $propertyWithSubscriptions['property']->id . '/' . $subscription->id) }}">
+                                        <a class="btn btn-primary" target="_blank" href="{{ URL::to('/boss/subscription/purchase/' . $propertyWithSubscriptions['property']->id . '/' . $subscription->id) }}">
                                             @lang('common.purchase_subscription')
                                         </a>
                                     @endif
@@ -158,7 +158,7 @@
                                                     @endif
                                                 </div>
                                                 @if ($purchase->substart->isActive == 1)
-                                                    <a class="btn btn-primary" target="_blanc" href="{{ URL::to('/boss/subscription/invoices/' . $purchase->substart->id) }}">
+                                                    <a class="btn btn-primary" target="_blank" href="{{ URL::to('/boss/subscription/invoices/' . $purchase->substart->id) }}">
                                                         @lang('common.invoices')
                                                     </a>
                                                 @endif
@@ -183,10 +183,10 @@
                                                     <div class="text-center">
                                                         <div id="button-space" style="padding: 1rem;">
                                                             <h2>@lang('common.people_assigned_to_subscription'):</h2>
-                                                            <a class="btn pallet-1-3" style="color: white;" target="_blanc" href="{{ URL::to('boss/subscription/workers/edit/' . $substart->id . '/0') }}">
+                                                            <a class="btn pallet-1-3" style="color: white;" target="_blank" href="{{ URL::to('boss/subscription/workers/edit/' . $substart->id . '/0') }}">
                                                                 @lang('common.edit')
                                                             </a>
-                                                            <a class="btn pallet-2-2" style="color: white;" target="_blanc" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/0') }}">
+                                                            <a class="btn pallet-2-2" style="color: white;" target="_blank" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/0') }}">
                                                                 @lang('common.all_massages')
                                                             </a>
                                                         </div>
@@ -206,7 +206,7 @@
                                                                     <td>{{$worker['email']}}</td>
                                                                     <td>{{$worker['phone_number']}}</td>
                                                                     <td>
-                                                                        <a class="btn pallet-2-2" style="color: white;" target="_blanc" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/' . $worker['id']) }}">
+                                                                        <a class="btn pallet-2-2" style="color: white;" target="_blank" href="{{ URL::to('boss/worker/appointment/list/' . $substart->id . '/' . $worker['id']) }}">
                                                                             @lang('common.show')
                                                                         </a>
                                                                     </td>

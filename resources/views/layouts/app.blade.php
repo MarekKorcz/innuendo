@@ -121,12 +121,12 @@
             <div class="col-sm-3 footer-3">
                 <div class="text-center">
                     <h5>
-                        <a href="{{ route('contact_page') }}" target="_blanc">
+                        <a href="{{ route('contact_page') }}" target="_blank">
                             @lang('contact.contact_page')
                         </a>
                     </h5>
                     <h5>
-                        <a href="{{ route('private_policy') }}" target="_blanc">
+                        <a href="{{ route('private_policy') }}" target="_blank">
                             @lang('common.private_policy')
                         </a>
                     </h5>
@@ -149,17 +149,17 @@
             <div class="col-5">
                 <ul>
                     <li>
-                        <a href="{{ route('contact_page') }}" target="_blanc">
+                        <a href="{{ route('contact_page') }}" target="_blank">
                             @lang('contact.contact_page')
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('private_policy') }}" target="_blanc">
+                        <a href="{{ route('private_policy') }}" target="_blank">
                             @lang('common.private_policy')
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('regulations') }}" target="_blanc">
+                        <a href="{{ route('regulations') }}" target="_blank">
                             @lang('common.regulations')
                         </a>
                     </li>

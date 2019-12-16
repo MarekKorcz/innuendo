@@ -46,16 +46,16 @@
                             <td>{{$appointment->address}}</td>
                             <td>
                                 @if ($user->isBoss)
-                                    <a href="{{ URL::to('/boss/subscription/list/' . $appointment->substart->property_id . '/' . $appointment->substart->subscription_id) }}" target="_blanc">  
+                                    <a href="{{ URL::to('/boss/subscription/list/' . $appointment->substart->property_id . '/' . $appointment->substart->subscription_id) }}" target="_blank">  
                                 @else
-                                    <a href="{{ URL::to('/user/subscription/list/' . $appointment->substart->id) }}" target="_blanc">                     
+                                    <a href="{{ URL::to('/user/subscription/list/' . $appointment->substart->id) }}" target="_blank">                     
                                 @endif
                                         {{$appointment->item->name}}
                                     </a>
                             </td>
                             <td>{{$appointment->minutes}}</td>
                             <td>
-                                <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
+                                <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blank">
                                     {{$appointment->employee}}
                                 </a>
                             </td>

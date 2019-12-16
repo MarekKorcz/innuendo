@@ -46,11 +46,11 @@
                                 {!! Html::decode(Form::label('terms','
                                     <span style="font-size: 18px;">
                                         Oświadczam, że zapoznałem/am się z 
-                                        <a href="https://masazplusdlafirm.pl/regulations" target="_blanc">
+                                        <a href="https://masazplusdlafirm.pl/regulations" target="_blank">
                                             Regulaminem
                                         </a>
                                         oraz
-                                        <a href="https://masazplusdlafirm.pl/private-policy" target="_blanc">
+                                        <a href="https://masazplusdlafirm.pl/private-policy" target="_blank">
                                             Polityką prywatności
                                         </a>
                                         serwisu masazplusdlafirm.pl i akceptuję wszystkie zawarte w nich warunki:

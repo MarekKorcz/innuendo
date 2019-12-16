@@ -68,7 +68,7 @@
                                 <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
                                 <td>{{$appointment->item->name}}</td>
                                 <td>
-                                    <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
+                                    <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blank">
                                         {{$appointment->employee}}
                                     </a>
                                 </td>

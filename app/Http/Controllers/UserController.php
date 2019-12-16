@@ -972,6 +972,11 @@ class UserController extends Controller
                 $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
                 $appointment['date'] = $date;
                 
+                $appointment['calendar_id'] = $calendar->id;
+                $appointment['year'] = $year->year;
+                $appointment['month'] = $month->month_number;
+                $appointment['day'] = $day->day_number;
+                
                 // appointment date                           
                 $appointmentDay = (string)$day->day_number;
                 $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
@@ -985,13 +990,17 @@ class UserController extends Controller
                 $appointment['employee'] = $employee->name . " " . $employee->surname;
                 $appointment['employee_slug'] = $employee->slug;
             }
+            
+            $purchase->load('intervals');
 
             return view('user.subscription_purchased_show')->with([
-                'purchase' => $purchase,
-                'expirationDate' => $expirationDate,
                 'appointments' => $appointments->sortByDesc('date_time'),
-                'substartInterval' => $substartInterval,
-                'intervalAvailableUnits' => $intervalAvailableUnits
+                'purchase' => $purchase,
+                'subscription' => $purchase->subscription,
+                'substart' => $substart,
+                'user' => $user,
+                'intervals' => $purchase->intervals,
+                'today' => new \DateTime(date('Y-m-d'))
             ]);
         }
         
@@ -1455,5 +1464,118 @@ class UserController extends Controller
         }
         
         return $substartArray;
+    }
+    
+    public function getUserAppointmentsFromDatabase(Request $request)
+    {        
+        if ($request->get('userId') && $request->get('substartId') && $request->get('intervalId'))
+        {
+            $userId = htmlentities((int)$request->get('userId'), ENT_QUOTES, "UTF-8");
+            $substartId = htmlentities((int)$request->get('substartId'), ENT_QUOTES, "UTF-8");
+            $intervalId = htmlentities((int)$request->get('intervalId'), ENT_QUOTES, "UTF-8");
+
+            $user = User::where('id', $userId)->with('chosenProperties')->first();
+            $substart = Substart::where('id', $substartId)->first();
+            $interval = Interval::where('id', $intervalId)->first();
+            
+            $boss = User::where('id', $user->boss_id)->first();
+
+            if ($user !== null && $substart !== null && $substart->boss_id == $boss->id && $interval !== null)
+            {
+                $appointments = new Collection();
+                
+                if ($user->chosenProperties)
+                {
+                    foreach ($user->chosenProperties as $chosenProperty)
+                    {
+                        if ($chosenProperty->property_id == $substart->property_id)
+                        {
+                            $chosenProperty->load('purchases');
+                            
+                            if (count($chosenProperty->purchases) > 0)
+                            {
+                                foreach ($chosenProperty->purchases as $purchase)
+                                {
+                                    if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
+                                    {
+                                        $userIntervals = Interval::where('purchase_id', $purchase->id)->get();
+
+                                        if (count($userIntervals) > 0)
+                                        {
+                                            foreach ($userIntervals as $userInterval)
+                                            {
+                                                if ($userInterval->start_date == $interval->start_date && $userInterval->end_date == $interval->end_date)
+                                                {
+                                                    $userAppointments = Appointment::where([
+                                                        'user_id' => $user->id,
+                                                        'interval_id' => $userInterval->id,
+                                                        'purchase_id' => $purchase->id
+                                                    ])->with('item')->get();
+                                                    
+                                                    if (count($userAppointments) > 0)
+                                                    {
+                                                        foreach ($userAppointments as $userAppointment)
+                                                        {
+                                                            $appointments->push($userAppointment);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                $appointmentsArray = [];
+
+                if (count($appointments) > 0)
+                {
+                    foreach ($appointments as $appointment)
+                    {
+                        $day = Day::where('id', $appointment->day_id)->first();
+                        $month = Month::where('id', $day->month_id)->first();
+                        $year = Year::where('id', $month->year_id)->first();
+                        $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
+
+                        $calendar = Calendar::where('id', $year->calendar_id)->first();
+                        $employee = User::where('id', $calendar->employee_id)->first();
+
+                        $appointmentStatus = config('appointment-status.' . $appointment->status);
+
+                        $appointmentsArray[] = [
+                            'date' => $date,
+                            'time' => $appointment->start_time . " - " . $appointment->end_time,
+                            'user' => $user->name . " " . $user->surname,
+                            'item' => $appointment->item->name,
+                            'employee' => $employee->name . " " . $employee->surname,
+                            'employee_slug' => $employee->slug,
+                            'status' => $appointmentStatus,
+                            'substart_id' => $substart->id,
+                            'interval_id' => $intervalId,
+                            'calendar_id' => $calendar->id,
+                            'day' => $day->day_number,
+                            'month' => $month->month_number,
+                            'year' => $year->year
+                        ];
+                    }
+                }
+
+                $data = [
+                    'type' => 'success',
+                    'appointments' => $appointmentsArray,
+                    'date_description' => \Lang::get('common.date'),
+                    'hour_description' => \Lang::get('common.hour'),
+                    'name_and_surname_description' => \Lang::get('common.name_and_surname'),
+                    'massage_description' => \Lang::get('common.massage'),
+                    'executor_description' => \Lang::get('common.executor'),
+                    'status_description' => \Lang::get('common.status'),
+                ];
+
+                return new JsonResponse($data, 200, array(), true);
+            }
+        }
     }
 }

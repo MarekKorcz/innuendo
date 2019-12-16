@@ -151,7 +151,7 @@
                                                         <p>@lang('common.subscription_duration_has_come_to_an_end')</p>
                                                     @endif
                                                 </div>
-                                                <a class="btn pallet-1-3" style="color: white;" target="_blanc" href="{{ URL::to('/user/subscription/purchased/show/' . $purchase->id) }}">
+                                                <a class="btn pallet-1-3" style="color: white;" target="_blank" href="{{ URL::to('/user/subscription/purchased/show/' . $purchase->id) }}">
                                                     @lang('common.appointments')
                                                 </a>
                                             </div>

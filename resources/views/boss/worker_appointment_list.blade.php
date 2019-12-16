@@ -41,7 +41,7 @@
                             <ul id="result" class="list-group list-styling"></ul>
                         </div>
                         <div class="text-center">
-                            <label for="timePeriod">@lang('common.select_a_billing_period') :</label>
+                            <label for="timePeriod">@lang('common.select_a_billing_period'):</label>
                             <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
                                 @foreach ($intervals as $key => $interval)
                                     @if ($interval->start_date <= $today && $interval->end_date >= $today ||
@@ -93,23 +93,23 @@
                             @foreach($appointments as $appointment)
                                 <tr>
                                     <td>
-                                        <a href="{{ URL::to('/boss/calendar/' . $appointment->calendar_id . '/' . $appointment->year . '/' . $appointment->month . '/' . $appointment->day) }}" target="_blanc">
+                                        <a href="{{ URL::to('/boss/calendar/' . $appointment->calendar_id . '/' . $appointment->year . '/' . $appointment->month . '/' . $appointment->day) }}" target="_blank">
                                             {{$appointment->date}}
                                         </a>
                                     </td>
                                     <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
                                     <td>
-                                        <!--<a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blanc">-->
+                                        <!--<a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blank">-->
                                             {{$appointment->user->name}} {{$appointment->user->surname}}
                                         <!--</a>-->
                                     </td>
                                     <td>
-                                        <a href="{{ URL::to('/boss/subscription/list/' . $substart->property_id . '/' . $substart->subscription_id) }}" target="_blanc">
+                                        <a href="{{ URL::to('/boss/subscription/list/' . $substart->property_id . '/' . $substart->subscription_id) }}" target="_blank">
                                             {{$appointment->item->name}}
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blanc">
+                                        <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blank">
                                             {{$appointment->employee}}
                                         </a>
                                     </td>
