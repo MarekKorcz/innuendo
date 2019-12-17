@@ -2754,7 +2754,7 @@ class BossController extends Controller
                                 'propertyId' => $property->id,
                                 'subscriptionId' => $propertySubscription->id
                             ]),
-                            'button_description' => \Lang::get('common.purchase_subscription'),
+                            'button_description' => \Lang::get('common.activate_subscription'),
                             'isPurchased' => false,
                         ];
                     }

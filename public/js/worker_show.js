@@ -62,7 +62,7 @@ $(document).ready(function() {
                             <td>` + value.time + `</td>
                             <td>` + value.item + `</td>
                             <td> 
-                                <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blanc">
+                                <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blank">
                                     ` + value.employee + `
                                 </a>
                             </td>

@@ -15,9 +15,9 @@
                         „{{ config('app.name') }} {{ config('app.name_2nd_part') }}”
                     </strong>
                 </p>
-                <h6>
+<!--                <h6>
                     (obowiązuje od 13-12-2019)
-                </h6>
+                </h6>-->
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
                     <ol>
                         <li>Masaż+ – należy przez to rozumieć Marek Korcz ......................................</li>
                         <li>Serwis – należy przez to rozumieć serwis internetowy należący do
-                            Masaż+, umożliwiający zakup masażu lub pakietów abonamentowych
+                            Masaż+, umożliwiający zakup masażu przy uyciu aktywowanych pakietów abonamentowych
                             masaży dla pracowników przedsiębiorstw, prowadzony pod adresem
                             <a href="{{route('welcome')}}">www.masazplusdlafirm.pl</a>.</li>
                         <li>Regulamin – należy przez to rozumieć niniejszy Regulamin, o którym
@@ -48,11 +48,11 @@
                             abonamentowych masaży prowadzoną przez Masaż+ w ramach
                             wykonywanej działalności gospodarczej oraz prowadzenie działalności
                             fizjoterapeutycznej polegającej na wykonywaniu masażu.</li>
-                        <li>Użytkownik – należy przez to rozumieć osobę, która dokonała zakupu
+                        <li>Użytkownik – należy przez to rozumieć osobę, która dokonała aktywacji
                             usługi lub posiada zarejestrowane konto użytkownika serwisu.
                             Użytkownik ma dostęp do usługi z poziomu „szef” dla przedsiębiorcy
-                            dokonującego zakupu i korzystającego z wykupionej usługi oraz z poziomu „pracownik” dla pracownika
-                            korzystającego z wykupionej usługi.</li>
+                            dokonującego zakupu i korzystającego z aktywowanej usługi oraz z poziomu „pracownik” dla pracownika
+                            korzystającego z aktywowanej usługi.</li>
                     </ol>
                 </p>
                 <p class="text-center">
@@ -80,9 +80,10 @@
                 </p>
                 <p>
                     <ol>
-                        <li>Użytkownik dokonuje zakupu usługi poprzez rejestrację, wybór jednej lub
-                            wielu opcji masażu lub ich pakietów dostępnych w serwisie oraz
-                            potwierdzenie zakupu (zaznaczenie checkbox'u, następnie kliknięcie przycisku 'Wykup').</li>
+                        <li>Użytkownik dokonuje zakupu usługi poprzez rejestrację, atywacje pakietów masaży
+                            (zaznaczenie checkbox'u, następnie kliknięcie przycisku 'Aktywuj') 
+                            oraz nastepnie wybór jednej lub wielu opcji masażu w serwisie 
+                            <a href="{{route('welcome')}}">www.masazplusdlafirm.pl</a>.</li>
                         <li>Rejestracja jest możliwa poprzez jej zlecenie administratorowi
                             serwisu lub przy pomocy kodu rejestracyjnego otrzymanego od
                             administratora lub osób trzecich w ramach akcji promocyjnych

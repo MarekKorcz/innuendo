@@ -25,7 +25,7 @@
                             </a>
                         @else
                             <a class="btn btn-success" href="{{ URL::to('user/subscription/show/' . $property->id . '/' . $subscription->id) }}">
-                                @lang('common.buy')
+                                @lang('common.activate')
                             </a>  
                         @endif
                     </div>

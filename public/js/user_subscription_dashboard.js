@@ -153,7 +153,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
-                                    <a class="btn pallet-1-3" style="color: white;" target="_blanc" href="` + substart.button + `">
+                                    <a class="btn pallet-1-3" style="color: white;" target="_blank" href="` + substart.button + `">
                                         ` + substart.button_description + `
                                     </a>
                                 </div>
@@ -187,7 +187,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
-                                    <a class="btn pallet-1-3" style="color: white;" target="_blanc" href="` + substart.button + `">
+                                    <a class="btn pallet-1-3" style="color: white;" target="_blank" href="` + substart.button + `">
                                         ` + substart.button_description + `
                                     </a>
                                 </div>

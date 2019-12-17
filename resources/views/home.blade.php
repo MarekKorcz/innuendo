@@ -52,7 +52,7 @@
                         <div class="card-body">
                             <h4 class="card-title text-center">@lang('common.subscriptions_view')</h4>
                             <p class="card-text text-center">
-                                @lang('common.purchased_subscriptions_attached_to_properties')
+                                @lang('common.activated_subscriptions_attached_to_properties')
                             </p>
                             <div class="text-center">
                                 <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/user/subscription/list/0') }}">
@@ -66,9 +66,9 @@
                 <!--@if ($showPurchaseSubscriptionsView)
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title text-center">@lang('common.purchase_subscription')</h4>
+                            <h4 class="card-title text-center">@lang('common.activate_subscription')</h4>
                             <p class="card-text text-center">
-                                @lang('common.purchased_subscriptions_attached_to_properties')
+                                @lang('common.activated_subscriptions_attached_to_properties')
                             </p>
                             <div class="text-center">
                                 <a class="btn btn-success btn-lg" href="{{ URL::to('user/properties/subscription/') }}">

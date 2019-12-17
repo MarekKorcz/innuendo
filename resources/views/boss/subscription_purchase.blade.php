@@ -74,7 +74,7 @@
                                 {{ Form::hidden('subscription_id', $subscription->id) }}
                                 {{ Form::hidden('property_id', $property->id) }}
 
-                                <input type="submit" value="@lang('common.buy')" class="btn pallet-1-3 btn-lg" style="color: white;">
+                                <input type="submit" value="@lang('common.activate')" class="btn pallet-1-3 btn-lg" style="color: white;">
 
                             {{ Form::close() }}
                         </div>

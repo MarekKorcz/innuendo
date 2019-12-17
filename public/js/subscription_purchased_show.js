@@ -63,7 +63,7 @@ $(document).ready(function()
                     $("div#appointments-table > table > tbody#appointments").append(`
                         <tr>
                             <td>
-                                <a href="http://localhost:8000/user/calendar/` + value.calendar_id + `/` + value.year + `/` + value.month + `/` + value.day + `" target="_blanc">
+                                <a href="http://localhost:8000/user/calendar/` + value.calendar_id + `/` + value.year + `/` + value.month + `/` + value.day + `" target="_blank">
                                     ` + value.date + `
                                 </a>
                             </td>
@@ -71,7 +71,7 @@ $(document).ready(function()
                             <td>` + value.user + `</td>
                             <td>` + value.item + `</td>
                             <td> 
-                                <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blanc">
+                                <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blank">
                                     ` + value.employee + `
                                 </a>
                             </td>

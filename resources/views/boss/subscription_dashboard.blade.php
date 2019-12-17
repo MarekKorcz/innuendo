@@ -107,8 +107,8 @@
                                     </div>
 
                                     @if ($subscription->propertyPurchases == null || count($subscription->propertyPurchases) == 0)
-                                        <a class="btn btn-primary" target="_blank" href="{{ URL::to('/boss/subscription/purchase/' . $propertyWithSubscriptions['property']->id . '/' . $subscription->id) }}">
-                                            @lang('common.purchase_subscription')
+                                        <a class="btn btn-primary" href="{{ URL::to('/boss/subscription/purchase/' . $propertyWithSubscriptions['property']->id . '/' . $subscription->id) }}">
+                                            @lang('common.activate_subscription')
                                         </a>
                                     @endif
                                 </div>
