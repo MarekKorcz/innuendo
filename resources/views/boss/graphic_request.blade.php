@@ -25,11 +25,13 @@
                             <p class="text-center">@lang('common.chosen_employees'):</p>
                             <ul style="padding: 12px;">
                                 @foreach($graphicRequest->allEmployees as $employee)
-                                    @if ($employee->isChosen == true)
-                                        <li class="form-control" style="background-color: lightgreen;" data-active="true" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
-                                    @else
-                                        <li class="form-control" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
-                                    @endif
+                                    <a href="{{ URL::to('/employee/' . $employee->slug) }}" target="_blank">
+                                        @if ($employee->isChosen == true)
+                                            <li class="form-control" style="background-color: lightgreen;" data-active="true" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                        @else
+                                            <li class="form-control" value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</li>
+                                        @endif
+                                    </a>
                                 @endforeach
                             </ul>
                         </div>
