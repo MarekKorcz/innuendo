@@ -62,22 +62,6 @@
                         </div>
                     </div>
                 @endif
-                <!--// todo: turn off this routing if it is not needed-->
-                <!--@if ($showPurchaseSubscriptionsView)
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-center">@lang('common.activate_subscription')</h4>
-                            <p class="card-text text-center">
-                                @lang('common.activated_subscriptions_attached_to_properties')
-                            </p>
-                            <div class="text-center">
-                                <a class="btn btn-success btn-lg" href="{{ URL::to('user/properties/subscription/') }}">
-                                    @lang('common.show')
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                @endif-->
             </div>
         </div>
         <div class="col-1"></div>

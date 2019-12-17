@@ -157,11 +157,11 @@
                                                         <p>@lang('common.subscription_duration_has_come_to_an_end')</p>
                                                     @endif
                                                 </div>
-                                                @if ($purchase->substart->isActive == 1)
+<!--                                                @if ($purchase->substart->isActive == 1)
                                                     <a class="btn btn-primary" target="_blank" href="{{ URL::to('/boss/subscription/invoices/' . $purchase->substart->id) }}">
                                                         @lang('common.invoices')
                                                     </a>
-                                                @endif
+                                                @endif-->
                                             </div>
                                         @endif
                                     @endforeach

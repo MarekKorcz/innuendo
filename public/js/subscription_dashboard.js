@@ -180,11 +180,13 @@ window.addEventListener('DOMContentLoaded', () => {
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
-                                    <a class="btn btn-primary" target="_blank" href="` + substart.button + `">
-                                        ` + substart.button_description + `
-                                    </a>
                                 </div>
                             `;
+                            
+                            // to jest do div class="substart text-center" na górze kiedy ogarne sprawe faktur
+                            //        <a class="btn btn-primary" target="_blank" href="` + substart.button + `">
+                            //            ` + substart.button_description + `
+                            //        </a>
                             
                         } else {
                             
@@ -214,11 +216,13 @@ window.addEventListener('DOMContentLoaded', () => {
                                         </p>                    
                                         <p>` + substart.isActiveMessage + `</p>
                                     </div>
-                                    <a class="btn btn-primary" target="_blank" href="` + substart.button + `">
-                                        ` + substart.button_description + `
-                                    </a>
                                 </div>
                             `;
+                            
+                            // to jest do div class="substart text-center" na górze kiedy ogarne sprawe faktur
+//                                    <a class="btn btn-primary" target="_blank" href="` + substart.button + `">
+//                                        ` + substart.button_description + `
+//                                    </a>
                             
                         } else {
                             

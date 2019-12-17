@@ -74,7 +74,7 @@
                 </p>
             </div>
             <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <h1 class="text-center">todo: Place for something?</h1>
+<!--                <h1 class="text-center">todo: Place for something?</h1>-->
             </div>
         </div>
     </div>
