@@ -8,19 +8,19 @@
         {{ Form::open(['action' => ['AdminController@promoUpdate']]) }}
 
             <div class="form-group">
-                <label for="title">@lang('common.title') :</label>
+                <label for="title">@lang('common.title'):</label>
                 {{ Form::text('title', $promo->title, array('class' => 'form-control')) }}
             </div>
             <div class="form-group">
-                <label for="title">@lang('common.title_en') :</label>
+                <label for="title">@lang('common.title_en'):</label>
                 {{ Form::text('title_en', $promo->title_en, array('class' => 'form-control')) }}
             </div>
             <div class="form-group">
-                <label for="description">@lang('common.description') :</label>
+                <label for="description">@lang('common.description'):</label>
                 {{ Form::textarea('description', $promo->description, array('class' => 'form-control')) }}
             </div>
             <div class="form-group">
-                <label for="description_en">@lang('common.description_en') :</label>
+                <label for="description_en">@lang('common.description_en'):</label>
                 {{ Form::textarea('description_en', $promo->description_en, array('class' => 'form-control')) }}
             </div>
         

@@ -624,7 +624,8 @@ class RegisterController extends Controller
                         $message->text = \Lang::get('common.greetings') . ", " . $boss->name . " " . $boss->surname . "! " . 
                             \Lang::get('common.we_are_very_happy_that') . " " . $youUsedPhrase . " " . 
                             \Lang::get('common.approve_message_body') . " " . 
-                            config('app.name');
+                            config('app.name') . " " .
+                            config('app.name_2nd_part');
                         $message->status = 0;
                         $message->owner_id = $admin->id;
                         $message->promo_code_id = $promoCode->id;

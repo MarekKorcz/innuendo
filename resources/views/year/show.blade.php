@@ -35,7 +35,7 @@
     
     <div class="jumbotron">
         <div class="text-center" style="margin-bottom: 40px;">
-            <h2>@lang('common.months') :</h2>
+            <h2>@lang('common.months'):</h2>
         </div>
         @if (count($months) > 0)
             <div class="list-group">

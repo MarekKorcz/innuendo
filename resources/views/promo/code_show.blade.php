@@ -9,7 +9,7 @@
         
         <div class="text-center" style="margin-bottom: 18px; padding: 1rem;">
             <h1>
-                @lang('common.promo_code_header') :
+                @lang('common.promo_code_header'):
                 @if (Session('locale') == "en")
                     {{ $promoCode->promo->title_en }}
                 @else
@@ -18,8 +18,8 @@
             </h1>
         </div>
         <div>
-            <p>@lang('common.code') : <strong>{{ $promoCode->code }}</strong></p>
-            <p>@lang('common.is_active') : 
+            <p>@lang('common.code'): <strong>{{ $promoCode->code }}</strong></p>
+            <p>@lang('common.is_active'): 
                 <strong>
                     @if ($promoCode->isActive == 1)
                         @lang('common.yes')
@@ -41,12 +41,12 @@
                         @endif
                     </strong>
                 </p>
-                <p>@lang('common.activation_date') : <strong>{{ $promoCode->activation_date }}</strong></p>
+                <p>@lang('common.activation_date'): <strong>{{ $promoCode->activation_date }}</strong></p>
             @endif
         </div>
         
         @if (count($promoCode->subscriptions) > 0)
-            <h2 class="text-center">@lang('common.subscriptions_list') :</h2>
+            <h2 class="text-center">@lang('common.subscriptions_list'):</h2>
             <div class="form-group">
                 <ul id="subscriptions" style="padding: 9px;">
                     @foreach ($promoCode->subscriptions as $subscription)
@@ -65,7 +65,7 @@
             
         @if ($promoCode->boss !== null)
             <div class="text-center" style="padding-top: 1rem;">
-                <h2>@lang('common.messages') :</h2>
+                <h2>@lang('common.messages'):</h2>
                 <a class="btn btn-success" href="{{ URL::to('/admin/approve/messages/' . $promoCode->boss->id) }}">
                     @lang('common.show')
                 </a>

@@ -28,7 +28,7 @@
 
                     <div class="form-group">
                         <p class="text-center" style="font-size: 20px;">
-                            @lang('common.hour') : 
+                            @lang('common.hour'): 
                             <strong style="font-size: 27px;">{{$appointmentTerm}}</strong>
                         </p>
                         @if ($appointmentTerm)
@@ -40,7 +40,7 @@
 
                     <div class="form-group">
                         <div class="text-center" style="font-size: 20px;">
-                            <label for="item">@lang('common.massage') :</label>
+                            <label for="item">@lang('common.massage'):</label>
                         </div>
                         <select id="item" name="item" class="form-control">
                             <option disabled selected value> @lang('common.choose_massage') </option>

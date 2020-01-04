@@ -985,6 +985,7 @@ class AdminController extends Controller
     public function promoShow($id)
     {
         $promo = Promo::where('id', $id)->with('promoCodes')->first();
+        $code = '';
         
         if ($promo !== null)
         {
@@ -1002,10 +1003,13 @@ class AdminController extends Controller
                         }
                     }
                 }
+                
+                $code = $promo->promoCodes->first()->code;
             }
             
             return view('promo.show')->with([
-                'promo' => $promo
+                'promo' => $promo,
+                'code' => $code
             ]);
         }
         

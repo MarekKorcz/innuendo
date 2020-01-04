@@ -5,7 +5,7 @@
 {!! Html::style('css/employee_index.css') !!}
 
 <div class="container">
-    <h1 class="text-center padding-top">@lang('common.employees') :</h1>
+    <h1 class="text-center padding-top">@lang('common.employees'):</h1>
     @for ($i = 1; $i <= count($employees); $i++)
         @if ($i == 1 || $i == 4 || $i == 7 || $i == 10)
             <div class="row padding">

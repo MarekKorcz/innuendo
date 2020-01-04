@@ -6,7 +6,7 @@
 
 <div class="container">
     <div id="title" class="container">
-        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.messages_regarding') : {{$promoCode->promo->title}}</h2>
+        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.messages_regarding'): {{$promoCode->promo->title}}</h2>
     </div>
 
     <div id="subscriptions" class="jumbotron">
@@ -19,11 +19,11 @@
                         <div>
                             <h4>{!! $subscription->name !!}</h4>
                             <h5>{!! $subscription->description !!}</h5>
-                            <p>@lang('common.old_price') : <strong>{{ $subscription->old_price }}</strong></p>
-                            <p>@lang('common.new_price') : <strong>{{ $subscription->new_price }}</strong></p>
-                            <p>@lang('common.appointment_quantity_per_month') : <strong>{{ $subscription->quantity }}</strong> @lang('common.per_person_2')</p>
-                            <p>@lang('common.how_many_months_since_start') : <strong>{{ $subscription->duration }}</strong></p>
-                            <p>@lang('common.worker_quantity') : 
+                            <p>@lang('common.old_price'): <strong>{{ $subscription->old_price }}</strong></p>
+                            <p>@lang('common.new_price'): <strong>{{ $subscription->new_price }}</strong></p>
+                            <p>@lang('common.appointment_quantity_per_month'): <strong>{{ $subscription->quantity }}</strong> @lang('common.per_person_2')</p>
+                            <p>@lang('common.how_many_months_since_start'): <strong>{{ $subscription->duration }}</strong></p>
+                            <p>@lang('common.worker_quantity'): 
                                 <strong>
                                     @if ($subscription->worker_quantity == 0)
                                         @lang('common.infinity')

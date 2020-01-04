@@ -83,7 +83,7 @@
                                                     @lang('common.registration_code_description')
                                                 </p>
                                                 <p>
-                                                    @lang('common.registration_code') :
+                                                    @lang('common.registration_code'):
                                                     <input class="code-text" name="code-text" type="text" value="{{$codes[$i]['code']}}" style="margin: 0px 12px 0px 12px;">
                                                     <a class="btn pallet-1-3 copy-button" style="color: white;">
                                                         @lang('common.registration_code_copy')

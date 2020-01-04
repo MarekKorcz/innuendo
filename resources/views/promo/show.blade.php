@@ -25,10 +25,11 @@
             </h4>
         </div>
         <div>
-            <p>@lang('common.available_code_count') : <strong>{{ $promo->available_code_count }}</strong></p>
-            <p>@lang('common.used_code_count') : <strong>{{ $promo->used_code_count }}</strong></p>
-            <p>@lang('common.total_code_count') : <strong>{{ $promo->total_code_count }}</strong></p>
-            <p>@lang('common.is_active') : 
+            <p>@lang('common.available_code_count'): <strong>{{ $promo->available_code_count }}</strong></p>
+            <p>@lang('common.used_code_count'): <strong>{{ $promo->used_code_count }}</strong></p>
+            <p>@lang('common.total_code_count'): <strong>{{ $promo->total_code_count }}</strong></p>
+            <p>@lang('common.code'): <strong>{{ $code }}</strong></p>
+            <p>@lang('common.is_active'): 
                 <strong style="padding-left: 1rem;">
                     @if ($promo->isActive == 1)
                         <a class="btn btn-danger" href="{{ URL::to('/admin/promo/activation/toggle/' . $promo->id) }}">
@@ -44,7 +45,7 @@
         </div>
         
         @if (count($promo->promoCodes) > 0)
-            <h3 class="text-center">@lang('common.promo_codes_list') :</h3>
+            <h3 class="text-center">@lang('common.promo_codes_list'):</h3>
             <div class="form-group">
                 <ul id="promo-codes" style="padding: 18px;">
                     @foreach ($promo->promoCodes as $key => $promoCode)
