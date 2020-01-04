@@ -15,7 +15,7 @@
                         <td>@lang('common.new_price')</td>
                         <td>@lang('common.quantity')</td>
                         <td>@lang('common.duration')</td>
-                        <td>@lang('common.worker_quantity')</td>
+                        <td>@lang('common.add_by_default')</td>
                         <td>@lang('common.action')</td>
                     </tr>
                 </thead>
@@ -29,10 +29,10 @@
                             <td>{{$subscription->quantity}}</td>
                             <td>{{$subscription->duration}}</td>
                             <td>
-                                @if ($subscription->worker_quantity == 0)
-                                    @lang('common.infinity')
-                                @elseif ($subscription->worker_quantity !== null)
-                                    {{ $subscription->worker_quantity }}
+                                @if ($subscription->add_by_default == 1)
+                                    @lang('common.yes')
+                                @else
+                                    @lang('common.no')
                                 @endif
                             </td>
                             <td>

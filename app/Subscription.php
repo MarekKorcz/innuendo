@@ -22,7 +22,7 @@ class Subscription extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'description', 'old_price', 'new_price', 'quantity', 'duration', 'worker_quantity'
+        'name', 'slug', 'description', 'old_price', 'new_price', 'quantity', 'duration', 'worker_quantity', 'add_by_default'
     ];
     
     /**

@@ -546,4 +546,29 @@ class SubscriptionController extends Controller
             'message' => $message            
         ));
     }
+    
+    /**
+     * Changes subscription add_by_default flag.
+     * 
+     * @param type $id
+     * @return type
+     */
+    public function changeAddByDefault($id)
+    {
+        $subscription = Subscription::where('id', $id)->first();
+        
+        if ($subscription !== null)
+        {                        
+            $subscription->add_by_default = $subscription->add_by_default == 1 ? 0 : 1; 
+            $subscription->update();
+            
+            return redirect()->action(
+                'SubscriptionController@show', [
+                    'id' => $subscription->id
+                ]
+            );
+        }
+        
+        return redirect()->route('welcome');
+    }
 }

@@ -415,9 +415,8 @@ return [
     'we_are_very_happy_that' => 'We are very happy that',
     'you_used_female' => 'you used',
     'you_used_male' => 'you used',
-    'approve_message_body' => 'our promotional code! The subject of the promotion is listed above. Please contact us to agree further details regarding our forthcoming cooperation! Best regards, team',
-    'promo_subscription' => 'Promotional subscription',
-    'worker_quantity' => 'Number of possible employees',
+    'approve_message_body' => 'our promotional code! Please contact us to agree further details regarding our forthcoming cooperation! Best regards, team',
+    'worker_quantity' => 'Number of possible employees (in case of first promo massage)',
     'infinity' => 'Infinity',
     'discounts' => 'Discounts',
     'discounts_description' => 'A view with a list of discounts created and the option to delete a created one or create a new one',
@@ -475,5 +474,7 @@ return [
     'private_policy_banner' => 'Private policy',
     'and_banner' => ' and ',
     'regulations' => 'Regulations',
-    'no_schedule' => 'No schedule'
+    'no_schedule' => 'No schedule',
+    'add_by_default' => 'Add by default',
+    'change' => 'Change'
 ];

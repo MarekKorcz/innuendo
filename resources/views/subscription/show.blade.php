@@ -38,6 +38,26 @@
             <p>@lang('common.new_price'): <strong>{{ $subscription->new_price }}</strong></p>
             <p>@lang('common.quantity_per_month'): <strong>{{ $subscription->quantity }}</strong></p>
             <p>@lang('common.how_many_months_since_start'): <strong>{{ $subscription->duration }}</strong></p>
+            <p>@lang('common.add_by_default'): 
+                <strong>
+                    @if ($subscription->add_by_default == 1)
+                        @lang('common.yes')
+                    @else
+                        @lang('common.no')
+                    @endif
+                </strong>
+            </p>
+            <p>
+                @if ($subscription->add_by_default == 1)
+                    <a class="btn btn-danger" href="{{ URL::to('/subscription/add-by-default/' . $subscription->id) }}">
+                        @lang('common.change')
+                    </a>
+                @else
+                    <a class="btn btn-success" href="{{ URL::to('/subscription/add-by-default/' . $subscription->id) }}">
+                        @lang('common.change')
+                    </a>
+                @endif
+            </p>
             <p>@lang('common.worker_quantity'): 
                 <strong>
                     @if ($subscription->worker_quantity == 0)

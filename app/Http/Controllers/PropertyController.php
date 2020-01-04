@@ -166,7 +166,6 @@ class PropertyController extends Controller
             
             if ($property['boss'] !== null && count($property->subscriptions) > 0)
             {
-                
                 foreach ($property->subscriptions as $subscription)
                 {
                     
@@ -193,10 +192,10 @@ class PropertyController extends Controller
                     }
                 }
             }
-
+            
             return view('property.show')->with([
                 'property' => $property,
-                'subscriptions' => $property->subscriptions,
+                'subscriptions' => $property->subscriptions->sortBy('old_price'),
                 'calendars' => $calendars,
                 'years' => $years,
                 'employees' => $employees

@@ -421,9 +421,8 @@ return [
     'we_are_very_happy_that' => 'Niezmiernie cieszymy się z tego, że',
     'you_used_female' => 'wykorzystałaś',
     'you_used_male' => 'wykorzystałeś',
-    'approve_message_body' => 'nasz kod promocyjny! Przedmiot promocji jest wymieniony powyżej. Prosimy o kontakt w celu uzgodnienia dalszych szczegółów dotyczących naszej rychłej współpracy! Pozdrawiamy, zespół',
-    'promo_subscription' => 'Pakiet promocyjny',
-    'worker_quantity' => 'Ilość możliwych pracowników',
+    'approve_message_body' => 'nasz kod promocyjny! Prosimy o kontakt w celu uzgodnienia dalszych szczegółów dotyczących naszej rychłej współpracy! Pozdrawiamy, zespół',
+    'worker_quantity' => 'Ilość możliwych pracowników (w przypadku pierwszego promocyjnego masażu)',
     'infinity' => 'Nieskończoność',
     'discounts' => 'Zniżki',
     'discounts_description' => 'Widok z listą utworzonych zniżek oraz możliwością usunięcia stworzonej lub utworzenia nowej',
@@ -481,5 +480,7 @@ return [
     'private_policy_banner' => 'Politykę prywatności',
     'and_banner' => ' oraz ',
     'regulations' => 'Regulamin',
-    'no_schedule' => 'Brak grafiku'
+    'no_schedule' => 'Brak grafiku',
+    'add_by_default' => 'Dodawana automatycznie',
+    'change' => 'Zmień'
 ];

@@ -13,7 +13,6 @@
         <div class="row text-center">
             <div class="col-1"></div>
             <div class="col-10">
-                <h3><strong>@lang('common.promo_subscription')</strong></h3>
                 @if (count($promoCode->subscriptions) > 0)
                     @foreach($promoCode->subscriptions as $subscription)
                         <div>

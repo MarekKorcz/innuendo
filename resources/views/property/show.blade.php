@@ -90,10 +90,15 @@
                     <th>@lang('common.quantity'):</th>
                     <th>@lang('common.duration'):</th>
                     <th>@lang('common.is_active'):</th>
+                    <th>@lang('common.add_by_default')</th>
                 </tr>
                     @foreach ($subscriptions as $subscription)
                         <tr>
-                            <td>{!! $subscription->name !!}</td>
+                            <td>
+                                <a href="{{ URL::to('subscription/show/' . $subscription->id) }}">
+                                    {!! $subscription->name !!}
+                                </a>
+                            </td>
                             <td>{!! $subscription->description !!}</td>
                             <td>{{ $subscription->old_price }}</td>
                             <td>{{ $subscription->new_price }}</td>
@@ -103,6 +108,13 @@
                                 @if ($subscription->isChosen == true)
                                     @lang('common.yes')
                                 @else 
+                                    @lang('common.no')
+                                @endif
+                            </td>
+                            <td>
+                                @if ($subscription->add_by_default == 1)
+                                    @lang('common.yes')
+                                @else
                                     @lang('common.no')
                                 @endif
                             </td>

@@ -202,6 +202,7 @@ class CreateModels extends Migration
             $table->integer('quantity');
             $table->integer('duration');
             $table->integer('worker_quantity')->nullable();
+            $table->boolean('add_by_default')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

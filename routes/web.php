@@ -182,6 +182,7 @@ Route::post('/subscription/set-subscription-to-temporary-property', 'Subscriptio
 Route::post('/subscription/set-item-to-subscription', 'SubscriptionController@setItemToSubscription');
 Route::get('/subscription/{id}/edit', 'SubscriptionController@edit');
 Route::put('/subscription/update', 'SubscriptionController@update');
+Route::get('/subscription/add-by-default/{id}', 'SubscriptionController@changeAddByDefault');
 
 // user >> routings
 // user calendar

@@ -909,7 +909,7 @@ class AdminController extends Controller
     {
         $subscriptions = Subscription::where('id', '!=', null)->get();
         
-        return view('promo.create')->with('subscriptions', $subscriptions);
+        return view('promo.create')->with('subscriptions', $subscriptions->sortBy('old_price'));
     }
     
     /**
@@ -947,6 +947,7 @@ class AdminController extends Controller
                 $promo->description_en = Input::get('description_en');
                 $promo->available_code_count = Input::get('total_code_count');
                 $promo->total_code_count = Input::get('total_code_count');
+                $promo->isActive = 1;
                 $promo->admin_id = $admin->id;
                 $promo->save();
 
