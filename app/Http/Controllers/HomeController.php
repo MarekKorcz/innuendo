@@ -3,29 +3,29 @@
 namespace App\Http\Controllers;
 
 // to tests
-//use App\Appointment;
-//use App\Promo;
-//use App\PromoCode;
-//use App\Category;
-//use App\Interval;
-//use App\InvoiceData;
-//use App\GraphicRequest;
-//use App\Substart;
-//use App\Purchase;
-//use App\ChosenProperty;
-//use App\Subscription;
-//use App\Item;
-//use App\Graphic;
-//use App\Calendar;
-//use App\Day;
-//use App\Month;
-//use App\Year;
-//use App\TempUser;
-//use App\Mail\BossCreateWithPromoCode;
-//use Illuminate\Support\Collection;
-//use Illuminate\Support\Facades\Hash;
-//use Illuminate\Support\Facades\File;
-//use Session;
+use App\Appointment;
+use App\Promo;
+use App\PromoCode;
+use App\Category;
+use App\Interval;
+use App\InvoiceData;
+use App\GraphicRequest;
+use App\Substart;
+use App\Purchase;
+use App\ChosenProperty;
+use App\Subscription;
+use App\Item;
+use App\Graphic;
+use App\Calendar;
+use App\Day;
+use App\Month;
+use App\Year;
+use App\TempUser;
+use App\Mail\BossCreateWithPromoCode;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+use Session;
 
 use App\Message;
 use App\Property;
@@ -290,7 +290,31 @@ class HomeController extends Controller
 //        }
 //    }
     
-//    public function test()
-//    {
-//    }
+    public function test()
+    {
+        $availableSubscriptions = Subscription::where([
+            ['id', '!=', null],
+            ['add_by_default', '=', 1]
+        ])->get();
+        
+        dump($availableSubscriptions);
+        
+        $brandNew = new Collection();
+        $subscriptions = Subscription::where('id', 2)->get();
+        
+        foreach ($subscriptions as $subscription)
+        {
+            if (count($availableSubscriptions) > 0 && $availableSubscriptions->contains('id', $subscription->id))
+            {
+                $availableSubscriptions = $availableSubscriptions->filter(function ($value) use ($subscription) {
+                    return $value->id !== $subscription->id;
+                });
+            }
+            
+            $brandNew->push($subscription);
+        }
+        
+        
+        dd($availableSubscriptions);
+    }
 }

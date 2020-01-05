@@ -909,7 +909,7 @@ class AdminController extends Controller
     {
         $subscriptions = Subscription::where('id', '!=', null)->get();
         
-        return view('promo.create')->with('subscriptions', $subscriptions->sortBy('old_price'));
+        return view('promo.create')->with('subscriptions', $subscriptions->sortBy('quantity'));
     }
     
     /**

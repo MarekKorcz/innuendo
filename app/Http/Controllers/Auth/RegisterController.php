@@ -328,7 +328,10 @@ class RegisterController extends Controller
                         $tempBossPropertyEntity->delete();
                         
                         // add all available subscriptions
-                        $subscriptions = Subscription::where('id', '!=', null)->get();
+                        $subscriptions = Subscription::where([
+                            ['id', '!=', null],
+                            ['add_by_default', '=', 1]
+                        ])->get();
                         
                         if (count($subscriptions) > 0)
                         {
@@ -570,10 +573,25 @@ class RegisterController extends Controller
                             'property_id' => $bossProperty->id
                         ]);
 
+                        // load all available subscriptions
+                        $availableSubscriptions = Subscription::where([
+                            ['id', '!=', null],
+                            ['add_by_default', '=', 1]
+                        ])->get();
+                        
                         if (count($promoCode->subscriptions) > 0)
                         {
                             foreach ($promoCode->subscriptions as $subscription)
                             {
+                                // checks whether in all available subscriptions existn the one from promo code. 
+                                // if yes, it's being deleted from availableSubscriptions
+                                if (count($availableSubscriptions) > 0 && $availableSubscriptions->contains('id', $subscription->id))
+                                {
+                                    $availableSubscriptions = $availableSubscriptions->filter(function ($value) use ($subscription) {
+                                        return $value->id !== $subscription->id;
+                                    });
+                                }
+            
                                 $bossProperty->subscriptions()->attach($subscription->id);
                                 $bossChosenProperty->subscriptions()->attach($subscription->id);
                                         
@@ -614,6 +632,12 @@ class RegisterController extends Controller
                         $promoCode->isActive = 1;
                         $promoCode->boss_id = $boss->id;
                         $promoCode->save();
+                        
+                        // add other subscriptions
+                        foreach ($availableSubscriptions as $availableSubscription)
+                        {
+                            $bossProperty->subscriptions()->attach($availableSubscription->id);
+                        }
                         
                         // send initial message to promocode user
                         $admin = User::where('isAdmin', 1)->first();

@@ -195,7 +195,7 @@ class PropertyController extends Controller
             
             return view('property.show')->with([
                 'property' => $property,
-                'subscriptions' => $property->subscriptions->sortBy('old_price'),
+                'subscriptions' => $property->subscriptions->sortBy('quantity'),
                 'calendars' => $calendars,
                 'years' => $years,
                 'employees' => $employees

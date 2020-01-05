@@ -89,8 +89,8 @@ class SubscriptionController extends Controller
         
         if ($name !== null && is_string($name) &&
             $description !== null && is_string($description) &&
-            $old_price !== null && is_integer((int)$old_price) &&
-            $new_price !== null && is_integer((int)$new_price) &&
+            $old_price !== null &&
+            $new_price !== null &&
             $quantity !== null && is_integer((int)$quantity) &&
             $duration !== null && is_integer((int)$duration) &&
             $worker_quantity !== null && is_integer((int)$worker_quantity) &&
@@ -99,12 +99,12 @@ class SubscriptionController extends Controller
         {            
             $name = htmlentities($name, ENT_QUOTES, "UTF-8");
             $description = htmlentities($description, ENT_QUOTES, "UTF-8");
-            $old_price = htmlentities((int)$old_price, ENT_QUOTES, "UTF-8");
-            $new_price = htmlentities((int)$new_price, ENT_QUOTES, "UTF-8");
+            $old_price = htmlentities($old_price, ENT_QUOTES, "UTF-8");
+            $new_price = htmlentities($new_price, ENT_QUOTES, "UTF-8");
             $quantity = htmlentities((int)$quantity, ENT_QUOTES, "UTF-8");
             $worker_quantity = htmlentities((int)$worker_quantity, ENT_QUOTES, "UTF-8");
             $property_id = htmlentities((int)$property_id, ENT_QUOTES, "UTF-8");
-            
+                        
             $subscription = new Subscription();
             $subscription->name = $name;
             $subscription->slug = str_slug($name);
@@ -114,6 +114,7 @@ class SubscriptionController extends Controller
             $subscription->quantity = $quantity;
             $subscription->duration = $duration;
             $subscription->worker_quantity = $worker_quantity;
+            $subscription->add_by_default = 1;
             $subscription->save();
             
             foreach ($items as $item)
@@ -360,7 +361,7 @@ class SubscriptionController extends Controller
         if (count($subscriptions) > 0)
         {            
             return view('subscription.index')->with([
-                'subscriptions' => $subscriptions
+                'subscriptions' => $subscriptions->sortBy('quantity')
             ]);
             
         } elseif (count($subscriptions) == 0) {
