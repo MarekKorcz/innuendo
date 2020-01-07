@@ -19,7 +19,16 @@ class PromoCode extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'activation_time', 'isActive', 'boss_id', 'promo_id'
+        'code', 'activation_time', 'is_active', 'boss_id'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'promo_id'
     ];
     
     /**
@@ -28,18 +37,10 @@ class PromoCode extends Model
      * @var array
      */
     protected $casts = [
-        'isActive' => 'boolean',
-        'boss_id' => 'integer',
-        'promo_id' => 'integer'
+        'is_active' => 'boolean',
+        'promo_id' => 'integer',
+        'boss_id' => 'integer'
     ];
-    
-    /**
-     * Get boss who owns this code.
-     */
-    public function boss()
-    {
-        return $this->belongsTo('App\User');
-    }
     
     /**
      * Get promo code associated to promo.
@@ -50,12 +51,14 @@ class PromoCode extends Model
     }
     
     /**
-     * Get subscriptions which belongs to promo code.
+     * Get boss who owns this code.
      */
-    public function subscriptions()
+    public function boss()
     {
-        return $this->belongsToMany('App\Subscription', 'promo_code_subscription');
+        return $this->belongsTo('App\User');
     }
+    
+    
     
     /**
      * Get messages which belongs to promoCode.

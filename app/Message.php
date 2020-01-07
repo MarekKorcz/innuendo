@@ -19,7 +19,13 @@ class Message extends Model
      * @var array
      */
     protected $fillable = [
-        'topic', 'email', 'text', 'status', 'owner_id', 'graphic_request_id', 'promo_code_id'
+        'topic', 
+        'email', 
+        'text', 
+        'status', 
+        'user_id', 
+        'graphic_request_id', 
+        'promo_code_id'
     ];
     
     /**
@@ -28,10 +34,18 @@ class Message extends Model
      * @var array
      */
     protected $casts = [
-        'owner_id' => 'integer',
+        'user_id' => 'integer',
         'graphic_request_id' => 'integer',
         'promo_code_id' => 'integer'
     ];
+    
+    /**
+     * Get user that owns message.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
     
     /**
      * Get graphicRequest that owns message.

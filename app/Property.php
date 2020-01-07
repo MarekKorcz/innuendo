@@ -29,51 +29,35 @@ class Property extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'description', 'street', 'street_number', 
-        'house_number', 'city', 'canShow', 'boss_id'
+        'name', 
+        'slug', 
+        'description', 
+        'street', 
+        'street_number', 
+        'house_number', 
+        'city', 
+        'can_show', 
+        'boss_id'
     ];
     
     /**
-     *      ADMIN
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
      */
-    
-    /**
-     * Get the calendar which belong to property
-     */
-    public function calendar()
-    {
-        return $this->hasOne('App\Calendar');
-    }
-    
-    /**
-     * Get subscriptions which belongs to property
-     */
-    public function subscriptions()
-    {
-        return $this->belongsToMany('App\Subscription');
-    }
-    
-    /**
-     *      BOSS
-     */
+    protected $casts = [
+        'boss_id' => 'integer'
+    ];
     
     /**
      * Get boss that owns the property.
      */
     public function boss()
     {
-        $boss = User::where('id', $this->boss_id)->first();
-        
-        return $boss !== null ? $boss : null;
+        return $this->belongsTo('App\User', 'id');
     }
     
-    /**
-     * Get ChosenProperties which belongs to property.
-     */
-    public function chosenProperties()
-    {
-        return $this->hasMany('App\ChosenProperty');
-    }
+    
     
     /**
      * Get invoiceData which belongs to property.
@@ -89,5 +73,13 @@ class Property extends Model
     public function graphicRequests()
     {
         return $this->hasMany('App\GraphicRequest');
+    }
+    
+    /**
+     * Get years associated to property.
+     */
+    public function years()
+    {
+        return $this->hasMany('App\Year');
     }
 }

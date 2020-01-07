@@ -22,24 +22,35 @@ class TempUser extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'email', 'phone_number', 'register_code', 'isBoss', 'isEmployee'
+        'name', 
+        'surname', 
+        'email', 
+        'phone_number', 
+        'register_code'
     ];
     
     /**
-     *      USER
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
      */
+    protected $hidden = [
+        'isBoss',
+        'isEmployee'
+    ];
     
     /**
-     * Get appointments associated with temporary user.
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
      */
-    public function appointments()
-    {
-        return $this->hasMany('App\Appointment');
-    }
+    protected $casts = [
+        'phone_number' => 'integer',
+        'isBoss' => 'boolean',
+        'isEmployee' => 'boolean'
+    ];
     
-    /**
-     *      BOSS
-     */
+    
     
     /**
      * Get temporary property associated with temporary user.

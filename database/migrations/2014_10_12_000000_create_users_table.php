@@ -18,19 +18,19 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('slug')->nullable();
-            $table->string('email')->unique();
             $table->integer('phone_number');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('profile_image')->nullable();
+            $table->string('email')->unique();
             $table->string('password');
-            $table->rememberToken();
+            $table->string('profile_image')->nullable();
+            $table->boolean('is_approved');
             $table->boolean('isAdmin')->nullable();
-            $table->boolean('isEmployee')->nullable();
             $table->boolean('isBoss')->nullable();
+            $table->boolean('isEmployee')->nullable();
             $table->integer('boss_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("users");
-            $table->boolean('isApproved')->default(1);
+            $table->rememberToken();
             $table->timestamps();
         });
+        
     }
 
     /**

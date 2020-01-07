@@ -23,8 +23,14 @@ class Promo extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'title_en', 'description', 'description_en', 'available_code_count', 'used_code_count', 
-        'total_code_count', 'isActive', 'admin_id'
+        'title', 
+        'title_en', 
+        'description', 
+        'description_en', 
+        'available_code_count', 
+        'used_code_count', 
+        'total_code_count', 
+        'is_active'
     ];
     
     /**
@@ -36,9 +42,10 @@ class Promo extends Model
         'available_code_count' => 'integer',
         'used_code_count' => 'integer',
         'total_code_count' => 'integer',
-        'isActive' => 'boolean',
-        'admin_id' => 'integer'
+        'is_active' => 'boolean'
     ];
+    
+    
     
     /**
      * Get promo codes that belong to promo.

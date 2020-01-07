@@ -22,6 +22,22 @@ class Discount extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'name_en', 'slug', 'description', 'description_en', 'worker_threshold', 'percent'
+        'name', 
+        'name_en', 
+        'slug', 
+        'description',
+        'description_en', 
+        'worker_threshold', 
+        'percent'
+    ];
+    
+    /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'worker_threshold' => 'integer',
+        'percent' => 'integer'
     ];
 }

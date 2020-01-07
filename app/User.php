@@ -15,7 +15,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'surname', 'phone_number', 'email', 'profile_image', 'password', 'isEmployee', 'isBoss', 'boss_id', 'isApproved'
+        'name', 
+        'surname', 
+        'slug', 
+        'phone_number', 
+        'email',
+        'is_approved',
+        'profile_image'
     ];
 
     /**
@@ -24,48 +30,113 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'isAdmin'
+        'password', 
+        'remember_token', 
+        'isAdmin', 
+        'isBoss', 
+        'isEmployee',
+        'boss_id'
     ];
     
     /**
-     *      BOSS & ADMIN
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'phone_number' => 'integer',
+        'is_approved' => 'boolean',
+        'isAdmin' => 'boolean',
+        'isBoss' => 'boolean',
+        'isEmployee' => 'boolean',
+        'boss_id' => 'boolean'
+    ];
+    
+    /**
+     *      COMMON
      */
     
     /**
-     * Get invoiceData which belongs to boss or admin.
+     * Get appointments associated with entity.
      */
-    public function invoiceDatas()
+    public function appointments()
     {
-        return $this->hasMany('App\InvoiceData');
+        return $this->hasMany('App\Appointment');
+    }
+    
+    /**
+     * Get messages associated with entity.
+     */
+    public function messages()
+    {
+        return $this->hasMany('App\Message');
     }
     
     /**
      *      BOSS
      */
     
+    /**
+     * Get properties which belongs to boss.
+     */
+    public function properties()
+    {
+        return $this->hasMany('App\Property');
+    }
+    
+    /**
+     * Get boss workers collection
+     */
     public function getWorkers()
     {
-        $workers = User::where('boss_id', $this->id)->with('chosenProperties')->get();
-        
-        return count($workers) > 0 ? $workers : [];
+        $this->isBoss == 1 ? User::where('boss_id', $this->id)->get() : [];
     }
     
     /**
-     * Get properties which belong to boss.
+     * Get code assigned to boss.
      */
-    public function getPlaces()
+    public function code()
     {
-        $properties = Property::where('boss_id', $this->id)->get();
-        
-        return count($properties) > 0 ? $properties : [];
+        return $this->hasOne('App\Code');
     }
     
     /**
-     * Get codes associated with boss.
+     * Get promo code assigned to boss.
      */
-    public function codes()
+    public function promoCode()
     {
-        return $this->hasMany('App\Code');
+        return $this->hasOne('App\PromoCode');
+    }
+
+    /**
+     *      WORKER
+     */
+    
+    /**
+     * Get boss assigned to worker
+     */
+    public function getBoss()
+    {
+        $boss = null;
+                
+        if ($this->isAdmin == 0 && $this->isBoss == 0 && $this->isEmployee == 0)
+        {
+            $boss = User::where('id', $this->boss_id)->first();
+        }
+        
+        return $boss !== null ? $boss : null;
+    }
+    
+    /**
+     *      EMPLOYEE
+     */
+    
+    /**
+     * Get graphics assigned to employee.
+     */
+    public function graphics()
+    {
+        return $this->belongsToMany('App\Graphic', 'graphic_employee', 'employee_id', 'graphic_id');
     }
     
     /**
@@ -74,53 +145,6 @@ class User extends Authenticatable
     public function graphicRequests()
     {
         return $this->belongsToMany('App\GraphicRequest', 'graphic_request_employee', 'employee_id', 'graphic_request_id');
-    }
-    
-    /**
-     * Get promo code associated with boss.
-     */
-    public function promoCode()
-    {
-        return $this->hasOne('App\PromoCode');
-    }
-
-    /**
-     *      USER
-     */
-    
-    public function getBoss()
-    {
-        $boss = User::where('id', $this->boss_id)->first();
-        
-        return $boss !== null ? $boss : null;
-    }
-    
-    /**
-     * Get appointments associated with user.
-     */
-    public function appointments()
-    {
-        return $this->hasMany('App\Appointment');
-    }
-    
-    /**
-     * Get chosenProperties which belongs to user.
-     */
-    public function chosenProperties()
-    {
-        return $this->hasMany('App\ChosenProperty');
-    }
-    
-    /**
-     *      EMPLOYEE
-     */
-    
-    /**
-     * Get calendars assigned to employee.
-     */
-    public function calendars()
-    {
-        return $this->hasMany('App\Calendar', 'employee_id');
     }
     
     public function getImageAttribute()

@@ -22,7 +22,11 @@ class Month extends Model
      * @var array
      */
     protected $fillable = [
-        'month', 'month_en', 'month_number', 'days_in_month', 'year_id'
+        'month', 
+        'month_en', 
+        'month_number', 
+        'days_in_month', 
+        'year_id'
     ];
     
     /**
@@ -44,25 +48,13 @@ class Month extends Model
         return $this->belongsTo('App\Year');
     }
     
+    
+    
     /**
      * Get days associated with month.
      */
     public function days()
     {
         return $this->hasMany('App\Day');
-    }
-    
-    /**
-     * 
-     * BOSS
-     * 
-     */
-    
-    /**
-     * Get graphicRequests which belongs to month.
-     */
-    public function graphicRequests()
-    {
-        return $this->hasMany('App\GraphicRequest');
     }
 }

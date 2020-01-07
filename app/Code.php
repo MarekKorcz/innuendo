@@ -22,7 +22,16 @@ class Code extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'code', 'boss_id'
+        'code'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'boss_id'
     ];
     
     /**
@@ -40,13 +49,5 @@ class Code extends Authenticatable
     public function boss()
     {
         return $this->belongsTo('App\User');
-    }
-    
-    /**
-     * Get chosenProperties which belongs to code.
-     */
-    public function chosenProperties()
-    {
-        return $this->hasMany('App\ChosenProperty');
     }
 }

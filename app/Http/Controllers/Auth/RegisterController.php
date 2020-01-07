@@ -9,13 +9,11 @@ use App\TempProperty;
 use App\Code;
 use App\ChosenProperty;
 use App\Purchase;
-use App\Interval;
 use App\Subscription;
 use App\Calendar;
 use App\Year;
 use App\Month;
 use App\Day;
-use App\Substart;
 use App\PromoCode;
 use App\Message;
 use App\Mail\AdminTempBossCreate2ndStep;
@@ -83,7 +81,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * Create a new user instance after a valid registration.
+     * Create boss worker with promo code.
      *
      * @param  array  $data
      * @return \App\User
@@ -100,11 +98,10 @@ class RegisterController extends Controller
         
         if ($user && is_string($data['code']))
         {
-            $code = Code::where('code', htmlentities($data['code'], ENT_QUOTES, "UTF-8"))->with('chosenProperties')->first();
+            $code = Code::where('code', htmlentities($data['code'], ENT_QUOTES, "UTF-8"))->first();
                         
             if ($code !== null)
             {
-                // register boss workers scenario
                 $boss = User::where([
                     'id' => $code->boss_id,
                     'isBoss' => 1
@@ -114,98 +111,32 @@ class RegisterController extends Controller
                 {
                     $user->boss_id = $boss->id;
 
-                    $bossCodeChosenProperties = new Collection();
+                    $codeChosenProperties = new Collection();
 
-                    if ($code->chosenProperties !== null)
+                    if (count($code->chosenProperties) > 0)
                     {
                         foreach ($code->chosenProperties as $chosenProperty)
                         {
-                            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('subscriptions')->first();
-                            $bossCodeChosenProperties->push($chosenProperty);
+                            $chosenProperty->load('subscriptions');
+                            $codeChosenProperties->push($chosenProperty);
                         }
                     }
 
-                    if (count($bossCodeChosenProperties))
+                    if (count($codeChosenProperties) > 0)
                     {
-                        foreach ($bossCodeChosenProperties as $bossChosenProperty)
+                        foreach ($codeChosenProperties as $codeChosenProperty)
                         {
                             $userChosenProperty = ChosenProperty::create([
                                 'user_id' => $user->id,
-                                'property_id' => $bossChosenProperty->property_id
+                                'property_id' => $codeChosenProperty->property_id
                             ]);
 
-                            foreach ($bossChosenProperty->subscriptions as $subscription)
+                            foreach ($codeChosenProperty->subscriptions as $codeSubscription)
                             {
-                                $substarts = Substart::where([
-                                    'boss_id' => $code->boss_id,
-                                    'subscription_id' => $subscription->id,
-                                    'property_id' => $bossChosenProperty->property_id
-                                ])->get();
-
-                                if (count($substarts) > 0)
-                                {                                
-                                    $today = new \DateTime(date('Y-m-d'));
-
-                                    foreach ($substarts as $substart)
-                                    {
-                                        if ($substart->start_date <= $today && $substart->end_date > $today)
-                                        {
-                                            $purchase = Purchase::create([
-                                                'subscription_id' => $subscription->id,
-                                                'chosen_property_id' => $userChosenProperty->id,
-                                                'substart_id' => $substart->id
-                                            ]);
-
-                                            $startDate = $substart->start_date;
-
-                                            if ($substart->isActive)
-                                            {
-                                                for ($i = 1; $i <= $subscription->duration; $i++)
-                                                {
-                                                    $bossInterval = Interval::where([
-                                                        'start_date' => $startDate,
-                                                        'substart_id' => $substart->id
-                                                    ])->first();
-
-                                                    $interval = new Interval();
-                                                    $interval->available_units = $subscription->quantity;
-
-                                                    $interval->start_date = $startDate;
-                                                    $startDate = date('Y-m-d', strtotime("+1 month", strtotime($startDate)));
-
-                                                    $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
-                                                    $interval->end_date = $endDate;
-
-                                                    $interval->interval_id = $bossInterval->id;
-                                                    $interval->purchase_id = $purchase->id;
-                                                    $interval->save();
-                                                }
-
-                                            } else {
-
-                                                $bossInterval = Interval::where([
-                                                    'start_date' => $startDate,
-                                                    'end_date' => $substart->end_date,
-                                                    'substart_id' => $substart->id
-                                                ])->first();
-                                                
-                                                if ($bossInterval !== null)
-                                                {  
-                                                    $interval = Interval::create([
-                                                        'available_units' => $subscription->quantity,
-                                                        'start_date' => $bossInterval->start_date,
-                                                        'end_date' => $bossInterval->end_date,
-                                                        'interval_id' => $bossInterval->id,
-                                                        'purchase_id' => $purchase->id,
-                                                    ]);
-                                                    
-                                                    $bossInterval->workers_available_units = $bossInterval->workers_available_units + $subscription->quantity;
-                                                    $bossInterval->save();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                Purchase::create([
+                                    'subscription_id' => $codeSubscription->id,
+                                    'chosen_property_id' => $userChosenProperty->id
+                                ]);
                             }
                         }
                     }

@@ -19,10 +19,11 @@ class GraphicRequest extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'end_time', 'comment', 
-        'property_id', 'year_id', 'year_number', 
-        'month_id', 'month_number', 'day_id', 
-        'day_number', 'boss_id'
+        'start_time', 
+        'end_time', 
+        'comment', 
+        'property_id',
+        'day_id'
     ];
     
     /**
@@ -32,13 +33,7 @@ class GraphicRequest extends Model
      */
     protected $casts = [
         'property_id' => 'integer',
-        'year_id' => 'integer',
-        'year_number' => 'integer',
-        'month_id' => 'integer',
-        'month_number' => 'integer',
         'day_id' => 'integer',
-        'day_number' => 'integer',
-        'boss_id' => 'integer'
     ];
     
     /**
@@ -47,22 +42,6 @@ class GraphicRequest extends Model
     public function property()
     {
         return $this->belongsTo('App\Property');
-    }
-    
-    /**
-     * Get year that owns GraphicRequest.
-     */
-    public function year()
-    {
-        return $this->belongsTo('App\Year');
-    }
-    
-    /**
-     * Get month that owns GraphicRequest.
-     */
-    public function month()
-    {
-        return $this->belongsTo('App\Month');
     }
     
     /**
@@ -80,6 +59,8 @@ class GraphicRequest extends Model
     {
         return $this->belongsToMany('App\User', 'graphic_request_employee', 'graphic_request_id', 'employee_id');
     }
+    
+    
     
     /**
      * Get messages which belongs to GraphicRequest.

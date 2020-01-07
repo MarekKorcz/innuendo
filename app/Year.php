@@ -22,7 +22,8 @@ class Year extends Model
      * @var array
      */
     protected $fillable = [
-        'year', 'calendar_id'
+        'year', 
+        'property_id'
     ];
     
     /**
@@ -32,16 +33,18 @@ class Year extends Model
      */
     protected $casts = [
         'year' => 'integer',
-        'calendar_id' => 'integer'
+        'property_id' => 'integer'
     ];
     
     /**
-     * Get calendar that owns year.
+     * Get property that owns year.
      */
-    public function calendar()
+    public function property()
     {
-        return $this->belongsTo('App\Calendar');
+        return $this->belongsTo('App\Property');
     }
+    
+    
     
     /**
      * Get months associated with year.
@@ -49,19 +52,5 @@ class Year extends Model
     public function months()
     {
         return $this->hasMany('App\Month');
-    }
-    
-    /**
-     * 
-     * BOSS
-     * 
-     */
-    
-    /**
-     * Get graphicRequests which belongs to year.
-     */
-    public function graphicRequests()
-    {
-        return $this->hasMany('App\GraphicRequest');
     }
 }

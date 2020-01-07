@@ -173,18 +173,6 @@ Route::get('/item/show/{id}', 'ItemController@show');
 Route::get('/item/{id}/edit', 'ItemController@edit');
 Route::put('/item/update', 'ItemController@update');
 
-Route::get('/subscription/create/{id}', 'SubscriptionController@create');
-Route::post('/subscription/store', 'SubscriptionController@store');
-Route::get('/subscription/show/{id}', 'SubscriptionController@show');
-Route::get('/subscription/index', 'SubscriptionController@subscriptionIndex');
-Route::delete('/subscription/{id}', 'SubscriptionController@destroy');
-Route::post('/subscription/set-subscription-to-property', 'SubscriptionController@setSubscriptionToProperty');
-Route::post('/subscription/set-subscription-to-temporary-property', 'SubscriptionController@setSubscriptionToTemporaryProperty');
-Route::post('/subscription/set-item-to-subscription', 'SubscriptionController@setItemToSubscription');
-Route::get('/subscription/{id}/edit', 'SubscriptionController@edit');
-Route::put('/subscription/update', 'SubscriptionController@update');
-Route::get('/subscription/add-by-default/{id}', 'SubscriptionController@changeAddByDefault');
-
 // user >> routings
 // user calendar
 Route::get('/user/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');

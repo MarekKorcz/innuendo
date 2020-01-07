@@ -22,7 +22,9 @@ class Day extends Model
      * @var array
      */
     protected $fillable = [
-        'day_number', 'number_in_week', 'month_id'
+        'day_number', 
+        'number_in_week', 
+        'month_id'
     ];
     
     /**
@@ -44,6 +46,8 @@ class Day extends Model
         return $this->belongsTo('App\Month');
     }
     
+    
+    
     /**
      * Get appointment that is set to day
      */
@@ -59,12 +63,6 @@ class Day extends Model
     {
         return $this->hasOne('App\Graphic');
     }
-    
-    /**
-     * 
-     * BOSS
-     * 
-     */
     
     /**
      * Get graphicRequests which belongs to day.

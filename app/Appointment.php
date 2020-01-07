@@ -22,7 +22,14 @@ class Appointment extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'start_time', 'minutes', 'status', 'graphic_id', 'item_id', 'day_id', 'user_id', 'temp_user_id', 'interval_id', 'purchase_id'
+        'start_time', 
+        'end_time', 
+        'minutes', 
+        'status', 
+        'graphic_id', 
+        'day_id', 
+        'item_id', 
+        'user_id'
     ];
     
     /**
@@ -37,28 +44,9 @@ class Appointment extends Model
         'status' => 'integer',
         'graphic_id' => 'integer',
         'day_id' => 'integer',
-        'user_id' => 'integer',
         'item_id' => 'integer',
-        'temp_user_id' => 'integer', 
-        'interval_id' => 'integer',
-        'purchase_id' => 'integer'
+        'user_id' => 'integer'
     ];
-    
-    /**
-     *      ADMIN
-     */
-    
-    /**
-     * Get day that owns the appointment.
-     */
-    public function day()
-    {
-        return $this->belongsTo('App\Day');
-    }
-    
-    /**
-     *      EMPLOYEE
-     */
     
     /**
      * Get graphic that owns the appointment.
@@ -69,16 +57,12 @@ class Appointment extends Model
     }
     
     /**
-     *      USER
+     * Get day that owns the appointment.
      */
-    
-    /**
-     * Get user that owns appointment.
-     */
-    public function user()
+    public function day()
     {
-        return $this->belongsTo('App\User');
-    }
+        return $this->belongsTo('App\Day');
+    }    
     
     /**
      * Get item that owns the appointment.
@@ -89,26 +73,10 @@ class Appointment extends Model
     }
     
     /**
-     * Get temporary user that owns appointment.
+     * Get user that owns appointment.
      */
-    public function tempUser()
+    public function user()
     {
-        return $this->belongsTo('App\TempUser');
-    }
-    
-    /**
-     * Get the interval that owns the appointment.
-     */
-    public function interval()
-    {
-        return $this->belongsTo('App\Interval');
-    }
-    
-    /**
-     * Get the purchase that owns the appointment.
-     */
-    public function purchase()
-    {
-        return $this->belongsTo('App\Purchase');
+        return $this->belongsTo('App\User');
     }
 }

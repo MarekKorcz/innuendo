@@ -29,7 +29,22 @@ class InvoiceData extends Model
      * @var array
      */
     protected $fillable = [
-        'company_name', 'address', 'email', 'phone_number', 'nip', 'bank_name', 'account_number', 'property_id', 'owner_id' 
+        'company_name', 
+        'address', 
+        'email', 
+        'phone_number', 
+        'nip', 
+        'bank_name', 
+        'account_number'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'property_id'
     ];
     
     /**
@@ -38,17 +53,10 @@ class InvoiceData extends Model
      * @var array
      */
     protected $casts = [
-        'property_id' => 'integer',
-        'owner_id' => 'integer'
+        'phone_number' => 'integer',
+        'account_number' => 'integer',
+        'property_id' => 'integer'
     ];
-    
-    /**
-     * Get owner associated to invoiceData.
-     */
-    public function owner()
-    {
-        return $this->belongsTo('App\User');
-    }
     
     /**
      * Get property associated to invoiceData.

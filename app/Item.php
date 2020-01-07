@@ -22,7 +22,12 @@ class Item extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'minutes', 'slug', 'description', 'price', 'image', 'category_id'
+        'name', 
+        'slug', 
+        'minutes', 
+        'description', 
+        'price', 
+        'category_id'
     ];
     
     /**
@@ -41,21 +46,5 @@ class Item extends Model
     public function category()
     {
         return $this->belongsTo('App\Category');
-    }
-    
-    /**
-     * Get the appointment record associated with the item.
-     */
-    public function appointment()
-    {
-        return $this->hasOne('App\Appointment');
-    }
-    
-    /**
-     * Get subscriptions which belongs to item
-     */
-    public function subscriptions()
-    {
-        return $this->belongsToMany('App\Subscription');
     }
 }

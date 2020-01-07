@@ -29,8 +29,22 @@ class TempProperty extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'street', 'street_number', 
-        'house_number', 'city', 'boss_id'
+        'name', 
+        'slug', 
+        'street', 
+        'street_number', 
+        'house_number', 
+        'city', 
+        'boss_id'
+    ];
+    
+    /**
+     * The attributes that should be cast to native types.
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'boss_id' => 'integer'
     ];
     
     /**
@@ -39,13 +53,5 @@ class TempProperty extends Model
     public function tempUser()
     {
         return $this->belongsTo('App\TempUser');
-    }
-    
-    /**
-     * Get subscriptions which belongs to temporary property
-     */
-    public function subscriptions()
-    {
-        return $this->belongsToMany('App\Subscription', 'temp_property_subscription');
     }
 }

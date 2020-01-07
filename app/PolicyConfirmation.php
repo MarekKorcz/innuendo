@@ -19,7 +19,8 @@ class PolicyConfirmation extends Model
      * @var array
      */
     protected $fillable = [
-        'ip_address', 'confirm'
+        'ip_address', 
+        'confirm'
     ];
     
     /**

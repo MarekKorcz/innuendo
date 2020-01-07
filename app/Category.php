@@ -29,8 +29,12 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'description', 'image'
+        'name', 
+        'slug', 
+        'description'
     ];
+    
+    
     
     /**
      * Get the items which belong to category.

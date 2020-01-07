@@ -22,7 +22,10 @@ class Graphic extends Model
      * @var array
      */
     protected $fillable = [
-        'start_time', 'end_time', 'total_time', 'day_id'
+        'start_time', 
+        'end_time', 
+        'total_time', 
+        'day_id'
     ];
     
     /**
@@ -44,6 +47,16 @@ class Graphic extends Model
     {
         return $this->belongsTo('App\Day');
     }
+    
+    /**
+     * Get employees that are assigned to graphic.
+     */
+    public function employees()
+    {
+        return $this->belongsToMany('App\User', 'graphic_employee', 'graphic_id', 'employee_id');
+    }
+    
+    
     
     /**
      * Get appointments assigned to employee.

@@ -798,34 +798,7 @@ class BossController extends Controller
                                     if (count($purchases) > 0)
                                     {
                                         $today = new \DateTime(date('Y-m-d'));
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
 //                                        $today = date('Y-m-d', strtotime("+13 month", strtotime($today->format("Y-m-d"))));
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
                                         
                                         foreach ($purchases as $purchase)
                                         {
