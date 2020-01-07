@@ -2,6 +2,7 @@
 
 return [
     'subscriptions' => 'Pakiety abonamentowe',
+    'promotion' => 'Promocja',
     'discounts' => 'Zniżki',
     'employees' => 'Pracownicy',
     'login' => 'Zaloguj',

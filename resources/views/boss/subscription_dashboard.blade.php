@@ -98,12 +98,6 @@
                                                 {{$subscription->quantity}}
                                             </strong>
                                         </p>
-                                        <p>
-                                            @lang('common.subscription_duration'): 
-                                            <strong>
-                                                {{$subscription->duration}}
-                                            </strong>
-                                        </p>
                                     </div>
 
                                     @if ($subscription->propertyPurchases == null || count($subscription->propertyPurchases) == 0)
@@ -157,6 +151,13 @@
                                                         <p>@lang('common.subscription_duration_has_come_to_an_end')</p>
                                                     @endif
                                                 </div>
+                                            
+                                                @if (!$purchase->substart->isCurrent)
+                                                    <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/boss/subscription/purchase/' . $purchase->substart->property_id . '/' . $purchase->substart->subscription_id) }}">
+                                                        @lang('common.refresh_subscription')
+                                                    </a>
+                                                @endif
+                                                
 <!--                                                @if ($purchase->substart->isActive == 1)
                                                     <a class="btn btn-primary" target="_blank" href="{{ URL::to('/boss/subscription/invoices/' . $purchase->substart->id) }}">
                                                         @lang('common.invoices')

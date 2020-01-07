@@ -34,13 +34,12 @@
                         <strong>{{$subscription->new_price}} zł @lang('common.per_person')</strong>
                     </p>
                     <p>@lang('common.number_of_massages_to_use_per_month'): <strong>{{$subscription->quantity}}</strong></p>
-                    <p>@lang('common.subscription_duration'): <strong>{{$subscription->duration}}</strong></p>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-12 text-center">
                         <div class="text-center">
-                            {{ Form::open(['id' => 'purchaseForm', 'action' => 'BossController@subscriptionPurchased', 'method' => 'POST']) }}
+                            {{ Form::open(['id' => 'purchaseForm', 'action' => $formAction, 'method' => 'POST']) }}
 
                                 <!--todo: jak tu zrobić tłumaczenie?????-->
                                 {!! Html::decode(Form::label('terms','

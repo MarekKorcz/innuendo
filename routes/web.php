@@ -21,6 +21,7 @@ Route::get('/regulations', 'HomeController@regulations')->name('regulations');
 Route::get('/contact', 'HomeController@contactPageShow')->name('contact_page');
 Route::post('/contact-update', 'HomeController@contactPageUpdate');
 Route::post('/accept-terms', 'HomeController@acceptTerms');
+Route::get('/promo/show', 'HomeController@promoShow')->name('promo');
 
 // change language
 Route::get('locale/{locale}', function($locale) {
@@ -227,6 +228,7 @@ Route::post('/boss/get/subscription/workers', 'BossController@getSubscriptionWor
 // subscription purchase
 Route::get('/boss/subscription/purchase/{propertyId}/{subscriptionId}', 'BossController@subscriptionPurchase')->name('subscriptionPurchaseView');
 Route::post('/boss/subscription/purchased', 'BossController@subscriptionPurchased');
+Route::post('/boss/subscription/purchased/refresh', 'BossController@subscriptionPurchasedRefresh');
 
 // boss and workers subscription appointment list
 Route::get('/boss/worker/appointment/list/{substartId}/{userId}', 'BossController@workerAppointmentList')->name('workerAppointmentList');

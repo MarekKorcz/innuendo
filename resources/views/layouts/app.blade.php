@@ -44,6 +44,9 @@
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" style="margin-right: 9px;">
+                    <a class="nav-link" href="{{ route('promo') }}">@lang('navbar.promotion')</a>
+                </li>
+                <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ url('subscriptions') }}">@lang('navbar.subscriptions')</a>
                 </li>
                 <li class="nav-item" style="margin-right: 9px;">

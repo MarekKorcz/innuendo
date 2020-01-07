@@ -798,7 +798,34 @@ class BossController extends Controller
                                     if (count($purchases) > 0)
                                     {
                                         $today = new \DateTime(date('Y-m-d'));
-//                                        $today = date('Y-m-d', strtotime("+3 month", strtotime($today->format("Y-m-d"))));
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+//                                        $today = date('Y-m-d', strtotime("+13 month", strtotime($today->format("Y-m-d"))));
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
                                         
                                         foreach ($purchases as $purchase)
                                         {
@@ -924,7 +951,7 @@ class BossController extends Controller
      * @return type
      */
     public function subscriptionPurchase($propertyId, $subscriptionId)
-    {
+    {        
         $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
         $property = Property::where('id', (int)$propertyId)->first();
         
@@ -938,20 +965,21 @@ class BossController extends Controller
             if ($boss !== null && count($boss->chosenProperties) > 0)
             {
                 $today = new \DateTime(date('Y-m-d'));
+//                $today = date('Y-m-d', strtotime("+13 month", strtotime($today->format("Y-m-d"))));
                 
                 foreach ($boss->chosenProperties as $chosenProperty)
                 {
                     if ($chosenProperty->property_id == $property->id)
                     {
-                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+                        $chosenProperty->load('purchases');
 
                         if (count($chosenProperty->purchases) > 0)
                         {
                             foreach ($chosenProperty->purchases as $purchase)
                             {
-                                $chosenSubscription = Subscription::where('id', $purchase->subscription_id)->first();
+                                $purchase->load('subscription');
                                 
-                                if ($chosenSubscription !== null && $chosenSubscription->id == $subscription->id)
+                                if ($purchase->subscription !== null && $purchase->subscription->id == $subscription->id)
                                 {
                                     $substart = Substart::where([
                                         'property_id' => $property->id,
@@ -974,10 +1002,27 @@ class BossController extends Controller
                     }
                 }
             }
+            
+            $formAction = 'BossController@subscriptionPurchased';
+            
+            $allSubstarts = Substart::where([
+                'boss_id' => $boss->id,
+                'property_id' => $property->id,
+                'subscription_id' => $subscription->id
+            ])->orderBy('id')->get();
+            
+            if (count($allSubstarts) > 0)
+            {                
+                if ($allSubstarts->last()->end_date < $today)
+                {
+                    $formAction = 'BossController@subscriptionPurchasedRefresh';
+                }
+            }
 
             return view('boss.subscription_purchase')->with([
                 'property' => $property,
-                'subscription' => $subscription
+                'subscription' => $subscription,
+                'formAction' => $formAction
             ]);
         }
         
@@ -987,10 +1032,9 @@ class BossController extends Controller
     /**
      * Subscription purchase method.
      * 
-     * @param Request $request
      * @return type
      */
-    public function subscriptionPurchased(Request $request)
+    public function subscriptionPurchased()
     {
         $rules = array(
             'terms'             => 'required',
@@ -1104,6 +1148,50 @@ class BossController extends Controller
                         )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
                     }
                 }
+            }
+            
+            return redirect()->route('welcome')->with('error', 'Niedozwolona próba');
+        }
+    }
+    
+    /**
+     * Subscription purchase refresh method.
+     * 
+     * @return type
+     */
+    public function subscriptionPurchasedRefresh()
+    {
+        $rules = array(
+            'terms'             => 'required',
+            'property_id'       => 'required',
+            'subscription_id'   => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('boss/subscription/purchase/' . Input::get('property_id') . '/' . Input::get('subscription_id'))
+                ->withErrors($validator);
+        } else {
+
+            $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+            
+            $substarts = Substart::where([
+                'boss_id' => $boss->id,
+                'property_id' => Input::get('property_id'),
+                'subscription_id' => Input::get('subscription_id')
+            ])->orderBy('id')->get();
+            
+            if (count($substarts) > 0)
+            {
+                // dodaj sprawdzenie czy dziś jest już większe od ostatniego substartu
+
+
+
+                dd($substarts);
+            
+            
+            
+            
             }
             
             return redirect()->route('welcome')->with('error', 'Niedozwolona próba');

@@ -47,7 +47,7 @@ class User extends Authenticatable
     {
         $workers = User::where('boss_id', $this->id)->with('chosenProperties')->get();
         
-        return count($workers) > 0 ? $workers : null;
+        return count($workers) > 0 ? $workers : [];
     }
     
     /**
@@ -57,7 +57,7 @@ class User extends Authenticatable
     {
         $properties = Property::where('boss_id', $this->id)->get();
         
-        return count($properties) > 0 ? $properties : null;
+        return count($properties) > 0 ? $properties : [];
     }
     
     /**

@@ -130,9 +130,9 @@ return [
     'congratulations' => 'Gratulacje',
     'admin_temp_boss_create_mail_text' => 'W celu zakończenia procesu rejestracji, kliknij w poniższy przycisk i wypełnij pozostałe dane oraz hasło.',
     'admin_temp_employee_create_mail_text' => 'W celu zakończenia procesu rejestracji, kliknij w poniższy przycisk i wypełnij pozostałe dane oraz hasło.',
-    'you_just_registered_to' => 'Właśnie udało Ci się zarejestrować do',
-    'admin_temp_boss_create_2nd_step_mail_text' => 'Jesteśmy zachwyceni wizją naszej przyszłej owocnej współpracy oraz nie możemy się doczekać naszej pierwszej wizyty w Twoim biurze!',
-    'boss_create_with_promo_code_mail_text_first' => 'Jesteśmy zachwyceni wizją naszej przyszłej owocnej współpracy oraz nie możemy się doczekać naszej pierwszej wizyty w Twoim biurze!',
+    'you_just_registered_to' => 'Właśnie udało Ci się zarejestrować w',
+    'admin_temp_boss_create_2nd_step_mail_text' => 'Jesteśmy zachwyceni wizją naszej przyszłej współpracy oraz nie możemy się doczekać naszej pierwszej wizyty w Twoim biurze!',
+    'boss_create_with_promo_code_mail_text_first' => 'Jesteśmy zachwyceni wizją naszej przyszłej współpracy oraz nie możemy się doczekać naszej pierwszej wizyty w Twoim biurze!',
     'boss_create_with_promo_code_mail_text_second' => 'By to przybliżyć, zaloguj się na swoje konto i skontaktuj z nami!',
     'remind_password' => 'Przypomnij hasło',
     'password_reset' => 'Resetuj hasło',
@@ -482,5 +482,9 @@ return [
     'regulations' => 'Regulamin',
     'no_schedule' => 'Brak grafiku',
     'add_by_default' => 'Dodawana automatycznie',
-    'change' => 'Zmień'
+    'change' => 'Zmień',
+    'refresh_subscription' => 'Odśwież pakiet',
+    'promo_status' => 'Status promocji',
+    'public_promo_copy_code_description' => 'By skorzystać z promocji, zarejestruj się przy użyciu kodu',
+    'click_to_copy' => 'Kliknij by skopiować kod'
 ];

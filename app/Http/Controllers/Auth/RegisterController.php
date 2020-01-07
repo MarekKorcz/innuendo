@@ -129,10 +129,10 @@ class RegisterController extends Controller
                     {
                         foreach ($bossCodeChosenProperties as $bossChosenProperty)
                         {
-                            $userChosenProperty = new ChosenProperty();
-                            $userChosenProperty->user_id = $user->id;
-                            $userChosenProperty->property_id = $bossChosenProperty->property_id;
-                            $userChosenProperty->save();
+                            $userChosenProperty = ChosenProperty::create([
+                                'user_id' => $user->id,
+                                'property_id' => $bossChosenProperty->property_id
+                            ]);
 
                             foreach ($bossChosenProperty->subscriptions as $subscription)
                             {
@@ -150,11 +150,11 @@ class RegisterController extends Controller
                                     {
                                         if ($substart->start_date <= $today && $substart->end_date > $today)
                                         {
-                                            $purchase = new Purchase();
-                                            $purchase->subscription_id = $subscription->id;
-                                            $purchase->chosen_property_id = $userChosenProperty->id;                       
-                                            $purchase->substart_id = $substart->id;                       
-                                            $purchase->save();
+                                            $purchase = Purchase::create([
+                                                'subscription_id' => $subscription->id,
+                                                'chosen_property_id' => $userChosenProperty->id,
+                                                'substart_id' => $substart->id
+                                            ]);
 
                                             $startDate = $substart->start_date;
 
@@ -191,15 +191,13 @@ class RegisterController extends Controller
                                                 
                                                 if ($bossInterval !== null)
                                                 {  
-                                                    $interval = new Interval();
-                                                    $interval->available_units = $subscription->quantity;
-
-                                                    $interval->start_date = $bossInterval->start_date;
-                                                    $interval->end_date = $bossInterval->end_date;
-
-                                                    $interval->interval_id = $bossInterval->id;
-                                                    $interval->purchase_id = $purchase->id;
-                                                    $interval->save();
+                                                    $interval = Interval::create([
+                                                        'available_units' => $subscription->quantity,
+                                                        'start_date' => $bossInterval->start_date,
+                                                        'end_date' => $bossInterval->end_date,
+                                                        'interval_id' => $bossInterval->id,
+                                                        'purchase_id' => $purchase->id,
+                                                    ]);
                                                     
                                                     $bossInterval->workers_available_units = $bossInterval->workers_available_units + $subscription->quantity;
                                                     $bossInterval->save();
@@ -254,7 +252,7 @@ class RegisterController extends Controller
         }
         
         return redirect()->route('login');
-    }
+    } 
     
     /**
      * Handle storing boss made from TempUser
@@ -312,17 +310,7 @@ class RegisterController extends Controller
                     ]);
 
                     if ($property !== null)
-                    {
-                        // uncomment this and comment code below if you want to add only subscriptions from tempProperty
-//                        if ($tempBossPropertyEntity->subscriptions !== null)
-//                        {
-//                            foreach ($tempBossPropertyEntity->subscriptions as $subscription)
-//                            {
-//                                $property->subscriptions()->attach($subscription);
-//                                $tempBossPropertyEntity->subscriptions()->detach($subscription);
-//                            }
-//                        }
-                        
+                    {                        
                         // delete temporary entities
                         $tempBossEntity->delete();
                         $tempBossPropertyEntity->delete();
@@ -341,7 +329,7 @@ class RegisterController extends Controller
                             }
                         }
                         
-                        // create calendar and sign employee (for now, me) to it
+                        // create calendar and sign employee (for now, myself) to it
                         $employee = User::where([
                             'name' => 'Marek',
                             'surname' => 'Korcz',
@@ -350,133 +338,15 @@ class RegisterController extends Controller
 
                         if ($employee !== null)
                         {                            
-                            $calendar = new Calendar();
-                            $calendar->isActive = 1;
-                            $calendar->property_id = $property->id;
-                            $calendar->employee_id = $employee->id;
-                            $calendar->save();
+                            $calendar = Calendar::create([
+                                'isActive' => 1,
+                                'property_id' => $property->id,
+                                'employee_id' => $employee->id
+                            ]);
 
                             if ($calendar !== null)
                             {
-                                $currentYear = new Year();
-                                $currentYear->year = date('Y');
-                                $currentYear->calendar_id = $calendar->id;
-                                $currentYear->save();
-
-                                $currentYearIncrementedByOneYear = date('Y', strtotime("+1 year", strtotime(date('Y'))));
-
-                                $nextYear = new Year();
-                                $nextYear->year = $currentYearIncrementedByOneYear;
-                                $nextYear->calendar_id = $calendar->id;
-                                $nextYear->save();
-
-                                $today = date('Y-n');                
-
-                                for ($i = 1; $i <= 3; $i++)
-                                {                    
-                                    $monthName = "";
-                                    $monthNameEn = "";
-                                    $todayInParts = explode("-", $today);
-                                    $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, (int)$todayInParts[1], (int)$todayInParts[0]);
-                                    $month = null;
-
-                                    switch ((int)$todayInParts[1]) 
-                                    {
-                                        case 1:
-                                            $monthName = "Styczeń";
-                                            $monthNameEn = "January";
-                                            break;
-                                        case 2:
-                                            $monthName = "Luty";
-                                            $monthNameEn = "February";
-                                            break;
-                                        case 3:
-                                            $monthName = "Marzec";
-                                            $monthNameEn = "March";
-                                            break;
-                                        case 4:
-                                            $monthName = "Kwiecień";
-                                            $monthNameEn = "April";
-                                            break;
-                                        case 5:
-                                            $monthName = "Maj";
-                                            $monthNameEn = "May";
-                                            break;
-                                        case 6:
-                                            $monthName = "Czerwiec";
-                                            $monthNameEn = "June";
-                                            break;
-                                        case 7:
-                                            $monthName = "Lipiec";
-                                            $monthNameEn = "July";
-                                            break;
-                                        case 8:
-                                            $monthName = "Sierpień";
-                                            $monthNameEn = "August";
-                                            break;
-                                        case 9:
-                                            $monthName = "Wrzesień";
-                                            $monthNameEn = "September";
-                                            break;
-                                        case 10:
-                                            $monthName = "Październik";
-                                            $monthNameEn = "October";
-                                            break;
-                                        case 11:
-                                            $monthName = "Listopad";
-                                            $monthNameEn = "November";
-                                            break;
-                                        case 12:
-                                            $monthName = "Grudzień";
-                                            $monthNameEn = "December";
-                                            break;
-                                    }
-
-                                    if ((int)$todayInParts[0] == (int)date("Y"))
-                                    {
-                                        $month = new Month();
-                                        $month->month = $monthName;
-                                        $month->month_en = $monthNameEn;
-                                        $month->month_number = $todayInParts[1];
-                                        $month->days_in_month = $numberOfDaysInMonth;
-                                        $month->year_id = $currentYear->id;
-                                        $month->save();
-
-                                    } else {
-
-                                        $month = new Month();
-                                        $month->month = $monthName;
-                                        $month->month_en = $monthNameEn;
-                                        $month->month_number = $todayInParts[1];
-                                        $month->days_in_month = $numberOfDaysInMonth;
-                                        $month->year_id = $nextYear->id;
-                                        $month->save();
-                                    }
-
-                                    if ($month !== null)
-                                    {
-                                        for ($j = 1; $j <= $numberOfDaysInMonth; $j++)
-                                        {
-                                            $year = Year::where('id', $month->year_id)->first();
-                                            $monthNumber = strlen($month->month_number) == 2 ? $month->month_number : "0" . $month->month_number;
-                                            $dayNumber = strlen($j) == 2 ? $j : "0" . $j;
-
-                                            $fullDate = $year->year . "-" . $monthNumber . "-" . $dayNumber;
-                                            $dayDate = new \DateTime($fullDate);
-
-                                            if ($dayDate->format("N") != 7)
-                                            {                                          
-                                                $day = new Day();
-                                                $day->day_number = $dayDate->format("j");
-                                                $day->number_in_week = $dayDate->format("N");
-                                                $day->month_id = $month->id;
-                                                $day->save();
-                                            }
-                                        }
-                                    }
-
-                                    $today = date('Y-m-d', strtotime("+1 month", strtotime($today)));
-                                }
+                                $this->createGraphicsForFirstMonths($calendar->id, 3);
                                 
                                 \Mail::to($boss)->send(new AdminTempBossCreate2ndStep($boss));
 
@@ -568,65 +438,87 @@ class RegisterController extends Controller
 
                     if ($bossProperty !== null)
                     {
-                        $bossChosenProperty = ChosenProperty::create([
-                            'user_id' => $boss->id,
-                            'property_id' => $bossProperty->id
-                        ]);
+                        // create calendar and sign employee (for now, myself) to it
+                        $employee = User::where([
+                            'name' => 'Marek',
+                            'surname' => 'Korcz',
+                            'isEmployee' => 1
+                        ])->first();
 
-                        // load all available subscriptions
-                        $availableSubscriptions = Subscription::where([
-                            ['id', '!=', null],
-                            ['add_by_default', '=', 1]
-                        ])->get();
-                        
-                        if (count($promoCode->subscriptions) > 0)
-                        {
-                            foreach ($promoCode->subscriptions as $subscription)
+                        if ($employee !== null)
+                        {                            
+                            $calendar = Calendar::create([
+                                'isActive' => 1,
+                                'property_id' => $bossProperty->id,
+                                'employee_id' => $employee->id
+                            ]);
+
+                            if ($calendar !== null)
                             {
-                                // checks whether in all available subscriptions existn the one from promo code. 
-                                // if yes, it's being deleted from availableSubscriptions
-                                if (count($availableSubscriptions) > 0 && $availableSubscriptions->contains('id', $subscription->id))
+                                // create graphics and add three months
+                                $this->createGraphicsForFirstMonths($calendar->id, 3);
+                        
+                                $bossChosenProperty = ChosenProperty::create([
+                                    'user_id' => $boss->id,
+                                    'property_id' => $bossProperty->id
+                                ]);
+
+                                // load all available subscriptions
+                                $availableSubscriptions = Subscription::where([
+                                    ['id', '!=', null],
+                                    ['add_by_default', '=', 1]
+                                ])->get();
+
+                                if (count($promoCode->subscriptions) > 0)
                                 {
-                                    $availableSubscriptions = $availableSubscriptions->filter(function ($value) use ($subscription) {
-                                        return $value->id !== $subscription->id;
-                                    });
+                                    foreach ($promoCode->subscriptions as $subscription)
+                                    {
+                                        // checks whether in all available subscriptions existn the one from promo code. 
+                                        // if yes, it's being deleted from availableSubscriptions
+                                        if (count($availableSubscriptions) > 0 && $availableSubscriptions->contains('id', $subscription->id))
+                                        {
+                                            $availableSubscriptions = $availableSubscriptions->filter(function ($value) use ($subscription) {
+                                                return $value->id !== $subscription->id;
+                                            });
+                                        }
+
+                                        $bossProperty->subscriptions()->attach($subscription->id);
+                                        $bossChosenProperty->subscriptions()->attach($subscription->id);
+
+                                        $bossPurchase = Purchase::create([
+                                            'subscription_id' => $subscription->id,
+                                            'chosen_property_id' => $bossChosenProperty->id
+                                        ]);
+
+                                        $startDate = new \DateTime(date('Y-m-d'));
+
+                                        $substart = new Substart();
+                                        $substart->start_date = $startDate;
+
+                                        $startDateIncrementedBySubscriptionDuration = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate->format("Y-m-d"))));
+                                        $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDateIncrementedBySubscriptionDuration)));
+
+                                        $substart->end_date = $endDate;
+                                        $substart->boss_id = $boss->id;
+                                        $substart->property_id = $bossProperty->id;
+                                        $substart->subscription_id = $subscription->id;
+                                        $substart->purchase_id = $bossPurchase->id;
+                                        $substart->save();
+
+                                        $bossPurchase->substart_id = $substart->id;
+                                        $bossPurchase->save();
+
+                                        $interval = Interval::create([
+                                            'available_units' => $subscription->quantity,
+                                            'start_date' => $substart->start_date,
+                                            'end_date' => $substart->end_date,
+                                            'substart_id' => $substart->id,
+                                            'purchase_id' => $bossPurchase->id
+                                        ]);
+                                    }
                                 }
-            
-                                $bossProperty->subscriptions()->attach($subscription->id);
-                                $bossChosenProperty->subscriptions()->attach($subscription->id);
-                                        
-                                $bossPurchase = Purchase::create([
-                                    'subscription_id' => $subscription->id,
-                                    'chosen_property_id' => $bossChosenProperty->id
-                                ]);
-
-                                $startDate = new \DateTime(date('Y-m-d'));
-
-                                $substart = new Substart();
-                                $substart->start_date = $startDate;
-
-                                $startDateIncrementedBySubscriptionDuration = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate->format("Y-m-d"))));
-                                $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDateIncrementedBySubscriptionDuration)));
-
-                                $substart->end_date = $endDate;
-                                $substart->boss_id = $boss->id;
-                                $substart->property_id = $bossProperty->id;
-                                $substart->subscription_id = $subscription->id;
-                                $substart->purchase_id = $bossPurchase->id;
-                                $substart->save();
-                                
-                                $bossPurchase->substart_id = $substart->id;
-                                $bossPurchase->save();
-
-                                $interval = Interval::create([
-                                    'available_units' => $subscription->quantity,
-                                    'start_date' => $substart->start_date,
-                                    'end_date' => $substart->end_date,
-                                    'substart_id' => $substart->id,
-                                    'purchase_id' => $bossPurchase->id
-                                ]);
                             }
-                        }                    
+                        }            
 
                         $promoCode->activation_date = date('Y-m-d H:i:s');
                         $promoCode->isActive = 1;
@@ -644,16 +536,16 @@ class RegisterController extends Controller
                         $splitedBossName = str_split($boss->name);
                         $youUsedPhrase = $splitedBossName[count($splitedBossName) - 1] == "a" ? \Lang::get('common.you_used_female') : \Lang::get('common.you_used_male');
 
-                        $message = new Message();
-                        $message->text = \Lang::get('common.greetings') . ", " . $boss->name . " " . $boss->surname . "! " . 
-                            \Lang::get('common.we_are_very_happy_that') . " " . $youUsedPhrase . " " . 
-                            \Lang::get('common.approve_message_body') . " " . 
-                            config('app.name') . " " .
-                            config('app.name_2nd_part');
-                        $message->status = 0;
-                        $message->owner_id = $admin->id;
-                        $message->promo_code_id = $promoCode->id;
-                        $message->save();
+                        $message = Message::create([
+                            'text' => \Lang::get('common.greetings') . ", " . $boss->name . " " . $boss->surname . "! " . 
+                                \Lang::get('common.we_are_very_happy_that') . " " . $youUsedPhrase . " " . 
+                                \Lang::get('common.approve_message_body') . " " . 
+                                config('app.name') . " " .
+                                config('app.name_2nd_part'),
+                            'status' => 0,
+                            'owner_id' => $admin->id,
+                            'promo_code_id' => $promoCode->id,
+                        ]);
                         
                         \Mail::to($boss)->send(new BossCreateWithPromoCode($boss));
                         
@@ -795,5 +687,116 @@ class RegisterController extends Controller
             'type'    => 'error',
             'message' => 'Pusty request'            
         ));
+    }
+    
+    private function createGraphicsForFirstMonths($calendarId, $numberOfMonths)
+    {
+        $currentYear = Year::create([
+            'year' => date('Y'),
+            'calendar_id' => $calendarId
+        ]);
+
+        $currentYearIncrementedByOneYear = date('Y', strtotime("+1 year", strtotime(date('Y'))));
+
+        $nextYear = Year::create([
+            'year' => $currentYearIncrementedByOneYear,
+            'calendar_id' => $calendarId,
+        ]);
+
+        $today = date('Y-n');                
+
+        for ($i = 1; $i <= $numberOfMonths; $i++)
+        {                    
+            $monthName = "";
+            $monthNameEn = "";
+            $todayInParts = explode("-", $today);
+            $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, (int)$todayInParts[1], (int)$todayInParts[0]);
+            $month = null;
+
+            switch ((int)$todayInParts[1]) 
+            {
+                case 1:
+                    $monthName = "Styczeń";
+                    $monthNameEn = "January";
+                    break;
+                case 2:
+                    $monthName = "Luty";
+                    $monthNameEn = "February";
+                    break;
+                case 3:
+                    $monthName = "Marzec";
+                    $monthNameEn = "March";
+                    break;
+                case 4:
+                    $monthName = "Kwiecień";
+                    $monthNameEn = "April";
+                    break;
+                case 5:
+                    $monthName = "Maj";
+                    $monthNameEn = "May";
+                    break;
+                case 6:
+                    $monthName = "Czerwiec";
+                    $monthNameEn = "June";
+                    break;
+                case 7:
+                    $monthName = "Lipiec";
+                    $monthNameEn = "July";
+                    break;
+                case 8:
+                    $monthName = "Sierpień";
+                    $monthNameEn = "August";
+                    break;
+                case 9:
+                    $monthName = "Wrzesień";
+                    $monthNameEn = "September";
+                    break;
+                case 10:
+                    $monthName = "Październik";
+                    $monthNameEn = "October";
+                    break;
+                case 11:
+                    $monthName = "Listopad";
+                    $monthNameEn = "November";
+                    break;
+                case 12:
+                    $monthName = "Grudzień";
+                    $monthNameEn = "December";
+                    break;
+            }
+
+            $month = Month::create([
+                'month' => $monthName,
+                'month_en' => $monthNameEn,
+                'month_number' => $todayInParts[1],
+                'days_in_month' => $numberOfDaysInMonth,
+                'year_id' => $todayInParts[0] == date("Y") ? $currentYear->id : $nextYear->id,
+            ]);
+
+            if ($month !== null)
+            {
+                $month->load('year');
+                $year = $month->year;
+                
+                $monthNumber = strlen($month->month_number) == 2 ? $month->month_number : "0" . $month->month_number;
+                
+                for ($j = 1; $j <= $numberOfDaysInMonth; $j++)
+                {
+                    $dayNumber = strlen($j) == 2 ? $j : "0" . $j;
+                    $dayDate = new \DateTime($year->year . "-" . $monthNumber . "-" . $dayNumber);
+
+                    if ($dayDate->format("N") != 7)
+                    {                                          
+                        $day = Day::create([
+                            'day_number' => $dayDate->format("j"),
+                            'number_in_week' => $dayDate->format("N"),
+                            'month_id' => $month->id
+                        ]);
+                    }
+                }
+            }
+
+            $today = date('Y-m-d', strtotime("+1 month", strtotime($today)));
+        }
     }
 }

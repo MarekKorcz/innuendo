@@ -476,5 +476,9 @@ return [
     'regulations' => 'Regulations',
     'no_schedule' => 'No schedule',
     'add_by_default' => 'Add by default',
-    'change' => 'Change'
+    'change' => 'Change',
+    'refresh_subscription' => 'Refresh subscription',
+    'promo_status' => 'Promotion status',
+    'public_promo_copy_code_description' => 'To use the promotion, register using the code',
+    'click_to_copy' => 'Click to copy code'
 ];
