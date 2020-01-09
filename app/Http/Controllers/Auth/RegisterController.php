@@ -6,7 +6,6 @@ use App\User;
 use App\TempUser;
 use App\Property;
 use App\TempProperty;
-use App\Code;
 use App\ChosenProperty;
 use App\Purchase;
 use App\Subscription;
@@ -14,6 +13,7 @@ use App\Calendar;
 use App\Year;
 use App\Month;
 use App\Day;
+use App\Code;
 use App\PromoCode;
 use App\Message;
 use App\Mail\AdminTempBossCreate2ndStep;
@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Redirect;
@@ -87,71 +86,31 @@ class RegisterController extends Controller
      * @return \App\User
      */
     protected function create(array $data)
-    {
-        $user = User::create([
-            'name' => $data['name'],
-            'surname' => $data['surname'],
-            'phone_number' => $data['phone_number'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+    {        
+        $code = Code::where('code', htmlentities($data['code'], ENT_QUOTES, "UTF-8"))->first();
         
-        if ($user && is_string($data['code']))
+        $boss = User::where([
+            'id' => $code->boss_id,
+            'isBoss' => 1
+        ])->first();
+        
+        if ($code !== null && $boss !== null)
         {
-            $code = Code::where('code', htmlentities($data['code'], ENT_QUOTES, "UTF-8"))->first();
-                        
-            if ($code !== null)
-            {
-                $boss = User::where([
-                    'id' => $code->boss_id,
-                    'isBoss' => 1
-                ])->first();
-                
-                if ($boss !== null)
-                {
-                    $user->boss_id = $boss->id;
-
-                    $codeChosenProperties = new Collection();
-
-                    if (count($code->chosenProperties) > 0)
-                    {
-                        foreach ($code->chosenProperties as $chosenProperty)
-                        {
-                            $chosenProperty->load('subscriptions');
-                            $codeChosenProperties->push($chosenProperty);
-                        }
-                    }
-
-                    if (count($codeChosenProperties) > 0)
-                    {
-                        foreach ($codeChosenProperties as $codeChosenProperty)
-                        {
-                            $userChosenProperty = ChosenProperty::create([
-                                'user_id' => $user->id,
-                                'property_id' => $codeChosenProperty->property_id
-                            ]);
-
-                            foreach ($codeChosenProperty->subscriptions as $codeSubscription)
-                            {
-                                Purchase::create([
-                                    'subscription_id' => $codeSubscription->id,
-                                    'chosen_property_id' => $userChosenProperty->id
-                                ]);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        $user->save();
-        
-        if ($boss !== null)
-        {
+            $user = new User();
+            $user->name = $data['name'];
+            $user->surname = $data['surname'];
+            $user->phone_number = $data['phone_number'];
+            $user->email = $data['email'];
+            $user->password = Hash::make($data['password']);
+            $user->boss_id = $boss->id;
+            $user->save();
+            
             \Mail::to($user)->send(new UserCreateWithPromoCode($user, $boss));
+            
+            return $user;
         }
         
-        return $user;
+        return redirect()->route('welcome')->with('error', 'Rejestracja nie powiodła się');
     }
     
     /**
@@ -270,14 +229,14 @@ class RegisterController extends Controller
                         if ($employee !== null)
                         {                            
                             $calendar = Calendar::create([
-                                'isActive' => 1,
+                                'is_active' => 1,
                                 'property_id' => $property->id,
                                 'employee_id' => $employee->id
                             ]);
 
                             if ($calendar !== null)
                             {
-                                $this->createGraphicsForFirstMonths($calendar->id, 3);
+                                $this->addCalendarToPropery($calendar->id, 3);
                                 
                                 \Mail::to($boss)->send(new AdminTempBossCreate2ndStep($boss));
 
@@ -330,30 +289,29 @@ class RegisterController extends Controller
             
             $promoCode = PromoCode::where([
                 'code' => Input::get('code'),
-                'isActive' => 0
+                'is_active' => 0
             ])->with([
-                'subscriptions',
                 'promo'
             ])->first();
-
+            
             if ($promoCode !== null)
             {
-                if ($promoCode->promo->isActive == 0)
+                if ($promoCode->promo->is_active == 0)
                 {
                     return redirect('/register')->with([
                         'error' => 'Przepraszamy, czas promocji dobiegł końca!'
                     ]);
                 }
                 
-                $boss = User::create([
-                    'name' => Input::get('name'),
-                    'surname' => Input::get('surname'),
-                    'phone_number' => Input::get('phone_number'),
-                    'email' => Input::get('email'),
-                    'password' => Hash::make(Input::get('password')),
-                    'isBoss' => 1,
-                    'isApproved' => 0
-                ]);
+                $boss = new User();
+                $boss->name = Input::get('name');
+                $boss->surname = Input::get('surname');
+                $boss->phone_number = Input::get('phone_number');
+                $boss->email = Input::get('email');
+                $boss->password = Hash::make(Input::get('password'));
+                $boss->isBoss = 1;
+                $boss->is_approved = 0;
+                $boss->save();
 
                 if ($boss !== null)
                 {     
@@ -369,98 +327,12 @@ class RegisterController extends Controller
 
                     if ($bossProperty !== null)
                     {
-                        // create calendar and sign employee (for now, myself) to it
-                        $employee = User::where([
-                            'name' => 'Marek',
-                            'surname' => 'Korcz',
-                            'isEmployee' => 1
-                        ])->first();
-
-                        if ($employee !== null)
-                        {                            
-                            $calendar = Calendar::create([
-                                'isActive' => 1,
-                                'property_id' => $bossProperty->id,
-                                'employee_id' => $employee->id
-                            ]);
-
-                            if ($calendar !== null)
-                            {
-                                // create graphics and add three months
-                                $this->createGraphicsForFirstMonths($calendar->id, 3);
-                        
-                                $bossChosenProperty = ChosenProperty::create([
-                                    'user_id' => $boss->id,
-                                    'property_id' => $bossProperty->id
-                                ]);
-
-                                // load all available subscriptions
-                                $availableSubscriptions = Subscription::where([
-                                    ['id', '!=', null],
-                                    ['add_by_default', '=', 1]
-                                ])->get();
-
-                                if (count($promoCode->subscriptions) > 0)
-                                {
-                                    foreach ($promoCode->subscriptions as $subscription)
-                                    {
-                                        // checks whether in all available subscriptions existn the one from promo code. 
-                                        // if yes, it's being deleted from availableSubscriptions
-                                        if (count($availableSubscriptions) > 0 && $availableSubscriptions->contains('id', $subscription->id))
-                                        {
-                                            $availableSubscriptions = $availableSubscriptions->filter(function ($value) use ($subscription) {
-                                                return $value->id !== $subscription->id;
-                                            });
-                                        }
-
-                                        $bossProperty->subscriptions()->attach($subscription->id);
-                                        $bossChosenProperty->subscriptions()->attach($subscription->id);
-
-                                        $bossPurchase = Purchase::create([
-                                            'subscription_id' => $subscription->id,
-                                            'chosen_property_id' => $bossChosenProperty->id
-                                        ]);
-
-                                        $startDate = new \DateTime(date('Y-m-d'));
-
-                                        $substart = new Substart();
-                                        $substart->start_date = $startDate;
-
-                                        $startDateIncrementedBySubscriptionDuration = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate->format("Y-m-d"))));
-                                        $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDateIncrementedBySubscriptionDuration)));
-
-                                        $substart->end_date = $endDate;
-                                        $substart->boss_id = $boss->id;
-                                        $substart->property_id = $bossProperty->id;
-                                        $substart->subscription_id = $subscription->id;
-                                        $substart->purchase_id = $bossPurchase->id;
-                                        $substart->save();
-
-                                        $bossPurchase->substart_id = $substart->id;
-                                        $bossPurchase->save();
-
-                                        $interval = Interval::create([
-                                            'available_units' => $subscription->quantity,
-                                            'start_date' => $substart->start_date,
-                                            'end_date' => $substart->end_date,
-                                            'substart_id' => $substart->id,
-                                            'purchase_id' => $bossPurchase->id
-                                        ]);
-                                    }
-                                }
-                            }
-                        }            
-
+                        $this->addCalendarToPropery($bossProperty->id, 12);
+                         
                         $promoCode->activation_date = date('Y-m-d H:i:s');
-                        $promoCode->isActive = 1;
+                        $promoCode->is_active = 1;
                         $promoCode->boss_id = $boss->id;
                         $promoCode->save();
-                        
-                        // add other subscriptions
-                        foreach ($availableSubscriptions as $availableSubscription)
-                        {
-                            $bossProperty->subscriptions()->attach($availableSubscription->id);
-                        }
                         
                         // send initial message to promocode user
                         $admin = User::where('isAdmin', 1)->first();
@@ -620,19 +492,19 @@ class RegisterController extends Controller
         ));
     }
     
-    private function createGraphicsForFirstMonths($calendarId, $numberOfMonths)
-    {
-        $currentYear = Year::create([
-            'year' => date('Y'),
-            'calendar_id' => $calendarId
-        ]);
+    private function addCalendarToPropery($propertyId, $numberOfMonths)
+    {        
+        $currentYear = new Year();
+        $currentYear->year = date('Y');
+        $currentYear->property_id = $propertyId;
+        $currentYear->save();
 
         $currentYearIncrementedByOneYear = date('Y', strtotime("+1 year", strtotime(date('Y'))));
-
-        $nextYear = Year::create([
-            'year' => $currentYearIncrementedByOneYear,
-            'calendar_id' => $calendarId,
-        ]);
+        
+        $nextYear = new Year();
+        $nextYear->year = $currentYearIncrementedByOneYear;
+        $nextYear->property_id = $propertyId;
+        $nextYear->save();
 
         $today = date('Y-n');                
 
@@ -695,14 +567,14 @@ class RegisterController extends Controller
                     $monthNameEn = "December";
                     break;
             }
-
-            $month = Month::create([
-                'month' => $monthName,
-                'month_en' => $monthNameEn,
-                'month_number' => $todayInParts[1],
-                'days_in_month' => $numberOfDaysInMonth,
-                'year_id' => $todayInParts[0] == date("Y") ? $currentYear->id : $nextYear->id,
-            ]);
+            
+            $month = new Month();
+            $month->month = $monthName;
+            $month->month_en = $monthNameEn;
+            $month->month_number = $todayInParts[1];
+            $month->days_in_month = $numberOfDaysInMonth;
+            $month->year_id = $todayInParts[0] == date("Y") ? $currentYear->id : $nextYear->id;
+            $month->save();
 
             if ($month !== null)
             {
@@ -717,12 +589,12 @@ class RegisterController extends Controller
                     $dayDate = new \DateTime($year->year . "-" . $monthNumber . "-" . $dayNumber);
 
                     if ($dayDate->format("N") != 7)
-                    {                                          
-                        $day = Day::create([
-                            'day_number' => $dayDate->format("j"),
-                            'number_in_week' => $dayDate->format("N"),
-                            'month_id' => $month->id
-                        ]);
+                    {                                
+                        $day = new Day();
+                        $day->day_number = $dayDate->format("j");
+                        $day->number_in_week = $dayDate->format("N");
+                        $day->month_id = $month->id;
+                        $day->save();
                     }
                 }
             }

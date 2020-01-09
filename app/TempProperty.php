@@ -10,19 +10,19 @@ class TempProperty extends Model
     use SoftDeletes;
     
     /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-    
-    /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'temp_properties';
     
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+        
     /**
      * The attributes that are mass assignable.
      *

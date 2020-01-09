@@ -20,6 +20,8 @@ namespace App\Http\Controllers;
 //use Illuminate\Support\Facades\File;
 //use Session;
 
+use App\Code;
+use App\PromoCode;
 use App\Message;
 use App\Property;
 use App\User;

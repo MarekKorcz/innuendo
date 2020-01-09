@@ -10,6 +10,13 @@ class Discount extends Model
     use SoftDeletes;
     
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'discounts';
+    
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array

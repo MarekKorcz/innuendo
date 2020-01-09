@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TempUser extends Model
 {
     use SoftDeletes;
+    
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'temp_users';
 
     /**
      * The attributes that should be mutated to dates.

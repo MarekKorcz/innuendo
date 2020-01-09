@@ -10,6 +10,13 @@ class User extends Authenticatable
     use Notifiable;
     
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -30,12 +37,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 
-        'remember_token', 
+        'remember_token',
+        'boss_id',
+        'password',
         'isAdmin', 
         'isBoss', 
-        'isEmployee',
-        'boss_id'
+        'isEmployee'
     ];
     
     /**

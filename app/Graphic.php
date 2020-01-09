@@ -10,6 +10,13 @@ class Graphic extends Model
     use SoftDeletes;
     
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'graphics';
+    
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
