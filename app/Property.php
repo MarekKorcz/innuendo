@@ -36,7 +36,15 @@ class Property extends Model
         'street_number', 
         'house_number', 
         'city', 
-        'can_show', 
+        'can_show'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'boss_id'
     ];
     

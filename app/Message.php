@@ -22,7 +22,15 @@ class Message extends Model
         'topic', 
         'email', 
         'text', 
-        'status', 
+        'status'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'user_id', 
         'graphic_request_id', 
         'promo_code_id'

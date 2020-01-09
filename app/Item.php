@@ -26,7 +26,15 @@ class Item extends Model
         'slug', 
         'minutes', 
         'description', 
-        'price', 
+        'price'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'category_id'
     ];
     

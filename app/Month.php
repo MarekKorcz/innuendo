@@ -25,7 +25,15 @@ class Month extends Model
         'month', 
         'month_en', 
         'month_number', 
-        'days_in_month', 
+        'days_in_month'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'year_id'
     ];
     

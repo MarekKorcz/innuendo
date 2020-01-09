@@ -19,7 +19,9 @@ class PromoCode extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'activation_time', 'is_active', 'boss_id'
+        'code', 
+        'activation_time', 
+        'is_active'
     ];
     
     /**
@@ -28,7 +30,8 @@ class PromoCode extends Model
      * @var array
      */
     protected $hidden = [
-        'promo_id'
+        'promo_id',
+        'boss_id'
     ];
     
     /**

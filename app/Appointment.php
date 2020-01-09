@@ -25,7 +25,15 @@ class Appointment extends Model
         'start_time', 
         'end_time', 
         'minutes', 
-        'status', 
+        'status'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'graphic_id', 
         'day_id', 
         'item_id', 

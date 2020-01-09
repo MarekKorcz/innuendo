@@ -23,7 +23,15 @@ class Day extends Model
      */
     protected $fillable = [
         'day_number', 
-        'number_in_week', 
+        'number_in_week'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'month_id'
     ];
     

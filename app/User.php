@@ -20,8 +20,8 @@ class User extends Authenticatable
         'slug', 
         'phone_number', 
         'email',
-        'is_approved',
-        'profile_image'
+        'profile_image',
+        'is_approved'
     ];
 
     /**

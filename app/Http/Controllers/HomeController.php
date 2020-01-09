@@ -6,13 +6,10 @@ namespace App\Http\Controllers;
 //use App\Appointment;
 //use App\PromoCode;
 //use App\Category;
-//use App\Interval;
 //use App\InvoiceData;
 //use App\GraphicRequest;
-//use App\Purchase;
 //use App\Item;
 //use App\Graphic;
-//use App\Calendar;
 //use App\Day;
 //use App\Month;
 //use App\Year;
@@ -324,5 +321,26 @@ class HomeController extends Controller
     
 //    public function test()
 //    {
+//        $hash = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
+//        
+////        $employee = new User();
+////        $employee->name = 'Marek5';
+////        $employee->surname = 'Korcz';
+////        $employee->slug = 'Marek5 Korcz';
+////        $employee->phone_number = '729364873';
+////        $employee->email = 'mark5.korcz@gmail.com';
+////        $employee->password = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
+////        $employee->isEmployee = 1;
+////        $employee->save();
+//        
+////        $employee1 = User::create([
+////            'name' => 'Marek5',
+////            'surname' => 'Korcz',
+////            'slug' => str_slug('Marek5 Korcz'),
+////            'phone_number' => '729364873',
+////            'email' => 'mark5.korcz@gmail.com',
+////            'password' => '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq',
+////            'isEmployee' => 1
+////        ]);
 //    }
 }

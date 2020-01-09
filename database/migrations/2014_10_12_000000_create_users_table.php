@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('profile_image')->nullable();
-            $table->boolean('is_approved');
+            $table->boolean('is_approved')->default(1);
             $table->boolean('isAdmin')->nullable();
             $table->boolean('isBoss')->nullable();
             $table->boolean('isEmployee')->nullable();

@@ -21,7 +21,15 @@ class GraphicRequest extends Model
     protected $fillable = [
         'start_time', 
         'end_time', 
-        'comment', 
+        'comment'        
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'property_id',
         'day_id'
     ];

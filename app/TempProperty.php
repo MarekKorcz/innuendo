@@ -34,7 +34,15 @@ class TempProperty extends Model
         'street', 
         'street_number', 
         'house_number', 
-        'city', 
+        'city'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'boss_id'
     ];
     

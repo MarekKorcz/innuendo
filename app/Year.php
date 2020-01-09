@@ -22,7 +22,15 @@ class Year extends Model
      * @var array
      */
     protected $fillable = [
-        'year', 
+        'year'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'property_id'
     ];
     

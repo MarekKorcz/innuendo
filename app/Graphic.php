@@ -24,7 +24,15 @@ class Graphic extends Model
     protected $fillable = [
         'start_time', 
         'end_time', 
-        'total_time', 
+        'total_time'
+    ];
+    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'day_id'
     ];
     
