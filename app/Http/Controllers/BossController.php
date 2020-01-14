@@ -43,7 +43,7 @@ class BossController extends Controller
     /**
      * Shows calendar that belongs to employee.
      * 
-     * @param integer $calendar_id
+     * @param integer $property_id
      * @param integer $year
      * @param integer $month_number
      * @param integer $day_number
@@ -51,28 +51,28 @@ class BossController extends Controller
      * @return type
      * @throws Exception
      */
-    public function calendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
+    public function calendar($property_id, $year = 0, $month_number = 0, $day_number = 0)
     {
-        $calendar = Calendar::where([
-            'id' => $calendar_id,
-            'isActive' => 1
-        ])->first();
+        $property = Property::where([
+            'id' => $property_id,
+            'boss_id' => auth()->user()->id
+        ])->with('boss')->first();
         
-        if ($calendar !== null)
+        if ($property !== null)
         {
             $currentDate = new \DateTime();
             
             if ($year == 0)
             {
                 $year = Year::where([
-                    'calendar_id' => $calendar->id,
+                    'property_id' => $property->id,
                     'year' => $currentDate->format("Y")
                 ])->first();
                 
             } else if (is_numeric($year) && (int)$year > 0) {
                 
                 $year = Year::where([
-                    'calendar_id' => $calendar->id,
+                    'property_id' => $property->id,
                     'year' => $year
                 ])->first();
             }
@@ -128,49 +128,36 @@ class BossController extends Controller
                         } else {
                             
                             $graphic = [];
-                            $graphicTime = [];
+                            $graphicTime = null;
                         }
                         
                         $availablePreviousMonth = false;
 
-                        if ($this->checkIfPreviewMonthIsAvailable($calendar, $year, $month))
+                        if ($this->checkIfPreviewMonthIsAvailable($property, $year, $month))
                         {
                             $availablePreviousMonth = true;
                         }
                         
                         $availableNextMonth = false;
 
-                        if ($this->checkIfNextMonthIsAvailable($calendar, $year, $month))
+                        if ($this->checkIfNextMonthIsAvailable($property, $year, $month))
                         {
                             $availableNextMonth = true;
                         }
                         
-                        $property = Property::where('id', $calendar->property_id)->first();
-                        
-                        $canSendRequest = $property->boss_id == auth()->user()->id ? true : false;
+                        $canSendRequest = $property->boss_id == $property->boss->id ? true : false;
                         $graphicRequest = null;
                         
                         if ($canSendRequest)
                         {
                             $graphicRequest = GraphicRequest::where([
                                 'property_id' => $property->id,
-                                'year_number' => $year->year,
-                                'month_number' => $month->month_number,
-                                'day_number' => $currentDay !== null ? $currentDay->day_number : $day_number,
-                                'boss_id' => auth()->user()->id
+                                'day_id' => $currentDay !== null ? $currentDay->id : $day_number
                             ])->first();
                         }
                         
-                        $employees = User::where('isEmployee', 1)->get();
-                        
-                        $employee = User::where([
-                            'isEmployee' => 1,
-                            'id' => $calendar->employee_id
-                        ])->first();        
-                        
                         return view('boss.calendar')->with([
-                            'calendar_id' => $calendar->id,
-                            'employee_slug' => $employee->slug,
+                            'property' => $property,
                             'availablePreviousMonth' => $availablePreviousMonth,
                             'availableNextMonth' => $availableNextMonth,
                             'year' => $year,
@@ -178,10 +165,10 @@ class BossController extends Controller
                             'days' => $days,
                             'current_day' => is_object($currentDay) ? $currentDay->day_number : 0,
                             'graphic' => $graphic,
-                            'graphic_id' => $graphicTime ? $graphicTime->id : null,
+                            'graphic_id' => $graphicTime !== null ? $graphicTime->id : null,
                             'canSendRequest' => $currentDay !== null ? $canSendRequest : false,
                             'graphicRequest' => $graphicRequest,
-                            'employees' => $employees
+                            'employees' => User::where('isEmployee', 1)->get()
                         ]);
                         
                     } else {
@@ -201,7 +188,7 @@ class BossController extends Controller
             
             return redirect()->action(
                 'BossController@calendar', [
-                    'calendar_id' => $calendar->id,
+                    'property_id' => $property->id,
                     'year' => 0, 
                     'month_number' => 0, 
                     'day_number' => 0
@@ -213,9 +200,7 @@ class BossController extends Controller
             $message = 'Niepoprawny numer id kalendarza!';
         }
         
-        return redirect()->action(
-            'UserController@employeesList', []
-        )->with('error', $message);
+        return redirect()->route('welcome')->with('error', $message);
     }
     
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
@@ -350,12 +335,12 @@ class BossController extends Controller
         return $graphic;
     }
     
-    private function checkIfPreviewMonthIsAvailable($calendar, $year, $month)
+    private function checkIfPreviewMonthIsAvailable($property, $year, $month)
     {
         if ($month->month_number == 1)
         {
             $year = Year::where([
-                'calendar_id' => $calendar->id,
+                'property_id' => $property->id,
                 'year' => ($year->year - 1)
             ])->first();
             
@@ -392,12 +377,12 @@ class BossController extends Controller
         return true;
     }
     
-    private function checkIfNextMonthIsAvailable($calendar, $year, $month)
+    private function checkIfNextMonthIsAvailable($property, $year, $month)
     {
         if ($month->month_number == 12)
         {
             $year = Year::where([
-                'calendar_id' => $calendar->id,
+                'property_id' => $property->id,
                 'year' => ($year->year + 1)
             ])->first();
             
@@ -674,245 +659,6 @@ class BossController extends Controller
             $property->save();
 
             return redirect('boss/subscription/list/' . $property->id . '/0')->with('success', 'Lokalizacja została zaktualizowana');
-        }
-    }
-    
-    /**
-     * Shows list of subscriptions
-     * 
-     * @param type $propertyId
-     * @param type $subscriptionId
-     * @return type
-     */
-    public function subscriptionList($propertyId = 0, $subscriptionId = 0)
-    {        
-        $boss = auth()->user();
-        $allBossWorkers = $boss->getWorkers();
-        $givenProperty = null;
-        
-        $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
-        $propertyId = (int)$propertyId;
-
-        if ($propertyId !== 0)
-        {
-            $givenProperty = Property::where([
-                'id' => $propertyId,
-                'boss_id' => $boss->id
-            ])->with('subscriptions')->first();
-        }
-
-        $chosenSubscription = null;
-        
-        $subscriptionId = htmlentities((int)$subscriptionId, ENT_QUOTES, "UTF-8");
-        $subscriptionId = (int)$subscriptionId;
-
-        if ($subscriptionId !== 0)
-        {
-            if ($givenProperty !== null && count($givenProperty->subscriptions) > 0)
-            {
-                foreach ($givenProperty->subscriptions as $subscription)
-                {
-                    if ($subscription->id === $subscriptionId)
-                    {
-                        $chosenSubscription = $subscription;
-                    }
-                }
-            }
-        }        
-        
-        $propertiesWithSubscriptions = [];
-        $properties = Property::where('boss_id', $boss->id)->with([
-            'chosenProperties',
-            'subscriptions'
-        ])->get();
-        
-        if (count($properties) > 0)
-        {
-            foreach ($properties as $property)
-            {                    
-                // >> checks how many workers belongs to property
-                $property['howManyWorkersBelongToProperty'] = 0;
-                
-                if ($allBossWorkers !== null)
-                {
-                    foreach ($allBossWorkers as $worker)
-                    {
-                        if (count($worker->chosenProperties) > 0)
-                        {
-                            foreach ($worker->chosenProperties as $chosenProperty)
-                            {
-                                if ($chosenProperty->property_id == $property->id)
-                                {
-                                    $property['howManyWorkersBelongToProperty'] = $property['howManyWorkersBelongToProperty'] + 1;
-                                }
-                            }
-                        }
-                    }
-                }
-                // <<                
-                
-                // >> checks if property is checked
-                $property['isChecked'] = false;
-                
-                if ($givenProperty !== null && $givenProperty->id === $property->id)
-                {
-                    $property['isChecked'] = true;
-                }
-                // <<
-                
-                $chosenProperty = ChosenProperty::where([
-                    'user_id' => $boss->id,
-                    'property_id' => $property->id
-                ])->with('subscriptions')->first();
-                
-                $subscriptions = new Collection();
-                
-                if (count($property->subscriptions) > 0)
-                {
-                    foreach ($property->subscriptions as $subscription)
-                    {
-                        // >> check if subscription is checked
-                        $subscription['isChecked'] = false;
-                
-                        if ($chosenSubscription !== null && $chosenSubscription->id === $subscription->id)
-                        {
-                            $subscription['isChecked'] = true;
-                        }
-                        // <<
-                        
-                        // >> check if subscription is purchased already
-                        if ($chosenProperty !== null && count($chosenProperty->subscriptions) > 0)
-                        {
-                            foreach ($chosenProperty->subscriptions as $chosenSub)
-                            {
-                                $purchases = new Collection();
-                                
-                                // >> check if subscription is purchased
-                                if ($chosenSub->id == $subscription->id)
-                                {
-                                    $purchases = Purchase::where([
-                                        'subscription_id' => $subscription->id,
-                                        'chosen_property_id' => $chosenProperty->id
-                                    ])->get();
-                            
-                                    if (count($purchases) > 0)
-                                    {
-                                        $today = new \DateTime(date('Y-m-d'));
-//                                        $today = date('Y-m-d', strtotime("+13 month", strtotime($today->format("Y-m-d"))));
-                                        
-                                        foreach ($purchases as $purchase)
-                                        {
-                                            // >> when purchased, look for substart
-                                            $substart = Substart::where([
-                                                'id' => $purchase->substart_id,
-                                                'boss_id' => $boss->id,
-                                                'purchase_id' => $purchase->id
-                                            ])->first();
-
-                                            if ($substart !== null)
-                                            {                                                
-                                                // >> check whether substart is current or not
-                                                $substart['isCurrent'] = false;
-                                                
-                                                if ($substart->start_date <= $today && $substart->end_date >= $today)
-                                                {
-                                                    $substart['isCurrent'] = true;
-                                                }
-                                                // <<
-                                                
-                                                // get workers assigned to boss purchsed subscription
-                                                $substart['workers'] = $this->getWorkersFrom($substart->id);
-                                                
-                                                // set substart to purchase
-                                                $purchase['substart'] = $substart;
-                                            }
-                                            // <<
-                                        }
-                                    }
-                                }
-                                // <<
-                                
-                                if ($subscription['propertyPurchases'] == null || count($subscription['propertyPurchases']) == 0)
-                                {
-                                    $subscription['propertyPurchases'] = $purchases;
-                                }
-                            }
-                        }
-                        // <<
-                        
-                        $subscriptions->push($subscription);
-                    }
-                }
-                
-                $propertiesWithSubscriptions[] = [
-                    'property' => $property,
-                    'subscriptions' => $subscriptions
-                ];
-            }
-            
-            if (count($propertiesWithSubscriptions) > 0)
-            {
-                // >> if not set, mark one property as checked
-                $checkedPropertyCount = 0;
-            
-                foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
-                {
-                    if ($propertyWithSubscriptions['property']->isChecked === true)
-                    {
-                        $checkedPropertyCount++;
-                    }
-                }
-                
-                if ($checkedPropertyCount === 0)
-                {
-                    $propertiesWithSubscriptions[0]['property']->isChecked = true;
-                    $propertyId = $propertiesWithSubscriptions[0]['property']->id;
-                }
-                // <<
-                
-                // >> if not set, mark one subscription as checked
-                $checkedSubscriptionCount = 0;
-                
-                foreach ($propertiesWithSubscriptions as $propertyWithSubscriptions)
-                {
-                    if ($propertyWithSubscriptions['property']->isChecked == true)
-                    {
-                        if (count($propertyWithSubscriptions['subscriptions']) > 0)
-                        {
-                            foreach ($propertyWithSubscriptions['subscriptions'] as $subscription)
-                            {
-                                if ($subscription->isChecked == true)
-                                {
-                                    $checkedSubscriptionCount++;
-                                }
-                            }
-                        }
-                        
-                        if ($checkedSubscriptionCount === 0)
-                        {
-                            $propertyWithSubscriptions['subscriptions']->first()->isChecked = true;
-                            $subscriptionId = $propertyWithSubscriptions['subscriptions']->first()->id;
-                        }
-                    }
-                }
-                // <<
-            }
-            
-            // >> get substarts attached to chosen property and subscription
-            $substarts = Substart::where([
-                'property_id' => $propertyId,
-                'subscription_id' => $subscriptionId
-            ])->get();
-            // <<
-            
-            return view('boss.subscription_dashboard')->with([
-                'propertiesWithSubscriptions' => $propertiesWithSubscriptions,
-                'substart' => count($substarts) > 0 ? $substarts->last() : null
-            ]);
-            
-        } else {
-            
-            return redirect()->route('welcome')->with('error', 'Ta lokalizacja nie należy do Ciebie');
         }
     }
         
@@ -2330,7 +2076,12 @@ class BossController extends Controller
     
     public function graphicRequests()
     {
-        $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+        $boss = User::where('id', auth()->user()->id)->with([
+            'properties.graphicRequests.day.month.year',
+            'properties.graphicRequests.employees'
+        ])->first();
+        
+        dd($boss);
         
         $graphicRequests = GraphicRequest::where('boss_id', $boss->id)->with([
             'property',
@@ -2515,18 +2266,16 @@ class BossController extends Controller
     
     public function approveMessages()
     {
-        $boss = auth()->user();
-        $promoCode = PromoCode::where('boss_id', $boss->id)->with([
-            'messages',
+        $promoCode = PromoCode::where('boss_id', auth()->user()->id)->with([
             'promo',
-            'subscriptions'
+            'boss',
+            'messages'
         ])->first();
         
         if ($promoCode !== null)
         {
             return view('boss.approve_messages')->with([
-                'promoCode' => $promoCode,
-                'boss' => $boss
+                'promoCode' => $promoCode
             ]);
         }
         
@@ -2601,7 +2350,7 @@ class BossController extends Controller
                     $message = new Message();
                     $message->text = Input::get('text');
                     $message->status = 0;
-                    $message->owner_id = $promoCode->boss_id;
+                    $message->user_id = $promoCode->boss_id;
                     $message->promo_code_id = $promoCode->id;
                     $message->save();
                     
@@ -2611,339 +2360,7 @@ class BossController extends Controller
             
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
-    }
-
-    public function setSubscriptionToChosenPropertySubscription(Request $request)
-    {        
-        if ($request->request->all())
-        {
-            $chosenPropertyId = htmlentities((int)$request->get('chosenPropertyId'), ENT_QUOTES, "UTF-8");
-            $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
-            
-            if ($chosenPropertyId !== 0 && $subscriptionId !== 0)
-            {
-                $chosenProperty = ChosenProperty::where('id', $chosenPropertyId)->with('subscriptions')->first();
-                $subscription = Subscription::where('id', $subscriptionId)->first();
-
-                if ($chosenProperty !== null && $subscription !== null)
-                {
-                    $active = false;
-
-                    foreach ($chosenProperty->subscriptions as $chosenPropertySubscription)
-                    {
-                        if ($chosenPropertySubscription->id == $subscription->id)
-                        {
-                            $active = true;
-                        }
-                    }
-
-                    if ($active)
-                    {
-                        $chosenProperty->subscriptions()->detach($subscription);
-
-                    } else {
-
-                        $chosenProperty->subscriptions()->attach($subscription);
-                    }
-
-                    $data = [
-                        'type'    => 'success',
-                        'message' => 'Subskrypcja została zmieniona'
-                    ];
-
-                    return new JsonResponse($data, 200, array(), true);
-
-                } else {
-
-                    $message = "Subskrypcja lub zabieg nie istnieje!";
-                }
-                
-            } else {
-
-                $message = "Nieprawidłowe dane requestu";
-            }
-            
-        } else {
-            
-            $message = "Pusty request";
-        }
-        
-        return new JsonResponse(array(
-            'type'    => 'error',
-            'message' => $message            
-        ));
-    }
-    
-    public function setChosenProperty(Request $request)
-    {        
-        if ($request->request->all())
-        {
-            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
-            $subscriptionId = htmlentities((int)$request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
-            $codeId = htmlentities((int)$request->get('codeId'), ENT_QUOTES, "UTF-8");
-            
-            $message = "Błąd zapytania";
-            $type = "error";
-            $newChosenPropertyId = 0;
-            
-            if ($codeId > 0 && $propertyId > 0 && $codeId !== 0)
-            {
-                $chosenProperty = new ChosenProperty();
-                $chosenProperty->property_id = $propertyId;
-                $chosenProperty->code_id = $codeId;
-                $chosenProperty->save();
-                
-                if ($chosenProperty->id !== null)
-                {
-                    $subscription = Subscription::where('id', $subscriptionId)->first();
-                    
-                    if ($subscription !== null)
-                    {
-                        $chosenProperty->subscriptions()->attach($subscription);
-                    }
-                    
-                    $message = "Lokalizacja została dodana do danego kodu";
-                    $type = "success";
-                    $newChosenPropertyId = $chosenProperty->id;
-                }
-            }
-            
-            $data = [
-                'type'    => $type,
-                'message' => $message,
-                'newChosenPropertyId' => $newChosenPropertyId
-            ];
-
-            return new JsonResponse($data, 200, array(), true);
-            
-        } else {
-            
-            $message = "Pusty request";
-        }
-        
-        return new JsonResponse(array(
-            'type'    => 'error',
-            'message' => $message            
-        ));
-    }
-    
-    public function deleteChosenProperty(Request $request)
-    {        
-        if ($request->request->all())
-        {
-            $chosenPropertyId = htmlentities((int)$request->get('chosenPropertyId'), ENT_QUOTES, "UTF-8");
-            
-            $message = "Błąd zapytania";
-            
-            if ($chosenPropertyId > 0) {
-                                
-                $chosenProperty = ChosenProperty::where('id', $chosenPropertyId)->with('subscriptions')->first();
-
-                if ($chosenProperty !== null)
-                {
-                    foreach ($chosenProperty->subscriptions as $chosenPropertySubscription)
-                    {
-                        $chosenProperty->subscriptions()->detach($chosenPropertySubscription);
-                    }
-                    
-                    $chosenProperty->delete();
-                    
-                    $message = "Lokalizacja została usunięta z danego kodu";
-                }
-            }
-            
-            $data = [
-                'type'    => 'success',
-                'message' => $message
-            ];
-
-            return new JsonResponse($data, 200, array(), true);
-            
-        } else {
-            
-            $message = "Pusty request";
-        }
-        
-        return new JsonResponse(array(
-            'type'    => 'error',
-            'message' => $message            
-        ));
-    }
-    
-    public function getPropertySubscriptions(Request $request)
-    {
-        if ($request->request->all())
-        {
-            $boss = auth()->user();
-        
-            $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
-            $property = Property::where([
-                'id' => $propertyId,
-                'boss_id' => $boss->id
-            ])->with([
-                'subscriptions',
-                'chosenProperties'
-            ])->first();
-
-            $message = "Błąd zapytania";
-            $type = "error";
-
-            if ($property !== null)
-            {
-                if (count($property->subscriptions) > 0)
-                {
-                    // >> get all property subscriptions
-                    $propertySubscriptions = [];
-
-                    foreach ($property->subscriptions as $propertySubscription)
-                    {
-                        $propertySubscriptions[] = [
-                            'id' => $propertySubscription->id,
-                            'name' => $propertySubscription->name,
-                            'name_description' => \Lang::get('common.label'),
-                            'description_description' => \Lang::get('common.description'),
-                            'description' => $propertySubscription->description,
-                            'old_price' => $propertySubscription->old_price . " zł " . \Lang::get('common.per_person'),
-                            'old_price_description' => \Lang::get('common.regular_price'),
-                            'new_price' => $propertySubscription->new_price . " zł " . \Lang::get('common.per_person'),
-                            'new_price_description' => \Lang::get('common.price_with_subscription'),
-                            'quantity' => $propertySubscription->quantity,
-                            'quantity_description' => \Lang::get('common.number_of_massages_to_use_per_month'),
-                            'duration' => $propertySubscription->duration,
-                            'duration_description' => \Lang::get('common.subscription_duration'),
-                            'button' => route('subscriptionPurchaseView', [
-                                'propertyId' => $property->id,
-                                'subscriptionId' => $propertySubscription->id
-                            ]),
-                            'button_description' => \Lang::get('common.activate_subscription'),
-                            'isPurchased' => false,
-                        ];
-                    }
-                    // <<
-
-                    // >> get purchased property subscriptions
-                    $purchasedSubscriptions = [];
-
-                    if (count($property->chosenProperties) > 0)
-                    {
-                        foreach ($property->chosenProperties as $chosenProperty)
-                        {
-                            $chosenProperty = ChosenProperty::where([
-                                'id' => $chosenProperty->id,
-                                'user_id' => $boss->id
-                            ])->with('subscriptions')->first();
-
-                            if ($chosenProperty !== null && count($chosenProperty->subscriptions) > 0)
-                            {
-                                foreach ($chosenProperty->subscriptions as $subscription)
-                                {
-                                    $purchasedSubscriptions[] = [
-                                        'id' => $subscription->id,
-                                        'name' => $subscription->name,
-                                        'description' => $subscription->name,
-                                        'old_price' => $subscription->old_price,
-                                        'new_price' => $subscription->new_price,
-                                        'quantity' => $subscription->quantity,
-                                        'duration' => $subscription->duration,
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                    // <<
-
-                    if (count($propertySubscriptions) > 0)
-                    {
-                        if (count($purchasedSubscriptions) > 0)
-                        {
-                            foreach ($propertySubscriptions as $key => $propertySubscription)
-                            {                            
-                                foreach ($purchasedSubscriptions as $purchasedSubscription)
-                                {                                
-                                    if ($propertySubscription['id'] == $purchasedSubscription['id'])
-                                    {
-                                        $propertySubscriptions[$key]['isPurchased'] = true;
-                                    }
-                                }
-                            }
-                        }
-
-                        $message = "Subskrypcje danej lokalizacji zostały wczytane";
-                        $type = "success";
-
-                        $data = [
-                            'type'    => $type,
-                            'message' => $message,
-                            'propertySubscriptions' => $propertySubscriptions
-                        ];
-                    }
-
-                } else {
-
-                    $message = "Dana lokalizacja nie posiada subskrypcji";
-                    $type = "error";
-
-                    $data = [
-                        'type'    => $type,
-                        'message' => $message
-                    ];
-                }
-
-                return new JsonResponse($data, 200, array(), true);
-            }
-            
-        } else {
-            
-            $message = "Pusty request";
-            $type = "error";
-        }
-        
-        return new JsonResponse(array(
-            'type'    => $type,
-            'message' => $message            
-        ));
-    }
-    
-    public function getSubscriptionWorkers(Request $request)
-    {
-        $substartId = htmlentities((int)$request->get('substartId'), ENT_QUOTES, "UTF-8");
-        $substart = Substart::where('id', $substartId)->first();
-
-        $workers = $this->getWorkersFrom($substartId);
-
-        if (count($workers) > 0)
-        {
-            $data = [
-                'type'    => 'success',
-                'message' => "Udało się pobrać użytkowników posiadający daną subskrypcje",
-                'workers' => $workers,
-                'header_workers' => \Lang::get('common.people_assigned_to_subscription'),
-                'subscription_workers_edit_button' => route('subscriptionWorkersEdit', [
-                    'substartId' => $substart->id,
-                    'intervalId' => 0
-                ]),
-                'subscription_workers_edit_button_description' => \Lang::get('common.edit'),
-                'worker_appointment_list_button' => route('workerAppointmentList', [
-                    'substartId' => $substart->id,
-                    'userId' => 0
-                ]),
-                'worker_appointment_list_button_description' => \Lang::get('common.all_massages'),
-                'show_button_description' => \Lang::get('common.show'),
-                'name_description' => \Lang::get('common.name'),
-                'email_description' => \Lang::get('common.email_address'),
-                'phone_number_description' => \Lang::get('common.phone_number'),
-                'appointments_description' => \Lang::get('common.items')
-            ];
-
-            return new JsonResponse($data, 200, array(), true);
-        }
-        
-        return new JsonResponse(array(
-            'type'    => "error",
-            'message' => "Pusty request",
-            'no_people_assigned_to_subscription' => \Lang::get('common.no_people_assigned_to_subscription'),
-        ));
-    }
+    }    
     
     private function getWorkersFrom($substartId)
     {
@@ -3116,74 +2533,6 @@ class BossController extends Controller
             'type'    => 'error',
             'message' => 'Pusty request'            
         ));
-    }
-    
-    public function getSubscriptionSubstarts (Request $request)
-    {
-        if ($request->get('propertyId') && $request->get('subscriptionId'))
-        {
-            $propertyId = htmlentities($request->get('propertyId'), ENT_QUOTES, "UTF-8");
-            $subscriptionId = htmlentities($request->get('subscriptionId'), ENT_QUOTES, "UTF-8");
-            
-            $boss = auth()->user();
-        
-            $property = Property::where([
-                'id' => $propertyId,
-                'boss_id' => $boss->id
-            ])->first();
-
-            $subscription = Subscription::where('id', $subscriptionId)->first();
-
-            if ($property !== null && $subscription !== null)
-            {
-                $substarts = Substart::where([
-                    'boss_id' => $boss->id,
-                    'property_id' => $property->id,
-                    'subscription_id' => $subscription->id
-                ])->get();
-
-                if (count($substarts) > 0)
-                {
-                    $substarts = $substarts->sortBy('end_date');
-                    $newestSubstart = $substarts->last();
-
-                    $workers = $this->getWorkersFrom($newestSubstart->id);                
-
-                    $data = [
-                        'type'    => 'success',
-                        'header'    => \Lang::get('common.subscription_duration_period'),
-                        'substarts' => $this->turnSubstartObjectsToArrays($substarts),
-                        'newestSubstart' => $this->turnSubstartObjectsToArrays($newestSubstart),
-                        'workers' => $workers,
-                        'lastSubstartId' => $substarts->last()->id,
-                        'header_workers' => \Lang::get('common.people_assigned_to_subscription'),
-                        'subscription_workers_edit_button' => route('subscriptionWorkersEdit', [
-                            'substartId' => $substarts->last()->id,
-                            'intervalId' => 0
-                        ]),
-                        'subscription_workers_edit_button_description' => \Lang::get('common.edit'),
-                        'worker_appointment_list_button' => route('workerAppointmentList', [
-                            'substartId' => $substarts->last()->id,
-                            'userId' => 0
-                        ]),
-                        'worker_appointment_list_button_description' => \Lang::get('common.all_massages'),
-                        'show_button_description' => \Lang::get('common.show'),
-                        'name_description' => \Lang::get('common.name'),
-                        'email_description' => \Lang::get('common.email_address'),
-                        'phone_number_description' => \Lang::get('common.phone_number'),
-                        'appointments_description' => \Lang::get('common.items'),
-                    ];
-
-                    return new JsonResponse($data, 200, array(), true);
-                }
-            }
-        }
-        
-        return new JsonResponse(array(
-            'type'    => 'error',
-            'message' => 'Pusty request',
-            'no_people_assigned_to_subscription' => \Lang::get('common.no_people_assigned_to_subscription'),
-        )); 
     }
 
     private function turnSubstartObjectsToArrays($substarts)

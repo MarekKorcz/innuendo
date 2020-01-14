@@ -31,7 +31,7 @@
                             <td>{{$promoCode->activation_date}}</td>
                             <td>{{$promoCode->promo->title}}</td>
                             <td>
-                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/admin/approve/messages/' . $promoCode->boss->id) }}">
+                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/admin/approve/messages/' . $promoCode->boss->id . '/' . $promoCode->promo->id) }}">
                                     @lang('common.show')
                                 </a>
                             </td>

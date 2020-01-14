@@ -15,22 +15,18 @@
                 @lang('common.all_massages')
             </a>
         </div>
-        <div class="col-4">
-            <a class="btn pallet-2-3" style="color: white;" href="{{ URL::to('/employee/' . $employee_slug) }}">
-                @lang('common.back_to_employee')
-            </a>
-        </div>
+        <div class="col-4"></div>
     </div>
 
     <div id="calendar" class="table-responsive">
         <div id="table-nav-bar">
             <div class="head-tile text-center" style="width: 25%; padding-top: 30px;">
                 @if ($availablePreviousMonth && $month->month_number == 1)
-                    <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . ($year->year - 1) . '/12/' . $current_day) }}">
+                    <a href="{{ URL::to('boss/calendar/' . $property->id . '/' . ($year->year - 1) . '/12/' . $current_day) }}">
                         @svg('solid/angle-left')
                     </a>
                 @elseif ($availablePreviousMonth)
-                    <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . $year->year . '/' . ($month->month_number - 1) . '/' . $current_day) }}">
+                    <a href="{{ URL::to('boss/calendar/' . $property->id . '/' . $year->year . '/' . ($month->month_number - 1) . '/' . $current_day) }}">
                         @svg('solid/angle-left')
                     </a>
                 @endif
@@ -49,11 +45,11 @@
             </div>
             <div class="head-tile text-center" style="width: 25%; padding-top: 30px;">
                 @if ($availableNextMonth && $month->month_number == 12)
-                    <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . ($year->year + 1) . '/1/' . $current_day) }}">
+                    <a href="{{ URL::to('boss/calendar/' . $property->id . '/' . ($year->year + 1) . '/1/' . $current_day) }}">
                         @svg('solid/angle-right')
                     </a>
                 @elseif ($availableNextMonth)
-                    <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . $year->year . '/' . ($month->month_number + 1) . '/' . $current_day) }}">
+                    <a href="{{ URL::to('boss/calendar/' . $property->id . '/' . $year->year . '/' . ($month->month_number + 1) . '/' . $current_day) }}">
                         @svg('solid/angle-right')
                     </a>
                 @endif
@@ -77,7 +73,7 @@
                         <tr>
                             <td class="text-center">
                                 @if (is_object($days[$i]) && $days[$i] !== null)
-                                    <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
+                                    <a href="{{ URL::to('boss/calendar/' . $property->id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                         @if ($days[$i]->day_number == $current_day)
                                             <h4 class="marked">
                                         @else
@@ -97,7 +93,7 @@
                     @elseif ($i == 5 || $i == 11 || $i == 17 || $i == 23 || $i == 29 || $i == 35)
                             <td class="text-center">
                                 @if (is_object($days[$i]) && $days[$i] !== null)
-                                    <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
+                                    <a href="{{ URL::to('boss/calendar/' . $property->id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                         @if ($days[$i]->day_number == $current_day)
                                             <h4 class="marked">
                                         @else
@@ -118,7 +114,7 @@
                     @else
                         <td class="text-center">
                             @if (is_object($days[$i]) && $days[$i] !== null)
-                                <a href="{{ URL::to('employee/calendar/' . $calendar_id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
+                                <a href="{{ URL::to('boss/calendar/' . $property->id . '/' . $year->year . '/' . $month->month_number . '/' . $days[$i]->day_number) }}">
                                     @if ($days[$i]->day_number == $current_day)
                                         <h4 class="marked">
                                     @else
@@ -393,10 +389,6 @@
                         @if($graphic_id !== null)
                             <input type="hidden" name="graphicId" value="{{$graphic_id}}"/>
                         @endif
-                        <input type="hidden" name="calendarId" value="{{$calendar_id}}"/>
-                        <input type="hidden" name="year" value="{{$year->year}}"/>
-                        <input type="hidden" name="month" value="{{$month->month_number}}"/>
-                        <input type="hidden" name="day" value="{{$current_day}}"/>
                     </div>
                  
                     <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
@@ -465,7 +457,7 @@
                                     {{ Form::textarea('comment', Input::old('comment'), array('class' => 'form-control')) }}
                                 </div>
 
-                                <input type="hidden" name="calendar" value="{{$calendar_id}}"/>
+                                <input type="hidden" name="property" value="{{$property->id}}"/>
                                 <input type="hidden" name="year" value="{{$year->id}}"/>
                                 <input type="hidden" name="month" value="{{$month->id}}"/>
                                 <input type="hidden" name="day" value="{{$current_day}}"/>

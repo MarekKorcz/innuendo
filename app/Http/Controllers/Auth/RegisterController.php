@@ -295,8 +295,8 @@ class RegisterController extends Controller
             ])->first();
             
             if ($promoCode !== null)
-            {
-                if ($promoCode->promo->is_active == 0)
+            {                
+                if ($promoCode->promo->is_active == 0 || $promoCode->promo->available_code_count <= 0 || $promoCode->is_active !== 0)
                 {
                     return redirect('/register')->with([
                         'error' => 'Przepraszamy, czas promocji dobiegł końca!'
@@ -315,40 +315,44 @@ class RegisterController extends Controller
 
                 if ($boss !== null)
                 {     
-                    $bossProperty = Property::create([
-                        'name' => Input::get('property_name'),
-                        'slug' => str_slug(Input::get('property_name')),
-                        'street' => Input::get('street'),
-                        'street_number' => Input::get('street_number'),
-                        'house_number' => Input::get('house_number'),
-                        'city' => Input::get('city'),
-                        'boss_id' => $boss->id
-                    ]);
+                    $bossProperty = new Property();
+                    $bossProperty->name = Input::get('property_name');
+                    $bossProperty->slug = str_slug(Input::get('property_name'));
+                    $bossProperty->street = Input::get('street');
+                    $bossProperty->street_number = Input::get('street_number');
+                    $bossProperty->house_number = Input::get('house_number');
+                    $bossProperty->city = Input::get('city');
+                    $bossProperty->boss_id = $boss->id;
+                    $bossProperty->save();
 
                     if ($bossProperty !== null)
                     {
-                        $this->addCalendarToPropery($bossProperty->id, 12);
+                        $this->addCalendarToPropery($bossProperty->id, 6);
                          
                         $promoCode->activation_date = date('Y-m-d H:i:s');
                         $promoCode->is_active = 1;
                         $promoCode->boss_id = $boss->id;
                         $promoCode->save();
                         
+                        $promoCode->promo->available_code_count = $promoCode->promo->available_code_count - 1;
+                        $promoCode->promo->used_code_count = $promoCode->promo->used_code_count + 1;
+                        $promoCode->promo->save();
+                        
                         // send initial message to promocode user
                         $admin = User::where('isAdmin', 1)->first();
                         $splitedBossName = str_split($boss->name);
                         $youUsedPhrase = $splitedBossName[count($splitedBossName) - 1] == "a" ? \Lang::get('common.you_used_female') : \Lang::get('common.you_used_male');
-
-                        $message = Message::create([
-                            'text' => \Lang::get('common.greetings') . ", " . $boss->name . " " . $boss->surname . "! " . 
-                                \Lang::get('common.we_are_very_happy_that') . " " . $youUsedPhrase . " " . 
-                                \Lang::get('common.approve_message_body') . " " . 
-                                config('app.name') . " " .
-                                config('app.name_2nd_part'),
-                            'status' => 0,
-                            'owner_id' => $admin->id,
-                            'promo_code_id' => $promoCode->id,
-                        ]);
+                        
+                        $message = new Message();
+                        $message->text = \Lang::get('common.greetings') . ", " . $boss->name . " " . $boss->surname . "! " . 
+                            \Lang::get('common.we_are_very_happy_that') . " " . $youUsedPhrase . " " . 
+                            \Lang::get('common.approve_message_body') . " " . 
+                            config('app.name') . " " .
+                            config('app.name_2nd_part');
+                        $message->status = 0;
+                        $message->user_id = $admin->id;
+                        $message->promo_code_id = $promoCode->id;
+                        $message->save();
                         
                         \Mail::to($boss)->send(new BossCreateWithPromoCode($boss));
                         

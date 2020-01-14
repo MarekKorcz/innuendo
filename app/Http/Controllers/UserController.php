@@ -485,53 +485,49 @@ class UserController extends Controller
      */
     public function appointmentShow($id)
     {
-        if ($id !== null)
-        {
-            $appointment = Appointment::where([
-                'id' => $id,
-                'user_id' => auth()->user()->id
-            ])->with([
-                'item',
-                'purchase'
-            ])->first();
+        $appointment = Appointment::where([
+            'id' => $id,
+            'user_id' => auth()->user()->id
+        ])->with('item')->first();
 
-            if ($appointment !== null)
-            {
-                $day = Day::where('id', $appointment->day_id)->first();
-                $month = Month::where('id', $day->month_id)->first();
-                $year = Year::where('id', $month->year_id)->first();
-                
-                // appointment date                           
-                $appointmentDay = (string)$day->day_number;
-                $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
-                $appointmentMonth = (string)$month->month_number;
-                $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
-    
-                $now = new \DateTime(date('Y-m-d H:i:s'));
-                $appointmentDate = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
-                
-                $canBeDeleted = $now < $appointmentDate ? true : false;
-                
-                $subscription = $appointment->purchase ? Subscription::where('id', $appointment->purchase->subscription_id)->first() : false;
-                
-                $calendar = Calendar::where('id', $year->calendar_id)->first();
-                
-                $employee = User::where('id', $calendar->employee_id)->first();
-                $property = Property::where('id', $calendar->property_id)->first();
-                
-                return view('user.appointment_show')->with([
-                    'appointment' => $appointment,
-                    'canBeDeleted' => $canBeDeleted,
-                    'subscription' => $subscription,
-                    'day' => $day->day_number,
-                    'month' => $month->month,
-                    'month_number' => $month->month_number,
-                    'year' => $year->year,
-                    'calendarId' => $calendar->id,
-                    'employee' => $employee,
-                    'property' => $property
-                ]);
-            }
+        dd($appointment);
+
+        if ($appointment !== null)
+        {
+            $day = Day::where('id', $appointment->day_id)->first();
+            $month = Month::where('id', $day->month_id)->first();
+            $year = Year::where('id', $month->year_id)->first();
+
+            // appointment date                           
+            $appointmentDay = (string)$day->day_number;
+            $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
+            $appointmentMonth = (string)$month->month_number;
+            $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
+
+            $now = new \DateTime(date('Y-m-d H:i:s'));
+            $appointmentDate = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
+
+            $canBeDeleted = $now < $appointmentDate ? true : false;
+
+            $subscription = $appointment->purchase ? Subscription::where('id', $appointment->purchase->subscription_id)->first() : false;
+
+            $calendar = Calendar::where('id', $year->calendar_id)->first();
+
+            $employee = User::where('id', $calendar->employee_id)->first();
+            $property = Property::where('id', $calendar->property_id)->first();
+
+            return view('user.appointment_show')->with([
+                'appointment' => $appointment,
+                'canBeDeleted' => $canBeDeleted,
+                'subscription' => $subscription,
+                'day' => $day->day_number,
+                'month' => $month->month,
+                'month_number' => $month->month_number,
+                'year' => $year->year,
+                'calendarId' => $calendar->id,
+                'employee' => $employee,
+                'property' => $property
+            ]);
         }
         
         return redirect()->route('welcome');
@@ -544,10 +540,11 @@ class UserController extends Controller
      */
     public function appointmentIndex()
     {
-        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-        $appointments = Appointment::where('user_id', $user->id)->with('item')->get();
+        $appointments = Appointment::where('user_id', auth()->user()->id)->with('item')->get();
         
-        if ($appointments !== null)
+        dd($appointments);
+        
+        if (count($appointments) > 0)
         {
             foreach ($appointments as $appointment)
             {

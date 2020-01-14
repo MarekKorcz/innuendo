@@ -31,37 +31,19 @@
                     </div>
                 </div>        
 
-                @if ($showGraphicsView)
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-center">@lang('common.schedules')</h4>
-                            <p class="card-text text-center">
-                                @lang('common.schedules_with_property_description_and_executor')
-                            </p>
-                            <div class="text-center">
-                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/user/properties') }}">
-                                    @lang('common.show')
-                                </a>
-                            </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">@lang('common.schedules')</h4>
+                        <p class="card-text text-center">
+                            @lang('common.schedules_with_property_description_and_executor')
+                        </p>
+                        <div class="text-center">
+                            <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/user/properties') }}">
+                                @lang('common.show')
+                            </a>
                         </div>
                     </div>
-                @endif
-
-                @if ($showSubscriptionsView)
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-center">@lang('common.subscriptions_view')</h4>
-                            <p class="card-text text-center">
-                                @lang('common.activated_subscriptions_attached_to_properties')
-                            </p>
-                            <div class="text-center">
-                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/user/subscription/list/0') }}">
-                                    @lang('common.show')
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                </div>
             </div>
         </div>
         <div class="col-1"></div>

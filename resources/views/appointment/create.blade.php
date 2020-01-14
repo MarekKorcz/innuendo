@@ -1,17 +1,19 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::script('js/subscription_create.js') !!}
-
 <div class="container">
 
     <div style="padding-top: 1rem;">
         <nav class="navbar navbar-inverse">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="{{ URL::to('/employee/calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
-                        @lang('common.back_to_calendar')
-                    </a>
+                    @if (auth()->user()->isBoss)
+                        <a href="{{ URL::to('/boss/calendar/'. $propertyId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
+                    @else
+                        <a href="{{ URL::to('/user/calendar/'. $propertyId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
+                    @endif
+                            @lang('common.back_to_calendar')
+                        </a>
                 </li>
             </ul>
         </nav>
@@ -45,22 +47,16 @@
                         <select id="item" name="item" class="form-control">
                             <option disabled selected value> @lang('common.choose_massage') </option>
                             @foreach ($items as $item)
-                                @if ($item->subscription_name)
-                                    <option value="{{$item->id}}" data-subscription_id="{{$item->subscription_id}}">{{$item->name}} - {{$item->minutes}} @lang('common.minutes') - {{$item->price}} zł - {{$item->subscription_name}}</option>
-                                @else
-                                    <option value="{{$item->id}}">{{$item->name}} - {{$item->minutes}} @lang('common.minutes') - {{$item->price}} zł</option>
-                                @endif
+                                <option value="{{$item->id}}">{{$item->name}} - {{$item->minutes}} @lang('common.minutes') - {{$item->price}} zł</option>
                             @endforeach
                         </select>
                         <div id="item-warning"></div>
-                    </div>
+                    </div>     
 
-                    <div id="subscription"></div>        
-
-                    @if ($calendarId)
-                        {{ Form::hidden('calendarId', $calendarId) }}
+                    @if ($propertyId)
+                        {{ Form::hidden('propertyId', $propertyId) }}
                     @else
-                        {{ Form::hidden('calendarId', Input::old('calendarId')) }}
+                        {{ Form::hidden('propertyId', Input::old('propertyId')) }}
                     @endif
 
                     @if ($graphicId)

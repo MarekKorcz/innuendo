@@ -77,7 +77,7 @@ Route::post('/admin/make-a-promo-code-message', 'AdminController@makeAPromoCodeM
 Route::get('/admin/promo-code/message/change-status/{promoId}/{messageId}', 'AdminController@promoCodeMessageChangeStatus');
 Route::get('/admin/promo/activation/toggle/{promoId}', 'AdminController@promoActivationToggle');
 Route::get('/admin/approve/messages', 'AdminController@approveMessages');
-Route::get('/admin/approve/messages/{bossId}', 'AdminController@approveMessageShow');
+Route::get('/admin/approve/messages/{bossId}/{promoId}', 'AdminController@approveMessageShow');
 Route::get('/admin/contact/messages', 'AdminController@contactMessages');
 Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminController@approveMessageStatusChange');
 Route::post('/admin/make-an-approve-message', 'AdminController@makeAnApproveMessage');
@@ -192,7 +192,7 @@ Route::post('/user/get-user-appointments-from-database', 'UserController@getUser
 
 // >> boss routings
 // calendars routing
-Route::get('/boss/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'BossController@calendar');
+Route::get('/boss/calendar/{property_id}/{year}/{month_number}/{day_number}', 'BossController@calendar');
 
 // code routings
 Route::get('/boss/codes', 'BossController@codes');
@@ -206,12 +206,6 @@ Route::post('/subscription/delete-chosen-property', 'BossController@deleteChosen
 // property update
 Route::get('/boss/property/{id}/edit', 'BossController@propertyEdit');
 Route::put('/boss/property/update', 'BossController@propertyUpdate');
-
-// boss dashboard
-Route::get('/boss/subscription/list/{propertyId}/{subscriptionId}', 'BossController@subscriptionList');
-Route::post('/boss/get/property/subscription', 'BossController@getPropertySubscriptions');
-Route::post('/boss/get/subscription/substarts', 'BossController@getSubscriptionSubstarts');
-Route::post('/boss/get/subscription/workers', 'BossController@getSubscriptionWorkers');
 
 // subscription purchase
 Route::get('/boss/subscription/purchase/{propertyId}/{subscriptionId}', 'BossController@subscriptionPurchase')->name('subscriptionPurchaseView');
@@ -250,4 +244,4 @@ Route::get('/boss/approve/messages', 'BossController@approveMessages');
 Route::post('/boss/make-an-approve-message', 'BossController@makeAnApproveMessage');
 Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisplayed');
 
-//Route::get('/test', 'HomeController@test');
+Route::get('/test', 'HomeController@test');

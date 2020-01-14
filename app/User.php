@@ -88,7 +88,7 @@ class User extends Authenticatable
      */
     public function properties()
     {
-        return $this->hasMany('App\Property');
+        return $this->hasMany('App\Property', 'boss_id');
     }
     
     /**

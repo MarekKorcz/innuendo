@@ -10,7 +10,7 @@
         <h2 class="text-center" style="padding-top: 2rem;">@lang('common.messages_between_admin_and') {{$promoCode->boss->name}} {{$promoCode->boss->surname}} ( {{$promoCode->promo->title}} )</h2>
         <div id="approve-button" class="text-center" style="padding-top: 1rem; padding-bottom: 1rem;">
             <a class="btn btn-info" href="{{ URL::to('/admin/approve/message/status/change/' . $promoCode->id) }}">
-                @if ($promoCode->boss->isApproved == 0)
+                @if ($promoCode->boss->is_approved == 0)
                     @lang('common.approve')
                 @else
                     @lang('common.disapprove')
@@ -18,42 +18,12 @@
             </a>
         </div>
     </div>
-    
-    <div id="subscriptions" class="jumbotron">
-        <div class="row text-center">
-            <div class="col-1"></div>
-            <div class="col-10">
-                @if (count($promoCode->subscriptions) > 0)
-                    @foreach($promoCode->subscriptions as $subscription)
-                        <div>
-                            <h4>{!! $subscription->name !!}</h4>
-                            <h5>{!! $subscription->description !!}</h5>
-                            <p>@lang('common.old_price'): <strong>{{ $subscription->old_price }}</strong></p>
-                            <p>@lang('common.new_price'): <strong>{{ $subscription->new_price }}</strong></p>
-                            <p>@lang('common.appointment_quantity_per_month'): <strong>{{ $subscription->quantity }}</strong></p>
-                            <p>@lang('common.how_many_months_since_start'): <strong>{{ $subscription->duration }}</strong></p>
-                            <p>@lang('common.worker_quantity'): 
-                                <strong>
-                                    @if ($subscription->worker_quantity == 0)
-                                        @lang('common.infinity')
-                                    @elseif ($subscription->worker_quantity !== null)
-                                        {{ $subscription->worker_quantity }}
-                                    @endif
-                                </strong>
-                            </p>
-                        </div>
-                    @endforeach
-                @endif
-            </div>
-            <div class="col-1"></div>
-        </div>
-    </div>
 
     <div id="messages" class="jumbotron">
         @if (count($promoCode->messages) > 0)
             @foreach ($promoCode->messages as $key => $message)
                 <div class="row" style="padding: 2px;">
-                    @if ($message->owner_id == $admin->id)
+                    @if ($message->user_id == $admin->id)
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                             @if ($key + 1 == count($promoCode->messages))
                                 <div class="boss-message" data-message_id="{{$message->id}}" data-last="true">
@@ -67,7 +37,7 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
-                    @else  
+                    @else
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6"></div>
                         <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                             @if ($key + 1 == count($promoCode->messages))
@@ -93,7 +63,7 @@
                 </div>
             
                 {{ Form::hidden('promo_code_id', $promoCode->id) }}
-                {{ Form::hidden('boss_id', $boss->id) }}
+                {{ Form::hidden('boss_id', $promoCode->boss->id) }}
             
                 <div class="text-center">
                     <input type="submit" value="@lang('common.send')" class="btn pallet-2-4" style="color: white;">

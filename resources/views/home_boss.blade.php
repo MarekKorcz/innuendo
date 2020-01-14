@@ -18,7 +18,7 @@
                 </strong>
             </div>
             <div class="wrapper">
-                @if ($user->isApproved == 1)
+                @if ($user->is_approved == 1)
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title text-center">@lang('common.appointments')</h4>
@@ -27,62 +27,6 @@
                             </p>
                             <div class="text-center">
                                 <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/appointment/index') }}">
-                                    @lang('common.show')
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-            <!--        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-center">@lang('common.schedules')</h4>
-                            <p class="card-text text-center">
-                                @lang('common.schedules_with_property_description_and_executor')
-                            </p>
-                            <div class="text-center">
-                                <a class="btn btn-success btn-lg" href="{{ URL::to('/user/properties') }}">
-                                    @lang('common.show')
-                                </a>
-                            </div>
-                        </div>
-                    </div>-->
-
-            <!--        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-center">Twoje lokalizacje</h4>
-                            <p class="card-text text-center">
-                                Widok Twoich lokalizacji z listą pracowników do nich przynależących
-                            </p>
-                            <div class="text-center">
-                                <a class="btn btn-success btn-lg" href="{{ URL::to('boss/property/list/') }}">
-                                    @lang('common.show')
-                                </a>
-                            </div>
-                        </div>
-                    </div>-->
-
-            <!--        <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-center">Pakiety</h4>
-                            <p class="card-text text-center">
-                                Widok z pakietami przypisanymi do lokalizacji
-                            </p>
-                            <div class="text-center">
-                                <a class="btn btn-success btn-lg" href="{{ URL::to('boss/properties/subscription/purchase/') }}">
-                                    @lang('common.show')
-                                </a>
-                            </div>
-                        </div>
-                    </div>-->
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title text-center">@lang('common.property_and_subscription_management_panel')</h4>
-                            <p class="card-text text-center">
-                                @lang('common.property_and_subscription_management_panel_with_attached_workers')
-                            </p>
-                            <div class="text-center">
-                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('boss/subscription/list/0/0') }}">
                                     @lang('common.show')
                                 </a>
                             </div>

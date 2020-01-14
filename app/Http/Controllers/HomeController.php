@@ -3,22 +3,21 @@
 namespace App\Http\Controllers;
 
 // to tests
-//use App\Appointment;
-//use App\PromoCode;
-//use App\Category;
-//use App\InvoiceData;
-//use App\GraphicRequest;
-//use App\Item;
-//use App\Graphic;
-//use App\Day;
-//use App\Month;
-//use App\Year;
-//use App\TempUser;
-//use App\Mail\BossCreateWithPromoCode;
-//use Illuminate\Support\Collection;
-//use Illuminate\Support\Facades\Hash;
-//use Illuminate\Support\Facades\File;
-//use Session;
+use App\Appointment;
+use App\Category;
+use App\InvoiceData;
+use App\GraphicRequest;
+use App\Item;
+use App\Graphic;
+use App\Day;
+use App\Month;
+use App\Year;
+use App\TempUser;
+use App\Mail\BossCreateWithPromoCode;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+use Session;
 
 use App\Code;
 use App\PromoCode;
@@ -64,11 +63,9 @@ class HomeController extends Controller
     {
 //        $canShowProperties = Property::where('canShow', 1)->get();
         
-        $showBanner = $this->showPolicyBanner();
-        
         return view('welcome')->with([
 //            'canShowProperties' => $canShowProperties,
-            'showBanner' => $showBanner
+            'showBanner' => $this->showPolicyBanner()
         ]);
     }
 
@@ -78,10 +75,8 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        $showBanner = $this->showPolicyBanner();
-        
-        $user = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
+    {        
+        $user = User::where('id', auth()->user()->id)->first();
         
         if ($user->isAdmin !== null)
         {
@@ -94,65 +89,18 @@ class HomeController extends Controller
         } else if ($user->isBoss !== null) {
             
             $route = 'home_boss';
-            
-        } else {
-            
-            // showGraphicsView
-            $showGraphics = false;
-            
-            if ($user->boss_id)
-            {
-                $showGraphics = true;
-                
-            } else {
-                
-                $properties = Property::where('boss_id', null)->get();
-                
-                if (count($properties) > 0)
-                {
-                    $showGraphics = true;
-                }
-            }
-            // >>
-            
-            // >> showPurchaseSubscriptionsView
-            $publicProperties = Property::where('boss_id', null)->with('subscriptions')->get();
-            $showPurchaseSubscriptions = false;
-
-            if (count($publicProperties) > 0)
-            {
-                foreach ($publicProperties as $publicProperty)
-                {
-                    if (count($publicProperty->subscriptions) > 0)
-                    {
-                        $showPurchaseSubscriptions = true;
-                        break;
-                    }
-                }
-            }
-            // >>
-            
-            return view('home')->with([
-                'user' => $user,
-                'showGraphicsView' => $showGraphics,
-                'showSubscriptionsView' => count($user->chosenProperties) > 0 ? true : false,
-                'showPurchaseSubscriptionsView' => $showPurchaseSubscriptions,
-                'showBanner' => $showBanner
-            ]);
         }
         
         return view($route)->with([
             'user' => $user,
-            'showBanner' => $showBanner
+            'showBanner' => $this->showPolicyBanner()
         ]);
     }
     
     public function subscriptions()
     {
-        $showBanner = $this->showPolicyBanner();
-        
         return view('subscriptions')->with([
-            'showBanner' => $showBanner
+            'showBanner' => $this->showPolicyBanner()
         ]);
     }
     
@@ -177,28 +125,22 @@ class HomeController extends Controller
     
     public function privatePolicy()
     {
-        $showBanner = $this->showPolicyBanner();
-        
         return view('private_policy')->with([
-            'showBanner' => $showBanner
+            'showBanner' => $this->showPolicyBanner()
         ]);
     } 
     
     public function regulations()
     {
-        $showBanner = $this->showPolicyBanner();
-        
         return view('regulations')->with([
-            'showBanner' => $showBanner
+            'showBanner' => $this->showPolicyBanner()
         ]);
     } 
     
     public function contactPageShow()
     {
-        $showBanner = $this->showPolicyBanner();
-        
         return view('contact_page')->with([
-            'showBanner' => $showBanner
+            'showBanner' => $this->showPolicyBanner()
         ]);
     }
     
@@ -228,15 +170,9 @@ class HomeController extends Controller
     
     private function showPolicyBanner()
     {
-        $showBanner = true;
         $confirmation = PolicyConfirmation::where('ip_address', $_SERVER['REMOTE_ADDR'])->first();
         
-        if ($confirmation !== null)
-        {
-            $showBanner = false;
-        }
-        
-        return $showBanner; 
+        return $confirmation !== null ? false : true; 
     }
     
     public function acceptTerms()
@@ -321,28 +257,116 @@ class HomeController extends Controller
 //        }
 //    }
     
-//    public function test()
-//    {
-//        $hash = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
-//        
-////        $employee = new User();
-////        $employee->name = 'Marek5';
-////        $employee->surname = 'Korcz';
-////        $employee->slug = 'Marek5 Korcz';
-////        $employee->phone_number = '729364873';
-////        $employee->email = 'mark5.korcz@gmail.com';
-////        $employee->password = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
-////        $employee->isEmployee = 1;
-////        $employee->save();
-//        
-////        $employee1 = User::create([
-////            'name' => 'Marek5',
-////            'surname' => 'Korcz',
-////            'slug' => str_slug('Marek5 Korcz'),
-////            'phone_number' => '729364873',
-////            'email' => 'mark5.korcz@gmail.com',
-////            'password' => '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq',
-////            'isEmployee' => 1
-////        ]);
-//    }
+    public function test()
+    {
+        $hash = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
+        
+//        $employee = new User();
+//        $employee->name = 'Marek5';
+//        $employee->surname = 'Korcz';
+//        $employee->slug = 'Marek5 Korcz';
+//        $employee->phone_number = '729364873';
+//        $employee->email = 'mark5.korcz@gmail.com';
+//        $employee->password = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
+//        $employee->isEmployee = 1;
+//        $employee->save();
+        
+//        $employee1 = User::create([
+//            'name' => 'Marek5',
+//            'surname' => 'Korcz',
+//            'slug' => str_slug('Marek5 Korcz'),
+//            'phone_number' => '729364873',
+//            'email' => 'mark5.korcz@gmail.com',
+//            'password' => '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq',
+//            'isEmployee' => 1
+//        ]);
+        
+        
+        $graphicId = 1;
+        $appointmentTerm = '13:00';
+        $explodedAppointmentTerm = explode(":", $appointmentTerm);
+        
+        
+        
+        $graphic = Graphic::where('id', $graphicId)->with('day.month.year.property')->first();
+        
+        
+        if ($graphic !== null)
+        {
+            $startTime = date('G:i', strtotime($graphic->start_time));
+            $endTime = date('G:i', strtotime($graphic->end_time));
+            $appointmentTerm = date('G:i', strtotime($appointmentTerm));
+            
+            if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
+            {
+                $chosenAppointment = Appointment::where([
+                    'graphic_id' => $graphicId,
+                    'start_time' => $appointmentTerm
+                ])->first();
+                
+                if ($chosenAppointment == null)
+                {
+                    $appointmentLength = 1;
+                    $appointmentTermIncremented = $appointmentTerm;
+
+                    for ($i = 0; $i < 5; $i++)
+                    {
+                        $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
+
+                        if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
+                        {
+                            $nextAppointmentAvailable = Appointment::where([
+                                'graphic_id' => $graphicId,
+                                'start_time' => $appointmentTermIncremented
+                            ])->first();
+
+                            if ($nextAppointmentAvailable === null)
+                            {
+                                $appointmentLength += 1;
+
+                            } else {
+
+                                break;
+                            }
+
+                        } else {
+
+                            break;
+                        }
+                    }
+                    
+                    $items = Item::all();
+
+                    return view('appointment.create')->with([
+                        'appointmentTerm' => $appointmentTerm,
+                        'propertyId' => $graphic->day->month->year->property->id,
+                        'graphicId' => $graphic->id,
+                        'year' => $graphic->day->month->year->year,
+                        'month' => $graphic->day->month->month_number,
+                        'day' => $graphic->day->day_number,
+                        'items' => count($items) > 0 ? $items->sortBy('minutes') : []
+                    ]);
+
+                } else {
+
+                    $message = 'Wizyta jest już zajęta';
+                }
+
+            } else {
+                
+                $message = 'Niepoprawny termin wizyty';
+            }
+            
+            return redirect()->action(
+                'UserController@calendar', [
+                    'property_id' => $graphic->day->month->year->property->id,
+                    'year' => $graphic->day->month->year->year, 
+                    'month_number' => $graphic->day->month->month_number, 
+                    'day_number' => $graphic->day->day_number
+                ]
+            )->with('error', $message);
+        }
+
+        return redirect()->route('welcome')->with('error', 'Grafik nie istnieje');
+    }
 }

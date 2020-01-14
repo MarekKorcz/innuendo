@@ -40,7 +40,6 @@ class PromoCode extends Model
      * @var array
      */
     protected $casts = [
-        'is_active' => 'boolean',
         'promo_id' => 'integer',
         'boss_id' => 'integer'
     ];

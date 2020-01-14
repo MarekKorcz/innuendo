@@ -62,7 +62,7 @@ class Property extends Model
      */
     public function boss()
     {
-        return $this->belongsTo('App\User', 'id');
+        return $this->belongsTo('App\User');
     }
     
     
