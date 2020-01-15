@@ -540,62 +540,45 @@ class UserController extends Controller
      */
     public function appointmentIndex()
     {
-        $appointments = Appointment::where('user_id', auth()->user()->id)->with('item')->get();
-        
-        dd($appointments);
-        
+        $user = auth()->user();
+        $appointments = Appointment::where('user_id', $user->id)->with([
+            'item',
+            'day.month.year.property',
+            'graphic.employee',
+            'user'
+        ])->get();
+            
         if (count($appointments) > 0)
         {
             foreach ($appointments as $appointment)
             {
-                $day = Day::where('id', $appointment->day_id)->first();
-                $month = Month::where('id', $day->month_id)->first();
-                $year = Year::where('id', $month->year_id)->first();
-                $calendar = Calendar::where('id', $year->calendar_id)->first();
-                $employee = User::where('id', $calendar->employee_id)->first();
-                $property = Property::where('id', $calendar->property_id)->first();
-                
-                $appointment['calendar'] = $calendar;
-                $appointment['year'] = $year->year;
-                $appointment['month'] = $month->month_number;
-                $appointment['day'] = $day->day_number;
-                
-                $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
-                $appointment['date'] = $date;
+                $appointment['year'] = $appointment->day->month->year->year;
+                $appointment['month'] = $appointment->day->month->month;
+                $appointment['month_en'] = $appointment->day->month->month_en;
+                $appointment['month_number'] = $appointment->day->month->month_number;
+                $appointment['day_number'] = $appointment->day->day_number;
                 
                 // appointment date                           
-                $appointmentDay = (string)$day->day_number;
+                $appointmentDay = (string)$appointment['day_number'];
                 $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
-                $appointmentMonth = (string)$month->month_number;
+                $appointmentMonth = (string)$appointment['month_number'];
                 $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
-                $appointment['date_time'] = new \DateTime($year->year . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
+                $appointment['date_time'] = new \DateTime($appointment['year'] . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
                 $appointment['date_timestamps'] = strtotime($appointment['date_time']->format('Y-m-d H:i:s'));
                 
-                $address = $property->street . ' ' . $property->street_number . '/' . $property->house_number . ', ' . $property->city;
-                $appointment['address'] = $address;
+                $appointment['date'] = $appointment['day_number'] . ' ' . $appointment['month'] . ' ' . $appointment['year'];
+                $appointment['date_en'] = $appointment['day_number'] . ' ' . $appointment['month_en'] . ' ' . $appointment['year'];
                 
-                $appointment['employee'] = $employee->name . " " . $employee->surname;
+                $appointment['property'] = $appointment->day->month->year->property;
+                $appointment['address'] = $appointment['property']->street . ' ' . $appointment['property']->street_number . '/' . $appointment['property']->house_number . ', ' . $appointment['property']->city;
+                
+                $employee = $appointment->graphic->employee;
+                $appointment['employee_name'] = $employee->name . " " . $employee->surname;
                 $appointment['employee_slug'] = $employee->slug;
-                
-                // get property and subscription info
-                $purchase = Purchase::where('id', $appointment->purchase_id)->first();
-                $substart = Substart::where('id', $purchase->substart_id)->first();
-                $appointment['substart'] = $substart;
-            }
-            
-            $property = null;
-            
-            if (count($appointments) == 0)
-            {
-                if (count($user->chosenProperties) > 0)
-                {
-                    $property = Property::where('id', $user->chosenProperties->first()->property_id)->first();
-                }
             }
             
             return view('user.appointment_index')->with([
                 'appointments' => $appointments->sortByDesc('date_timestamps'),
-                'property' => $property,
                 'user' => $user
             ]);
         }

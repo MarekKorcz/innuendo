@@ -143,7 +143,7 @@ class User extends Authenticatable
      */
     public function graphics()
     {
-        return $this->belongsToMany('App\Graphic', 'graphic_employee', 'employee_id', 'graphic_id');
+        return $this->hasMany('App\Graphic');
     }
     
     /**

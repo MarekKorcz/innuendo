@@ -257,116 +257,31 @@ class HomeController extends Controller
 //        }
 //    }
     
-    public function test()
-    {
-        $hash = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
-        
-//        $employee = new User();
-//        $employee->name = 'Marek5';
-//        $employee->surname = 'Korcz';
-//        $employee->slug = 'Marek5 Korcz';
-//        $employee->phone_number = '729364873';
-//        $employee->email = 'mark5.korcz@gmail.com';
-//        $employee->password = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
-//        $employee->isEmployee = 1;
-//        $employee->save();
-        
-//        $employee1 = User::create([
-//            'name' => 'Marek5',
-//            'surname' => 'Korcz',
-//            'slug' => str_slug('Marek5 Korcz'),
-//            'phone_number' => '729364873',
-//            'email' => 'mark5.korcz@gmail.com',
-//            'password' => '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq',
-//            'isEmployee' => 1
-//        ]);
-        
-        
-        $graphicId = 1;
-        $appointmentTerm = '13:00';
-        $explodedAppointmentTerm = explode(":", $appointmentTerm);
-        
-        
-        
-        $graphic = Graphic::where('id', $graphicId)->with('day.month.year.property')->first();
-        
-        
-        if ($graphic !== null)
-        {
-            $startTime = date('G:i', strtotime($graphic->start_time));
-            $endTime = date('G:i', strtotime($graphic->end_time));
-            $appointmentTerm = date('G:i', strtotime($appointmentTerm));
-            
-            if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
-            {
-                $chosenAppointment = Appointment::where([
-                    'graphic_id' => $graphicId,
-                    'start_time' => $appointmentTerm
-                ])->first();
-                
-                if ($chosenAppointment == null)
-                {
-                    $appointmentLength = 1;
-                    $appointmentTermIncremented = $appointmentTerm;
-
-                    for ($i = 0; $i < 5; $i++)
-                    {
-                        $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
-
-                        if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
-                        {
-                            $nextAppointmentAvailable = Appointment::where([
-                                'graphic_id' => $graphicId,
-                                'start_time' => $appointmentTermIncremented
-                            ])->first();
-
-                            if ($nextAppointmentAvailable === null)
-                            {
-                                $appointmentLength += 1;
-
-                            } else {
-
-                                break;
-                            }
-
-                        } else {
-
-                            break;
-                        }
-                    }
-                    
-                    $items = Item::all();
-
-                    return view('appointment.create')->with([
-                        'appointmentTerm' => $appointmentTerm,
-                        'propertyId' => $graphic->day->month->year->property->id,
-                        'graphicId' => $graphic->id,
-                        'year' => $graphic->day->month->year->year,
-                        'month' => $graphic->day->month->month_number,
-                        'day' => $graphic->day->day_number,
-                        'items' => count($items) > 0 ? $items->sortBy('minutes') : []
-                    ]);
-
-                } else {
-
-                    $message = 'Wizyta jest już zajęta';
-                }
-
-            } else {
-                
-                $message = 'Niepoprawny termin wizyty';
-            }
-            
-            return redirect()->action(
-                'UserController@calendar', [
-                    'property_id' => $graphic->day->month->year->property->id,
-                    'year' => $graphic->day->month->year->year, 
-                    'month_number' => $graphic->day->month->month_number, 
-                    'day_number' => $graphic->day->day_number
-                ]
-            )->with('error', $message);
-        }
-
-        return redirect()->route('welcome')->with('error', 'Grafik nie istnieje');
-    }
+//    public function test()
+//    {
+//        $hash = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
+//        
+////        $employee = new User();
+////        $employee->name = 'Marek5';
+////        $employee->surname = 'Korcz';
+////        $employee->slug = 'Marek5 Korcz';
+////        $employee->phone_number = '729364873';
+////        $employee->email = 'mark5.korcz@gmail.com';
+////        $employee->password = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
+////        $employee->isEmployee = 1;
+////        $employee->save();
+//        
+////        $employee1 = User::create([
+////            'name' => 'Marek5',
+////            'surname' => 'Korcz',
+////            'slug' => str_slug('Marek5 Korcz'),
+////            'phone_number' => '729364873',
+////            'email' => 'mark5.korcz@gmail.com',
+////            'password' => '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq',
+////            'isEmployee' => 1
+////        ]);
+//        
+//        
+//        
+//    }
 }

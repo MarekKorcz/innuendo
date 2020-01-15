@@ -90,4 +90,12 @@ class Property extends Model
     {
         return $this->hasMany('App\Year');
     }
+    
+    /**
+     * Get graphics associated to property.
+     */
+    public function graphics()
+    {
+        return $this->hasMany('App\Graphic');
+    }
 }

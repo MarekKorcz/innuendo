@@ -40,7 +40,9 @@ class Graphic extends Model
      * @var array
      */
     protected $hidden = [
-        'day_id'
+        'day_id',
+        'property_id',
+        'user_id'
     ];
     
     /**
@@ -52,7 +54,9 @@ class Graphic extends Model
         'start_time' => 'time',
         'end_time' => 'time',
         'total_time' => 'integer',
-        'day_id' => 'integer'
+        'day_id' => 'integer',
+        'property_id' => 'integer',
+        'employee_id' => 'integer'
     ];
     
     /**
@@ -64,11 +68,19 @@ class Graphic extends Model
     }
     
     /**
-     * Get employees that are assigned to graphic.
+     * Get property that owns graphic.
      */
-    public function employees()
+    public function property()
     {
-        return $this->belongsToMany('App\User', 'graphic_employee', 'graphic_id', 'employee_id');
+        return $this->belongsTo('App\Property');
+    }
+    
+    /**
+     * Get employee that owns graphic.
+     */
+    public function employee()
+    {
+        return $this->belongsTo('App\User');
     }
     
     

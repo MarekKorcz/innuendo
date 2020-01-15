@@ -84,14 +84,10 @@ class CreateModels extends Migration
             $table->time('end_time');
             $table->integer('total_time');
             $table->integer('day_id')->unsigned()->index()->foreign()->references("id")->on("days");
+            $table->integer('property_id')->unsigned()->index()->foreign()->references("id")->on("properties");
+            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
             $table->timestamps();
             $table->softDeletes();
-        });
-        
-        Schema::create('graphic_employee', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('graphic_id')->unsigned()->index()->foreign()->references("id")->on("graphics");
-            $table->integer('employee_id')->unsigned()->index()->foreign()->references("id")->on("users");
         });
         
         Schema::create('graphic_requests', function (Blueprint $table) {

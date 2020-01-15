@@ -244,4 +244,4 @@ Route::get('/boss/approve/messages', 'BossController@approveMessages');
 Route::post('/boss/make-an-approve-message', 'BossController@makeAnApproveMessage');
 Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisplayed');
 
-Route::get('/test', 'HomeController@test');
+//Route::get('/test', 'HomeController@test');

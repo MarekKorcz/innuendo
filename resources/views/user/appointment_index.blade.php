@@ -2,14 +2,6 @@
 @section('content')
 <div class="container">
 
-<!--    <nav class="navbar navbar-inverse">
-        <div class="navbar-header" style="padding-top: 1rem;">
-            <a class="btn btn-success" href="{{ URL::previous() }}">
-                @lang('common.go_back')
-            </a>
-        </div>
-    </nav>-->
-
     <div style="padding: 1rem;">
 
         <div class="text-center">
@@ -35,9 +27,9 @@
                         <tr>
                             <td>
                                 @if ($user->isBoss)
-                                    <a href="{{ URL::to('boss/calendar/' . $appointment['calendar']->id . '/' . $appointment['year'] . '/' . $appointment['month'] . '/' . $appointment['day']) }}">
+                                    <a href="{{ URL::to('boss/calendar/' . $appointment['property']->id . '/' . $appointment['year'] . '/' . $appointment['month_number'] . '/' . $appointment['day_number']) }}">
                                 @else
-                                    <a href="{{ URL::to('user/calendar/' . $appointment['calendar']->id . '/' . $appointment['year'] . '/' . $appointment['month'] . '/' . $appointment['day']) }}">
+                                    <a href="{{ URL::to('user/calendar/' . $appointment['property']->id . '/' . $appointment['year'] . '/' . $appointment['month_number'] . '/' . $appointment['day_number']) }}">
                                 @endif
                                         {{$appointment->date}}
                                     </a>
@@ -45,18 +37,12 @@
                             <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
                             <td>{{$appointment->address}}</td>
                             <td>
-                                @if ($user->isBoss)
-                                    <a href="{{ URL::to('/boss/subscription/list/' . $appointment->substart->property_id . '/' . $appointment->substart->subscription_id) }}" target="_blank">  
-                                @else
-                                    <a href="{{ URL::to('/user/subscription/list/' . $appointment->substart->id) }}" target="_blank">                     
-                                @endif
-                                        {{$appointment->item->name}}
-                                    </a>
+                                {{$appointment->item->name}}
                             </td>
                             <td>{{$appointment->minutes}}</td>
                             <td>
                                 <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blank">
-                                    {{$appointment->employee}}
+                                    {{$appointment->employee_name}}
                                 </a>
                             </td>
                             <td>
