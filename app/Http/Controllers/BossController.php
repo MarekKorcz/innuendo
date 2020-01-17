@@ -120,6 +120,7 @@ class BossController extends Controller
                         if ($currentDay !== null)
                         {
                             $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
+                            $graphicTimes = Graphic::where('day_id', $currentDay->id)->with('employee')->get();
                             
                             $chosenDay = $currentDay;
                             $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
@@ -130,6 +131,8 @@ class BossController extends Controller
                             $graphic = [];
                             $graphicTime = null;
                         }
+                        
+//                        dd($graphic);
                         
                         $availablePreviousMonth = false;
 
@@ -166,6 +169,7 @@ class BossController extends Controller
                             'current_day' => is_object($currentDay) ? $currentDay->day_number : 0,
                             'graphic' => $graphic,
                             'graphic_id' => $graphicTime !== null ? $graphicTime->id : null,
+                            'graphicTimesEntites' => $graphicTimes, 
                             'canSendRequest' => $currentDay !== null ? $canSendRequest : false,
                             'graphicRequest' => $graphicRequest,
                             'employees' => User::where('isEmployee', 1)->get()
@@ -203,6 +207,35 @@ class BossController extends Controller
         return redirect()->route('welcome')->with('error', $message);
     }
     
+//    public function getEmployeeGraphic(Request $request)
+//    {
+//        if ($request->get('graphicId'))
+//        {
+//            $graphicTime = Graphic::where('id', $request->get('graphicId'))->first();
+//            
+//                            $chosenDay = $currentDay;
+//                            $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
+//                            $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
+//                
+//                
+//                if ($graphic !== null)
+//                {
+//                    $graphicArray = [
+//                        ''
+//                    ];
+//                    
+//                    return new JsonResponse([
+//                        'type' => 'success',
+//                        'graphic' => $graphicArray
+//                    ], 200, array(), true);
+//                }
+//        }
+//        
+//        return new JsonResponse(array(
+//            'type'    => 'error'        
+//        ));
+//    }
+
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
     {
         $daysArray = [];
@@ -240,7 +273,7 @@ class BossController extends Controller
             $timeZone = new \DateTimeZone("Europe/Warsaw");
             $now = new \DateTime(null, $timeZone);
             
-            $workUnits = ($graphicTime->total_time / 15);
+            $workUnits = ($graphicTime->total_time / 20);
             $startTime = date('G:i', strtotime($graphicTime->start_time));
             
             for ($i = 0; $i < $workUnits; $i++) 
@@ -251,21 +284,19 @@ class BossController extends Controller
                 ])->with('user')->first();
                 
                 $appointmentId = 0;
-                $bossWorkerAppointment = false;
                 $ownAppointment = false;
+                $bossWorkerAppointment = false;
                 
                 $explodedStartTime = explode(":", $startTime);
                 $chosenDayDateTime->setTime($explodedStartTime[0], $explodedStartTime[1], 0);
                 
-                if ($appointment !== null && auth()->user() !== null)
+                if ($appointment !== null)
                 {
-                    $boss = null;
+                    $boss = auth()->user();
                     $appointmentId = $appointment->id;
                     
-                    if (auth()->user()->isBoss !== null)
-                    {
-                        $boss = auth()->user();
-                                    
+                    if ($boss->isBoss !== null)
+                    {       
                         if (count($boss->getWorkers()) > 0)
                         {
                             foreach ($boss->getWorkers() as $worker)
@@ -276,23 +307,19 @@ class BossController extends Controller
                                 }
                             }
                         }
-
                     }
                     
-                    $ownAppointment = $appointment->user_id == auth()->user()->id ? true : false;
-                }
-                
-                if ($appointment !== null)
-                {
-                    $limit = $appointment->minutes / 15;
+                    $ownAppointment = $appointment->user_id == $boss->id ? true : false;
+
+                    $limit = $appointment->minutes / 20;
                     
                     if ($limit > 1)
                     {
-                        $time = array($startTime);
+                        $time = [$startTime];
 
                         for ($j = 1; $j < $limit; $j++)
                         {
-                            $time[] = date('G:i', strtotime("+15 minutes", strtotime($time[count($time) - 1])));
+                            $time[] = date('G:i', strtotime("+20 minutes", strtotime($time[count($time) - 1])));
                             $workUnits -= 1;
                         }
                         
@@ -305,9 +332,8 @@ class BossController extends Controller
                         'time' => $time,
                         'appointment' => $appointment,
                         'appointmentLimit' => $limit,
-                        'appointmentId' => $appointmentId,
-                        'bossWorkerAppointment' => $bossWorkerAppointment,
                         'ownAppointment' => $ownAppointment,
+                        'bossWorkerAppointment' => $bossWorkerAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
                     
@@ -320,14 +346,13 @@ class BossController extends Controller
                         'time' => $startTime,
                         'appointment' => null,
                         'appointmentLimit' => 0,
-                        'appointmentId' => $appointmentId,
-                        'bossWorkerAppointment' => $bossWorkerAppointment,
                         'ownAppointment' => $ownAppointment,
+                        'bossWorkerAppointment' => $bossWorkerAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
                     
-                    $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
-                    $startTime = date('G:i', $timeIncrementedBy15Minutes);
+                    $timeIncrementedBy20Minutes = strtotime("+20 minutes", strtotime($startTime));
+                    $startTime = date('G:i', $timeIncrementedBy20Minutes);
                 }
             }            
         }

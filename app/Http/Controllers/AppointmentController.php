@@ -78,18 +78,19 @@ class AppointmentController extends Controller
             
             if (count($explodedAppointmentTerm) == 2)
             {
-                $appointmentTerm = htmlentities($request->session()->get('appointmentTerm'), ENT_QUOTES, "UTF-8");
                 $graphicId = htmlentities((int)$request->session()->get('graphicId'), ENT_QUOTES, "UTF-8");
+                $appointmentTerm = htmlentities($request->session()->get('appointmentTerm'), ENT_QUOTES, "UTF-8");
                 
-                $request->session()->forget('appointmentTerm');
                 $request->session()->forget('graphicId');
+                $request->session()->forget('appointmentTerm');
                 
                 $graphic = Graphic::where('id', $graphicId)->with('day.month.year.property')->first();
-        
+                
                 if ($graphic !== null)
                 {
                     $startTime = date('G:i', strtotime($graphic->start_time));
                     $endTime = date('G:i', strtotime($graphic->end_time));
+                    
                     $appointmentTerm = date('G:i', strtotime($appointmentTerm));
 
                     if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
@@ -106,7 +107,7 @@ class AppointmentController extends Controller
 
                             for ($i = 0; $i < 5; $i++)
                             {
-                                $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
+                                $appointmentTermIncremented = date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented)));
 
                                 if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                                 {
@@ -129,8 +130,8 @@ class AppointmentController extends Controller
                                     break;
                                 }
                             }
-
-                            $items = Item::all();
+                            
+                            $items = Item::where('minutes', '<=', $appointmentLength * 20)->get();
 
                             return view('appointment.create')->with([
                                 'appointmentTerm' => $appointmentTerm,
@@ -297,7 +298,7 @@ class AppointmentController extends Controller
 
                     for ($i = 0; $i < 5; $i++)
                     {
-                        $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
+                        $appointmentTermIncremented = date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented)));
 
                         if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
                         {
@@ -321,7 +322,7 @@ class AppointmentController extends Controller
                         }
                     }
                     
-                    $itemLength = $itemLength / 15;
+                    $itemLength = $itemLength / 20;
                     
                     for ($i = 0; $i < $itemLength; $i++)
                     {

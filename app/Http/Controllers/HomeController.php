@@ -78,6 +78,8 @@ class HomeController extends Controller
     {        
         $user = User::where('id', auth()->user()->id)->first();
         
+        $route = 'home';
+        
         if ($user->isAdmin !== null)
         {
             $route = 'home_admin';

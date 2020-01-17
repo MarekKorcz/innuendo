@@ -141,9 +141,28 @@
         </table>
         <div id="appointments-container" class="container">
             <div class="row">
-                <div class="col-1"></div>
-                <div id="appointments" class="col-10 text-center">
+                <div class="col-0 col-md-1"></div>
+                <div id="appointments" class="col-12 col-md-10 text-center">
                     @if(count($graphic) > 0)
+                    
+                    @if (count($graphicTimesEntites) > 1)
+                        <div id="graphic-employees-buttons" style="padding: 1rem;">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                @foreach ($graphicTimesEntites as $key => $graphicTimeEntity)
+                                    @if ($key == 0)
+                                        <button data-graphic_id="{{$graphicTimeEntity->id}}" type="button" class="btn btn-success btn-lg">
+                                    @else
+                                        <button data-graphic_id="{{$graphicTimeEntity->id}}" type="button" class="btn btn-info btn-lg">
+                                    @endif
+                                        {{$graphicTimeEntity->employee->name}} {{$graphicTimeEntity->employee->surname}}
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                        <hr>
+                    @endif
+                        
+                    
                         @for ($i = 0; $i < count($graphic); $i++)
                             @if ($graphic[$i]['appointmentLimit'] == 0)
                                 <div class="appointment">
@@ -167,8 +186,8 @@
                             @elseif ($graphic[$i]['appointmentLimit'] == 1)                            
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time']}}</div>
-                                    @if ($graphic[$i]['appointmentId'] !== 0)
-                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                    @if ($graphic[$i]['appointment']->id !== 0)
+                                        @if ($graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
                                             <div class="appointment-term box-1 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
@@ -177,7 +196,7 @@
                                         @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
                                             <div class="appointment-term box-1 pallet-1-2">
                                                 <div class="appointment-info">
-                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointment']->id) }}">
                                                         @lang('common.appointment_details')
                                                     </a>
                                                 </div>
@@ -195,8 +214,8 @@
                                 <div class="appointment">
                                     <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][1]}}</div>
-                                    @if ($graphic[$i]['appointmentId'] !== 0)
-                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                    @if ($graphic[$i]['appointment']->id !== 0)
+                                        @if ($graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
                                             <div class="appointment-term box-2 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
@@ -205,7 +224,7 @@
                                         @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
                                             <div class="appointment-term box-2 pallet-1-2">
                                                 <div class="appointment-info">
-                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointment']->id) }}">
                                                         @lang('common.appointment_details')
                                                     </a>
                                                 </div>
@@ -224,8 +243,8 @@
                                     <div class="box">{{$graphic[$i]['time'][0]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][1]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][2]}}</div>
-                                    @if ($graphic[$i]['appointmentId'] !== 0)
-                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                    @if ($graphic[$i]['appointment']->id !== 0)
+                                        @if ($graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
                                             <div class="appointment-term box-3 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
@@ -234,7 +253,7 @@
                                         @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
                                             <div class="appointment-term box-3 pallet-1-2">
                                                 <div class="appointment-info">
-                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointment']->id) }}">
                                                         @lang('common.appointment_details')
                                                     </a>
                                                 </div>
@@ -254,8 +273,8 @@
                                     <div class="box">{{$graphic[$i]['time'][1]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][2]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][3]}}</div>
-                                    @if ($graphic[$i]['appointmentId'] !== 0)
-                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                    @if ($graphic[$i]['appointment']->id !== 0)
+                                        @if ($graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
                                             <div class="appointment-term box-4 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
@@ -264,7 +283,7 @@
                                         @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
                                             <div class="appointment-term box-4 pallet-1-2">
                                                 <div class="appointment-info">
-                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointment']->id) }}">
                                                         @lang('common.appointment_details')
                                                     </a>
                                                 </div>
@@ -285,8 +304,8 @@
                                     <div class="box">{{$graphic[$i]['time'][2]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][3]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][4]}}</div>
-                                    @if ($graphic[$i]['appointmentId'] !== 0)
-                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                    @if ($graphic[$i]['appointment']->id !== 0)
+                                        @if ($graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
                                             <div class="appointment-term box-5 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
@@ -295,7 +314,7 @@
                                         @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
                                             <div class="appointment-term box-5 pallet-1-2">
                                                 <div class="appointment-info">
-                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointment']->id) }}">
                                                         @lang('common.appointment_details')
                                                     </a>
                                                 </div>
@@ -317,8 +336,8 @@
                                     <div class="box">{{$graphic[$i]['time'][3]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][4]}}</div>
                                     <div class="box">{{$graphic[$i]['time'][5]}}</div>
-                                    @if ($graphic[$i]['appointmentId'] !== 0)
-                                        @if (auth()->user()->isBoss !== null && $graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
+                                    @if ($graphic[$i]['appointment']->id !== 0)
+                                        @if ($graphic[$i]['bossWorkerAppointment'] == true && $graphic[$i]['ownAppointment'] == false)
                                             <div class="appointment-term box-6 pallet-2-2">
                                                 <div class="appointment-info">
                                                     {{ $graphic[$i]['appointment']->user->name }} {{ $graphic[$i]['appointment']->user->surname }}
@@ -327,7 +346,7 @@
                                         @elseif ($graphic[$i]['appointment']->user->id == auth()->user()->id)
                                             <div class="appointment-term box-6 pallet-1-2">
                                                 <div class="appointment-info">
-                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointmentId']) }}">
+                                                    <a style="color: white;" href="{{ URL::to('/appointment/show/' . $graphic[$i]['appointment']->id) }}">
                                                         @lang('common.appointment_details')
                                                     </a>
                                                 </div>
@@ -369,7 +388,7 @@
                         @endif
                     @endif
                 </div>
-                <div class="col-1"></div>
+                <div class="col-0 col-md-1"></div>
             </div>
         </div>
     </div>

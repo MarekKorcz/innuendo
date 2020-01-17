@@ -176,6 +176,7 @@ Route::put('/item/update', 'ItemController@update');
 // user >> routings
 // user calendar
 Route::get('/user/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
+Route::post('/employee/get-graphic', 'UserController@getEmployeeGraphic');
 
 // show employees to user
 Route::get('/user/properties', 'UserController@propertiesList')->name('properties');

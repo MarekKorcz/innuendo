@@ -56,7 +56,7 @@ class User extends Authenticatable
         'isAdmin' => 'boolean',
         'isBoss' => 'boolean',
         'isEmployee' => 'boolean',
-        'boss_id' => 'boolean'
+        'boss_id' => 'integer'
     ];
     
     /**
@@ -96,7 +96,7 @@ class User extends Authenticatable
      */
     public function getWorkers()
     {
-        $this->isBoss == 1 ? User::where('boss_id', $this->id)->get() : [];
+        return $this->isBoss == 1 ? User::where('boss_id', $this->id)->get() : [];
     }
     
     /**
@@ -132,6 +132,19 @@ class User extends Authenticatable
         }
         
         return $boss !== null ? $boss : null;
+    }
+    
+    /**
+     * Get boss properties assigned to worker
+     */
+    public function getBossProperties()
+    {                
+        if ($this->isAdmin == 0 && $this->isBoss == 0 && $this->isEmployee == 0 && $this->boss_id !== null)
+        {
+            return Property::where([
+                'boss_id' => $this->boss_id
+            ])->get();
+        }
     }
     
     /**

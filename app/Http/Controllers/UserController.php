@@ -75,36 +75,46 @@ class UserController extends Controller
         
         if ($employee !== null)
         {
-            $user = auth()->user();
-            
             $employeeCreatedAt = $employee->created_at->format('d.m.Y');
-            $calendars = new Collection();
-            $properties = [];        
+            $user = auth()->user();
+            $properties = [];
         
-            if ($user !== null)
-            {
-                $calendars = Calendar::where([
-                    'employee_id' => $employee->id,
-                    'isActive' => 1
-                ])->with('property')->get();
+            if ($user->isBoss) 
+            {    
+                $user->load('properties');
+                $bossProperties = $user->properties;
+
+            } else if ($user->boss_id !== null) {
+
+                $bossProperties = $user->getBossProperties();
+            }
+            
+            
+            dd('dopiero można dokończyć kiedy slug employee bedzie do kalendarzy dodany');
+               
                 
-                if ($user->isBoss) 
-                {                
-                    if (count($calendars) > 0)
+                    if (count($bossProperties) > 0)
                     {
-                        foreach ($calendars as $key => $calendar)
+                        $bossProperties->load('graphics.employee');
+                        
+                        foreach ($bossProperties as $key => $property)
                         {
-                            if ($calendar->property !== null)
+                            if (count($property->graphics) > 0)
                             {
-                                if ($calendar->property->boss_id !== $user->id)
+                                foreach ($property->graphics as $graphic)
                                 {
-                                    $calendars->forget($key);
+                                    if ($graphic->employee !== null)
+                                    {
+                                            if ($calendar->property->boss_id !== $user->id)
+                                            {
+                                                $calendars->forget($key);
+                                            }
+                                    }
                                 }
                             }
                         }
                     }
 
-                } else if ($user->boss_id !== null) {
                     
                     $user->load('chosenProperties');
                     
@@ -133,13 +143,11 @@ class UserController extends Controller
                             $calendars->push($calendar);
                         }
                     }
-                }
 
                 for ($i = 0; $i < count($calendars); $i++)
                 {
                     $properties[$i] = Property::where('id', $calendars[$i]->property_id)->first();
                 }
-            }
             
             $calendarsArray = [];
 
