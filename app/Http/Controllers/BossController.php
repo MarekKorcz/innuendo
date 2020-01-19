@@ -167,6 +167,7 @@ class BossController extends Controller
                             'month' => $month,
                             'days' => $days,
                             'current_day' => is_object($currentDay) ? $currentDay->day_number : 0,
+                            'current_day_id' => is_object($currentDay) ? $currentDay->id : 0,
                             'graphic' => $graphic,
                             'graphic_id' => $graphicTime !== null ? $graphicTime->id : null,
                             'graphicTimesEntites' => $graphicTimes, 
@@ -207,34 +208,50 @@ class BossController extends Controller
         return redirect()->route('welcome')->with('error', $message);
     }
     
-//    public function getEmployeeGraphic(Request $request)
-//    {
-//        if ($request->get('graphicId'))
-//        {
-//            $graphicTime = Graphic::where('id', $request->get('graphicId'))->first();
-//            
-//                            $chosenDay = $currentDay;
-//                            $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
-//                            $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
-//                
-//                
-//                if ($graphic !== null)
-//                {
-//                    $graphicArray = [
-//                        ''
-//                    ];
-//                    
-//                    return new JsonResponse([
-//                        'type' => 'success',
-//                        'graphic' => $graphicArray
-//                    ], 200, array(), true);
-//                }
-//        }
-//        
-//        return new JsonResponse(array(
-//            'type'    => 'error'        
-//        ));
-//    }
+    public function getEmployeeGraphic(Request $request)
+    {
+        if ($request->get('graphicId') && $request->get('currentDayId'))
+        {
+            $graphic = Graphic::where('id', $request->get('graphicId'))->first();
+            $day = Day::where('id', $request->get('currentDayId'))->with('month.year')->first();
+            
+            if ($graphic !== null && $day !== null)
+            {
+                $chosenDayDateTime = new \DateTime($day->month->year->year . "-" . $day->month->month_number . "-" . $day->day_number);
+                $graphicArray = $this->formatGraphicAndAppointments($graphic, $day, $chosenDayDateTime);
+                
+                foreach ($graphicArray as $key => $graphArr)
+                {
+                    if ($graphArr['appointment'] !== null)
+                    {
+                        $graphicArray[$key]['appointmentId'] = $graphArr['appointment']->id;
+                        $graphicArray[$key]['appointmentUserId'] = $graphArr['appointment']->user->id;
+                        $graphicArray[$key]['appointmentUserName'] = $graphArr['appointment']->user->name;
+                        $graphicArray[$key]['appointmentUserSurname'] = $graphArr['appointment']->user->surname;
+                        $graphicArray[$key]['ownAppointmentHref'] = route('appointmentShow', [
+                            'id' => $graphArr['appointment']->id
+                        ]);
+                        
+                        unset($graphicArray[$key]['appointment']);
+                    }
+                }
+                
+                return new JsonResponse([
+                    'type' => 'success',
+                    'graphic' => $graphicArray,
+                    'userId' => auth()->user()->id,
+                    'appointmentDetailsDescription' => \Lang::get('common.appointment_details'),
+                    'appointmentBookedDescription' => \Lang::get('common.booked'),
+                    'availableDescription' => \Lang::get('common.available'),
+                    'clickToMakeReservationDescription' => \Lang::get('common.click_to_make_reservation')
+                ], 200, array(), true);
+            }
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error'        
+        ));
+    }
 
     private function formatDaysToUserCalendarForm($days, $daysInMonth) 
     {
@@ -280,6 +297,7 @@ class BossController extends Controller
             {
                 $appointment = Appointment::where([
                     'day_id' => $chosenDay->id,
+                    'graphic_id' => $graphicTime->id,
                     'start_time' => $startTime
                 ])->with('user')->first();
                 

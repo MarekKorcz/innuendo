@@ -156,7 +156,7 @@ Route::post('/appointment/beforeShowCreatePage', 'AppointmentController@beforeSh
 Route::get('/appointment/create', 'AppointmentController@create');
 Route::post('/appointment/store', 'AppointmentController@store');
 
-Route::get('/appointment/show/{id}', 'UserController@appointmentShow');
+Route::get('/appointment/show/{id}', 'UserController@appointmentShow')->name('appointmentShow');
 Route::get('/appointment/index', 'UserController@appointmentIndex');
 Route::delete('/appointment/{id}', 'UserController@appointmentDestroy');
 
@@ -176,7 +176,6 @@ Route::put('/item/update', 'ItemController@update');
 // user >> routings
 // user calendar
 Route::get('/user/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
-Route::post('/employee/get-graphic', 'UserController@getEmployeeGraphic');
 
 // show employees to user
 Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
@@ -194,6 +193,7 @@ Route::post('/user/get-user-appointments-from-database', 'UserController@getUser
 // >> boss routings
 // calendars routing
 Route::get('/boss/calendar/{property_id}/{year}/{month_number}/{day_number}', 'BossController@calendar');
+Route::post('boss/employee/get-graphic', 'BossController@getEmployeeGraphic');
 
 // code routings
 Route::get('/boss/codes', 'BossController@codes');
