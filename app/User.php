@@ -156,7 +156,7 @@ class User extends Authenticatable
      */
     public function graphics()
     {
-        return $this->hasMany('App\Graphic');
+        return $this->hasMany('App\Graphic', 'employee_id');
     }
     
     /**

@@ -10,7 +10,7 @@
     
     <div class="row">
         <div class="col-1"></div>
-        <div class="col-10">
+        <div class="col-10" style="padding-bottom: 2rem;">
             <div class="row">
                 <div class="col-6">
                     <h3 style="padding: 9px;">@lang('common.description')</h3>
@@ -34,29 +34,29 @@
                 </div>
             </div>
             
-            @if ($calendars && count($calendars) == count($properties))
+            @if (count($properties) > 0)
                 <div class="text-center">
                     <h2>@lang('common.schedule_in'):</h2>
                 </div>
 
                 <ul>
-                    @for ($i = 1; $i <= count($calendars); $i++)
+                    @foreach ($properties as $property)
                         <div id="properties" class="text-center">
                             @if ($user->isBoss)
-                                <a href="{{ URL::to('boss/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                <a href="{{ URL::to('boss/calendar/' . $property->id . '/0/0/0') }}">
                             @else
-                                <a href="{{ URL::to('user/calendar/' . $calendars[$i]->id . '/0/0/0') }}">
+                                <a href="{{ URL::to('user/calendar/' . $property->id . '/0/0/0') }}">
                             @endif
                                     <li>
                                         <strong>
-                                            {{$properties[$i - 1]->name}}
+                                            {{$property->name}}
                                         </strong>
                                         -
-                                        {{$properties[$i - 1]->street}} {{$properties[$i - 1]->street_number}} / {{$properties[$i - 1]->house_number}}, {{$properties[$i - 1]->city}}
+                                        {{$property->street}} {{$property->street_number}} {{$property->house_number}}, {{$property->city}}
                                     </li>
                                 </a>
                         </div>
-                    @endfor
+                    @endforeach
                 </ul>
             @endif
         </div>

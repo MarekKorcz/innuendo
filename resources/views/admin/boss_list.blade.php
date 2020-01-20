@@ -24,7 +24,7 @@
                                 <tr>
                                     <td>{{$boss->name}} {{$boss->surname}}</td>
                                     <td>
-                                        @if ($boss->isApproved == 1)
+                                        @if ($boss->is_approved == 1)
                                             @lang('common.yes')
                                         @else
                                             @lang('common.no')

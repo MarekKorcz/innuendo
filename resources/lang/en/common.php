@@ -96,7 +96,6 @@ return [
     'your_appointments_view' => 'Your appointments view',
     'subscriptions_view' => 'Subscriptions view',
     'appointment_removal' => 'Appointment removal',
-    'appointment_removal_description' => 'If you cancel a visit in the period preceding it, less than one day, this visit will be considered completed and it will not be possible to use it in the future!',
     'cancel_the_visit' => 'Cancel the visit',
     'appointment_details' => 'Appointment details',
     'appointment_reservation' => 'Appointment reservation',

@@ -42,7 +42,7 @@ class Graphic extends Model
     protected $hidden = [
         'day_id',
         'property_id',
-        'user_id'
+        'employee_id'
     ];
     
     /**

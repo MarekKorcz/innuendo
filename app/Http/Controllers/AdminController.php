@@ -541,9 +541,7 @@ class AdminController extends Controller
     {
         $graphicRequests = GraphicRequest::where('id', '!=', null)->with([
             'property',
-            'year',
-            'month',
-            'day',
+            'day.month.year',
             'employees'
         ])->get();
 
@@ -557,15 +555,18 @@ class AdminController extends Controller
         ]);
     }
     
-    public function graphicRequestShow($graphicRequestId, $chosenMessageId = 0)
+    public function graphicRequestShow($graphicRequestId)
     {
         $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->with([
             'property',
-            'year',
-            'month',
-            'day',
-            'employees'
+            'day.month.year',
+            'employees',
+            'messages'
         ])->first();
+        
+        
+        dd('zanim to rozorasz musisz najpierw ogarnąć widoki związane z dodawaniem dni miesięcy i lat do lokalizacji bo nieżej są przekierowania tam');
+        dd($graphicRequest);
         
         if ($graphicRequest !== null)
         {
@@ -719,7 +720,7 @@ class AdminController extends Controller
                 $message->graphic_request_id = $graphicRequest->id;
                 $message->save();
 
-                return redirect('/admin/graphic-request/' . $graphicRequest->id . '/' . $message->id)->with('success', 'Message has been sended!');
+                return redirect('/admin/graphic-request/' . $graphicRequest->id)->with('success', 'Message has been sended!');
             }
             
             return redirect()->route('welcome')->with('error', 'Something went wrong');
@@ -744,7 +745,7 @@ class AdminController extends Controller
             
             $message->save();
             
-            return redirect('/admin/graphic-request/' . $graphicRequest->id . '/' . $message->id)->with('success', 'Message status has been changed!');
+            return redirect('/admin/graphic-request/' . $graphicRequest->id)->with('success', 'Message status has been changed!');
         }
         
         return redirect()->route('welcome')->with('error', 'Something went wrong');

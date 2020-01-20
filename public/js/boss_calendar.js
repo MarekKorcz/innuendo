@@ -45,7 +45,7 @@ $(document).ready(function()
     
     function getEmployeeGraphic(graphicId, currentDayId)
     {
-        return fetch('http://localhost:8000/user/employee/get-graphic', {
+        return fetch('http://localhost:8000/boss/employee/get-graphic', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -61,6 +61,8 @@ $(document).ready(function()
         .then((data) => {
             if (data.type === "success" && data.graphic.length > 0)
             {
+                
+                
                 let graphicElement = $("div#graphic");
                 graphicElement.html("");
                 
@@ -105,7 +107,20 @@ $(document).ready(function()
                         
                         if (graphic[i]['appointmentId'] !== 0)
                         {
-                            if (graphic[i]['ownAppointment']) {
+                            if (graphic[i]['bossWorkerAppointment'])
+                            {
+                                element = `
+                                    <div class="appointment">
+                                        <div class="box">` + graphic[i]['time'] + `</div>
+                                        <div class="appointment-term box-1 pallet-2-2">
+                                            <div class="appointment-info">
+                                                ` + graphic[i]['appointmentUserName'] + `
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                            } else if (graphic[i]['appointmentUserId'] == data.userId) {
                                 
                                 element = `
                                     <div class="appointment">
@@ -140,7 +155,21 @@ $(document).ready(function()
                         
                         if (graphic[i]['appointmentId'] !== 0)
                         {
-                            if (graphic[i]['ownAppointment']) {
+                            if (graphic[i]['bossWorkerAppointment'])
+                            {
+                                element = `
+                                    <div class="appointment">
+                                        <div class="box">` + graphic[i]['time'][0] + `</div>
+                                        <div class="box">` + graphic[i]['time'][1] + `</div>
+                                        <div class="appointment-term box-2 pallet-2-2">
+                                            <div class="appointment-info">
+                                                ` + graphic[i]['appointmentUserName'] + `
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                            } else if (graphic[i]['appointmentUserId'] == data.userId) {
                                 
                                 element = `
                                     <div class="appointment">
@@ -177,7 +206,22 @@ $(document).ready(function()
                         
                         if (graphic[i]['appointmentId'] !== 0)
                         {
-                            if (graphic[i]['ownAppointment']) {
+                            if (graphic[i]['bossWorkerAppointment'])
+                            {
+                                element = `
+                                    <div class="appointment">
+                                        <div class="box">` + graphic[i]['time'][0] + `</div>
+                                        <div class="box">` + graphic[i]['time'][1] + `</div>
+                                        <div class="box">` + graphic[i]['time'][2] + `</div>
+                                        <div class="appointment-term box-3 pallet-2-2">
+                                            <div class="appointment-info">
+                                                ` + graphic[i]['appointmentUserName'] + `
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                            } else if (graphic[i]['appointmentUserId'] == data.userId) {
                                 
                                 element = `
                                     <div class="appointment">

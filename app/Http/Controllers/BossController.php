@@ -130,9 +130,8 @@ class BossController extends Controller
                             
                             $graphic = [];
                             $graphicTime = null;
+                            $graphicTimes = null;
                         }
-                        
-//                        dd($graphic);
                         
                         $availablePreviousMonth = false;
 
@@ -226,8 +225,7 @@ class BossController extends Controller
                     {
                         $graphicArray[$key]['appointmentId'] = $graphArr['appointment']->id;
                         $graphicArray[$key]['appointmentUserId'] = $graphArr['appointment']->user->id;
-                        $graphicArray[$key]['appointmentUserName'] = $graphArr['appointment']->user->name;
-                        $graphicArray[$key]['appointmentUserSurname'] = $graphArr['appointment']->user->surname;
+                        $graphicArray[$key]['appointmentUserName'] = $graphArr['appointment']->user->name . " " . $graphArr['appointment']->user->surname;
                         $graphicArray[$key]['ownAppointmentHref'] = route('appointmentShow', [
                             'id' => $graphArr['appointment']->id
                         ]);
@@ -2025,9 +2023,6 @@ class BossController extends Controller
             'start_time' => 'required',
             'end_time'   => 'required',
             'employees'  => 'required',
-            'calendar'   => 'required|numeric',
-            'year'       => 'required|numeric',
-            'month'      => 'required|numeric',
             'day'        => 'required|numeric'
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -2042,76 +2037,40 @@ class BossController extends Controller
             
             if ($boss->isBoss == 1)
             {
-                $calendar = Calendar::where('id', Input::get('calendar'))->first();
+                $day = Day::where('id', Input::get('day'))->with('month.year.property')->first();
                 
-                if ($calendar !== null)
-                {
-                    $bossProperty = Property::where([
-                        'id' => $calendar->property_id,
-                        'boss_id' => $boss->id
-                    ])->first();
-            
-                    if ($bossProperty !== null)
+                if ($day !== null && $day->month->year->property->boss_id == $boss->id)
+                {          
+                    $graphicRequest = new GraphicRequest();
+                    $graphicRequest->start_time = Input::get('start_time');
+                    $graphicRequest->end_time = Input::get('end_time');
+                    $graphicRequest->comment = Input::get('comment');
+                    $graphicRequest->property_id = $day->month->year->property->id;
+                    $graphicRequest->day_id = $day->id;
+                    $graphicRequest->save();
+
+                    if ($graphicRequest !== null)
                     {
-                        $year = Year::where('id', Input::get('year'))->first();
-                        
-                        if ($year !== null)
+                        foreach (Input::get('employees') as $employee_id)
                         {
-                            $month = Month::where([
-                                'id' => Input::get('month'),
-                                'year_id' => $year->id
+                            $employee = User::where([
+                                'id' => $employee_id,
+                                'isEmployee' => 1
                             ])->first();
-                            
-                            if ($month !== null)
+
+                            if ($employee !== null)
                             {
-                                $day = Day::where([
-                                    'day_number' => Input::get('day'),
-                                    'month_id' => $month->id
-                                ])->first();
-                                
-                                if ($day !== null)
-                                {
-                                    $graphicRequest = new GraphicRequest();
-                                    $graphicRequest->start_time = Input::get('start_time');
-                                    $graphicRequest->end_time = Input::get('end_time');
-                                    $graphicRequest->comment = Input::get('comment');
-                                    $graphicRequest->property_id = $bossProperty->id;
-                                    $graphicRequest->year_id = $year->id;
-                                    $graphicRequest->year_number = $year->year;
-                                    $graphicRequest->month_id = $month->id;
-                                    $graphicRequest->month_number= $month->month_number;
-                                    $graphicRequest->day_id = $day->id;
-                                    $graphicRequest->day_number = $day->day_number;
-                                    $graphicRequest->boss_id = $boss->id;
-                                    $graphicRequest->save();
-                                    
-                                    if ($graphicRequest !== null)
-                                    {
-                                        foreach (Input::get('employees') as $employee_id)
-                                        {
-                                            $employee = User::where([
-                                                'id' => $employee_id,
-                                                'isEmployee' => 1
-                                            ])->first();
-                                            
-                                            if ($employee !== null)
-                                            {
-                                                $graphicRequest->employees()->attach($employee->id);
-                                                $graphicRequest->save();
-                                            }
-                                        }
-                                        
-                                        return redirect()->action(
-                                            'BossController@graphicRequests'
-                                        )->with('success', 'Zapytanie o otwarcie grafiku zostało wysłane');
-                                    }
-                                }
+                                $graphicRequest->employees()->attach($employee->id);
+                                $graphicRequest->save();
                             }
                         }
-                    }
+
+                        return redirect()->action(
+                            'BossController@graphicRequests'
+                        )->with('success', 'Zapytanie o otwarcie grafiku zostało wysłane');
+                    }        
                 }
             }
-            
             
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
@@ -2120,52 +2079,46 @@ class BossController extends Controller
     public function graphicRequests()
     {
         $boss = User::where('id', auth()->user()->id)->with([
-            'properties.graphicRequests.day.month.year',
-            'properties.graphicRequests.employees'
+            'properties.graphicRequests.day.month.year'
         ])->first();
         
-        dd($boss);
+        $graphicRequests = new Collection();
         
-        $graphicRequests = GraphicRequest::where('boss_id', $boss->id)->with([
-            'property',
-            'year',
-            'month',
-            'day',
-            'employees'
-        ])->get();
-        
-        $property = null;
-
-        if (count($graphicRequests) == 0)
+        if (count($boss->properties) > 0)
         {
-            if (count($boss->chosenProperties) > 0)
+            foreach ($boss->properties as $property)
             {
-                $property = Property::where('id', $boss->chosenProperties->first()->property_id)->first();
+                if (count($property->graphicRequests) > 0)
+                {
+                    foreach ($property->graphicRequests as $graphicRequest)
+                    {
+                        $graphicRequest->load([
+                            'property',
+                            'employees'
+                        ]);
+                        $graphicRequests->push($graphicRequest);
+                    }
+                }
             }
         }
         
         return view('boss.graphic_requests')->with([
-            'graphicRequests' => $graphicRequests,
-            'property' => $property
+            'graphicRequests' => $graphicRequests
         ]);
     }
     
-    public function graphicRequestShow($graphicRequestId, $chosenMessageId = 0)
+    public function graphicRequestShow($graphicRequestId)
     {
         $boss = auth()->user();
         
-        $graphicRequest = GraphicRequest::where([
-            'id' => $graphicRequestId,
-            'boss_id' => $boss->id
-        ])->with([
+        $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->with([
             'property',
-            'year',
-            'month',
-            'day',
-            'employees'
+            'day.month.year',
+            'employees',
+            'messages'
         ])->first();
         
-        if ($graphicRequest !== null)
+        if ($graphicRequest !== null && $graphicRequest->property->boss_id == $boss->id)
         {
             $allEmployees = User::where('isEmployee', 1)->get();
             
@@ -2182,20 +2135,8 @@ class BossController extends Controller
             
             $graphicRequest['allEmployees'] = $allEmployees;
             
-            $chosenMessage = Message::where('id', $chosenMessageId)->first();
-            
-            if ($chosenMessage !== null && $chosenMessage->owner_id !== $boss->id)
-            {
-                $chosenMessage->status = 1;
-                $chosenMessage->save();
-            }
-            
-            $graphicRequestMessages = Message::where('graphic_request_id', $graphicRequest->id)->get();
-            
             return view('boss.graphic_request')->with([
                 'graphicRequest' => $graphicRequest,
-                'graphicRequestMessages' => $graphicRequestMessages,
-                'chosenMessage' => $chosenMessage !== null ? $chosenMessage : null,
                 'boss' => $boss
             ]);
         }
@@ -2344,20 +2285,19 @@ class BossController extends Controller
             if ($boss->isBoss == 1)
             {
                 $graphicRequest = GraphicRequest::where([
-                    'id' => Input::get('graphic_request_id'),
-                    'boss_id' => $boss->id
-                ])->first();
+                    'id' => Input::get('graphic_request_id')
+                ])->with('property')->first();
 
-                if ($graphicRequest !== null)
+                if ($graphicRequest !== null && $graphicRequest->property !== null && $graphicRequest->property->boss_id == $boss->id)
                 {
                     $message = new Message();
                     $message->text = Input::get('text');
                     $message->status = 0;
-                    $message->owner_id = $graphicRequest->boss_id;
+                    $message->user_id = $boss->id;
                     $message->graphic_request_id = $graphicRequest->id;
                     $message->save();
                     
-                    return redirect('/boss/graphic-request/' . $graphicRequest->id . '/' . $message->id)->with('success', 'Wiadomość została wysłana!');
+                    return redirect('/boss/graphic-request/' . $graphicRequest->id)->with('success', 'Wiadomość została wysłana!');
                 }
             }
             

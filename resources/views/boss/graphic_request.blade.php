@@ -2,10 +2,10 @@
 @section('content')
 
 {!! Html::style('css/graphic_request.css') !!}
-{!! Html::script('js/graphic_request_show.js') !!}
+<!--{!! Html::script('js/graphic_request_show.js') !!}-->
 
     <div id="title" class="container">
-        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from'): {{$graphicRequest->day->day_number}} {{$graphicRequest->month->month}} {{$graphicRequest->year->year}}</h2>
+        <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from'): {{$graphicRequest->day->day_number}} {{$graphicRequest->day->month->month}} {{$graphicRequest->day->month->year->year}}</h2>
         <p class="text-center">@lang('common.regarding'): {{$graphicRequest->property->name}}</p>
     </div>
 
@@ -52,8 +52,8 @@
                     <h3 class="text-center">@lang('common.messages'):</h3>
                     <hr style="margin-bottom: 2rem;">
                 </div>
-                @if (count($graphicRequestMessages) > 0)
-                    @foreach ($graphicRequestMessages as $message)
+                @if (count($graphicRequest->messages) > 0)
+                    @foreach ($graphicRequest->messages as $message)
                         <div class="row" style="padding: 2px;">
                             @if ($message->owner_id == $graphicRequest->boss_id)
                                 <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
@@ -78,9 +78,6 @@
                             @endif
                         </div>
                     @endforeach
-                    @if ($chosenMessage !== null)
-                        <div id="chosenMessageId" data-chosen_message_id="{{$chosenMessage->id}}"></div>
-                    @endif
                 @endif
                 <div class="row" style="margin-top: 2rem;">
                     {{ Form::open(['id' => 'send-message', 'action' => ['BossController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}

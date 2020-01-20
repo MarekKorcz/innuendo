@@ -2,7 +2,7 @@
 
 @section('content')
 
-{!! Html::script('js/calendar.js') !!}
+{!! Html::script('js/boss_calendar.js') !!}
 {!! Html::script('js/graphic_request.js') !!}
 {!! Html::style('css/calendar.css') !!}
 
@@ -11,7 +11,7 @@
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>
         <div class="col-4">
-            <a class="btn btn-primary" href="{{ URL::to('/appointment/index') }}">
+            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/appointment/index') }}">
                 @lang('common.all_massages')
             </a>
         </div>
@@ -281,7 +281,7 @@
                                     @lang('common.show')
                                 </a>
                             @else
-                                <h2 class="pallet-1-4-font" style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.send_graphic_request')</h2>
+                                <h3 class="pallet-1-4-font" style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.send_graphic_request')</h3>
                                 <a href="#makeAGraphicRequest" 
                                    id="request-btn" 
                                    class="btn btn-lg pallet-1-3" 
@@ -384,10 +384,7 @@
                                     {{ Form::textarea('comment', Input::old('comment'), array('class' => 'form-control')) }}
                                 </div>
 
-                                <input type="hidden" name="property" value="{{$property->id}}"/>
-                                <input type="hidden" name="year" value="{{$year->id}}"/>
-                                <input type="hidden" name="month" value="{{$month->id}}"/>
-                                <input type="hidden" name="day" value="{{$current_day}}"/>
+                                <input type="hidden" name="day" value="{{$current_day_id}}"/>
                                 @if(count($employees) == 1)
                                     @foreach($employees as $employee)
                                         <input type="hidden" name="employees[]" value="{{$employee->id}}"/>

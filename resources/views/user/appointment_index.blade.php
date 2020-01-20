@@ -23,6 +23,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                @if (count($appointments) > 0)
                     @foreach($appointments as $appointment)
                         <tr>
                             <td>
@@ -55,29 +56,18 @@
                             </td>
                         </tr>
                     @endforeach
+                @endif
                 </tbody>
             </table>
         @else
             <div class="text-center" style="padding: 1rem;">
-                @if ($property !== null)
-                    <h3>@lang('common.go_to_schedule_description_1')</h3>
-                    <h4>@lang('common.go_to_schedule_description_2')</h4>
-                    <div style="padding: 1rem;">
-                        <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/user/property/' . $property->id) }}">
-                            @lang('common.go_to_schedule')
-                        </a>
-                    </div>
-                @else
-                    @if ($user->isBoss == 1)
-                        <h3>@lang('common.go_to_schedule_description_3')</h3>
-                        <h4>@lang('common.go_to_schedule_description_4')</h4>
-                        <div style="padding: 1rem;">
-                            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/boss/subscription/list/0/0') }}">
-                                @lang('common.subscriptions_list')
-                            </a>
-                        </div>
-                    @endif
-                @endif
+                <h3>@lang('common.go_to_schedule_description_1')</h3>
+                <h4>@lang('common.go_to_schedule_description_2')</h4>
+                <div style="padding: 1rem;">
+                    <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/user/properties') }}">
+                        @lang('common.go_to_schedule')
+                    </a>
+                </div>
             </div>
         @endif
     </div>

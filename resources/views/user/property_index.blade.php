@@ -5,27 +5,31 @@
 {!! Html::style('css/property_index.css') !!}
 
 <div class="container">
-    <h1 class="text-center padding-top">@lang('common.pick_property_to_choose_schedule')</h1>
+    <div class="text-center padding-top">
+        <h2>@lang('common.pick_property_to_choose_schedule')</h2>
+    </div>
     
     <div class="wrapper">
         @foreach ($properties as $property)
-<!--            @if ($property->isPurchased)
-                <div class="card" style="background-color: lightgreen;">
-            @else
-                <div class="card">
-            @endif-->
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title text-center">{{$property->name}}</h3>
-                    @if ($property->description)
-                        <div class="text-center" style="padding-bottom: 1rem;">
-                            <p class="card-text">
-                                {!!$property->description!!}
-                            </p>
-                        </div>
-                    @endif
+                    <div class="text-center" style="padding-bottom: 1rem;">
+                        <h3 class="card-title">{{$property->name}}</h3>
+                        <h5>{{$property->street}} {{$property->street_number}} {{$property->house_number}}</h5>
+                        @if ($property->description)
+                            <div style="padding-bottom: 1rem;">
+                                <p class="card-text">
+                                    {!!$property->description!!}
+                                </p>
+                            </div>
+                        @endif
+                    </div>
                     <div class="text-center">
-                        <a href="{{ URL::to('user/property/' . $property->id) }}" class="btn btn-success btn-lg">
+                        @if (auth()->user()->isBoss)
+                            <a href="{{ URL::to('/boss/calendar/' . $property->id . '/0/0/0') }}" class="btn pallet-1-3 btn-lg" style="color: white;">
+                        @else
+                            <a href="{{ URL::to('/user/calendar/' . $property->id . '/0/0/0') }}" class="btn pallet-1-3 btn-lg" style="color: white;">
+                        @endif
                             @lang('common.show')
                         </a>
                     </div>

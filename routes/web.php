@@ -57,7 +57,7 @@ Route::put('/admin/user/edit', 'AdminController@userEdit');
 Route::get('/admin/boss/create', 'AdminController@bossCreate');
 Route::post('/admin/boss/store', 'AdminController@bossStore');
 Route::get('/admin/graphic-requests', 'AdminController@graphicRequests');
-Route::get('/admin/graphic-request/{graphicRequestId}/{chosenMessageId}', 'AdminController@graphicRequestShow');
+Route::get('/admin/graphic-request/{graphicRequestId}', 'AdminController@graphicRequestShow');
 Route::post('/admin/make-a-message', 'AdminController@makeAMessage');
 Route::get('/admin/graphic-request/message/change-status/{graphicRequestId}/{messageId}', 'AdminController@graphicRequestMessageChangeStatus');
 Route::get('/admin/promo/create', 'AdminController@promoCreate');
@@ -175,7 +175,8 @@ Route::put('/item/update', 'ItemController@update');
 
 // user >> routings
 // user calendar
-Route::get('/user/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
+Route::get('/user/calendar/{property_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
+Route::post('user/employee/get-graphic', 'UserController@getEmployeeGraphic');
 
 // show employees to user
 Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
@@ -237,7 +238,7 @@ Route::put('/boss/subscription/invoice/update', 'BossController@invoiceDataUpdat
 // graphic requests and approve messages
 Route::post('/boss/make-a-graphic-request', 'BossController@makeAGraphicRequest');
 Route::get('/boss/graphic-requests', 'BossController@graphicRequests');
-Route::get('/boss/graphic-request/{graphicRequestId}/{chosenMessageId}', 'BossController@graphicRequestShow');
+Route::get('/boss/graphic-request/{graphicRequestId}', 'BossController@graphicRequestShow');
 Route::get('/boss/graphic-request/edit/{graphicRequestId}', 'BossController@graphicRequestEdit');
 Route::put('/boss/graphic-request/update', 'BossController@graphicRequestUpdate');
 Route::post('/boss/make-a-message', 'BossController@makeAMessage');

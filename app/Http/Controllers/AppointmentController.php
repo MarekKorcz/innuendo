@@ -78,7 +78,7 @@ class AppointmentController extends Controller
             
             if (count($explodedAppointmentTerm) == 2)
             {
-                $graphicId = htmlentities((int)$request->session()->get('graphicId'), ENT_QUOTES, "UTF-8");
+                $graphicId = htmlentities($request->session()->get('graphicId'), ENT_QUOTES, "UTF-8");
                 $appointmentTerm = htmlentities($request->session()->get('appointmentTerm'), ENT_QUOTES, "UTF-8");
                 
                 $request->session()->forget('graphicId');
@@ -93,7 +93,7 @@ class AppointmentController extends Controller
                     
                     $appointmentTerm = date('G:i', strtotime($appointmentTerm));
 
-                    if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
+                    if ($appointmentTerm >= $startTime && $appointmentTerm < $endTime)
                     {
                         $chosenAppointment = Appointment::where([
                             'graphic_id' => $graphicId,
@@ -109,7 +109,7 @@ class AppointmentController extends Controller
                             {
                                 $appointmentTermIncremented = date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented)));
 
-                                if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
+                                if ($appointmentTermIncremented >= $startTime && $appointmentTermIncremented < $endTime)
                                 {
                                     $nextAppointmentAvailable = Appointment::where([
                                         'graphic_id' => $graphicId,
@@ -186,25 +186,25 @@ class AppointmentController extends Controller
         $month = $request->get('month');
         $day = $request->get('day');
         
-        if ($appointmentTerm !== null && is_integer((int)$appointmentTerm) &&
+        if ($appointmentTerm !== null &&
             $item !== null && is_integer((int)$item) &&
             $propertyId !== null && is_integer((int)$propertyId) &&
             $graphicId !== null && is_integer((int)$graphicId) &&
             $year !== null && is_integer((int)$year) &&
             $month !== null && is_integer((int)$month) &&
             $day !== null && is_integer((int)$day))
-        {            
+        {        
             $explodedAppointmentTerm = explode(":", $appointmentTerm);
             
             if (count($explodedAppointmentTerm) == 2)
             {
                 $appointmentTerm = htmlentities($appointmentTerm, ENT_QUOTES, "UTF-8");
-                $item = htmlentities((int)$item, ENT_QUOTES, "UTF-8");
-                $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
-                $graphicId = htmlentities((int)$graphicId, ENT_QUOTES, "UTF-8");
-                $year = htmlentities((int)$year, ENT_QUOTES, "UTF-8");
-                $month = htmlentities((int)$month, ENT_QUOTES, "UTF-8");
-                $day = htmlentities((int)$day, ENT_QUOTES, "UTF-8");
+                $item = htmlentities($item, ENT_QUOTES, "UTF-8");
+                $propertyId = htmlentities($propertyId, ENT_QUOTES, "UTF-8");
+                $graphicId = htmlentities($graphicId, ENT_QUOTES, "UTF-8");
+                $year = htmlentities($year, ENT_QUOTES, "UTF-8");
+                $month = htmlentities($month, ENT_QUOTES, "UTF-8");
+                $day = htmlentities($day, ENT_QUOTES, "UTF-8");
                 
                 $item = Item::where('id', $item)->first();
                 
@@ -260,7 +260,7 @@ class AppointmentController extends Controller
             }
         }
         
-        return redirect()->route('welcome');
+        return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
     }
     
     /**
@@ -282,7 +282,7 @@ class AppointmentController extends Controller
             $endTime = date('G:i', strtotime($graphic->end_time));
             $appointmentTerm = date('G:i', strtotime($appointmentTerm));
 
-            if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
+            if ($appointmentTerm >= $startTime && $appointmentTerm < $endTime)
             {
                 $chosenAppointment = Appointment::where([
                     'graphic_id' => $graphicId,
@@ -300,7 +300,7 @@ class AppointmentController extends Controller
                     {
                         $appointmentTermIncremented = date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented)));
 
-                        if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
+                        if ($appointmentTermIncremented >= $startTime && $appointmentTermIncremented < $endTime)
                         {
                             $nextAppointmentAvailable = Appointment::where([
                                 'graphic_id' => $graphicId,
@@ -310,14 +310,14 @@ class AppointmentController extends Controller
                             if ($nextAppointmentAvailable === null)
                             {
                                 $appointmentLength[] = true;
-                            }
-                            else
-                            {
+                                
+                            } else {
+                                
                                 $appointmentLength[] = false;
                             }
-                        }
-                        else
-                        {
+                            
+                        } else {
+                            
                             $appointmentLength[] = false;
                         }
                     }

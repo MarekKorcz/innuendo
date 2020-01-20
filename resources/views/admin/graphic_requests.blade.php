@@ -22,12 +22,12 @@
                     @foreach($graphicRequests as $graphicRequest)
                         <tr>
                             <td>{{$graphicRequest->property->name}} - {{$graphicRequest->boss->name}} {{$graphicRequest->boss->surname}}</td>
-                            <td>{{$graphicRequest->year->year}} {{$graphicRequest->month->month}} {{$graphicRequest->day->day_number}}</td>
+                            <td>{{$graphicRequest->day->month->year->year}} {{$graphicRequest->day->month->month}} {{$graphicRequest->day->day_number}}</td>
                             <td>{{$graphicRequest->start_time}} - {{$graphicRequest->end_time}}</td>
                             <td>{{$graphicRequest->comment}}</td>
                             <td>{{count($graphicRequest->employees)}}</td>
                             <td>
-                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/admin/graphic-request/' . $graphicRequest->id . '/0') }}">
+                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/admin/graphic-request/' . $graphicRequest->id) }}">
                                     @lang('common.show')
                                 </a>
                             </td>

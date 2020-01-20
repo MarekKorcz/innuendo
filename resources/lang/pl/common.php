@@ -96,8 +96,6 @@ return [
     'your_appointments_view' => 'Widok Twoich wizyt',
     'subscriptions_view' => 'Widok pakietów',
     'appointment_removal' => 'Usunięcie wizyty',
-    'appointment_removal_description' => 'Jeśli odwołasz wizytę w okresie ją poprzedzającym, mniejszym niż jedna doba, to wizyta 
-                                          ta zostanie uznana za wykonaną i nie będzie możliwości wykorzystania jej w przyszłości!',
     'cancel_the_visit' => 'Odwołaj wizytę',
     'appointment_details' => 'Szczegóły wizyty',
     'appointment_reservation' => 'Rezerwacja wizyty',
