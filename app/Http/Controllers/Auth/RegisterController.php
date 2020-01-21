@@ -80,22 +80,19 @@ class RegisterController extends Controller
     }
 
     /**
-     * Create boss worker with promo code.
+     * Create boss worker with code.
      *
      * @param  array  $data
      * @return \App\User
      */
     protected function create(array $data)
     {        
-        $code = Code::where('code', htmlentities($data['code'], ENT_QUOTES, "UTF-8"))->first();
+        $code = Code::where('code', htmlentities($data['code'], ENT_QUOTES, "UTF-8"))->with('boss')->first();
         
-        $boss = User::where([
-            'id' => $code->boss_id,
-            'isBoss' => 1
-        ])->first();
-        
-        if ($code !== null && $boss !== null)
+        if ($code !== null)
         {
+            $boss = $code->boss;
+            
             $user = new User();
             $user->name = $data['name'];
             $user->surname = $data['surname'];

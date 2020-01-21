@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Year;
 use App\Month;
 use App\Day;
 use App\Graphic;
-use App\Property;
+use App\GraphicRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -96,11 +95,17 @@ class DayController extends Controller
         
         if ($day !== null)
         {            
+            $graphicRequest = GraphicRequest::where([
+                'day_id' => $day->id,
+                'property_id' => $day->month->year->property_id
+            ])->first();
+            
             return view('day.show')->with([
                 'day' => $day,
                 'month' => $day->month,
                 'year' => $day->month->year,
                 'property' => $day->month->year->property,
+                'graphicRequest' => $graphicRequest,
                 'graphics' => Graphic::where('day_id', $day->id)->with('employee')->get()
             ]);
         }

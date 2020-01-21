@@ -124,7 +124,7 @@
                     </h3>
                     <div style="padding: 1rem;">
                         <a class="btn pallet-2-1" style="color: white;" href="{{ URL::to('/boss/codes') }}">
-                            @lang('common.register_codes')
+                            @lang('common.register_code')
                         </a>
                     </div>
                 </div>

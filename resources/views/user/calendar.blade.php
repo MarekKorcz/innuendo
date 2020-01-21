@@ -144,7 +144,6 @@
                 <div id="appointments" class="col-12 col-md-10 text-center">
                     @if(count($graphic) > 0)
                     
-                    @if (count($graphicTimesEntites) > 1)
                         <div id="graphic-employees-buttons" data-current_day_id="{{$current_day_id}}" style="padding: 1rem;">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 @foreach ($graphicTimesEntites as $key => $graphicTimeEntity)
@@ -159,7 +158,6 @@
                             </div>
                         </div>
                         <hr>
-                    @endif
                         
                         <div id="graphic">
                             @for ($i = 0; $i < count($graphic); $i++)

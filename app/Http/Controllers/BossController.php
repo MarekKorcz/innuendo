@@ -191,17 +191,12 @@ class BossController extends Controller
             }
             
             return redirect()->action(
-                'BossController@calendar', [
-                    'property_id' => $property->id,
-                    'year' => 0, 
-                    'month_number' => 0, 
-                    'day_number' => 0
-                ]
+                'UserController@propertiesList'
             )->with('error', $message);
             
         } else {
             
-            $message = 'Niepoprawny numer id kalendarza!';
+            $message = 'Niepoprawny numer id';
         }
         
         return redirect()->route('welcome')->with('error', $message);
@@ -461,140 +456,15 @@ class BossController extends Controller
     }
     
     /**
-     * Shows boss codes
+     * Shows boss code
      */
-    public function codes()
+    public function code()
     {
-        $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-        $codes = Code::where('boss_id', $boss->id)->get();
-        $codesArray = [];
-        $redirectToSubscriptionPurchaseView = true;
+        $boss = auth()->user();
+        $boss->load('code');
         
-        if (count($codes) > 0)
-        {
-            $bossProperties = Property::where('boss_id', $boss->id)->with('chosenProperties')->get();
-            
-            if (count($bossProperties) > 0)
-            {
-                for ($i = 0; $i < count($codes); $i++)
-                {
-                    $properties = [];
-
-                    foreach ($bossProperties as $bossProperty)
-                    {                    
-                        $subscriptions = [];
-                        
-                        $allPropertySubscriptions = new Collection();
-                        
-                        if ($bossProperty->chosenProperties)
-                        {
-                            foreach ($bossProperty->chosenProperties as $chosenProperty)
-                            {
-                                $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-                                                                
-                                if ($chosenProperty !== null && $chosenProperty->user_id == $boss->id && $chosenProperty->purchases)
-                                {
-                                    $today = new \DateTime(date('Y-m-d'));
-                                    
-                                    foreach ($chosenProperty->purchases as $purchase)
-                                    {
-                                        $substart = Substart::where('id', $purchase->substart_id)->first();
-                                        
-                                        if ($substart !== null && $substart->start_date <= $today && $substart->end_date >= $today)
-                                        {
-                                            $subscription = Subscription::where('id', $purchase->subscription_id)->first();
-                                            $allPropertySubscriptions->push($subscription);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        $chosenProperty = ChosenProperty::where([
-                            'property_id' => $bossProperty->id,
-                            'code_id' => $codes[$i]->id
-                        ])->with('subscriptions')->first();
-
-                        foreach ($allPropertySubscriptions as $propertySubscription)
-                        {
-                            $isChosen = false;
-
-                            if ($chosenProperty !== null)
-                            {
-                                $chosenPropertySubscriptions = $chosenProperty->subscriptions;
-
-                                foreach ($chosenPropertySubscriptions as $chosenPropertySubscription)
-                                {
-                                    if ($propertySubscription->id == $chosenPropertySubscription->id)
-                                    {
-                                        $isChosen = true;
-                                    }
-                                }
-                            }
-                            
-                            $isSubscriptionStarted = null;
-                            
-                            $substarts = Substart::where([
-                                'property_id' => $bossProperty->id,
-                                'subscription_id' => $propertySubscription->id
-                            ])->get();
-
-                            if (count($substarts) > 0)
-                            {
-                                $today = new \DateTime(date('Y-m-d'));
-                                
-                                foreach ($substarts as $substart)
-                                {
-                                    if ($substart->start_date <= $today && $substart->end_date >= $today)
-                                    {
-                                        if ($substart->isActive == 1)
-                                        {
-                                            $isSubscriptionStarted = "(od " . $substart->start_date->format("Y-m-d") . " do " . $substart->end_date->format("Y-m-d") . ")";
-                                            
-                                        } else {
-                                            
-                                            $isSubscriptionStarted = "(jeszcze nie aktywowana)";
-                                        }
-
-                                        $subscriptions[] = [
-                                            'subscription_id' => $propertySubscription->id,
-                                            'subscription_name' => $propertySubscription->name,
-                                            'isChosen' => $isChosen,
-                                            'isSubscriptionStarted' => $isSubscriptionStarted
-                                        ];
-                                    }
-                                }
-                            }
-                        }
-
-                        $properties[] = [
-                            'property_id' => $bossProperty->id,
-                            'property_name' => $bossProperty->name,
-                            'chosen_property_id' => $chosenProperty !== null ? $chosenProperty->id : 0,
-                            'subscriptions' => $subscriptions
-                        ];
-                    }
-
-                    $codesArray[$i + 1] = [
-                        'code_id' => $codes[$i]->id,
-                        'code' => $codes[$i]->code,
-                        'properties' => $properties
-                    ];
-                }
-            }
-        }
-        
-        if (count($codesArray) == 0)
-        {
-            if (count($boss->chosenProperties) > 0)
-            {
-                $redirectToSubscriptionPurchaseView = false;
-            }
-        }
-        
-        return view('boss.codes')->with([
-            'codes' => $codesArray,
-            'redirectToSubscriptionPurchaseView' => $redirectToSubscriptionPurchaseView
+        return view('boss.code')->with([
+            'code' => $boss->code
         ]);
     }
     
@@ -637,7 +507,7 @@ class BossController extends Controller
                 $code->code = $codeText;
                 $code->save();
                 
-                return redirect('/boss/codes')->with('success', $message);
+                return redirect('/boss/code')->with('success', $message);
             }
         }
 
@@ -972,7 +842,7 @@ class BossController extends Controller
         if ($code->id !== null)
         {
             $type = 'success';
-            $message = 'Dodano nowy kod. Wybierz lokalizacje oraz subskrypcje które chcesz udostępnić swoim pracownikom, następnie włącz rejestracje oraz wyślij im wygenerowany kod z którym będą mogli się zarejestrować!';
+            $message = 'Dodano nowy kod.';
             
         } else {
             
@@ -981,7 +851,7 @@ class BossController extends Controller
         }
         
         return redirect()->action(
-            'BossController@codes'
+            'BossController@code'
         )->with($type, $message);
     }
     
@@ -993,27 +863,10 @@ class BossController extends Controller
      */
     public function destroyCode($id)
     {
-        $code = Code::where('id', $id)->with('chosenProperties')->first();
+        $code = Code::where('id', $id)->first();
         
         if ($code !== null)
-        {            
-            $chosenProperties = $code->chosenProperties;
-            
-            if ($chosenProperties !== null)
-            {
-                foreach ($chosenProperties as $chosenProperty)
-                {
-                    $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('subscriptions')->first();
-                    
-                    if ($chosenProperty->subscriptions !== null)
-                    {
-                        $chosenProperty->subscriptions()->detach();
-                    }
-                    
-                    $chosenProperty->delete();
-                }
-            }
-            
+        {     
             $code->delete();
 
             $type = 'success';
@@ -1026,7 +879,7 @@ class BossController extends Controller
         }
         
         return redirect()->action(
-            'BossController@codes'
+            'BossController@code'
         )->with($type, $message);
     }
     

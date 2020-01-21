@@ -104,7 +104,7 @@ class User extends Authenticatable
      */
     public function code()
     {
-        return $this->hasOne('App\Code');
+        return $this->hasOne('App\Code', 'boss_id');
     }
     
     /**

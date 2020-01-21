@@ -63,12 +63,12 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title text-center">@lang('common.register_codes_generation')</h4>
+                            <h4 class="card-title text-center">@lang('common.register_code_generation')</h4>
                             <p class="card-text text-center">
-                                @lang('common.register_codes_generation_description')
+                                @lang('common.register_code_generation_description')
                             </p>
                             <div class="text-center">
-                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('boss/codes/') }}">
+                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('boss/code/') }}">
                                     @lang('common.show')
                                 </a>
                             </div>

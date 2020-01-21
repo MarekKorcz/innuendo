@@ -94,16 +94,19 @@ class UserController extends Controller
             {
                 $employee->graphics->each(function($item) use ($employeeBossGraphicProperties, $bossId, $user) 
                 {
-                    if (!$user->isAdmin)
+                    if (!$employeeBossGraphicProperties->contains('id', $item->property->id))
                     {
-                        if ($item->property->boss_id == $bossId)
+                        if (!$user->isAdmin)
                         {
+                            if ($item->property->boss_id == $bossId)
+                            {
+                                $employeeBossGraphicProperties->push($item->property);
+                            }
+
+                        } else {
+
                             $employeeBossGraphicProperties->push($item->property);
                         }
-                        
-                    } else {
-                        
-                        $employeeBossGraphicProperties->push($item->property);
                     }
                 });
             }
@@ -232,6 +235,7 @@ class UserController extends Controller
      */
     public function calendar($property_id, $year = 0, $month_number = 0, $day_number = 0)
     {
+        
         $user = auth()->user();
         $properties = $user->getBossProperties();
         
@@ -365,17 +369,12 @@ class UserController extends Controller
             }
             
             return redirect()->action(
-                'BossController@calendar', [
-                    'property_id' => $property->id,
-                    'year' => 0, 
-                    'month_number' => 0, 
-                    'day_number' => 0
-                ]
+                'UserController@propertiesList'
             )->with('error', $message);
             
         } else {
             
-            $message = 'Niepoprawny numer id kalendarza!';
+            $message = 'Niepoprawny numer id';
         }
         
         return redirect()->route('welcome')->with('error', $message);

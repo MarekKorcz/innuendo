@@ -4,7 +4,13 @@
     
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>
-        <div class="col-4"></div>
+        <div class="col-4">
+            @if ($graphicRequest)
+                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('admin/graphic-request/' . $graphicRequest->id) }}">
+                    @lang('common.graphic_request')
+                </a>
+            @endif
+        </div>
         <div class="col-4">
             @if ($month)
                 <a class="btn btn-success" href="{{ URL::to('month/show/' . $month->id) }}">

@@ -191,13 +191,10 @@ Route::get('/boss/calendar/{property_id}/{year}/{month_number}/{day_number}', 'B
 Route::post('boss/employee/get-graphic', 'BossController@getEmployeeGraphic');
 
 // code routings
-Route::get('/boss/codes', 'BossController@codes');
+Route::get('/boss/code', 'BossController@code');
 Route::post('/boss/set-code', 'BossController@setCode');
 Route::get('/code/add', 'BossController@addCode');
 Route::delete('/code/{id}', 'BossController@destroyCode');
-Route::post('/subscription/set-subscription-to-chosen-property-subscription', 'BossController@setSubscriptionToChosenPropertySubscription');
-Route::post('/subscription/set-chosen-property', 'BossController@setChosenProperty');
-Route::post('/subscription/delete-chosen-property', 'BossController@deleteChosenProperty');
 
 // property update
 Route::get('/boss/property/{id}/edit', 'BossController@propertyEdit');
