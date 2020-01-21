@@ -5,31 +5,32 @@
 {!! Html::script('js/month_show.js') !!}
 
 <div class="container">
-
-    <nav class="navbar navbar-inverse">
-        <ul class="nav navbar-nav">
-            <li>
-                @if ($year)
-                    <a class="btn btn-success" href="{{ URL::to('year/show/' . $year->id) }}">
-                        @lang('common.back_to_year')
-                    </a>
-                @endif
-            </li>
-        </ul>
-        <div class="navbar-header">
+    
+    <div class="row text-center" style="padding-top: 2rem;">
+        <div class="col-4">
+            @if ($year)
+                <a class="btn btn-success" href="{{ URL::to('year/show/' . $year->id) }}">
+                    @lang('common.back_to_year')
+                </a>
+            @endif
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4">
             <a class="btn btn-danger delete" style="color: white;" data-month_id="{{$month->id}}">
                 @lang('common.delete')
             </a>
         </div>
-    </nav>
+    </div>
 
-    <h2 style="padding: 20px;">
-        @if (Session('locale') == "en")
-            {{ $month->month_en }}
-        @else
-            {{ $month->month }}
-        @endif
-    </h2>
+    <div class="text-center">
+        <h2 style="padding: 20px;">
+            @if (Session('locale') == "en")
+                {{ $month->month_en }}
+            @else
+                {{ $month->month }}
+            @endif
+        </h2>
+    </div>
     
     <div class="jumbotron">
         @if (count($days) > 0)

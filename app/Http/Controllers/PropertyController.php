@@ -141,64 +141,15 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-        $property = Property::where('id', $id)->with('subscriptions')->first();
+        $property = Property::where('id', $id)->with([
+            'boss',
+            'years'
+        ])->first();
         
         if ($property !== null)
-        {
-            $property['boss'] = User::where('id', $property->boss_id)->with('chosenProperties')->first();            
-            $calendars = Calendar::where('property_id', $property->id)->get();
-
-            $years = [];
-            $employees = [];
-
-            foreach ($calendars as $calendar)
-            {
-                if ($calendar)
-                {
-                    $years[$calendar->id] = Year::where('calendar_id', $calendar->id)->orderBy('year', 'desc')->get();
-
-                    if ($calendar->employee_id != null)
-                    {
-                        $employees[$calendar->id] = User::where('id', $calendar->employee_id)->first();
-                    }
-                }
-            }
-            
-            if ($property['boss'] !== null && count($property->subscriptions) > 0)
-            {
-                foreach ($property->subscriptions as $subscription)
-                {
-                    
-                    // todo: przetestuj jeśli jest więcej niż jedno purchase dopisane do chosenProperties na tą samą subscription
-                    
-                    $subscriptionPurchases = Purchase::where('subscription_id', $subscription->id)->get();
-                    $subscription['isChosen'] = false;
-                    
-                    if (count($subscriptionPurchases) > 0)
-                    {
-                        foreach ($subscriptionPurchases as $purchase)
-                        {
-                            if (count($property['boss']->chosenProperties) > 0)
-                            {
-                                foreach ($property['boss']->chosenProperties as $bossChosenProperty)
-                                {
-                                    if ($purchase->chosen_property_id == $bossChosenProperty->id)
-                                    {
-                                        $subscription['isChosen'] = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
+        {            
             return view('property.show')->with([
-                'property' => $property,
-                'subscriptions' => $property->subscriptions->sortBy('quantity'),
-                'calendars' => $calendars,
-                'years' => $years,
-                'employees' => $employees
+                'property' => $property
             ]);
         }
         

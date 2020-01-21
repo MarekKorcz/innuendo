@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Calendar;
+use App\Property;
 use App\Year;
 use App\Month;
 use Illuminate\Support\Facades\Validator;
@@ -29,9 +29,9 @@ class YearController extends Controller
      */
     public function create($id)
     {
-        $calendar = Calendar::where('id', $id)->first();
+        $property = Property::where('id', $id)->first();
         
-        return view('year.create')->with('calendar', $calendar);
+        return view('year.create')->with('property', $property);
     }
 
     /**
@@ -43,7 +43,8 @@ class YearController extends Controller
     {
         // validate
         $rules = array(
-            'year' => 'required'
+            'year' => 'required',
+            'property_id' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -52,17 +53,40 @@ class YearController extends Controller
             return Redirect::to('year/create')
                 ->withErrors($validator);
         } else {
-            // store            
-            $year = Year::firstOrCreate([
-                'year' => Input::get('year'),
-                'calendar_id' => Input::get('calendar_id')
-            ]);
             
-            return redirect()->action(
-                        'YearController@show', [
-                            'id' => $year->id
-                    ])->with('success', 'Year successfully created!')
-            ;
+            $property = Property::where('id', Input::get('property_id'))->with([
+                'years'
+            ])->first();
+            
+            if ($property !== null)
+            {
+                $givenYear = Input::get('year');
+                $year = null;
+                
+                if (count($property->years) > 0)
+                {
+                    foreach ($property->years as $propertyYear)
+                    {
+                        if ($propertyYear->year == $givenYear)
+                        {
+                            $year = $propertyYear;
+                        }
+                    }
+                }
+                
+                if ($year == null)
+                {
+                    $year = new Year();
+                    $year->year = $givenYear;
+                    $year->property_id = $property->id;
+                    $year->save();
+                }
+
+                return redirect()->action(
+                    'YearController@show', [
+                        'id' => $year->id
+                ])->with('success', 'Year successfully created!');
+            }
         }
     }
 
@@ -74,18 +98,13 @@ class YearController extends Controller
      */
     public function show($id)
     {        
-        $year = Year::where('id', $id)->first();
-        $months = Month::where('year_id', $year->id)->orderBy('month_number')->get();
-        
-        if ($year)
-        {
-            $calendar = Calendar::where('id', $year->calendar_id)->first();
-        }
+        $year = Year::where('id', $id)->with([
+            'months',
+            'property'
+        ])->first();
         
         return view('year.show')->with([
-            'year' => $year,
-            'months' => $months,
-            'property_id' => $calendar->property_id
+            'year' => $year
         ]);
     }
 
@@ -97,16 +116,18 @@ class YearController extends Controller
      */
     public function destroy($id)
     {
-        $year = Year::where('id', $id)->first();
+        $year = Year::where('id', $id)->with('property')->first();
         
-        $calendar = Calendar::where('id', $year->calendar_id)->first();
-        
-        $year->delete();
-        
-        return redirect()->action(
-                    'PropertyController@show', [
-                        'id' => $calendar->property_id
-                ])->with('success', 'Year has been successfully deleted!')
-        ;
+        if ($year !== null)
+        {
+            $property = $year->property;
+
+            $year->delete();
+
+            return redirect()->action(
+                'PropertyController@show', [
+                    'id' => $property->id
+            ])->with('success', 'Year has been successfully deleted!');
+        }
     }
 }

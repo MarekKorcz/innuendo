@@ -1,17 +1,16 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-
-    <nav class="navbar navbar-inverse" style="padding-top: 1rem;">
-        <div class="navbar-header"></div>
-        <ul class="nav navbar-nav">
-            <li>
-                <a class="btn btn-success" href="{{ URL::to('day/show/' . $day->id) }}">
-                    @lang('common.back_to_day')
-                </a>
-            </li>
-        </ul>
-    </nav>
+    
+    <div class="row text-center" style="padding: 2rem 0 2rem 0;">
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+        <div class="col-4">
+            <a class="btn btn-success" href="{{ URL::to('day/show/' . $day->id) }}">
+                @lang('common.back_to_day')
+            </a>
+        </div>
+    </div>
 
     <div class="jumbotron">
         <div class="text-center">
@@ -27,6 +26,20 @@
             <div class="form-group">
                 <label for="end_time">@lang('common.end_time')</label>
                 {{ Form::time('end_time', Input::old('end_time'), array('class' => 'form-control')) }}
+            </div>
+            <div class="form-group">
+                <label for="employee_id">@lang('common.employees'):</label>
+                <select name="employee_id" class="form-control">
+                    @if (count($employees) > 0)
+                        @foreach ($employees as $key => $employee)
+                            @if ($key == 0)
+                                <option value="{{$employee->id}}" selected="true">{{$employee->name}} {{$employee->surname}}</option>
+                            @else
+                                <option value="{{$employee->id}}">{{$employee->name}} {{$employee->surname}}</option>
+                            @endif
+                        @endforeach
+                    @endif
+                </select>
             </div>
             @if ($day)
                 {{ Form::hidden('day_id', $day->id) }}

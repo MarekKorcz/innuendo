@@ -78,7 +78,7 @@ class WorkerController extends Controller
     /**
      * Shows calendar that belongs to employee.
      * 
-     * @param integer $calendar_id
+     * @param integer $property_id
      * @param integer $year
      * @param integer $month_number
      * @param integer $day_number
@@ -86,8 +86,11 @@ class WorkerController extends Controller
      * @return type
      * @throws Exception
      */
-    public function backendCalendar($calendar_id, $year = 0, $month_number = 0, $day_number = 0)
-    {                
+    public function backendCalendar($property_id, $year = 0, $month_number = 0, $day_number = 0)
+    {              
+        
+        dd('dokoncz wszedzie dalej zmieniać na $property_id');
+        
         $calendar = Calendar::where([
             'id' => $calendar_id,
             'isActive' => 1

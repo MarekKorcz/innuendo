@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Day;
 use App\Graphic;
+use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -30,7 +31,10 @@ class GraphicController extends Controller
     {
         $day = Day::where('id', $id)->first();
         
-        return view('graphic.create')->with('day', $day);
+        return view('graphic.create')->with([
+            'day' => $day,
+            'employees' => User::where('isEmployee', 1)->get()
+        ]);
     }
 
     /**
@@ -42,7 +46,9 @@ class GraphicController extends Controller
     {
         $rules = array(
             'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time'
+            'end_time' => 'required|date_format:H:i|after:start_time',
+            'employee_id' => 'required',
+            'day_id' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -51,42 +57,60 @@ class GraphicController extends Controller
                 ->withErrors($validator);
         } else {
             
-            // count total time
-            $startDate = \DateTime::createFromFormat('H:i', Input::get('start_time'));
-            $endDate = \DateTime::createFromFormat('H:i', Input::get('end_time'));
+            $day = Day::where('id', Input::get('day_id'))->with('month.year.property')->first();
             
-            $graphic = $startDate->diff($endDate);
-            $minutes = 0;
+            // >> get given employee
+            $givenEmployee = User::where([
+                'id' => Input::get('employee_id'),
+                'isEmployee' => 1
+            ])->first();
+            // <<
             
-            if ($graphic->h > 0)
+            if ($day !== null && $givenEmployee !== null)
             {
-                $minutes = $graphic->h * 60;
+                // count total time
+                $startDate = \DateTime::createFromFormat('H:i', Input::get('start_time'));
+                $endDate = \DateTime::createFromFormat('H:i', Input::get('end_time'));
+
+                $graphic = $startDate->diff($endDate);
+                $minutes = 0;
+
+                if ($graphic->h > 0)
+                {
+                    $minutes = $graphic->h * 60;
+                }
+
+                $minutes += $graphic->i;
+                
+                $graphicTime = new Graphic();
+                $graphicTime->start_time = Input::get('start_time');
+                $graphicTime->end_time = Input::get('end_time');
+                $graphicTime->total_time = $minutes;
+                $graphicTime->day_id = $day->id;
+                $graphicTime->property_id = $day->month->year->property->id;
+                $graphicTime->employee_id = $givenEmployee->id;
+                $graphicTime->save();
+
+                return redirect()->action('DayController@show', [
+                        'id' => $day->id
+                ])->with('success', 'Graphic has been successfully added!');
             }
-            
-            $minutes += $graphic->i;
-            
-            $graphicTime = Graphic::firstOrCreate([
-                'start_time' => Input::get('start_time'),
-                'end_time' => Input::get('end_time'),
-                'total_time' => $minutes,
-                'day_id' => Input::get('day_id')
-            ]);
-            
-            return redirect()->action('DayController@show', [
-                    'id' => Input::get('day_id')
-            ])->with('success', 'Graphic has been successfully added!');
         }
     }
     
     public function edit($id)
     {
-        $graphic = Graphic::where('id', $id)->with('day')->first();
+        $graphic = Graphic::where('id', $id)->with([
+            'day',
+            'employee'
+        ])->first();
         
         if ($graphic !== null)
         {
             return view('graphic.edit')->with([
                 'graphic' => $graphic,
-                'day' => $graphic->day
+                'day' => $graphic->day,
+                'employees' => User::where('isEmployee', 1)->get()
             ]);
         }
         
@@ -98,7 +122,8 @@ class GraphicController extends Controller
         $rules = array(
             'start_time'  => 'required',
             'end_time'    => 'required',
-            'graphic_id'  => 'required'
+            'graphic_id'  => 'required',
+            'employee_id' => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -109,10 +134,18 @@ class GraphicController extends Controller
         
             $graphic = Graphic::where('id', Input::get('graphic_id'))->with([
                 'appointments',
-                'day'
+                'day',
+                'employee'
             ])->first();
         
-            if ($graphic !== null)
+            // >> get given employee
+            $givenEmployee = User::where([
+                'id' => Input::get('employee_id'),
+                'isEmployee' => 1
+            ])->first();
+            // <<
+            
+            if ($graphic !== null && $givenEmployee !== null)
             {
                 // >> count total time
                 $startTimeExploded = explode(":", Input::get('start_time'));
@@ -131,10 +164,14 @@ class GraphicController extends Controller
 
                 $minutes += $graph->i;
                 // <<
-            
+                
                 $graphic->start_time = Input::get('start_time');
                 $graphic->end_time = Input::get('end_time');
                 $graphic->total_time = $minutes;
+                if ($givenEmployee->id !== $graphic->employee->id)
+                {
+                    $graphic->employee_id = $givenEmployee->id;
+                }
                 $graphic->save();
                 
                 return redirect()->action('DayController@show', [

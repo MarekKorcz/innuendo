@@ -96,7 +96,7 @@ Route::get('/userimage/{fileName}', [
 
 // >> employee routings
 Route::get('/employee/backend-graphic', 'WorkerController@graphicList')->name('graphicList');
-Route::get('/employee/backend-calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'WorkerController@backendCalendar')->name('backendCalendar');
+Route::get('/employee/backend-calendar/{property_id}/{year}/{month_number}/{day_number}', 'WorkerController@backendCalendar')->name('backendCalendar');
 Route::get('/employee/backend-appointment/show/{id}', 'WorkerController@backendAppointmentShow');
 Route::get('/employee/backend-appointment/index/{id}', 'WorkerController@backendAppointmentIndex');
 Route::get('/employee/backend-appointment/index/temp-user/{id}', 'WorkerController@backendAppointmentIndexTempUser');
@@ -127,11 +127,6 @@ Route::get('/property/can-show/change/{id}', 'PropertyController@canShowChange')
 Route::put('/temp-property/{id}', 'PropertyController@tempPropertyUpdate');
 Route::delete('/property/{id}', 'PropertyController@destroy');
 Route::delete('/temp-property/{id}', 'PropertyController@tempPropertyDestroy');
-
-Route::get('/calendar/{id}', 'CalendarController@create');
-Route::post('/calendar/activate/{id}', 'CalendarController@activate');
-Route::post('/calendar/deactivate/{id}', 'CalendarController@deactivate');
-Route::delete('/calendar/{id}', 'CalendarController@destroy');
 
 Route::get('/year/{id}', 'YearController@create');
 Route::post('/year/store', 'YearController@store');

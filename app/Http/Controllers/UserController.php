@@ -92,10 +92,17 @@ class UserController extends Controller
             
             if (count($employee->graphics) > 0)
             {
-                $employee->graphics->each(function($item) use ($employeeBossGraphicProperties, $bossId) 
+                $employee->graphics->each(function($item) use ($employeeBossGraphicProperties, $bossId, $user) 
                 {
-                    if ($item->property->boss_id == $bossId)
+                    if (!$user->isAdmin)
                     {
+                        if ($item->property->boss_id == $bossId)
+                        {
+                            $employeeBossGraphicProperties->push($item->property);
+                        }
+                        
+                    } else {
+                        
                         $employeeBossGraphicProperties->push($item->property);
                     }
                 });

@@ -44,6 +44,8 @@
                         <div id="properties" class="text-center">
                             @if ($user->isBoss)
                                 <a href="{{ URL::to('boss/calendar/' . $property->id . '/0/0/0') }}">
+                            @elseif ($user->isAdmin || $user->isEmployee)
+                                <a href="{{ URL::to('employee/backend-calendar/' . $property->id . '/0/0/0') }}">
                             @else
                                 <a href="{{ URL::to('user/calendar/' . $property->id . '/0/0/0') }}">
                             @endif

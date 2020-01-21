@@ -54,68 +54,55 @@ class DayController extends Controller
                 ->withErrors($validator);
         } else {
             
-            $month = Month::where('id', Input::get('month_id'))->first();
-            $year = Year::where('id', $month->year_id)->first();
+            $month = Month::where('id', Input::get('month_id'))->with('year')->first();
             
-            $monthNumber = strlen($month->month_number) == 2 ? $month->month_number : "0" . $month->month_number;
-            $yearNumber = $year->year;
-            
-            $yearMonth = $yearNumber . "-" . $monthNumber;
-            
-            for ($i = Input::get('start_day'); $i <= Input::get('end_day'); $i++)
+            if ($month !== null)
             {
-                if ($i > 0 && $i <= $month->days_in_month)
+                $yearNumber = $month->year->year;
+                $monthNumber = strlen($month->month_number) == 2 ? $month->month_number : "0" . $month->month_number;
+
+                $yearMonth = $yearNumber . "-" . $monthNumber;
+
+                for ($i = Input::get('start_day'); $i <= Input::get('end_day'); $i++)
                 {
-                    $dayNumber = strlen($i) == 2 ? $i : "0" . $i;
-                    
-                    $fullDate = $yearMonth . "-" . $dayNumber;
-                    $dayDate = new \DateTime($fullDate);
-                    
-                    if ($dayDate->format("N") != 7)
+                    if ($i > 0 && $i <= $month->days_in_month)
                     {
-                        $day = Day::firstOrCreate([
-                            'day_number' => $dayDate->format("j"),
-                            'number_in_week' => $dayDate->format("N"),
-                            'month_id' => Input::get('month_id')
-                        ]);
+                        $dayNumber = strlen($i) == 2 ? $i : "0" . $i;
+
+                        $fullDate = $yearMonth . "-" . $dayNumber;
+                        $dayDate = new \DateTime($fullDate);
+
+                        if ($dayDate->format("N") != 7)
+                        {
+                            $day = new Day();
+                            $day->day_number = $dayDate->format("j");
+                            $day->number_in_week = $dayDate->format("N");
+                            $day->month_id = Input::get('month_id');
+                            $day->save();
+                        }
                     }
                 }
-            }
 
-            return redirect()->action('MonthController@show', [
-                'id' => $month->id
-            ])->with('success', 'Days have been successfully created!');
+                return redirect()->action('MonthController@show', [
+                    'id' => $month->id
+                ])->with('success', 'Days have been successfully created!');
+            }
         }
     }
 
     public function show($id)
     {
-        $day = Day::where('id', $id)->first();
+        $day = Day::where('id', $id)->with('month.year.property')->first();
         
         if ($day !== null)
-        {
-            $month = Month::where('id', $day->month_id)->first();
-            
-            if ($month !== null)
-            {
-                $year = Year::where('id', $month->year_id)->with('calendar')->first();
-                
-                if ($year !== null)
-                {
-                    $property = Property::where('id', $year->calendar->property_id)->first();
-                    
-                    $graphicTime = Graphic::where('day_id', $day->id)->first();
-
-                    return view('day.show')->with([
-                        'day' => $day,
-                        'month' => $month,
-                        'year' => $year,
-                        'calendar' => $year->calendar,
-                        'property' => $property,
-                        'graphicTime' => $graphicTime
-                    ]);
-                }
-            }
+        {            
+            return view('day.show')->with([
+                'day' => $day,
+                'month' => $day->month,
+                'year' => $day->month->year,
+                'property' => $day->month->year->property,
+                'graphics' => Graphic::where('day_id', $day->id)->with('employee')->get()
+            ]);
         }
         
         return redirect()->route('welcome');

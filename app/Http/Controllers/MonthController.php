@@ -55,26 +55,38 @@ class MonthController extends Controller
             
             $year = Year::where('id', Input::get('year_id'))->first();
             
-            $monthNumber = strlen((int)Input::get('month_number')) == 2 ? Input::get('month_number') : "0" . Input::get('month_number');
-            $yearNumber = $year->year;
-            
-            $yearMonth = $yearNumber . "-" . $monthNumber;
-            
-            $currentMonth = new \DateTime($yearMonth . "-01");
-            $numberInMonth = $currentMonth->format("t");
-                 
-            $month = Month::firstOrCreate([
-                'month' => Input::get('month'),
-                'month_en' => Input::get('month_en'),
-                'month_number' => Input::get('month_number'),
-                'days_in_month' => $numberInMonth,
-                'year_id' => Input::get('year_id')
-            ]);
-            
-            return redirect()->action(
-                'MonthController@show', [
-                    'id' => $month->id
-            ])->with('success', 'Month successfully created!');
+            if ($year !== null)
+            {
+                $yearNumber = $year->year;
+                $monthNumber = strlen((int)Input::get('month_number')) == 2 ? Input::get('month_number') : "0" . Input::get('month_number');
+                $yearMonth = $yearNumber . "-" . $monthNumber;
+                $currentMonth = new \DateTime($yearMonth . "-01");
+                $numberInMonth = $currentMonth->format("t");
+                
+                $month = Month::where([
+                    'month' => Input::get('month'),
+                    'month_en' => Input::get('month_en'),
+                    'month_number' => Input::get('month_number'),
+                    'days_in_month' => $numberInMonth,
+                    'year_id' => Input::get('year_id')
+                ])->first();
+                
+                if ($month == null)
+                {
+                    $month = new Month();
+                    $month->month = Input::get('month');
+                    $month->month_en = Input::get('month_en');
+                    $month->month_number = Input::get('month_number');
+                    $month->days_in_month = $numberInMonth;
+                    $month->year_id = Input::get('year_id');
+                    $month->save();
+                }
+
+                return redirect()->action(
+                    'MonthController@show', [
+                        'id' => $month->id
+                ])->with('success', 'Month successfully created!');
+            }
         }
     }
 
@@ -111,19 +123,26 @@ class MonthController extends Controller
      */
     public function destroy($id)
     {
-        $month = Month::where('id', $id)->first();
+        $month = Month::where('id', $id)->with('days')->first();
         
         if ($month !== null)
         {
             $year = Year::where('id', $month->year_id)->first();
             
+            if (count($month->days) > 0)
+            {
+                foreach ($month->days as $day)
+                {
+                    $day->delete();
+                }
+            }
+            
             $month->delete();
 
             return redirect()->action(
-                        'YearController@show', [
-                            'id' => $year->id
-                    ])->with('success', 'Month has been successfully deleted!')
-            ;
+                'YearController@show', [
+                    'id' => $year->id
+            ])->with('success', 'Month has been successfully deleted!');
         }
         
         return redirect()->route('welcome')->with('error', 'Such month doesn\'t exist');

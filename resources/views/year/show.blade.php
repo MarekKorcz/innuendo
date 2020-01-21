@@ -5,27 +5,26 @@
 {!! Html::script('js/year_show.js') !!}
 
 <div class="container">
-
-    <nav class="navbar navbar-inverse">
-        <ul class="nav navbar-nav">
-            <li>
-                @if ($property_id != 0)
-                    <a class="btn btn-success" href="{{ URL::to('property/' . $property_id) }}">
-                        @lang('common.back_to_property')
-                    </a>
-                @else
-                    <a class="btn btn-primary" href="{{ URL::to('/property/index') }}">
-                        @lang('common.all_properties')
-                    </a>
-                @endif
-            </li>
-        </ul>
-        <div class="navbar-header">
+    
+    <div class="row text-center" style="padding-top: 2rem;">
+        <div class="col-4">
+            @if ($year->property !== null)
+                <a class="btn btn-success" href="{{ URL::to('property/' . $year->property->id) }}">
+                    @lang('common.back_to_property')
+                </a>
+            @else
+                <a class="btn btn-primary" href="{{ URL::to('/property/index') }}">
+                    @lang('common.all_properties')
+                </a>
+            @endif
+        </div>
+        <div class="col-4"></div>
+        <div class="col-4">
             <a class="btn btn-danger delete" style="color: white;" data-year_id="{{$year->id}}">
                 @lang('common.delete')
             </a>
         </div>
-    </nav>
+    </div>
 
     <div class="text-center">
         <h2>{{ $year->year }}</h2>
@@ -37,9 +36,9 @@
         <div class="text-center" style="margin-bottom: 40px;">
             <h2>@lang('common.months'):</h2>
         </div>
-        @if (count($months) > 0)
+        @if (count($year->months) > 0)
             <div class="list-group">
-                @foreach ($months as $month)
+                @foreach ($year->months as $month)
                     <a class="list-group-item text-center" href="{{ URL::to('month/show/' . $month->id) }}">
                         <h4>
                             @if (Session('locale') == "en")

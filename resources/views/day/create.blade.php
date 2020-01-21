@@ -1,19 +1,20 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
+    
+    <div class="row text-center" style="padding-top: 2rem;">
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+        <div class="col-4">
+            <a class="btn btn-success" href="{{ URL::previous() }}">
+                @lang('common.back_to_month')
+            </a>
+        </div>
+    </div>
 
-    <nav class="navbar navbar-inverse">
-        <div class="navbar-header"></div>
-        <ul class="nav navbar-nav">
-            <li>
-                <a class="btn btn-success" href="{{ URL::previous() }}">
-                    @lang('common.back_to_month')
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <h1>@lang('common.create_days')</h1>
+    <div class="text-center">
+        <h2>@lang('common.create_days')</h2>
+    </div>
 
     {{ Form::open(['action' => 'DayController@store', 'method' => 'POST']) }}
 
@@ -31,7 +32,9 @@
             {{ Form::hidden('month_id', Input::old('month_id')) }}
         @endif
         
-        <input type="submit" value="@lang('common.create')" class="btn btn-primary">
+        <div class="text-center" style="padding-bottom: 2rem;">
+            <input type="submit" value="@lang('common.create')" class="btn btn-primary">
+        </div>
 
     {{ Form::close() }}
 
