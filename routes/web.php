@@ -59,7 +59,6 @@ Route::post('/admin/boss/store', 'AdminController@bossStore');
 Route::get('/admin/graphic-requests', 'AdminController@graphicRequests');
 Route::get('/admin/graphic-request/{graphicRequestId}', 'AdminController@graphicRequestShow');
 Route::post('/admin/make-a-message', 'AdminController@makeAMessage');
-Route::get('/admin/graphic-request/message/change-status/{graphicRequestId}/{messageId}', 'AdminController@graphicRequestMessageChangeStatus');
 Route::get('/admin/promo/create', 'AdminController@promoCreate');
 Route::post('/admin/promo/store', 'AdminController@promoStore');
 Route::get('/admin/promo/show/{id}', 'AdminController@promoShow');

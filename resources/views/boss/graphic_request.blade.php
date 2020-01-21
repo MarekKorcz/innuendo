@@ -55,7 +55,7 @@
                 @if (count($graphicRequest->messages) > 0)
                     @foreach ($graphicRequest->messages as $message)
                         <div class="row" style="padding: 2px;">
-                            @if ($message->owner_id == $graphicRequest->boss_id)
+                            @if ($message->user->id == $graphicRequest->boss->id)
                                 <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
                                     <div class="boss-message" data-message_id="{{$message->id}}">
                                         <div class="text-center">

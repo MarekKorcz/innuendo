@@ -13,8 +13,7 @@ use App\Subscription;
 use App\Promo;
 use App\PromoCode;
 use App\InvoiceData;
-use App\Year;
-use App\Month;
+use App\Graphic;
 use App\Mail\AdminTempBossCreate;
 use App\Mail\AdminTempEmployeeCreate;
 use Illuminate\Http\Request;
@@ -558,15 +557,11 @@ class AdminController extends Controller
     public function graphicRequestShow($graphicRequestId)
     {
         $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->with([
-            'property',
+            'property.boss',
             'day.month.year',
             'employees',
-            'messages'
+            'messages.user'
         ])->first();
-        
-        
-        dd('zanim to rozorasz musisz najpierw ogarnąć widoki związane z dodawaniem dni miesięcy i lat do lokalizacji bo nieżej są przekierowania tam');
-        dd($graphicRequest);
         
         if ($graphicRequest !== null)
         {
@@ -578,117 +573,23 @@ class AdminController extends Controller
                 {                    
                     foreach ($graphicRequest->employees as $chosenEmployee)
                     {
-                        if ($employee->id == $chosenEmployee->id && !$employee['isChosen'])
+                        if (!$employee['isChosen'])
                         {
-                            $employee['isChosen'] = true;
-                            
-                        } else if (!$employee['isChosen']) {
-                            
-                            $employee['isChosen'] = false;
-                        }
-                            
-                        $chosenEmployee = User::where('id', $employee->id)->with('calendars')->first();
-
-                        $employee['showProperty'] = false;
-
-                        $employee['yearId'] = null;
-                        $employee['monthId'] = null;
-                        $employee['dayId'] = null;
-
-                        if (count($chosenEmployee->calendars) > 0)
-                        {
-                            foreach ($chosenEmployee->calendars as $calendar)
-                            {
-                                $calendar = Calendar::where('id', $calendar->id)->with('years')->first();
-                                    
-                                if ($calendar !== null && $calendar->property_id == $graphicRequest->property_id && count($calendar->years) > 0)
-                                {
-                                    $employee['showProperty'] = false;
-                                    
-                                    foreach ($calendar->years as $year)
-                                    {
-                                        if ($year->year == $graphicRequest->year->year)
-                                        {
-                                            $year = Year::where('id', $year->id)->with('months')->first();
-
-                                            if (count($year->months) > 0)
-                                            {
-                                                foreach ($year->months as $month)
-                                                {
-                                                    if ($month->month_number == $graphicRequest->month->month_number)
-                                                    {
-                                                        $month = Month::where('id', $month->id)->with('days')->first();
-
-                                                        if (count($month->days) > 0)
-                                                        {
-                                                            foreach ($month->days as $day)
-                                                            {
-                                                                if ($day->day_number == $graphicRequest->day->day_number)
-                                                                {
-                                                                    $employee['dayId'] = $day->id;
-                                                                }
-                                                            }
-
-                                                            if ($employee['dayId'] === null)
-                                                            {
-                                                                $employee['monthId'] = $month->id;
-                                                            }
-
-                                                        } else {
-
-                                                            $employee['monthId'] = $month->id;
-                                                        }
-                                                    }
-                                                }
-
-                                                if ($employee['monthId'] === null && $employee['dayId'] === null)
-                                                {
-                                                    $employee['yearId'] = $year->id;
-                                                }
-
-                                            } else {
-
-                                                $employee['yearId'] = $year->id;
-                                            }
-                                        }
-                                    }
-
-                                    if ($employee['yearId'] === null && $employee['monthId'] === null && $employee['dayId'] === null)
-                                    {
-                                        $employee['showProperty'] = true;
-                                    }
-
-                                } else {
-
-                                    $employee['showProperty'] = true;
-                                }
-                            }
-
-                        } else {
-                            
-                            $employee['showProperty'] = true;
+                            $employee['isChosen'] = $employee->id == $chosenEmployee->id ? true : false;
                         }
                     }
                 }
             }
             
             $graphicRequest['allEmployees'] = $allEmployees;
-            $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
-            
-            $chosenMessage = Message::where('id', $chosenMessageId)->first();
-            
-            if ($chosenMessage !== null && $chosenMessage->owner_id !== auth()->user()->id)
-            {
-                $chosenMessage->status = 1;
-                $chosenMessage->save();
-            }
-            
-            $graphicRequestMessages = Message::where('graphic_request_id', $graphicRequest->id)->get();
-            
+            $graphicRequest['boss'] = $graphicRequest->property->boss;
+            $graphicRequest['property'] = $graphicRequest->day->month->year->property;
+            $graphicRequest['year'] = $graphicRequest->day->month->year;
+            $graphicRequest['month'] = $graphicRequest->day->month;
+                        
             return view('admin.graphic_request')->with([
                 'graphicRequest' => $graphicRequest,
-                'graphicRequestMessages' => $graphicRequestMessages,
-                'chosenMessage' => $chosenMessage !== null ? $chosenMessage : null
+                'graphicRequestMessages' => $graphicRequest->messages
             ]);
         }
         
@@ -716,7 +617,7 @@ class AdminController extends Controller
                 $message = new Message();
                 $message->text = Input::get('text');
                 $message->status = 0;
-                $message->owner_id = auth()->user()->id;
+                $message->user_id = auth()->user()->id;
                 $message->graphic_request_id = $graphicRequest->id;
                 $message->save();
 
@@ -725,30 +626,6 @@ class AdminController extends Controller
             
             return redirect()->route('welcome')->with('error', 'Something went wrong');
         }
-    }
-    
-    public function graphicRequestMessageChangeStatus($graphicRequestId, $messageId)
-    {
-        $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->first();
-        $message = Message::where('id', $messageId)->first();
-        
-        if ($graphicRequest !== null && $message !== null && $message->graphic_request_id == $graphicRequest->id)
-        {
-            if ($message->status == 0)
-            {
-                $message->status = 1;
-                
-            } else if ($message->status = 1) {
-                
-                $message->status = 0;
-            }
-            
-            $message->save();
-            
-            return redirect('/admin/graphic-request/' . $graphicRequest->id)->with('success', 'Message status has been changed!');
-        }
-        
-        return redirect()->route('welcome')->with('error', 'Something went wrong');
     }
     
     public function approveMessages()

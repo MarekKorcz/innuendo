@@ -2112,10 +2112,10 @@ class BossController extends Controller
         $boss = auth()->user();
         
         $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->with([
-            'property',
+            'property.boss',
             'day.month.year',
             'employees',
-            'messages'
+            'messages.user'
         ])->first();
         
         if ($graphicRequest !== null && $graphicRequest->property->boss_id == $boss->id)
@@ -2134,6 +2134,7 @@ class BossController extends Controller
             }
             
             $graphicRequest['allEmployees'] = $allEmployees;
+            $graphicRequest['boss'] = $graphicRequest->property->boss;
             
             return view('boss.graphic_request')->with([
                 'graphicRequest' => $graphicRequest,
