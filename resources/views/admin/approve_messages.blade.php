@@ -22,7 +22,7 @@
                         <tr>
                             <td>{{$promoCode->boss->name}} {{$promoCode->boss->surname}}</td>
                             <td>
-                                @if ($promoCode->boss->isApproved == 0)
+                                @if ($promoCode->boss->is_approved == 0)
                                     @lang('common.no')
                                 @else
                                     @lang('common.yes')

@@ -127,7 +127,7 @@ $(document).ready(function()
                                         <div class="box">` + graphic[i]['time'] + `</div>
                                         <div class="appointment-term box-1 pallet-1-2">
                                             <div class="appointment-info">
-                                                <a style="color: white;" href="` + graphic[i]['ownAppointmentHref'] + `">
+                                                <a style="color: white;" href="` + graphic[i]['ownAppointmentHref'] + `" target="_blank">
                                                     ` + data.appointmentDetailsDescription + `
                                                 </a>
                                             </div>
@@ -177,7 +177,7 @@ $(document).ready(function()
                                         <div class="box">` + graphic[i]['time'][1] + `</div>
                                         <div class="appointment-term box-2 pallet-1-2">
                                             <div class="appointment-info">
-                                                <a style="color: white;" href="` + graphic[i]['ownAppointmentHref'] + `">
+                                                <a style="color: white;" href="` + graphic[i]['ownAppointmentHref'] + `" target="_blank">
                                                     ` + data.appointmentDetailsDescription + `
                                                 </a>
                                             </div>
@@ -230,7 +230,7 @@ $(document).ready(function()
                                         <div class="box">` + graphic[i]['time'][2] + `</div>
                                         <div class="appointment-term box-3 pallet-1-2">
                                             <div class="appointment-info">
-                                                <a style="color: white;" href="` + graphic[i]['ownAppointmentHref'] + `">
+                                                <a style="color: white;" href="` + graphic[i]['ownAppointmentHref'] + `" target="_blank">
                                                     ` + data.appointmentDetailsDescription + `
                                                 </a>
                                             </div>

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Calendar;
 use App\Graphic;
-use App\GraphicRequest;
 use App\Property;
 use App\User;
 use App\Year;
@@ -235,7 +234,6 @@ class UserController extends Controller
      */
     public function calendar($property_id, $year = 0, $month_number = 0, $day_number = 0)
     {
-        
         $user = auth()->user();
         $properties = $user->getBossProperties();
         
@@ -289,7 +287,7 @@ class UserController extends Controller
                 {
                     $days = Day::where('month_id', $month->id)->get();
                     
-                    if ($days !== null)
+                    if (count($days) > 0)
                     {
                         $days = $this->formatDaysToUserCalendarForm($days, $month->days_in_month);
 

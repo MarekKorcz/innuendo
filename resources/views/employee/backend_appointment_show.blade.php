@@ -9,16 +9,12 @@
     
     <div class="row text-center" style="padding: 3rem 0 1rem 0;">
         <div class="col-4">
-            <a href="{{ URL::to('/employee/backend-calendar/'. $calendarId . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-2" style="color: white;">
+            <a href="{{ URL::to('/employee/backend-calendar/'. $property->id . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-2" style="color: white;">
                 @lang('common.back_to_calendar')
             </a>
         </div>
         <div class="col-4">
-            @if ($appointment->user)
-                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/employee/backend-appointment/index/' . $appointment->user->id) }}">
-            @else
-                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/employee/backend-appointment/index/temp-user/' . $appointment->tempUser->id) }}">
-            @endif
+            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/employee/backend-appointment/index/' . $appointment->user->id) }}">
                 @lang('common.current_user_appointments')
             </a>
         </div>
@@ -61,21 +57,15 @@
                 <div class="row">
                     <div class="col-3"></div>
                     <div class="col-6">
-                        @if ($isActivated)
-                            <select id="appointment-status" class="form-control">
-                                @foreach ($statuses as $status)
-                                    @if ($status['isActive'])
-                                        <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}" selected="selected">{{$status['value']}}</option>
-                                    @else
-                                        <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}">{{$status['value']}}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        @else
-                            <a class="btn pallet-1-3" style="color: white; margin: 3px;" href="{{ URL::to('/employee/activate-subscription/' . $subscriptionPurchaseId . '/' . $appointment->id) }}">
-                                @lang('common.activate_subscription')
-                            </a>
-                        @endif
+                        <select id="appointment-status" class="form-control">
+                            @foreach ($statuses as $status)
+                                @if ($status['isActive'])
+                                    <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}" selected="selected">{{$status['value']}}</option>
+                                @else
+                                    <option value="{{$status['key']}}" data-appointment="{{$appointment->id}}">{{$status['value']}}</option>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-3"></div>
                 </div>

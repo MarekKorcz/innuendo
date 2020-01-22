@@ -5,7 +5,7 @@
 {!! Html::script('js/calendar.js') !!}
 {!! Html::style('css/calendar.css') !!}
 
-<div class="container" style="padding-bottom: 2rem;">
+<div class="container" style="padding: 2rem 0 2rem 0;">
     
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>

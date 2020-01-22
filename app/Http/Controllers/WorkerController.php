@@ -41,38 +41,53 @@ class WorkerController extends Controller
      */
     public function graphicList()
     {
-        $employee = User::where('id', auth()->user()->id)->first();
-        $calendars = Calendar::where('employee_id', $employee->id)->with('property')->get();
-        
-        if (count($calendars) > 0)
-        {            
-            if (count($calendars) == 1)
+        $employee = User::where('id', auth()->user()->id)->with('graphics')->first();
+                
+        if ($employee !== null)
+        {        
+            $employeeGraphics = $employee->graphics;
+            $employeeGraphicProperties = new Collection();
+            
+            if (count($employeeGraphics) == 1)
             {
                 return redirect()->action(
                     'WorkerController@backendCalendar', [
-                        'calendar_id' => $calendars->first()->id,
+                        'property_id' => $employeeGraphics->first()->property_id,
                         'year' => 0, 
                         'month_number' => 0, 
                         'day_number' => 0
                     ]
                 );
                 
-            } else {
+            } else if (count($employeeGraphics) > 1) {
                 
-                return view('employee.backend_graphic')->with('calendars', $calendars);
+                if (count($employeeGraphics) > 0)
+                {
+                    $employeeGraphics->each(function($item) use ($employeeGraphicProperties) 
+                    {
+                        if (!$employeeGraphicProperties->contains('id', $item->property->id))
+                        {
+                            $employeeGraphicProperties->push($item->property);
+                        }
+                    });
+                }
+                
+                return view('employee.backend_graphic')->with('properties', $employeeGraphicProperties);
             }
+            
+            if (substr($employee->name, -1) == "a")
+            {
+                $message = \Lang::get('common.no_schedule_yet_female');
+
+            } else {
+
+                $message = \Lang::get('common.no_schedule_yet_male');
+            }
+            
+            return redirect()->route('home')->with('success', $message);
         }
         
-        if (substr($employee->name, -1) == "a")
-        {
-            $message = \Lang::get('common.no_schedule_yet_female');
-            
-        } else {
-            
-            $message = \Lang::get('common.no_schedule_yet_male');
-        }
-        
-        return redirect()->route('home')->with('success', $message);
+        return redirect()->route('welcome');
     }
 
     /**
@@ -87,30 +102,26 @@ class WorkerController extends Controller
      * @throws Exception
      */
     public function backendCalendar($property_id, $year = 0, $month_number = 0, $day_number = 0)
-    {              
+    {      
+        $property = Property::where([
+            'id' => $property_id
+        ])->with('boss')->first();
         
-        dd('dokoncz wszedzie dalej zmieniać na $property_id');
-        
-        $calendar = Calendar::where([
-            'id' => $calendar_id,
-            'isActive' => 1
-        ])->first();
-        
-        if ($calendar !== null)
+        if ($property !== null)
         {
             $currentDate = new \DateTime();
             
             if ($year == 0)
             {
                 $year = Year::where([
-                    'calendar_id' => $calendar->id,
+                    'property_id' => $property->id,
                     'year' => $currentDate->format("Y")
                 ])->first();
                 
             } else if (is_numeric($year) && (int)$year > 0) {
                 
                 $year = Year::where([
-                    'calendar_id' => $calendar->id,
+                    'property_id' => $property->id,
                     'year' => $year
                 ])->first();
             }
@@ -136,7 +147,7 @@ class WorkerController extends Controller
                 {
                     $days = Day::where('month_id', $month->id)->get();
                     
-                    if ($days !== null)
+                    if (count($days) > 0)
                     {
                         $days = $this->formatDaysToUserCalendarForm($days, $month->days_in_month);
 
@@ -154,57 +165,49 @@ class WorkerController extends Controller
                                 'day_number' => $day_number
                             ])->first();
                         }
-                            
+
                         if ($currentDay !== null)
                         {
                             $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
+                            $graphicTimes = Graphic::where('day_id', $currentDay->id)->with('employee')->get();
                             
                             $chosenDay = $currentDay;
-                            $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
-                            $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
-
-                            $currentDay = $currentDay->day_number;
+                            $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay);
                             
                         } else {
                             
-                            $currentDay = 0;
                             $graphic = [];
-                            $graphicTime = [];
+                            $graphicTime = null;
+                            $graphicTimes = null;
                         }
-
+                        
                         $availablePreviousMonth = false;
 
-                        if ($this->checkIfPreviewMonthIsAvailable($calendar, $year, $month))
+                        if ($this->checkIfPreviewMonthIsAvailable($property, $year, $month))
                         {
                             $availablePreviousMonth = true;
                         }
                         
                         $availableNextMonth = false;
 
-                        if ($this->checkIfNextMonthIsAvailable($calendar, $year, $month))
+                        if ($this->checkIfNextMonthIsAvailable($property, $year, $month))
                         {
                             $availableNextMonth = true;
                         }
                         
-                        $employee = User::where([
-                            'isEmployee' => 1,
-                            'id' => $calendar->employee_id
-                        ])->first();
-                        
-                        $property = Property::where('id', $calendar->property_id)->first();
-                        
                         return view('employee.backend_calendar')->with([
                             'property' => $property,
-                            'calendar_id' => $calendar->id,
-                            'employee_slug' => $employee->slug,
                             'availablePreviousMonth' => $availablePreviousMonth,
                             'availableNextMonth' => $availableNextMonth,
                             'year' => $year,
                             'month' => $month,
                             'days' => $days,
-                            'current_day' => $currentDay,
+                            'current_day' => is_object($currentDay) ? $currentDay->day_number : 0,
+                            'current_day_id' => is_object($currentDay) ? $currentDay->id : 0,
                             'graphic' => $graphic,
-                            'graphic_id' => $graphicTime ? $graphicTime->id : null
+                            'graphic_id' => $graphicTime !== null ? $graphicTime->id : null,
+                            'graphicTimesEntites' => $graphicTimes,
+                            'employees' => User::where('isEmployee', 1)->get()
                         ]);
                         
                     } else {
@@ -222,23 +225,51 @@ class WorkerController extends Controller
                 $message = 'Brak otwartego grafiku na ten rok';
             }
             
-            return redirect()->action(
-                'UserController@calendar', [
-                    'calendar_id' => $calendar->id,
-                    'year' => 0, 
-                    'month_number' => 0, 
-                    'day_number' => 0
-                ]
-            )->with('error', $message);
-            
         } else {
             
-            $message = 'Niepoprawny numer id kalendarza!';
+            $message = 'Niepoprawny numer id';
         }
         
-        return redirect()->action(
-            'UserController@employeesList', []
-        )->with('error', $message);
+        return redirect()->route('welcome')->with('error', $message);
+    }
+    
+    public function getEmployeeGraphic(Request $request)
+    {
+        if ($request->get('graphicId') && $request->get('currentDayId'))
+        {
+            $graphic = Graphic::where('id', $request->get('graphicId'))->first();
+            $day = Day::where('id', $request->get('currentDayId'))->first();
+            
+            if ($graphic !== null && $day !== null)
+            {
+                $graphicArray = $this->formatGraphicAndAppointments($graphic, $day);
+                
+                foreach ($graphicArray as $key => $graphArr)
+                {
+                    if ($graphArr['appointment'] !== null)
+                    {
+                        $graphicArray[$key]['appointmentId'] = $graphArr['appointment']->id;
+                        $graphicArray[$key]['appointmentUserName'] = $graphArr['appointment']->user->name . " " . $graphArr['appointment']->user->surname;
+                        $graphicArray[$key]['appointmentHref'] = route('backendAppointmentShow', [
+                            'id' => $graphArr['appointment']->id
+                        ]);
+                        
+                        unset($graphicArray[$key]['appointment']);
+                    }
+                }
+                
+                return new JsonResponse([
+                    'type' => 'success',
+                    'graphic' => $graphicArray,
+                    'availableDescription' => \Lang::get('common.available'),
+                    'clickToMakeReservationDescription' => \Lang::get('common.click_to_make_reservation')
+                ], 200, array(), true);
+            }
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error'        
+        ));
     }
     
     /**
@@ -249,101 +280,42 @@ class WorkerController extends Controller
      */
     public function backendAppointmentShow($id)
     {
-        if ($id !== null)
+        $appointment = Appointment::where('id', $id)->with([
+            'day.month.year.property',
+            'item',
+            'user',
+            'graphic.employee'
+        ])->first();
+
+        if ($appointment !== null)
         {
-            $appointment = Appointment::where('id', $id)->first();
-            
-            if ($appointment->user_id !== null)
+            $day = $appointment->day;
+            $month = $appointment->day->month;
+            $year = $appointment->day->month->year;
+            $property = $appointment->day->month->year->property;
+            $employee = $appointment->graphic->employee;
+
+            $statuses = [];
+
+            for($i = 0; $i < 4; $i++)
             {
-                $appointment = Appointment::where('id', $id)->with([
-                    'item',
-                    'user'
-                ])->first();
-                
-            } else {
-                
-                $appointment = Appointment::where('id', $id)->with([
-                    'item',
-                    'tempUser'
-                ])->first();
+                $statuses[] = [
+                    'key' => $i,
+                    'value' => config('appointment-status.' . $i),
+                    'isActive' => $appointment->status == $i ? true : false
+                ];
             }
-            
-            if ($appointment !== null)
-            {
-                $day = Day::where('id', $appointment->day_id)->first();
-                $month = Month::where('id', $day->month_id)->first();
-                $year = Year::where('id', $month->year_id)->first();
-                
-                $calendar = Calendar::where('id', $year->calendar_id)->first();
-                
-                $employee = User::where('id', $calendar->employee_id)->first();
-                $property = Property::where('id', $calendar->property_id)->first();
-                
-                $statuses = [];
-                
-                for($i = 0; $i < 4; $i++)
-                {
-                    $statuses[] = [
-                        'key' => $i,
-                        'value' => config('appointment-status.' . $i),
-                        'isActive' => $appointment->status == $i ? true : false
-                    ];
-                }
-                
-                $isActivated = true;
-                $subscriptionPurchaseId = null;
-                $appointmentInterval = Interval::where('id', $appointment->interval_id)->first();
-                
-                if ($appointmentInterval !== null)
-                {
-                    if ($appointmentInterval->substart_id === null)
-                    {
-                        $bossMainInterval = Interval::where('id', $appointmentInterval->interval_id)->first();
-                        
-                        if ($bossMainInterval !== null)
-                        {
-                            $substart = Substart::where('id', $bossMainInterval->substart_id)->first();
-                        
-                            if ($substart !== null)
-                            {
-                                $subscriptionPurchaseId = $substart->purchase_id;
-                                
-                                if ($substart->isActive == 0)
-                                {
-                                    $isActivated = false;
-                                }
-                            }
-                        }
-                        
-                    } elseif ($appointmentInterval->substart_id !== null) {
-                                
-                        $substart = Substart::where('id', $appointmentInterval->substart_id)->first();
-                        
-                        if ($substart !== null)
-                        {
-                            $subscriptionPurchaseId = $substart->purchase_id;
-                            
-                            if ($substart->isActive == 0)
-                            {
-                                $isActivated = false;
-                            }
-                        }
-                    }
-                }
-                
-                return view('employee.backend_appointment_show')->with([
-                    'appointment' => $appointment,
-                    'day' => $day->day_number,
-                    'month' => $month->month_number,
-                    'year' => $year->year,
-                    'calendarId' => $calendar->id,
-                    'employee' => $employee,
-                    'property' => $property,
-                    'statuses' => $statuses,
-                    'isActivated' => $isActivated,
-                    'subscriptionPurchaseId' => $subscriptionPurchaseId
-                ]);
-            }
+
+            return view('employee.backend_appointment_show')->with([
+                'appointment' => $appointment,
+                'day' => $day->day_number,
+                'month' => $month->month_number,
+                'year' => $year->year,
+                'property' => $property,
+                'employee' => $employee,
+                'property' => $property,
+                'statuses' => $statuses
+            ]);
         }
         
         return redirect()->route('welcome');
@@ -361,25 +333,24 @@ class WorkerController extends Controller
         
         if ($user !== null)
         {
-            $appointments = Appointment::where('user_id', $user->id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
+            $appointments = Appointment::where('user_id', $user->id)->with([
+                'day.month.year.property',
+                'graphic.employee'
+            ])->orderBy('created_at', 'desc')->paginate(5);
 
-            if ($appointments !== null)
+            if (count($appointments) > 0)
             {
                 foreach ($appointments as $appointment)
                 {
-                    $day = Day::where('id', $appointment->day_id)->first();
-                    $month = Month::where('id', $day->month_id)->first();
-                    $year = Year::where('id', $month->year_id)->first();
-                    $calendar = Calendar::where('id', $year->calendar_id)->first();
-                    $employee = User::where('id', $calendar->employee_id)->first();
-                    $property = Property::where('id', $calendar->property_id)->first();
+                    $appointment['day'] = $appointment->day;
+                    $appointment['month'] = $appointment->day->month;
+                    $appointment['year'] = $appointment->day->month->year;
+                    $appointment['property'] = $appointment->day->month->year->property;
+                    
+                    $appointment['date'] = $appointment['day']->day_number. ' ' . $appointment['month']->month . ' ' . $appointment['year']->year;
 
-                    $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
-                    $appointment['date'] = $date;
-
-                    $appointment['name'] = $property->name;
-
-                    $appointment['employee'] = $employee->name . " " . $employee->surname;
+                    $employee = $appointment->graphic->employee;
+                    $appointment['employee_name'] = $employee->name . " " . $employee->surname;
                     $appointment['employee_slug'] = $employee->slug;
                 }
 
@@ -388,44 +359,6 @@ class WorkerController extends Controller
                     'user' => $user
                 ]);
             }
-        }
-        
-        return redirect()->route('welcome');
-    }
-    
-    /**
-     * Shows a list of appointments assigned to temporary user.
-     * 
-     * @param type $id
-     * @return type
-     */
-    public function backendAppointmentIndexTempUser($id)
-    {
-        $appointments = Appointment::where('temp_user_id', $id)->with('item')->orderBy('created_at', 'desc')->paginate(5);
-        
-        if ($appointments !== null)
-        {
-            foreach ($appointments as $appointment)
-            {
-                $day = Day::where('id', $appointment->day_id)->first();
-                $month = Month::where('id', $day->month_id)->first();
-                $year = Year::where('id', $month->year_id)->first();
-                $calendar = Calendar::where('id', $year->calendar_id)->first();
-                $employee = User::where('id', $calendar->employee_id)->first();
-                $property = Property::where('id', $calendar->property_id)->first();
-                
-                $date = $day->day_number. ' ' . $month->month . ' ' . $year->year;
-                $appointment['date'] = $date;
-                
-                $appointment['name'] = $property->name;
-                
-                $employee = $employee->name;
-                $appointment['employee'] = $employee;
-            }
-            
-            return view('employee.backend_appointment_index')->with([
-                'appointments' => $appointments
-            ]);
         }
         
         return redirect()->route('welcome');
@@ -477,58 +410,24 @@ class WorkerController extends Controller
     
     public function setAppointmentStatus(Request $request)
     {
-        if ($request->request->all())
+        $appointment = Appointment::where('id', $request->get('appointmentId'))->first();
+
+        if ($appointment !== null)
         {
-            $appointmentId = htmlentities((int)$request->get('appointmentId'), ENT_QUOTES, "UTF-8");
-            $appointment = Appointment::where('id', $appointmentId)->first();
-            
-            if ($appointment !== null)
-            {
-                $statusId = htmlentities((int)$request->get('statusId'), ENT_QUOTES, "UTF-8");
-                
-                if ($statusId && $statusId == 1)
-                {
-                    $appointment = Appointment::where('id', $appointmentId)->first();
-                    
-                    $appointmentInterval = Interval::where('id', $appointment->interval_id)->first();
-                    $appointmentInterval->used_units = $appointmentInterval->used_units + 1;
-                    
-                    if ($appointmentInterval->interval_id != null)
-                    {
-                        $bossMainInterval = Interval::where('id', $appointmentInterval->interval_id)->first();
-                        
-                        if ($bossMainInterval !== null)
-                        {
-                            $bossMainInterval->available_units = $bossMainInterval->available_units - 1;
-                        }
-                        
-                    } elseif ($appointmentInterval->interval_id == null) {
-                        
-                        $appointmentInterval->available_units = $appointmentInterval->available_units - 1;
-                    }
-                    
-                    $appointmentInterval->save();
-                    
-                    $appointment->status = $statusId;
-                    $appointment->save();
+            $appointment->status = htmlentities((int)$request->get('statusId'), ENT_QUOTES, "UTF-8");
+            $appointment->save();
 
-                    $data = [
-                        'type'    => 'success',
-                        'message' => 'Status wizyty został zmieniony!',
-                        'status'  => config('appointment-status.' . $appointment->status)
-                    ];
+            $data = [
+                'type'    => 'success',
+                'message' => 'Status wizyty został zmieniony!',
+                'status'  => config('appointment-status.' . $appointment->status)
+            ];
 
-                    return new JsonResponse($data, 200, array(), true);
-                }
-                
-            } else {
-                
-                $message = "Wizyta nie istnieje";
-            }
-            
+            return new JsonResponse($data, 200, array(), true);
+
         } else {
-            
-            $message = "Pusty request";
+
+            $message = "Wizyta nie istnieje";
         }
         
         return new JsonResponse(array(
@@ -547,22 +446,14 @@ class WorkerController extends Controller
     public function beforeShowCreatePage(Request $request)
     {
         if ($request->appointmentTerm && 
-            $request->graphicId && 
-            $request->calendarId && 
-            $request->year && 
-            $request->month && 
-            $request->day)
+            $request->graphicId)
         {
             session([
                 'appointmentTerm' => $request->appointmentTerm,
-                'graphicId' => $request->graphicId,
-                'calendarId' => $request->calendarId,
-                'year' => $request->year,
-                'month' =>  $request->month,
-                'day' => $request->day
+                'graphicId' => $request->graphicId
             ]);
             
-            if (auth()->user() !== null && auth()->user()->isEmployee)
+            if (auth()->user()->isEmployee)
             {
                 return redirect()->action(
                     'WorkerController@appointmentCreate'
@@ -586,12 +477,8 @@ class WorkerController extends Controller
      */
     public function appointmentCreate(Request $request)
     {
-        if ($request->session()->get('appointmentTerm') !== null && is_integer((int)$request->session()->get('appointmentTerm')) &&
-            $request->session()->get('graphicId') !== null && is_integer((int)$request->session()->get('graphicId')) &&
-            $request->session()->get('calendarId') !== null && is_integer((int)$request->session()->get('calendarId')) &&
-            $request->session()->get('year') !== null && is_integer((int)$request->session()->get('year')) &&
-            $request->session()->get('month') !== null && is_integer((int)$request->session()->get('month')) &&
-            $request->session()->get('day') !== null && is_integer((int)$request->session()->get('day')))
+        if ($request->session()->get('appointmentTerm') !== null &&
+            $request->session()->get('graphicId') !== null && is_integer((int)$request->session()->get('graphicId')))
         {           
             $explodedAppointmentTerm = explode(":", $request->session()->get('appointmentTerm'));
             
@@ -599,19 +486,11 @@ class WorkerController extends Controller
             {
                 $appointmentTerm = htmlentities($request->session()->get('appointmentTerm'), ENT_QUOTES, "UTF-8");
                 $graphicId = htmlentities((int)$request->session()->get('graphicId'), ENT_QUOTES, "UTF-8");
-                $calendarId = htmlentities((int)$request->session()->get('calendarId'), ENT_QUOTES, "UTF-8");
-                $year = htmlentities((int)$request->session()->get('year'), ENT_QUOTES, "UTF-8");
-                $month = htmlentities((int)$request->session()->get('month'), ENT_QUOTES, "UTF-8");
-                $day = htmlentities((int)$request->session()->get('day'), ENT_QUOTES, "UTF-8");
                 
                 $request->session()->forget('appointmentTerm');
                 $request->session()->forget('graphicId');
-                $request->session()->forget('calendarId');
-                $request->session()->forget('year');
-                $request->session()->forget('month');
-                $request->session()->forget('day');
 
-                $graphic = Graphic::where('id', $graphicId)->first();
+                $graphic = Graphic::where('id', $graphicId)->with('day.month.year.property')->first();
         
                 if ($graphic !== null)
                 {
@@ -619,7 +498,7 @@ class WorkerController extends Controller
                     $endTime = date('G:i', strtotime($graphic->end_time));
                     $appointmentTerm = date('G:i', strtotime($appointmentTerm));
 
-                    if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
+                    if ($appointmentTerm >= $startTime && $appointmentTerm < $endTime)
                     {
                         $chosenAppointment = Appointment::where([
                             'graphic_id' => $graphicId,
@@ -633,9 +512,9 @@ class WorkerController extends Controller
 
                             for ($i = 0; $i < 2; $i++)
                             {
-                                $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
+                                $appointmentTermIncremented = date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented)));
 
-                                if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
+                                if ($appointmentTermIncremented >= $startTime && $appointmentTermIncremented < $endTime)
                                 {
                                     $nextAppointmentAvailable = Appointment::where([
                                         'graphic_id' => $graphicId,
@@ -656,10 +535,6 @@ class WorkerController extends Controller
                                     break;
                                 }
                             }
-
-                            $calendar = Calendar::where('id', $calendarId)->first();
-                            
-                            $possibleAppointmentLengthInMinutes = $appointmentLength * 15;
                             
                             $users = User::where([
                                 'isAdmin' => null,
@@ -668,13 +543,12 @@ class WorkerController extends Controller
                             
                             return view('employee.backend_appointment_create')->with([
                                 'appointmentTerm' => $appointmentTerm,
-                                'calendar' => $calendar,
-                                'propertyId' => $calendar->property_id,
-                                'graphicId' => $graphic->id,
-                                'year' => $year,
-                                'month' => $month,
-                                'day' => $day,
-                                'possibleAppointmentLengthInMinutes' => $possibleAppointmentLengthInMinutes,
+                                'property' => $graphic->day->month->year->property,
+                                'graphic' => $graphic,
+                                'year' => $graphic->day->month->year,
+                                'month' => $graphic->day->month,
+                                'day' => $graphic->day,
+                                'possibleAppointmentLengthInMinutes' => $appointmentLength * 20,
                                 'users' => $users
                             ]);
                             
@@ -711,21 +585,19 @@ class WorkerController extends Controller
     {        
         $message = 'Pusty request';
         
-        if ($request->get('searchField') && $request->get('calendarId'))
+        if ($request->get('searchField') && $request->get('propertyId'))
         {          
             $searchField = $request->get('searchField');
-            $calendarId = $request->get('calendarId');
-            
-            $calendar = Calendar::where('id', $calendarId)->with('property')->first();
-            
-            if ($calendar !== null)
+            $property = Property::where('id', $request->get('propertyId'))->with('boss')->first();
+
+            if ($property !== null)
             {
                 $usersFromDBWithNameRelatedToSearchQuery = User::where(function ($query) use ($searchField) {
-                $query->where('name', 'like', $searchField . '%')
-                        ->where([
-                            'isEmployee' => null,
-                            'isAdmin' => null
-                        ]);
+                    $query->where('name', 'like', $searchField . '%')
+                            ->where([
+                                'isEmployee' => null,
+                                'isAdmin' => null
+                            ]);
                 })->orWhere(function ($query) use ($searchField) {
                     $query->where('surname', 'like', $searchField . '%')
                         ->where([
@@ -736,72 +608,23 @@ class WorkerController extends Controller
 
                 if (count($usersFromDBWithNameRelatedToSearchQuery) > 0)
                 {
-                    // get calendar property
-                    $property = Property::where('id', $calendar->property_id)->first();
+                    $users = new Collection();
 
-                    // get property owner and its workers
-                    $propertyOwner = User::where('id', $property->boss_id)->first();
-                    $ownerWorkers = $propertyOwner->getWorkers();
-
-                    // create users collection and add property owner as a first one to collect
-                    $ownerAndOwnersWorkersWithPurchasedSubscription = new Collection();
-                    $ownerAndOwnersWorkersWithPurchasedSubscription->push($propertyOwner);
-
-                    // >> look for workers with purchased subscription
-                    if (count($ownerAndOwnersWorkersWithPurchasedSubscription) > 0)
+                    foreach ($usersFromDBWithNameRelatedToSearchQuery as $user)
                     {
-                        if ($ownerWorkers !== null && count($ownerWorkers) > 0)
+                        if ($user->boss_id !== null && $user->boss_id == $property->boss->id || 
+                            $user->isBoss !== null && $user->id == $property->boss->id)
                         {
-                            foreach($ownerWorkers as $worker)
-                            {
-                                $worker->load('chosenProperties');
-
-                                if (count($worker->chosenProperties) > 0)
-                                {
-                                    foreach ($worker->chosenProperties as $chosenProperty)
-                                    {
-                                        if ($chosenProperty->property_id == $calendar->property->id)
-                                        {
-                                            $chosenProperty->load('purchases');
-
-                                            if (count($chosenProperty->purchases) > 0)
-                                            {
-                                                if (!$ownerAndOwnersWorkersWithPurchasedSubscription->contains('id', $worker->id))
-                                                {
-                                                    $ownerAndOwnersWorkersWithPurchasedSubscription->push($worker);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            $users->push($user);
                         }
-
-                        // >> create users collection with entities satisfying query phrase and subscription purchase condition
-                        $users = new Collection();
-
-                        foreach ($ownerAndOwnersWorkersWithPurchasedSubscription as $userWithPurchasedSubscription)
-                        {
-                            foreach ($usersFromDBWithNameRelatedToSearchQuery as $userFromDBRelatedToSearchQuery)
-                            {
-                                if ($userWithPurchasedSubscription->id == $userFromDBRelatedToSearchQuery->id)
-                                {
-                                    $users->push($userFromDBRelatedToSearchQuery);
-                                }
-                            }
-                        }
-                        // <<
-
-                        $data = [
-                            'type'    => 'success',
-                            'users'  => $users !== null ? $users : ""
-                        ];
-                        
-                        return new JsonResponse($data, 200, array(), true);
                     }
-                    // <<
 
-                    $message = 'Nie ma userow z wykupiona subskrypcja i podana fraza';
+                    $data = [
+                        'type'    => 'success',
+                        'users'  => $users
+                    ];
+
+                    return new JsonResponse($data, 200, array(), true);
                 }
 
                 $message = 'Fraza nie zwrocila zadnego wyniku';
@@ -814,82 +637,37 @@ class WorkerController extends Controller
         ));
     }
     
-    public function getUserItemsFromDatabase(Request $request)
+    public function getItemsFromDatabase(Request $request)
     {        
-        $userId = $request->get('userId');
-        $propertyId = $request->get('propertyId');
         $possibleAppointmentLengthInMinutes = $request->get('possibleAppointmentLengthInMinutes');
             
-        if ($userId !== null || $userId == 0 && $propertyId !== null && $possibleAppointmentLengthInMinutes !== null || $possibleAppointmentLengthInMinutes !== 0)
+        if ($possibleAppointmentLengthInMinutes !== null || $possibleAppointmentLengthInMinutes !== 0)
         {
-            $user = User::where('id', $userId)->with('chosenProperties')->first();
-            $property = Property::where('id', $propertyId)->first();
+            $itemsCollection = Item::where('minutes', '<=', $possibleAppointmentLengthInMinutes)->get();
             $items = [];
 
-            if ($property !== null && $possibleAppointmentLengthInMinutes !== null || $possibleAppointmentLengthInMinutes !== 0)
+            if (count($itemsCollection) > 0)
             {
-                if ($userId !== 0 && $user !== null)
+                foreach ($itemsCollection as $item)
                 {
-                    if ($user->chosenProperties)
-                    {
-                        foreach ($user->chosenProperties as $chosenProperty)
-                        {
-                            if ($chosenProperty->property_id == $property->id)
-                            {
-                                $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-
-                                if ($chosenProperty->purchases)
-                                {
-                                    foreach ($chosenProperty->purchases as $purchase)
-                                    {
-                                        $purchase = Purchase::where('id', $purchase->id)->with('subscription')->first();
-                                        $subscription = Subscription::where('id', $purchase->subscription->id)->with('items')->first();
-
-                                        if ($subscription->items)
-                                        {
-                                            foreach ($subscription->items as $item)
-                                            {
-                                                if ($item->minutes <= $possibleAppointmentLengthInMinutes)
-                                                {
-                                                    $items[] = [
-                                                        'item_id' => $item->id,
-                                                        'item_name' => $item->name . ' - ' . $item->minutes . ' min - ' . $subscription->name,
-                                                        'item_minutes' => $item->minutes,
-                                                        'purchase_id' => $purchase->id
-                                                    ];
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    $items[] = [
+                        'item_id' => $item->id,
+                        'item_name' => $item->name . ' - ' . $item->minutes . ' min',
+                        'item_minutes' => $item->minutes,
+                        'purchase_id' => 0
+                    ];
                 }
-                
-                $categoriesItems = Item::where('minutes', '<=', $possibleAppointmentLengthInMinutes)->get();
-
-                if (count($categoriesItems) > 0)
-                {
-                    foreach ($categoriesItems as $categoriesItem)
-                    {
-                        $items[] = [
-                            'item_id' => $categoriesItem->id,
-                            'item_name' => $categoriesItem->name . ' - ' . $categoriesItem->minutes . ' min',
-                            'item_minutes' => $categoriesItem->minutes,
-                            'purchase_id' => 0
-                        ];
-                    }
-                }
-                
-                $data = [
-                    'type'      => 'success',
-                    'user_name' => $user !== null ? $user->name . " " . $user->surname : "Nowego użytkownika",
-                    'items'     => $items
-                ];
-
-                return new JsonResponse($data, 200, array(), true);
             }
+
+            $user = User::where('id', $request->get('userId'))->first();
+
+            $data = [
+                'type'      => 'success',
+                'user_name' => $user !== null ? $user->name . " " . $user->surname : "Nowego użytkownika",
+                'items'     => $items
+            ];
+
+            return new JsonResponse($data, 200, array(), true);
         }
         
         return new JsonResponse(array(
@@ -906,6 +684,12 @@ class WorkerController extends Controller
      */
     public function appointmentStore(Request $request)
     {
+        
+        
+        
+        
+        dd($request->all());
+        
         $appointmentTerm = htmlentities($request->get('appointmentTerm'), ENT_QUOTES, "UTF-8");
         $possibleAppointmentLengthInMinutes = htmlentities($request->get('possibleAppointmentLengthInMinutes'), ENT_QUOTES, "UTF-8");
         $purchaseId = htmlentities((int)$request->get('purchase_id'), ENT_QUOTES, "UTF-8");
@@ -918,39 +702,20 @@ class WorkerController extends Controller
         $day = htmlentities((int)$request->get('day'), ENT_QUOTES, "UTF-8");        
         
         $userId = null;
-        
-        if ($request->get('userId'))
-        {
-            $userId = htmlentities((int)$request->get('userId'), ENT_QUOTES, "UTF-8"); 
-        }
-        
         $name = null;
-        
-        if ($request->get('name'))
-        {
-            $name = htmlentities((int)$request->get('name'), ENT_QUOTES, "UTF-8"); 
-        }
-        
         $surname = null;
-        
-        if ($request->get('surname'))
-        {
-            $surname = htmlentities((int)$request->get('surname'), ENT_QUOTES, "UTF-8"); 
-        }
-        
         $email = null;
-        
-        if ($request->get('email'))
-        {
-            $email = htmlentities((int)$request->get('email'), ENT_QUOTES, "UTF-8"); 
-        }
-        
         $phone = null;
         
-        if ($request->get('phone'))
+        if ($request->get('userId') && $request->get('name') && $request->get('surname') && $request->get('email') && $request->get('phone'))
         {
+            $userId = htmlentities((int)$request->get('userId'), ENT_QUOTES, "UTF-8"); 
+            $name = htmlentities((int)$request->get('name'), ENT_QUOTES, "UTF-8"); 
+            $surname = htmlentities((int)$request->get('surname'), ENT_QUOTES, "UTF-8"); 
+            $email = htmlentities((int)$request->get('email'), ENT_QUOTES, "UTF-8"); 
             $phone = htmlentities((int)$request->get('phone'), ENT_QUOTES, "UTF-8"); 
         }
+        
         
         if ($appointmentTerm !== null && is_integer((int)$appointmentTerm) &&
             $possibleAppointmentLengthInMinutes !== null && is_integer((int)$possibleAppointmentLengthInMinutes) &&
@@ -1770,42 +1535,37 @@ class WorkerController extends Controller
         return $daysArray;
     }
     
-    private function formatGraphicAndAppointments($graphicTime, $chosenDay, $chosenDayDateTime) 
-    {        
+    private function formatGraphicAndAppointments($graphicTime, $chosenDay) 
+    {
         $graphic = [];
         
         if ($graphicTime !== null)
-        {            
-            $workUnits = ($graphicTime->total_time / 15);
+        {
+            $timeZone = new \DateTimeZone("Europe/Warsaw");
+            $now = new \DateTime(null, $timeZone);
+            
+            $workUnits = ($graphicTime->total_time / 20);
             $startTime = date('G:i', strtotime($graphicTime->start_time));
             
             for ($i = 0; $i < $workUnits; $i++) 
             {
                 $appointment = Appointment::where([
                     'day_id' => $chosenDay->id,
+                    'graphic_id' => $graphicTime->id,
                     'start_time' => $startTime
-                ])->first();
-
+                ])->with('user')->first();
+                
                 if ($appointment !== null)
                 {
-                    if ($appointment->user_id !== null)
-                    {
-                        $appointment->load('user', 'item');
-
-                    } else {
-
-                        $appointment->load('tempUser', 'item');
-                    }
-                    
-                    $limit = $appointment->minutes / 15;
+                    $limit = $appointment->minutes / 20;
                     
                     if ($limit > 1)
                     {
-                        $time = array($startTime);
+                        $time = [$startTime];
 
                         for ($j = 1; $j < $limit; $j++)
                         {
-                            $time[] = date('G:i', strtotime("+15 minutes", strtotime($time[count($time) - 1])));
+                            $time[] = date('G:i', strtotime("+20 minutes", strtotime($time[count($time) - 1])));
                             $workUnits -= 1;
                         }
                         
@@ -1816,7 +1576,8 @@ class WorkerController extends Controller
                     
                     $graphic[] = [
                         'time' => $time,
-                        'appointment' => $appointment
+                        'appointment' => $appointment,
+                        'appointmentLimit' => $limit,
                     ];
                     
                     $timeIncrementedByAppointmentMinutes = strtotime($appointment->end_time, strtotime($startTime));
@@ -1826,24 +1587,25 @@ class WorkerController extends Controller
                     
                     $graphic[] = [
                         'time' => $startTime,
-                        'appointment' => null
+                        'appointment' => null,
+                        'appointmentLimit' => 0,
                     ];
                     
-                    $timeIncrementedBy15Minutes = strtotime("+15 minutes", strtotime($startTime));
-                    $startTime = date('G:i', $timeIncrementedBy15Minutes);
+                    $timeIncrementedBy20Minutes = strtotime("+20 minutes", strtotime($startTime));
+                    $startTime = date('G:i', $timeIncrementedBy20Minutes);
                 }
-            }            
+            }
         }
         
         return $graphic;
     }
     
-    private function checkIfPreviewMonthIsAvailable($calendar, $year, $month)
+    private function checkIfPreviewMonthIsAvailable($property, $year, $month)
     {
         if ($month->month_number == 1)
         {
             $year = Year::where([
-                'calendar_id' => $calendar->id,
+                'property_id' => $property->id,
                 'year' => ($year->year - 1)
             ])->first();
             
@@ -1880,12 +1642,12 @@ class WorkerController extends Controller
         return true;
     }
     
-    private function checkIfNextMonthIsAvailable($calendar, $year, $month)
+    private function checkIfNextMonthIsAvailable($property, $year, $month)
     {
         if ($month->month_number == 12)
         {
             $year = Year::where([
-                'calendar_id' => $calendar->id,
+                'property_id' => $property->id,
                 'year' => ($year->year + 1)
             ])->first();
             

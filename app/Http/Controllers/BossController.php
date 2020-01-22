@@ -98,7 +98,7 @@ class BossController extends Controller
                 {
                     $days = Day::where('month_id', $month->id)->get();
                     
-                    if ($days !== null)
+                    if (count($days) > 0)
                     {
                         $days = $this->formatDaysToUserCalendarForm($days, $month->days_in_month);
 

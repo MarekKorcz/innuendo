@@ -7,13 +7,14 @@
 
 <div class="container">
 
-    <div class="row text-center" style="padding: 1rem 0 1rem 0;">
+    <div class="row text-center" style="padding: 2rem 0 2rem 0;">
         <div class="col-4">
-            <a href="{{ URL::to('/employee/backend-calendar/'. $calendar->id . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
+            <a href="{{ URL::to('/employee/backend-calendar/'. $property->id . '/' . $year->year . '/' . $month->month_number . '/' . $day->day_number) }}" class="btn pallet-1-3" style="color: white;">
                 @lang('common.back_to_calendar')
             </a>
         </div>
-        <div class="col-8"></div>
+        <div class="col-4"></div>
+        <div class="col-4"></div>
     </div>
     
     <div class="jumbotron">
@@ -61,46 +62,40 @@
 
             <div class="text-center" id="items"></div>
 
-            @if ($calendar->id)
-                {{ Form::hidden('calendarId', $calendar->id) }}
+            @if ($property->id)
+                {{ Form::hidden('propertyId', $property->id) }}
             @else
-                {{ Form::hidden('calendarId', Input::old('$calendar->id')) }}
+                {{ Form::hidden('propertyId', Input::old('propertyId')) }}
             @endif
 
-            @if ($graphicId)
-                {{ Form::hidden('graphicId', $graphicId) }}
+            @if ($graphic->id)
+                {{ Form::hidden('graphicId', $graphic->id) }}
             @else
                 {{ Form::hidden('graphicId', Input::old('graphicId')) }}
             @endif
 
             @if ($year)
-                {{ Form::hidden('year', $year) }}
+                {{ Form::hidden('yearId', $year->id) }}
             @else
-                {{ Form::hidden('year', Input::old('year')) }}
+                {{ Form::hidden('yearId', Input::old('yearId')) }}
             @endif
 
             @if ($month)
-                {{ Form::hidden('month', $month) }}
+                {{ Form::hidden('monthId', $month->id) }}
             @else
-                {{ Form::hidden('month', Input::old('month')) }}
+                {{ Form::hidden('monthId', Input::old('monthId')) }}
             @endif
 
             @if ($day)
-                {{ Form::hidden('day', $day) }}
+                {{ Form::hidden('dayId', $day->id) }}
             @else
-                {{ Form::hidden('day', Input::old('day')) }}
+                {{ Form::hidden('dayId', Input::old('dayId')) }}
             @endif
 
             @if ($possibleAppointmentLengthInMinutes)
                 {{ Form::hidden('possibleAppointmentLengthInMinutes', $possibleAppointmentLengthInMinutes) }}
             @else
                 {{ Form::hidden('possibleAppointmentLengthInMinutes', Input::old('possibleAppointmentLengthInMinutes')) }}
-            @endif
-
-            @if ($propertyId)
-                {{ Form::hidden('propertyId', $propertyId) }}
-            @else
-                {{ Form::hidden('propertyId', Input::old('propertyId')) }}
             @endif
 
             <div class="text-center">

@@ -96,14 +96,15 @@ Route::get('/userimage/{fileName}', [
 // >> employee routings
 Route::get('/employee/backend-graphic', 'WorkerController@graphicList')->name('graphicList');
 Route::get('/employee/backend-calendar/{property_id}/{year}/{month_number}/{day_number}', 'WorkerController@backendCalendar')->name('backendCalendar');
-Route::get('/employee/backend-appointment/show/{id}', 'WorkerController@backendAppointmentShow');
+Route::post('/employee/get-graphic', 'WorkerController@getEmployeeGraphic');
+
+Route::get('/employee/backend-appointment/show/{id}', 'WorkerController@backendAppointmentShow')->name('backendAppointmentShow');
 Route::get('/employee/backend-appointment/index/{id}', 'WorkerController@backendAppointmentIndex');
-Route::get('/employee/backend-appointment/index/temp-user/{id}', 'WorkerController@backendAppointmentIndexTempUser');
 Route::get('/employee/backend-users/index', 'WorkerController@backendUsersIndex');
 Route::post('/employee/backend-appointment/set-appointment-status', 'WorkerController@setAppointmentStatus');
 Route::post('/employee/backend-appointment/before-show-create-page', 'WorkerController@beforeShowCreatePage');
 Route::post('/employee/backend-appointment/get-user-from-database', 'WorkerController@getUserFromDatabase');
-Route::post('/employee/backend-appointment/get-user-items-from-database', 'WorkerController@getUserItemsFromDatabase');
+Route::post('/employee/backend-appointment/get-items-from-database', 'WorkerController@getItemsFromDatabase');
 Route::get('/employee/backend-appointment/create', 'WorkerController@appointmentCreate');
 Route::post('/employee/backend-appointment/store', 'WorkerController@appointmentStore');
 Route::get('/employee/backend-appointment/edit/{id}', 'WorkerController@appointmentEdit');
@@ -170,7 +171,7 @@ Route::put('/item/update', 'ItemController@update');
 // user >> routings
 // user calendar
 Route::get('/user/calendar/{property_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
-Route::post('user/employee/get-graphic', 'UserController@getEmployeeGraphic');
+Route::post('/user/employee/get-graphic', 'UserController@getEmployeeGraphic');
 
 // show employees to user
 Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
@@ -188,7 +189,7 @@ Route::post('/user/get-user-appointments-from-database', 'UserController@getUser
 // >> boss routings
 // calendars routing
 Route::get('/boss/calendar/{property_id}/{year}/{month_number}/{day_number}', 'BossController@calendar');
-Route::post('boss/employee/get-graphic', 'BossController@getEmployeeGraphic');
+Route::post('/boss/employee/get-graphic', 'BossController@getEmployeeGraphic');
 
 // code routings
 Route::get('/boss/code', 'BossController@code');

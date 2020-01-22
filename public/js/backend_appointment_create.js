@@ -4,11 +4,11 @@ $(document).ready(function()
     {
         $("#result").html('');
         let searchField = document.getElementById("search");
-        let calendarInput = $("input[name=calendarId]");
+        let propertyInput = $("input[name=propertyId]");
         
         if (searchField !== null && searchField.value !== "") 
         {
-            getUserFromDatabase(searchField.value, calendarInput.val());
+            getUserFromDatabase(searchField.value, propertyInput.val());
         }
     });    
     
@@ -26,7 +26,6 @@ $(document).ready(function()
             let surname = $(event.target).data('surname');
             
             let possibleAppointmentLengthInMinutes = $("input[name='possibleAppointmentLengthInMinutes']").val();
-            let propertyId = $("input[name='propertyId']").val();
 
             $("#search").val(name + " " + surname);
             $("#userId").val(userId);
@@ -34,7 +33,7 @@ $(document).ready(function()
             $("#result").html('');
             $("#items").html('');
 
-            getUserItemsFromDatabase(userId, propertyId, possibleAppointmentLengthInMinutes);
+            getItemsFromDatabase(userId, possibleAppointmentLengthInMinutes);
         }
         
         if (event.target.id == 'item')
@@ -255,9 +254,8 @@ $(document).ready(function()
             `);
             
             let possibleAppointmentLengthInMinutes = $("input[name='possibleAppointmentLengthInMinutes']").val();
-            let propertyId = $("input[name='propertyId']").val();
 
-            getUserItemsFromDatabase(0, propertyId, possibleAppointmentLengthInMinutes);
+            getItemsFromDatabase(0, possibleAppointmentLengthInMinutes);
             
         } else {
             
@@ -281,8 +279,8 @@ $(document).ready(function()
         }
     });   
     
-    function getUserFromDatabase(searchField, calendarId)
-    {
+    function getUserFromDatabase(searchField, propertyId)
+    {        
         return fetch('http://localhost:8000/employee/backend-appointment/get-user-from-database', {
             method: 'POST',
             headers: {
@@ -292,7 +290,7 @@ $(document).ready(function()
             },
             body: JSON.stringify({
                 searchField: searchField,
-                calendarId: calendarId
+                propertyId: propertyId
             })
         })
         .then((res) => res.json())
@@ -315,9 +313,9 @@ $(document).ready(function()
         });
     }
     
-    function getUserItemsFromDatabase(userId, propertyId, possibleAppointmentLengthInMinutes)
+    function getItemsFromDatabase(userId, possibleAppointmentLengthInMinutes)
     {
-        return fetch('http://localhost:8000/employee/backend-appointment/get-user-items-from-database', {
+        return fetch('http://localhost:8000/employee/backend-appointment/get-items-from-database', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -326,7 +324,6 @@ $(document).ready(function()
             },
             body: JSON.stringify({
                 userId: userId,
-                propertyId: propertyId,
                 possibleAppointmentLengthInMinutes: possibleAppointmentLengthInMinutes
                 
             })

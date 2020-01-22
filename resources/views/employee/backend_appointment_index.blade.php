@@ -41,14 +41,18 @@
                         <tbody>
                             @foreach($appointments as $appointment)
                                 <tr>
-                                    <td>{{$appointment->date}}</td>
+                                    <td>
+                                        <a href="{{ URL::to('employee/backend-calendar/' . $appointment->property->id . '/' . $appointment['year']->year . '/' . $appointment['month']->month_number . '/' . $appointment['day']->day_number) }}" target="_blank">
+                                            {{$appointment->date}}
+                                        </a>
+                                    </td>
                                     <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
-                                    <td>{{$appointment->name}}</td>
+                                    <td>{{$appointment->property->name}}</td>
                                     <td>{{$appointment->item->name}}</td>
                                     <td>{{$appointment->minutes}}</td>
                                     <td>
-                                        <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}">
-                                            {{$appointment->employee}}
+                                        <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blank">
+                                            {{$appointment->employee_name}}
                                         </a>
                                     </td>
                                     <td>
