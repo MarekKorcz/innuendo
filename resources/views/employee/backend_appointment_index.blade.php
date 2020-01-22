@@ -10,13 +10,30 @@
         </div>
         <div class="col-8"></div>
     </div>
-
+    
     <div class="text-center" style="padding: 1rem;">
-        <h2>
-            @lang('common.all_appointments') 
+        <h2> 
             <strong>
                 {{$user->name}} {{$user->surname}}
             </strong>
+        </h2>
+        <p>
+            @lang('common.phone_number'): 
+            <strong>
+                {{$user->phone_number}}
+            </strong>
+        </p>
+        <p>
+            @lang('common.email_address'): 
+            <strong>
+                {{$user->email}}
+            </strong>
+        </p>
+    </div>
+
+    <div class="text-center" style="padding-bottom: 1rem;">
+        <h2>
+            @lang('common.all_appointments')
         </h2>
     </div>
     

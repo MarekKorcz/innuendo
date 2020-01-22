@@ -18,7 +18,7 @@
                             <tr>                
                                 <td>@lang('common.name')</td>
                                 <td>@lang('common.surname')</td>
-                                <td>@lang('common.property')</td>
+                                <td>@lang('common.boss')</td>
                                 <td>@lang('common.action')</td>
                             </tr>
                         </thead>
@@ -27,7 +27,11 @@
                                 <tr>
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->surname}}</td>
-                                    <td>{{$user->property->name}}</td>
+                                    <td>
+                                        @if ($user->boss !== null)
+                                            {{$user->boss->name}} {{$user->boss->surname}}
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/employee/backend-appointment/index/' . $user->id) }}">
                                             @lang('common.show')

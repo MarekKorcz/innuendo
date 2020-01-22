@@ -7,7 +7,6 @@ use App\Category;
 use App\Item;
 use App\Graphic;
 use App\User;
-use App\TempUser;
 use App\Year;
 use App\Month;
 use App\Day;
@@ -21,6 +20,9 @@ use App\Interval;
 use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Redirect;
 
 class WorkerController extends Controller
 {    
@@ -309,7 +311,7 @@ class WorkerController extends Controller
             return view('employee.backend_appointment_show')->with([
                 'appointment' => $appointment,
                 'day' => $day->day_number,
-                'month' => $month->month_number,
+                'month' => $month,
                 'year' => $year->year,
                 'property' => $property,
                 'employee' => $employee,
@@ -369,40 +371,16 @@ class WorkerController extends Controller
      */
     public function backendUsersIndex()
     {
-        $users = new Collection();
-        $employee = User::where([
-            'id' => auth()->user()->id,
-            'isEmployee' => 1
-        ])->with('calendars')->first();
+        $users = User::where('isBoss', '!=', null)->orWhere('boss_id', '!=', null)->get();
         
-        if ($employee !== null && count($employee->calendars) > 0)
+        if (count($users) > 0)
         {
-            foreach ($employee->calendars as $calendar)
+            foreach ($users as $user)
             {
-                $property = Property::where('id', $calendar->property_id)->first();
-                
-                if ($property !== null && $property->boss() !== null)
-                {
-                    $boss = $property->boss();
-                    $boss['property'] = $property;
-                    
-                    $users->push($boss);
-                    
-                    $bossWorkers = User::where('boss_id', $boss->id)->get();
-                    
-                    if (count($bossWorkers) > 0)
-                    {
-                        foreach ($bossWorkers as $bossWorker)
-                        {
-                            $bossWorker['property'] = $property;
-                            
-                            $users->push($bossWorker);
-                        }
-                    }
-                }
+                $user['boss'] = $user->getBoss();
             }
         }
-            
+        
         return view('employee.backend_users_index')->with([
             'users' => $users
         ]);
@@ -679,266 +657,50 @@ class WorkerController extends Controller
     /**
      * Store a newly created resource in storage.
      * 
-     * @param Request $request
      * @return type
      */
-    public function appointmentStore(Request $request)
+    public function appointmentStore()
     {
+        $rules = array(
+            'appointmentTerm' => 'required',
+            'userId' => 'required',
+            'item_id' => 'required',
+            'graphicId' => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('property/create')
+                ->withErrors($validator);
+        } else {
         
-        
-        
-        
-        dd($request->all());
-        
-        $appointmentTerm = htmlentities($request->get('appointmentTerm'), ENT_QUOTES, "UTF-8");
-        $possibleAppointmentLengthInMinutes = htmlentities($request->get('possibleAppointmentLengthInMinutes'), ENT_QUOTES, "UTF-8");
-        $purchaseId = htmlentities((int)$request->get('purchase_id'), ENT_QUOTES, "UTF-8");
-        $itemId = htmlentities((int)$request->get('item_id'), ENT_QUOTES, "UTF-8");
-        $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
-        $calendarId = htmlentities((int)$request->get('calendarId'), ENT_QUOTES, "UTF-8");
-        $graphicId = htmlentities((int)$request->get('graphicId'), ENT_QUOTES, "UTF-8");
-        $year = htmlentities((int)$request->get('year'), ENT_QUOTES, "UTF-8");
-        $month = htmlentities((int)$request->get('month'), ENT_QUOTES, "UTF-8");
-        $day = htmlentities((int)$request->get('day'), ENT_QUOTES, "UTF-8");        
-        
-        $userId = null;
-        $name = null;
-        $surname = null;
-        $email = null;
-        $phone = null;
-        
-        if ($request->get('userId') && $request->get('name') && $request->get('surname') && $request->get('email') && $request->get('phone'))
-        {
-            $userId = htmlentities((int)$request->get('userId'), ENT_QUOTES, "UTF-8"); 
-            $name = htmlentities((int)$request->get('name'), ENT_QUOTES, "UTF-8"); 
-            $surname = htmlentities((int)$request->get('surname'), ENT_QUOTES, "UTF-8"); 
-            $email = htmlentities((int)$request->get('email'), ENT_QUOTES, "UTF-8"); 
-            $phone = htmlentities((int)$request->get('phone'), ENT_QUOTES, "UTF-8"); 
-        }
-        
-        
-        if ($appointmentTerm !== null && is_integer((int)$appointmentTerm) &&
-            $possibleAppointmentLengthInMinutes !== null && is_integer((int)$possibleAppointmentLengthInMinutes) &&
-            $purchaseId !== null && is_integer((int)$purchaseId) && $purchaseId >= 0 && 
-            $itemId !== null && is_integer((int)$itemId) && $itemId > 0 && 
-            $propertyId !== null && is_integer((int)$propertyId) && $propertyId > 0 && 
-            $calendarId !== null && is_integer((int)$calendarId) &&
-            $graphicId !== null && is_integer((int)$graphicId) &&
-            $year !== null && is_integer((int)$year) &&
-            $month !== null && is_integer((int)$month) &&
-            $day !== null && is_integer((int)$day))
-        {
-            $item = Item::where('id', $itemId)->first();
-            
-            $year = Year::where([
-                'year' => $year,
-                'calendar_id' => $calendarId
+            $graphic = Graphic::where('id', Input::get('graphicId'))->with([
+                'day.month.year',
+                'property'
             ])->first();
-            
-            if ($year !== null)
-            {
-                $month = Month::where([
-                    'month_number' => $month,
-                    'year_id' => $year->id
-                ])->first();
-                
-            } else {
-                
-                return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane');
-            }
-            
-            if ($month !== null)
-            {
-                $day = Day::where([
-                    'day_number' => $day,
-                    'month_id' => $month->id
-                ])->first();
-                
-            } else {
-                
-                return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane');
-            }
-            
-            if ($item == null || $year == null || $month == null || $day == null)
-            {
-                return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane');
-            }
-            
-            if ($userId !== null && is_integer((int)$userId) && $name == null && $surname == null && $email == null && $phone == null)
+            $item = Item::where('id', Input::get('item_id'))->first();
+            $possibleAppointmentLengthInMinutes = Input::get('possibleAppointmentLengthInMinutes');
+            $appointmentTerm = Input::get('appointmentTerm');
+
+            if ($graphic !== null && $item !== null && $possibleAppointmentLengthInMinutes !== null && $appointmentTerm !== null)
             {
                 $explodedAppointmentTerm = explode(":", $appointmentTerm);
 
-                if (count($explodedAppointmentTerm) == 2 && $this->checkIfStillCanMakeAnAppointment($graphicId, $appointmentTerm, $item->minutes))
+                if (count($explodedAppointmentTerm) == 2 && $this->checkIfStillCanMakeAnAppointment($graphic->id, $appointmentTerm, $item->minutes))
                 {
                     $plusTime = "+" . $item->minutes . " minutes";
                     $endTime = date('G:i', strtotime($plusTime, strtotime($appointmentTerm)));
-                    
-                    $graphic = Graphic::where([
-                        'id' => $graphicId,
-                        'day_id' => $day->id
-                    ])->first();
-                    
-                    $user = User::where('id', $userId)->first();
+
+                    $user = User::where('id', Input::get('userId'))->first();
 
                     $appointment = new Appointment();
                     $appointment->start_time = $appointmentTerm;
                     $appointment->end_time = $endTime;
-                    $appointment->day_id = $day->id;
-                    
-                    if ($graphic !== null)
-                    {
-                        $appointment->graphic_id = $graphic->id;
-                        
-                    } else {
-                        
-                        return redirect()->action(
-                            'WorkerController@backendCalendar', [
-                                'calendarId' => $calendarId,
-                                'year' => $year->year,
-                                'month_number' => $month->month_number,
-                                'day_number' => $day->day_number
-                            ]
-                        )->with('error', 'Podany grafik nie istnieje');
-                    }
-                    
-                    if ($user !== null)
-                    {
-                        $appointment->user_id = $user->id;
-                        
-                    } else {
-                        
-                        return redirect()->action(
-                            'WorkerController@backendCalendar', [
-                                'calendarId' => $calendarId,
-                                'year' => $year->year,
-                                'month_number' => $month->month_number,
-                                'day_number' => $day->day_number
-                            ]
-                        )->with('error', 'Podany użytkownik nie istnieje');
-                    }
-                    
-                    if ($item->minutes <= $possibleAppointmentLengthInMinutes)
-                    {
-                        $appointment->item_id = $item->id;
-                        $appointment->minutes = $item->minutes;
-                        
-                    } else {
-                        
-                        return redirect()->action(
-                            'WorkerController@backendCalendar', [
-                                'calendarId' => $calendarId,
-                                'year' => $year->year,
-                                'month_number' => $month->month_number,
-                                'day_number' => $day->day_number
-                            ]
-                        )->with('error', 'Wizyta przekracza dostępny czas');
-                    }
-                    
-                    if ($purchaseId > 0)
-                    {
-                        $purchase = Purchase::where('id', $purchaseId)->first();
-                        
-                        if ($purchase !== null)
-                        {   
-                            $subscription = Subscription::where('id', $purchase->subscription_id)->with('items')->first();
-                            $isItemIdentical = false;
-
-                            foreach ($subscription->items as $subscriptionItem)
-                            {
-                                if ($subscriptionItem->id == $item->id)
-                                {
-                                    $isItemIdentical = true;
-                                    break;
-                                }
-                            }
-
-                            if ($isItemIdentical)
-                            {
-                                $calendar = Calendar::where('id', $calendarId)->first();
-
-                                $chosenProperty = ChosenProperty::where([
-                                    'user_id' => $user->id,
-                                    'property_id' => $calendar->property_id
-                                ])->first();
-
-                                if ($chosenProperty !== null)
-                                {
-                                    $purchase = Purchase::where([
-                                        'chosen_property_id' => $chosenProperty->id,
-                                        'subscription_id' => $subscription->id
-                                    ])->first();
-
-                                    if ($purchase !== null)
-                                    {                                                        
-                                        $chosenDay = (string)$day->day_number;
-                                        $chosenDay = strlen($chosenDay) == 1 ? '0' . $chosenDay : $chosenDay;
-                                        $chosenMonth = (string)$month->month_number;
-                                        $chosenMonth = strlen($chosenMonth) == 1 ? '0' . $chosenMonth : $chosenMonth;
-
-                                        $chosenDate = new \DateTime($year->year . '-' . $chosenMonth . '-' . $chosenDay);
-
-                                        $purchaseIntervals = Interval::where('purchase_id', $purchase->id)->get();
-                                        $currentInterval = new Collection();
-
-                                        // looking for interval corresponding to the given date
-                                        foreach ($purchaseIntervals as $purchaseInterval)
-                                        {
-                                            $startDate = new \DateTime($purchaseInterval->start_date);
-                                            $endDate = new \DateTime($purchaseInterval->end_date);
-
-                                            if ($startDate <= $chosenDate && $chosenDate <= $endDate)
-                                            {
-                                                $currentInterval->push($purchaseInterval);
-                                                break;
-                                            }
-                                        }
-
-                                        if (count($currentInterval) == 1)
-                                        {
-                                            $interval = $currentInterval->first();
-                                            
-                                            $bossMainInterval = Interval::where('id', $interval->interval_id)->first();
-
-                                            if ($bossMainInterval !== null && $bossMainInterval->workers_available_units > 0 && $interval->available_units > 0)
-                                            {
-                                                $bossMainInterval->workers_available_units = $bossMainInterval->workers_available_units - 1;
-                                                $bossMainInterval->save();
-                                                        
-                                                $interval->available_units = ($interval->available_units - 1);
-                                                $interval->save();
-
-                                                $appointment->purchase()->associate($purchase->id);
-                                                $appointment->interval_id = $interval->id;
-
-                                            } else {
-
-                                                return redirect()->action(
-                                                    'WorkerController@backendCalendar', [
-                                                        'calendarId' => $calendarId,
-                                                        'year' => $year->year,
-                                                        'month_number' => $month->month_number,
-                                                        'day_number' => $day->day_number
-                                                    ]
-                                                )->with('error', 'Liczba dostępnych wizyt subskrypcji dla danego miesiąca została przekroczona!');
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            
-                        } else {
-                            
-                            return redirect()->action(
-                                'WorkerController@backendCalendar', [
-                                    'calendarId' => $calendarId,
-                                    'year' => $year->year,
-                                    'month_number' => $month->month_number,
-                                    'day_number' => $day->day_number
-                                ]
-                            )->with('error', 'Błędne dane wykupionej subskrypcji');
-                        }
-                    }
-                        
+                    $appointment->graphic_id = $graphic->id;
+                    $appointment->day_id = $graphic->day->id;
+                    $appointment->user_id = $user->id;
+                    $appointment->item_id = $item->id;
+                    $appointment->minutes = $item->minutes;
                     $appointment->save();
 
                     /**
@@ -951,83 +713,20 @@ class WorkerController extends Controller
                      * 
                      * 
                      */
-
+                    
                     return redirect()->action(
-                        'WorkerController@backendAppointmentShow', [
-                            'id' => $appointment->id
+                        'WorkerController@backendCalendar', [
+                            'propertyId' => $graphic->property->id,
+                            'year' => $graphic->day->month->year->year,
+                            'month_number' => $graphic->day->month->month_number,
+                            'day_number' => $graphic->day->day_number
                         ]
                     )->with('success', 'Wizyta została zarezerwowana. Informacja potwierdzająca została wysłana na maila!');
                 }
-
-                return redirect()->action(
-                    'WorkerController@backendCalendar', [
-                        'calendarId' => $calendarId,
-                        'year' => $year->year,
-                        'month_number' => $month->month_number,
-                        'day_number' => $day->day_number
-                    ]
-                )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
-
-            } else if ($name !== null && is_string($name) &&
-                       $surname !== null && is_string($surname) &&
-                       $email !== null && is_string($email) &&
-                       $phone !== null && is_numeric($phone)) 
-            {
-                if ($this->checkIfStillCanMakeAnAppointment($graphicId, $appointmentTerm, $item->minutes))
-                {
-                    $tempUser = new TempUser();
-                    $tempUser->name = $name;
-                    $tempUser->surname = $surname;
-                    $tempUser->email = $email;
-                    $tempUser->phone_number = $phone;
-                    $tempUser->save();
-
-                    if ($tempUser !== null)
-                    {
-                        $plusTime = "+" . $item->minutes . " minutes";
-                        $endTime = date('G:i', strtotime($plusTime, strtotime($appointmentTerm)));
-
-                        $appointment = new Appointment();
-                        $appointment->start_time = $appointmentTerm;
-                        $appointment->end_time = $endTime;
-                        $appointment->minutes = $item->minutes;
-                        $appointment->graphic_id = $graphicId;
-                        $appointment->day_id = $day->id;
-                        $appointment->temp_user_id = $tempUser->id;
-                        $appointment->item_id = $item->id;
-                        $appointment->save();
-
-                        /**
-                         * 
-                         * 
-                         * 
-                         * email sanding
-                         * 
-                         * 
-                         * 
-                         * 
-                         */  
-
-                        return redirect()->action(
-                            'WorkerController@backendAppointmentShow', [
-                                'id' => $appointment->id
-                            ]
-                        )->with('success', 'Wizyta została zarezerwowana. Informacja potwierdzająca została wysłana na maila!');
-                    }
-                }
-
-                return redirect()->action(
-                    'WorkerController@backendCalendar', [
-                        'calendarId' => $calendarId,
-                        'year' => $year,
-                        'month_number' => $month,
-                        'day_number' => $day
-                    ]
-                )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
             }
+            
+            return redirect()->route('welcome');
         }
-        
-        return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane');
     }
     
     /**

@@ -9,7 +9,7 @@
     
     <div class="row text-center" style="padding: 3rem 0 1rem 0;">
         <div class="col-4">
-            <a href="{{ URL::to('/employee/backend-calendar/'. $property->id . '/' . $year . '/' . $month . '/' . $day) }}" class="btn pallet-1-2" style="color: white;">
+            <a href="{{ URL::to('/employee/backend-calendar/'. $property->id . '/' . $year . '/' . $month->month_number . '/' . $day) }}" class="btn pallet-1-2" style="color: white;">
                 @lang('common.back_to_calendar')
             </a>
         </div>
@@ -37,7 +37,7 @@
                     <h3><strong>{{$appointment->user->name}} {{$appointment->user->surname}}</strong></h3>
                     <h3>@lang('common.in') {{$property->name}}</h3>
                 </div>
-                <p>@lang('common.date'): <strong>{{$day}} {{$month}} {{$year}}</strong></p>
+                <p>@lang('common.date'): <strong>{{$day}} {{$month->month}} {{$year}}</strong></p>
                 <p>@lang('common.hour'): <strong>{{$appointment->start_time}}</strong> - <strong>{{$appointment->end_time}}</strong></p>
                 <p>@lang('common.time'): <strong>{{$appointment->minutes}} @lang('common.minutes')</strong></p>
                 <p>@lang('common.massage'): <strong>{{$appointment->item->name}}</strong></p>
