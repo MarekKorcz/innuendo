@@ -12,12 +12,12 @@
     </div>
         
     <div class="container">
-        <h2 class="text-center">@lang('welcome.massage_15')</h2>
+        <h2 class="text-center">@lang('welcome.massage_20')</h2>
         <div class="row text-center padding">
             <div class="col-xs-12 col-sm-6 col-md-6">
                 @svg('regular/smile-beam')
-                <h3>@lang('welcome.1_massage_15_per_month')</h3>
-                <p>@lang('welcome.1_massage_15_price') <strong>@lang('welcome.5_discount')</strong></p>
+                <h3>@lang('welcome.1_massage_20_per_month')</h3>
+                <p>@lang('welcome.1_massage_20_price') <strong>@lang('welcome.5_discount')</strong></p>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
                 @svg('regular/laugh-beam')
@@ -28,13 +28,13 @@
         <div class="row text-center padding">
             <div class="col-xs-12 col-sm-6 col-md-6">
                 @svg('regular/grin-hearts')
-                <h3>@lang('welcome.3_massages_15_per_month')</h3>
-                <p>@lang('welcome.3_massages_15_price') <strong>@lang('welcome.15_discount')</strong></p>
+                <h3>@lang('welcome.3_massages_20_per_month')</h3>
+                <p>@lang('welcome.3_massages_20_price') <strong>@lang('welcome.15_discount')</strong></p>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
                 @svg('regular/surprise')
                 <h3>@lang('welcome.4_massages_15_per_month')</h3>
-                <p>@lang('welcome.4_massages_15_price') <strong>@lang('welcome.20_discount')</strong></p>
+                <p>@lang('welcome.4_massages_20_price') <strong>@lang('welcome.20_discount')</strong></p>
             </div>
         </div>
     </div>
@@ -54,12 +54,12 @@
     </div>
 
     <div class="container">
-        <h2 class="text-center">@lang('welcome.massage_30')</h2>
+        <h2 class="text-center">@lang('welcome.massage_40')</h2>
         <div class="row text-center padding">
             <div class="col-xs-12 col-sm-6 col-md-6">
                 @svg('regular/smile-beam')
-                <h3>@lang('welcome.1_massage_30_per_month')</h3>
-                <p>@lang('welcome.1_massage_30_price') <strong>@lang('welcome.5_discount')</strong></p>
+                <h3>@lang('welcome.1_massage_40_per_month')</h3>
+                <p>@lang('welcome.1_massage_40_price') <strong>@lang('welcome.5_discount')</strong></p>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
                 @svg('regular/laugh-beam')

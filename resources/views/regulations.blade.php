@@ -34,7 +34,8 @@
                 <p>
                     Ilekroć poniżej używa się pojęcia:
                     <ol>
-                        <li>Masaż+ – należy przez to rozumieć Marek Korcz ......................................</li>
+                        <li>Masaż+ – należy przez to rozumieć MAREK KORCZ, pod adresem WARSZAWA 02-672, ul. DOMANIEWSKA 17/19/109,
+                            REGON 147199810, NIP 5213533415</li>
                         <li>Serwis – należy przez to rozumieć serwis internetowy należący do
                             Masaż+, umożliwiający zakup masażu przy uyciu aktywowanych pakietów abonamentowych
                             masaży dla pracowników przedsiębiorstw, prowadzony pod adresem
@@ -232,9 +233,9 @@
                 <div class="row text-center">
                     <div class="col-1"></div>
                     <div class="col-10">
-                        <span>Masaż klasyczny (15 min) - 40zł / osoba</span>
+                        <span>Masaż klasyczny (20 min) - 45zł / osoba</span>
                         <br>
-                        <span>Masaż klasyczny (30 min) - 70zł / osoba</span>
+                        <span>Masaż klasyczny (40 min) - 80zł / osoba</span>
                     </div>
                     <div class="col-1"></div>
                 </div>
@@ -242,38 +243,38 @@
                     Pakiety abonamentowe:
                     <ul style="list-style-type: circle;">
                         <li>
-                            <strong>1 x masaż klasyczny (15 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>38 zł (zniżka 5%)</strong> / osoba
+                            <strong>1 x masaż klasyczny (20 min)</strong> w miesiącu (łączny czas trwania - 12
+                            miesięcy) - <strong>42.75 zł (zniżka 5%)</strong> / osoba
                         </li>
                         <li>
-                            <strong>2 x masaż klasyczny (15 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>72 zł (zniżka 10%)</strong> / osoba
+                            <strong>2 x masaż klasyczny (20 min)</strong> w miesiącu (łączny czas trwania - 12
+                            miesięcy) - <strong>81 zł (zniżka 10%)</strong> / osoba
                         </li>
                         <li>
-                            <strong>3 x masaż klasyczny (15 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>102 zł (zniżka 15%)</strong> / osoba
+                            <strong>3 x masaż klasyczny (20 min)</strong> w miesiącu (łączny czas trwania - 12
+                            miesięcy) - <strong>114.75 zł (zniżka 15%)</strong> / osoba
                         </li>
                         <li>
-                            <strong>4 x masaż klasyczny (15 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>128 zł (zniżka 20%)</strong> / osoba
+                            <strong>4 x masaż klasyczny (20 min)</strong> w miesiącu (łączny czas trwania - 12
+                            miesięcy) - <strong>144 zł (zniżka 20%)</strong> / osoba
                         </li>
                     </ul>
                     <ul style="list-style-type: circle;">
                         <li>
-                            <strong>1 x masaż klasyczny (30 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>66.5 zł (zniżka 5%)</strong> / osoba
+                            <strong>1 x masaż klasyczny (40 min)</strong> w miesiącu (łączny czas trwania - 12
+                            miesięcy) - <strong>76 zł (zniżka 5%)</strong> / osoba
                         </li>
                         <li>
-                            <strong>2 x masaż klasyczny (30 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>126 zł (zniżka 10%)</strong> / osoba
+                            <strong>2 x masaż klasyczny (40 min)</strong> w miesiącu (łączny czas trwania - 12
+                            miesięcy) - <strong>144 zł (zniżka 10%)</strong> / osoba
                         </li>
                         <li>
-                            <strong>3 x masaż klasyczny (30 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>178,5 zł (zniżka 15%)</strong> / osoba
+                            <strong>3 x masaż klasyczny (40 min)</strong> w miesiącu (łączny czas trwania - 12
+                            miesięcy) - <strong>204 zł (zniżka 15%)</strong> / osoba
                         </li>
                         <li>
-                            <strong>4 x masaż klasyczny (30 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>224 zł (zniżka 20%)</strong> / osoba
+                            <strong>4 x masaż klasyczny (40 min)</strong> w miesiącu (łączny czas trwania - 12
+                            miesięcy) - <strong>256 zł (zniżka 20%)</strong> / osoba
                         </li>
                     </ul>
                     Progi wzrostu zniżki abonamentowej (<strong>zniżka</strong> w pakietach

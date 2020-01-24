@@ -46,6 +46,7 @@ return [
     'write_your_name_and_lastname' => 'Wpisz imię lub nazwisko',
     'subscription_first_time_activation_info' => 'Pakiet nie została jeszcze aktywowana. Aktywacja nastąpi wraz ze zrealizowaniem pierwszego zabiegu',
     'all_massages' => 'Wszystkie masaże',
+    'all_massages_in_localization' => 'Wszystkie masaże w lokalizacji',
     'current_user_appointments' => 'Wszystkie wizyty danego użytkownika',
     'belonging_to' => 'należące do',
     'for_the_period_from' => 'za okres od ',
@@ -167,6 +168,7 @@ return [
     'person_authorized_to_pick_up' => 'Osoba upoważniona do odbioru',
     'person_authorized_to_issue' => 'Osoba upoważniona do wystawienia',
     'massage_in' => 'Masaż w',
+    'massages_in' => 'Masaże w',
     'minutes' => 'minut',
     'activate_subscription' => 'Aktywuj pakiet',
     'pick_subscription_from_property' => 'Wybierz Lokalizacje z której interesują Cie pakiety',
@@ -206,7 +208,7 @@ return [
     'back_to_month' => 'Powrót do miesiąca',
     'back_to_year' => 'Powrót do roku',
     'create_graphic' => 'Stwórz grafik',
-    'pick_property_to_choose_schedule' => 'Wybierz Lokalizacje z której interesują Cie grafiki',
+    'pick_property_to_choose_schedule' => 'Wybierz Lokalizacje z której interesuje Cie kalendarz',
     'graphic_request_from' => 'Zapytanie o grafik z dnia',
     'chosen_employees' => 'Wybrani pracownicy',
     'last_update' => 'Data ostatniej modyfikacji',
@@ -483,5 +485,7 @@ return [
     'refresh_subscription' => 'Odśwież pakiet',
     'promo_status' => 'Status promocji',
     'public_promo_copy_code_description' => 'By skorzystać z promocji, zarejestruj się przy użyciu kodu',
-    'click_to_copy' => 'Kliknij by skopiować kod'
+    'click_to_copy' => 'Kliknij by skopiować kod',
+    'calendars' => 'Kalendarze',
+    'calendars_list_in_properties' => 'Lista kalendarzy przydzielonych do lokalizacji'
 ];

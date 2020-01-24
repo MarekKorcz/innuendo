@@ -46,6 +46,7 @@ return [
     'write_your_name_and_lastname' => 'Write your name and lastname',
     'subscription_first_time_activation_info' => 'Subscription has not been activated yet. Activation will occur along with the implementation of the first massage',
     'all_massages' => 'All massages',
+    'all_massages_in_localization' => 'All massages in localization',
     'current_user_appointments' => 'All user appointments',
     'belonging_to' => 'belonging to',
     'for_the_period_from' => 'for the period from ',
@@ -166,6 +167,7 @@ return [
     'person_authorized_to_pick_up' => 'Person authorized to pick up',
     'person_authorized_to_issue' => 'Person authorized to issue',
     'massage_in' => 'Massage in',
+    'massages_in' => 'Massages in',
     'minutes' => 'minutes',
     'activate_subscription' => 'Activate subscription',
     'pick_subscription_from_property' => 'Select the location from which you are interested in subscriptions',
@@ -205,7 +207,7 @@ return [
     'back_to_month' => 'Back to month',
     'back_to_year' => 'Bach to year',
     'create_graphic' => 'Create schedule',
-    'pick_property_to_choose_schedule' => 'Select the location from which you are interested in schedule',
+    'pick_property_to_choose_schedule' => 'Select the location from which you are interested in calendar',
     'graphic_request_from' => 'Graphic request from',
     'chosen_employees' => 'Chosen employees',
     'last_update' => 'Last update',
@@ -481,5 +483,7 @@ return [
     'refresh_subscription' => 'Refresh subscription',
     'promo_status' => 'Promotion status',
     'public_promo_copy_code_description' => 'To use the promotion, register using the code',
-    'click_to_copy' => 'Click to copy code'
+    'click_to_copy' => 'Click to copy code',
+    'calendars' => 'Calendars',
+    'calendars_list_in_properties' => 'List of calendars allocated to locations'
 ];
