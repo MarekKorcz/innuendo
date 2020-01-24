@@ -65,7 +65,7 @@ return [
     
     '1_massage_20_price' => 'Cena jednego masażu - 42.75 zł',
     '2_massages_20_price' => 'Cena jednego masażu - 40.5 zł',
-    '3_massages_20_price' => 'Cena jednego masażu - 38,25 zł',
+    '3_massages_20_price' => 'Cena jednego masażu - 38.25 zł',
     '4_massages_20_price' => 'Cena jednego masażu - 36 zł',
     
     'massage_40' => 'Masaż 40 min (cena regularna - 80zł)',
