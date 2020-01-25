@@ -64,9 +64,9 @@ class Day extends Model
     
     
     /**
-     * Get appointment that is set to day
+     * Get appointments that is set to day
      */
-    public function appointment()
+    public function appointments()
     {
         return $this->hasMany('App\Appointment');
     }

@@ -224,7 +224,7 @@ class WorkerController extends Controller
                 
             } else {
                 
-                $message = 'Brak otwartego grafiku na ten rok';
+                $message = 'Brak otwartego kalendarza na ten rok';
             }
             
         } else {

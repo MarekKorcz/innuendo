@@ -11,8 +11,8 @@
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>
         <div class="col-4">
-            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/appointment/index') }}">
-                @lang('common.all_massages')
+            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/boss/worker/appointment/list/' . $property->id . '/0') }}">
+                @lang('common.all_appointments')
             </a>
         </div>
         <div class="col-4"></div>

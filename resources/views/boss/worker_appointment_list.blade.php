@@ -6,78 +6,46 @@
 
 <div class="container">
     
-    <div class="row text-center" style="padding-top: 2rem;">
-        <div class="col-4"></div>
-        <div class="col-4">
-            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('boss/subscription/list/' . $substart->property_id . '/' . $substart->subscription_id) }}">
-                @lang('common.subscriptions')
-            </a>
+    <div class="row" style="padding-top: 1rem;">
+        <div class="col-12">
+            <h1 class="text-center">
+                @if ($property !== null)
+                    @lang('common.massages_in')                
+                    {{$property->name}}
+                @endif
+            </h1>
         </div>
-        <div class="col-4"></div>
     </div>
     
-    <div class="row" style="padding: 1rem 0 1rem 0;">
+    <div class="row" style="padding-bottom: 1rem;">
         <div class="col-1"></div>
         <div class="col-10">
-            <div class="text-center" style="padding-top: 2rem;">
-                <h2>
-                    @lang('common.subscription_massages')
-                    {!! $subscription->name !!}
-                </h2>
-                <a id="showAllWorkers" class="btn pallet-2-3" style="color: white;">
-                    @lang('common.all_appointments')
-                </a>
-            </div>
             @if (count($appointments) > 0)
                 <div id="workers-panel" class="wrapper cont">
-                    @if ($substart->isActive)
-                        <div class="text-center">
-                            <label for="search">@lang('common.write_your_name_and_lastname'):</label>
-                            @if($worker !== null)
-                                <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" data-user_id="{{$worker->id}}" autocomplete="off">
-                            @else
-                                <input id="search" class="form-control" type="text" value="" autocomplete="off">          
-                            @endif
-                            <ul id="result" class="list-group list-styling"></ul>
-                        </div>
-                        <div class="text-center">
-                            <label for="timePeriod">@lang('common.select_a_billing_period'):</label>
-                            <select id="timePeriod" class="form-control" data-substart_id="{{$substart->id}}">
-                                @foreach ($intervals as $key => $interval)
-                                    @if ($interval->start_date <= $today && $interval->end_date >= $today ||
-                                         $interval->end_date < $today && $key + 1 == count($intervals))
-                                        <option value="{{$interval->id}}" selected>{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
-                                    @else
-                                        <option value="{{$interval->id}}">{{$interval->start_date->format('Y-m-d')}} - {{$interval->end_date->format('Y-m-d')}}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    @endif
+                    <div class="text-center">
+                        <label for="search">@lang('common.write_your_name_and_lastname'):</label>
+                        @if($worker !== null)
+                            <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" data-user_id="{{$worker->id}}" autocomplete="off">
+                        @else
+                            <input id="search" class="form-control" type="text" value="" autocomplete="off">          
+                        @endif
+                        <ul id="result" class="list-group list-styling"></ul>
+                    </div>
+                    <div class="text-center">
+                        <label for="timePeriod">@lang('common.select_a_billing_period'):</label>
+                        <select id="timePeriod" class="form-control" data-property_id="{{$property->id}}">
+                            @foreach ($intervals as $interval)
+                                @if ($interval['start_date'] == $currentInterval['start_date'])
+                                    <option data-month_id="{{$interval['month_id']}}" selected>{{$interval['start_date']->format('Y-m-d')}} - {{$interval['end_date']->format('Y-m-d')}}</option>
+                                @else
+                                    <option data-month_id="{{$interval['month_id']}}">{{$interval['start_date']->format('Y-m-d')}} - {{$interval['end_date']->format('Y-m-d')}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             
                 <div id="appointments-table">
-                    @if ($substart->isActive == 0)
-                        <div class="col-12">
-                            <h2 class="text-center">
-                                @lang('common.items')
-                                @if ($worker !== null)
-                                    @lang('common.belonging_to')                
-                                    {{$worker->name}} {{$worker->surname}}
-                                @endif
-                                @if ($intervals)
-                                    @foreach ($intervals as $interval)
-                                        @if ($interval->start_date <= $today && $interval->end_date >= $today)
-                                            @lang('common.for_the_period_from')
-                                            {{$interval->start_date->format('Y-m-d')}}
-                                            @lang('common.to')
-                                            {{$interval->end_date->format('Y-m-d')}}
-                                        @endif
-                                    @endforeach
-                                @endif
-                            </h2>
-                        </div>
-                    @endif
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>                
@@ -93,24 +61,22 @@
                             @foreach($appointments as $appointment)
                                 <tr>
                                     <td>
-                                        <a href="{{ URL::to('/boss/calendar/' . $appointment->calendar_id . '/' . $appointment->year . '/' . $appointment->month . '/' . $appointment->day) }}" target="_blank">
+                                        <a href="{{ URL::to('/boss/calendar/' . $property->id . '/' . $appointment->year->year . '/' . $appointment->month_number . '/' . $appointment->day_number) }}" target="_blank">
                                             {{$appointment->date}}
                                         </a>
                                     </td>
                                     <td>{{$appointment->start_time}} - {{$appointment->end_time}}</td>
                                     <td>
-                                        <!--<a href="{{ URL::to('/boss/worker/show/' . $appointment->user->id . '/' . $substart->id . '/' . $appointment->interval_id) }}" target="_blank">-->
+                                        <a href="{{ URL::to('/boss/worker/appointment/list/' . $property->id . '/' . $appointment->user->id) }}">
                                             {{$appointment->user->name}} {{$appointment->user->surname}}
-                                        <!--</a>-->
-                                    </td>
-                                    <td>
-                                        <a href="{{ URL::to('/boss/subscription/list/' . $substart->property_id . '/' . $substart->subscription_id) }}" target="_blank">
-                                            {{$appointment->item->name}}
                                         </a>
                                     </td>
                                     <td>
+                                        {{$appointment->item->name}}
+                                    </td>
+                                    <td>
                                         <a href="{{ URL::to('/employee/' . $appointment->employee_slug) }}" target="_blank">
-                                            {{$appointment->employee}}
+                                            {{$appointment->employee_name}}
                                         </a>
                                     </td>
                                     <td>
@@ -123,21 +89,11 @@
                 </div>
             @else
                 <div class="text-center" style="padding: 1rem 1rem 0 1rem;">
-                    <h3>@lang('common.subscription_first_time_activation_info')</h3>
+                    <h3>@lang('common.no_appointments')</h3>
+                    <h4>@lang('common.no_appointments_description')</h4>
                     <div style="padding: 1rem;">
-                        <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/appointment/index') }}">
-                            @lang('common.go_to_appointments')
-                        </a>
-                    </div>
-                </div>
-                </hr>
-                <div class="text-center" style="padding: 1rem;">
-                    <h3>
-                        @lang('common.go_to_codes_view_description_2')
-                    </h3>
-                    <div style="padding: 1rem;">
-                        <a class="btn pallet-2-1" style="color: white;" href="{{ URL::to('/boss/codes') }}">
-                            @lang('common.register_code')
+                        <a href="{{ URL::to('/boss/calendar/' . $property->id . '/0/0/0') }}" class="btn pallet-1-3 btn-lg" style="color: white;">
+                            @lang('common.show')
                         </a>
                     </div>
                 </div>

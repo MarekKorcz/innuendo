@@ -207,8 +207,9 @@ Route::post('/boss/subscription/purchased', 'BossController@subscriptionPurchase
 Route::post('/boss/subscription/purchased/refresh', 'BossController@subscriptionPurchasedRefresh');
 
 // boss and workers subscription appointment list
-Route::get('/boss/worker/appointment/list/{substartId}/{userId}', 'BossController@workerAppointmentList')->name('workerAppointmentList');
-Route::post('/boss/get-subscription-users-from-database', 'BossController@getSubscriptionUsersFromDatabase');
+Route::get('/boss/property/appointments', 'BossController@propertyAppointments');
+Route::get('/boss/worker/appointment/list/{propertyId}/{userId?}', 'BossController@workerAppointmentList')->name('workerAppointmentList');
+Route::post('/boss/get-property-users-from-database', 'BossController@getPropertyUsersFromDatabase');
 Route::post('/boss/get-user-appointments-from-database', 'BossController@getUserAppointmentsFromDatabase');
 Route::post('/boss/get-users-appointments-from-database', 'BossController@getUsersAppointmentsFromDatabase');
 

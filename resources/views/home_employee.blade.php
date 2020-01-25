@@ -21,9 +21,9 @@
             <div class="wrapper">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title text-center">@lang('common.schedules')</h4>
+                        <h4 class="card-title text-center">@lang('common.calendars')</h4>
                         <p class="card-text text-center">
-                            @lang('common.schedules_list_in_properties')
+                            @lang('common.calendars_list_in_properties')
                         </p>
                         <div class="text-center">
                             <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/employee/backend-graphic') }}">

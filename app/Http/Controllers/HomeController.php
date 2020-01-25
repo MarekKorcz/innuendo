@@ -282,7 +282,5 @@ class HomeController extends Controller
 ////            'password' => '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq',
 ////            'isEmployee' => 1
 ////        ]);
-//        
-//        
 //    }
 }

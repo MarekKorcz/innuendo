@@ -5,7 +5,7 @@
     <div style="padding: 1rem;">
 
         <div class="text-center">
-            <h1>@lang('common.all_massages')</h1>
+            <h1>@lang('common.your_appointments')</h1>
         </div>
 
         @if (count($appointments) > 0)

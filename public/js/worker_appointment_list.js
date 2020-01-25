@@ -3,15 +3,15 @@ $(document).ready(function() {
     $("input#search").on('keyup', function(event) 
     {              
         let searchFieldValue = event.target.value;
-        let substartId = $("#timePeriod").data("substart_id");
+        let propertyId = $("#timePeriod").data("property_id");
         
         $("#result").html('');
         
-        if (substartId !== 0) 
+        if (propertyId !== 0) 
         {
             if (searchFieldValue !== "") 
             {
-                getSubscriptionUsersFromDatabase(searchFieldValue, substartId);
+                getUsersFromDatabase(searchFieldValue, propertyId);
                 
             } else {
                 
@@ -39,18 +39,18 @@ $(document).ready(function() {
             searchField.setAttribute('data-user_id', userId);
             searchField.setAttribute('value', userName);
             
-            let substartId = $("#timePeriod").data("substart_id");
+            let propertyId = $("#timePeriod").data("property_id");
             
-            let intervalId = 0;
+            let monthId = 0;
             
             if ($("select#timePeriod").length > 0)
             {
-                intervalId = $("select#timePeriod").children("option:selected").val();
+                monthId = $("select#timePeriod").children("option:selected").data('month_id');
             }
             
             $("#appointments-table").html('');
             
-            getUserAppointmentsFromDatabase(userId, substartId, intervalId);
+            getUserAppointmentsFromDatabase(userId, propertyId, monthId);
             
             listResultElement.html('');
         }
@@ -65,22 +65,22 @@ $(document).ready(function() {
     {
         let userId = document.getElementById('search').dataset.user_id;
         
-        let intervalId = $(this).children("option:selected").val();
-        let substartId = $(this).data("substart_id");
+        let monthId = $(this).children("option:selected").data('month_id');
+        let propertyId = $(this).data("property_id");
 
         if (userId == undefined || userId == '')
         {
-            getUsersAppointmentsFromDatabase(intervalId, substartId);
+            getUsersAppointmentsFromDatabase(propertyId, monthId);
             
         } else {
             
-            getUserAppointmentsFromDatabase(userId, substartId, intervalId);
+            getUserAppointmentsFromDatabase(userId, propertyId, monthId);
         }
     });
     
-    function getSubscriptionUsersFromDatabase(searchField, substartId)
+    function getUsersFromDatabase(searchField, propertyId)
     {
-        return fetch('http://localhost:8000/boss/get-subscription-users-from-database', {
+        return fetch('http://localhost:8000/boss/get-property-users-from-database', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -89,11 +89,12 @@ $(document).ready(function() {
             },
             body: JSON.stringify({
                 searchField: searchField,
-                substartId: substartId
+                propertyId: propertyId
             })
         })
         .then((res) => res.json())
-        .then((data) => {            
+        .then((data) => {
+            
             if (data.type === "success")
             {      
                 let resultList = $("#result");
@@ -110,8 +111,8 @@ $(document).ready(function() {
     // function to display all boss worker appointments after choosing one through search input 
     // (it grabs time period selected option value(intervalId) 
     // or doing download without it (with no intervalId existed (non activated subscription scenario)))
-    function getUserAppointmentsFromDatabase(userId, substartId, intervalId)
-    {        
+    function getUserAppointmentsFromDatabase(userId, propertyId, monthId)
+    {       
         return fetch('http://localhost:8000/boss/get-user-appointments-from-database', {
             method: 'POST',
             headers: {
@@ -121,8 +122,8 @@ $(document).ready(function() {
             },
             body: JSON.stringify({
                 userId: userId,
-                substartId: substartId, 
-                intervalId: intervalId
+                propertyId: propertyId, 
+                monthId: monthId
             })
         })
         .then((res) => res.json())
@@ -163,11 +164,15 @@ $(document).ready(function() {
                                 </a>
                             </td>
                             <td>` + value.time + `</td>
-                            <td>` + value.worker + `</td>
+                            <td>
+                                <a href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + value.worker_id + `">
+                                    ` + value.worker + `
+                                </a>
+                            </td>
                             <td>` + value.item + `</td>
                             <td> 
                                 <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blank">
-                                    ` + value.employee + `
+                                    ` + value.employee_name + `
                                 </a>
                             </td>
                             <td>` + value.status + `</td>
@@ -180,8 +185,8 @@ $(document).ready(function() {
     
     // function to display all boss workers based on only intervalId and substartId
     // after selecting time period with empty search input
-    function getUsersAppointmentsFromDatabase(intervalId, substartId)
-    {
+    function getUsersAppointmentsFromDatabase(propertyId, monthId)
+    {        
         return fetch('http://localhost:8000/boss/get-users-appointments-from-database', {
             method: 'POST',
             headers: {
@@ -190,8 +195,8 @@ $(document).ready(function() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             body: JSON.stringify({
-                intervalId: intervalId,
-                substartId: substartId
+                propertyId: propertyId,
+                monthId: monthId
             })
         })
         .then((res) => res.json())
@@ -230,11 +235,15 @@ $(document).ready(function() {
                                 </a>
                             </td>
                             <td>` + value.time + `</td>
-                            <td>` + value.worker + `</td>
-                            <td>` + value.item + `</td>
                             <td>
+                                <a href="http://localhost:8000/boss/worker/appointment/list/` + data.propertyId + `/` + value.worker_id + `">
+                                    ` + value.worker + `
+                                </a>
+                            </td>
+                            <td>` + value.item + `</td>
+                            <td> 
                                 <a href="http://localhost:8000/employee/` + value.employee_slug + `" target="_blank">
-                                    ` + value.employee + `
+                                    ` + value.employee_name + `
                                 </a>
                             </td>
                             <td>` + value.status + `</td>
@@ -252,9 +261,9 @@ $(document).ready(function() {
         searchField.value = '';
 
         let timePeriod = $("#timePeriod");
-        let intervalId = timePeriod.children("option:selected").val();
-        let substartId = timePeriod.data("substart_id");
+        let propertyId = timePeriod.data("property_id");
+        let monthId = timePeriod.children("option:selected").data('month_id');
 
-        getUsersAppointmentsFromDatabase(intervalId, substartId);
+        getUsersAppointmentsFromDatabase(propertyId, monthId);
     }
 });
