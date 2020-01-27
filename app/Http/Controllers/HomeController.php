@@ -139,6 +139,13 @@ class HomeController extends Controller
         ]);
     } 
     
+    public function about()
+    {
+        return view('about')->with([
+            'showBanner' => $this->showPolicyBanner()
+        ]);
+    } 
+    
     public function contactPageShow()
     {
         return view('contact_page')->with([

@@ -15,9 +15,9 @@
                         „{{ config('app.name') }} {{ config('app.name_2nd_part') }}”
                     </strong>
                 </p>
-<!--                <h6>
-                    (obowiązuje od 13-12-2019)
-                </h6>-->
+                <h6>
+                    (obowiązuje od 13-01-2020)
+                </h6>
             </div>
         </div>
     </div>

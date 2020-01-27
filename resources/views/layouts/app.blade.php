@@ -43,6 +43,9 @@
     
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item" style="margin-right: 9px;">
+                    <a class="nav-link" href="{{ route('about') }}">@lang('navbar.about')</a>
+                </li>
 <!--                <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ route('promo') }}">@lang('navbar.promotion')</a>
                 </li>-->
@@ -153,6 +156,11 @@
             </div>
             <div class="col-5">
                 <ul>
+                    <li>
+                        <a href="{{ route('about') }}" target="_blank">
+                            @lang('navbar.about')
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('contact_page') }}" target="_blank">
                             @lang('contact.contact_page')

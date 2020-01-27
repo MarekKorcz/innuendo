@@ -21,6 +21,7 @@ Route::get('/regulations', 'HomeController@regulations')->name('regulations');
 Route::get('/contact', 'HomeController@contactPageShow')->name('contact_page');
 Route::post('/contact-update', 'HomeController@contactPageUpdate');
 Route::post('/accept-terms', 'HomeController@acceptTerms');
+Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/promo/show', 'HomeController@promoShow')->name('promo');
 
 // change language

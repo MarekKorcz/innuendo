@@ -3,6 +3,7 @@
 return [
     'subscriptions' => 'Subscriptions',
     'promotion' => 'Promotion',
+    'about' => 'About',
     'discounts' => 'Discounts',
     'employees' => 'Employees',
     'login' => 'Login',
