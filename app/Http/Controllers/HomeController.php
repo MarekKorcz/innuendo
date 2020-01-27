@@ -50,7 +50,8 @@ class HomeController extends Controller
             'contactPageShow',
             'contactPageUpdate',
             'acceptTerms',
-            'promoShow'
+            'promoShow',
+            'about'
         ]);
     }
     

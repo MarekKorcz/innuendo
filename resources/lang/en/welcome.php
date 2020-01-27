@@ -5,7 +5,7 @@ return [
     'main_header'      => 'Did you know that massage in the office is becoming more and more common among company employees?',
     'first_paragraph'  => 'Due to the sedentary nature of work, office workers belong to the group with the highest risk of spinal diseases
                            Back pain, often accompanying throughout the day, measurably affects the comfort of work, and thus, 
-                           the end performance of your company! We have a way to fix this!',
+                           the end performance of your company! We know how to fix this!',
     'second_paragraph' => 'Money intended for regular massages of your employees will be much more beneficial for your company\'s profits
                            than various types of employee benefits (such as Multisport cards), which only a small percentage of subscribers 
                            use in the long term!',
@@ -14,28 +14,28 @@ return [
                            to many complications and then to uncontrolled inflammatory processes and degeneration of the spine.',
     'forth_paragraph'  => 'Regular employee massage is a real investment, a kind of "business Aikido" that translates into increased efficiency
                            and productivity of the company, and hence, greater profits!',
-    'less'             => 'Less:',
+    'less'             => 'Say goodbye to:',
     'sick_leave'       => 'sick leave',
     'health_leave'     => 'health leave',
     'staff_turnover'   => 'staff turnover',
-    'more'             => 'More:',
+    'more'             => 'Take a look ahead into more:',
     'productivity_and_profits' => 'productivity and profits',
     'concentration_and_motivation' => 'concentration and motivation in work',
     'employee_satisfaction' => 'satisfaction among employees',
     
     'us_vs_other_header' => 'What makes us different from the competition?',
-    'our_site_header' => 'Our site was created to enable you to:',
+    'our_site_header' => 'Our services and service have been created to enable you:',
     
     'our_site_first_li' => 'establishment and course of our further cooperation',
-    'our_site_first_li_p' => 'The more often you use our services, the cheaper they will be for your company (up to 30% less retail price in total)',
+    'our_site_first_li_p' => 'The more often you use our services, the cheaper they will be for your company (up to 30% less retail price in total).',
         
-    'our_site_second_li' => 'access to a calendar with graphics enabling you and your employees to sign up for a selected time, selected day, in a selected place',
+    'our_site_second_li' => 'access to a calendar with graphics enabling you and your employees to arrange an appointment with us for a selected time, selected day, in a selected place',
     'our_site_second_li_p' => 'Once you are logged in, we give you the opportunity to easily determine with us when graphics are to be open for your company! Just enter the calendar,
                               select the day you are interested in and send us an inquiry. We answer as soon as we can!',
     
     'our_site_third_li' => 'insight into the current course of our cooperation in the form of statistics used in given months of massage',
     
-    'our_site_fourth_li' => 'generating registration codes for your employees that will assign them to the massage packages you selected during registration',
+    'our_site_fourth_li' => 'generating registration codes for your employees that will assign them to your account',
 //    'our_site_fourth_li_p' => 'In addition, in the event of staff turnover, you have full control and the ability to manually change the participation of individual people in selected packages',
     
     
@@ -48,14 +48,14 @@ return [
     'all_discounts' => 'All discounts',
     'massage_20' => 'Massage 20 min (regular price - 50zł)',
     
-    '1_massage_20_per_month' => '1 massage 20 min per month - 47.5 zł per person',
+    '1_massage_20_per_month' => '1 massage 20 min per month - 47.50 zł per person',
     '2_massages_20_per_month' => '2 massages 20 min per month - 90 zł per person',
-    '3_massages_20_per_month' => '3 massages 20 min per month - 127.5 zł per person',
+    '3_massages_20_per_month' => '3 massages 20 min per month - 127.50 zł per person',
     '4_massages_20_per_month' => '4 massages 20 min per month - 160 zł per person',
     
-    '1_massage_20_price' => 'Price for one massage - 47.5 zł',
+    '1_massage_20_price' => 'Price for one massage - 47.50 zł',
     '2_massages_20_price' => 'Price for one massage - 45 zł',
-    '3_massages_20_price' => 'Price for one massage - 42.5 zł',
+    '3_massages_20_price' => 'Price for one massage - 42.50 zł',
     '4_massages_20_price' => 'Price for one massage - 40 zł',
     
     'massage_40' => 'Massage 40 min (regular price - 100zł)',
@@ -82,6 +82,8 @@ return [
                                     from our massages in a given month',
     'discount_paragraph' => 'Depending on how many employees of your company will benefit from our massages in a given month,
                              your discount will increase!',
+    'see_by_yourself' => 'See by yourself!',
+    'checkf_by_yourself' => 'Check by yourself!',
     
     'from_five' => 'from 5 employees the discount on the number of massages per month will be increased by 5%',
     'from_twenty_five' => 'from 25 employees the discount on the number of massages per month will be increased by 15%',
@@ -92,8 +94,8 @@ return [
     
     'meeting_methodology_first_li' => 'We arrange massage stands using screens or placed in a separate room (e.g. conference room).',
 //    'meeting_methodology_second_li' => 'Massages are performed on massage chairs or tables depending on the demand.',
-    'meeting_methodology_second_li' => 'Massages are performed on massage tables.',
-    'meeting_methodology_third_li' => 'Employees come to the massage in the order resulting from the entries in the schedule.',
+    'meeting_methodology_second_li' => 'Employees come to the massage in the order resulting from the entries in the schedule.',
+    'meeting_methodology_third_li' => 'Massages are performed on massage tables.',
     'meeting_methodology_fourth_li' => 'Massages usually last from 20 to 40 minutes. '
                                      . 'This time includes time for us to prepare the workplace after the previous person, time for you to reveal the massaged surface of the body and clothing.',
     'meeting_methodology_fifth_li' => 'We focus mainly on the back, neck and shoulders. This is due to the fact that these are the places we expose the most to our daily work',

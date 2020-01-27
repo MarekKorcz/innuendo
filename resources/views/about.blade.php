@@ -28,6 +28,8 @@
                     <a href="{{ route('subscriptions') }}">@lang('navbar.subscriptions')</a>
                     @lang('common.and')
                     <a href="{{ route('discounts') }}">@lang('navbar.discounts')</a>
+                    lub na stronie firmy: 
+                    <a href="{{ route('welcome') }}">{{ config('app.name') }} {{ config('app.name_2nd_part') }}</a>
                 </p>
                 <p>
                     @lang('about.description_3')

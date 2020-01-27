@@ -89,10 +89,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6">
-                    <p class="lead text-center">@lang('welcome.second_paragraph')</p>
+                    <p class="lead">@lang('welcome.third_paragraph')</p>
                 </div>
-                <div class="col-sm-6 text-center">
-                    <img src="img/column.jpg" class="img-fluid">
+                <div class="col-sm-6 text-center box">
+                    <img src="img/główna.jpg" class="img-fluid">
                 </div>
             </div>
         </div>
@@ -112,36 +112,41 @@
     <div class="container-fluid">
         <div class="row welcome text-center">
             <div class="col-12">
-                <p class="lead">@lang('welcome.third_paragraph')</p>
+                <p class="lead text-center">@lang('welcome.second_paragraph')</p>
+            </div>
+            <div class="col-12">
+                <p class="lead" style="font-size: 21px;">@lang('welcome.meeting_methodology_sixth_li')</p>
             </div>
         </div>
     </div>
-    
+    <hr>
     <div class="container-fluid">
         <div class="row welcome text-center">
             <div class="col-12">
-                <p class="lead">@lang('welcome.forth_paragraph')</p>
+                <p class="lead" style="font-size: 27px;">
+                    @lang('welcome.forth_paragraph')
+                </p>
             </div>
         </div>
     </div>
     
     <div class="welcome">
         <div class="container">
-            <div class="row">
+            <div class="row" style="font-size: 24px;">
                 <div class="col-sm-6" style="padding-bottom: 2rem;">
-                    <p class="lead">@lang('welcome.less')</p>
+                    <p class="lead" style="font-size: 30px;">@lang('welcome.less')</p>
                     <ul>
-                        <li>@lang('welcome.staff_turnover')</li>
-                        <li>@lang('welcome.sick_leave')</li>
-                        <li>@lang('welcome.health_leave')</li>
+                        <li>- @lang('welcome.staff_turnover')</li>
+                        <li>- @lang('welcome.sick_leave')</li>
+                        <li>- @lang('welcome.health_leave')</li>
                     </ul>
                 </div>
                 <div class="col-sm-6">
-                    <p class="lead">@lang('welcome.more')</p>
+                    <p class="lead" style="font-size: 30px;">@lang('welcome.more')</p>
                     <ul>
-                        <li>@lang('welcome.employee_satisfaction')</li>
-                        <li>@lang('welcome.concentration_and_motivation')</li>
-                        <li>@lang('welcome.productivity_and_profits')</li>
+                        <li>- @lang('welcome.employee_satisfaction')</li>
+                        <li>- @lang('welcome.concentration_and_motivation')</li>
+                        <li>- @lang('welcome.productivity_and_profits')</li>
                     </ul>
                 </div>
             </div>
@@ -159,13 +164,18 @@
     <div class="container">
         <div class="row welcome text-center">
             <div class="col-12">
-                <h2>@lang('welcome.our_site_header')</h2>
+                <h3 style="font-size: 33px;">@lang('welcome.our_site_header')</h3>
                 
                 <ul>
                     <li>
                         <h4>@lang('welcome.our_site_first_li')</h4>
                     </li>
-                    <p>@lang('welcome.our_site_first_li_p')</p>
+                    <p>
+                        @lang('welcome.our_site_first_li_p')
+                        <a href="{{ URL::to('subscriptions') }}" target="_blank">
+                            @lang('welcome.check_by_yourself')
+                        </a>
+                    </p>
                     
                     <li>
                         <h4>@lang('welcome.our_site_second_li')</h4>
@@ -175,7 +185,12 @@
                     <li>
                         <h4>@lang('welcome.our_site_third_li')</h4>
                     </li>
-                    <p>@lang('welcome.discount_paragraph')</p>
+                    <p>
+                        @lang('welcome.discount_paragraph')
+                        <a href="{{ URL::to('discounts') }}" target="_blank">
+                            @lang('welcome.see_by_yourself')
+                        </a>
+                    </p>
                     
                     <li>
                         <h4>@lang('welcome.our_site_fourth_li')</h4>
@@ -195,7 +210,11 @@
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-12 text-center" style="padding-top: 1rem;">
-                <h2>@lang('welcome.subscriptions')</h2>
+                <h2>
+                    <a href="{{ URL::to('subscriptions') }}" target="_blank">
+                        @lang('welcome.subscriptions')
+                    </a>
+                </h2>
             </div>
         </div>
     </div>  
@@ -245,13 +264,19 @@
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-12 text-center" style="padding-top: 1rem;">
-                <h2>@lang('welcome.additional_discounts')</h2>
+                <h2>
+                    <a href="{{ URL::to('discounts') }}" target="_blank">
+                        @lang('welcome.additional_discounts')
+                    </a>
+                </h2>
             </div>
         </div>
     </div> 
     
     <div class="container">
-        <h3 class="text-center">@lang('welcome.discount_paragraph')</h3>
+        <h3 class="text-center">
+            @lang('welcome.discount_paragraph')
+        </h3>
         <div class="row text-center padding">
             <div class="col-xs-12 col-sm-6 col-md-6">
                 @svg('regular/smile-beam')
@@ -262,6 +287,7 @@
                 <h3>@lang('welcome.from_twenty_five')</h3>
             </div>
         </div>
+        <hr>
         <div class="row text-center padding">
             <div class="col-xs-12 col-sm-6 col-md-6">
                 @svg('regular/grin-hearts')
@@ -295,7 +321,7 @@
     </div>
     
     <div class="container">
-        <div class="row welcome text-center">
+        <div class="row welcome text-center" style="padding-bottom: 3rem;">
             <div class="col-12">
                 <ul>
                     <li>
@@ -316,10 +342,6 @@
                     
                     <li>
                         <h4>@lang('welcome.meeting_methodology_fifth_li')</h4>
-                    </li>
-                    
-                    <li>
-                        <h4>@lang('welcome.meeting_methodology_sixth_li')</h4>
                     </li>
                 </ul>
             </div>

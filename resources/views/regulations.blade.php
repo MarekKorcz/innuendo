@@ -35,25 +35,22 @@
                     Ilekroć poniżej używa się pojęcia:
                     <ol>
                         <li>Masaż+ – należy przez to rozumieć MAREK KORCZ, pod adresem WARSZAWA 02-672, ul. DOMANIEWSKA 17/19/109,
-                            REGON 147199810, NIP 5213533415</li>
+                            REGON: 147199810, NIP: 5213533415</li>
                         <li>Serwis – należy przez to rozumieć serwis internetowy należący do
-                            Masaż+, umożliwiający zakup masażu przy uyciu aktywowanych pakietów abonamentowych
-                            masaży dla pracowników przedsiębiorstw, prowadzony pod adresem
+                            Masaż+, umożliwiający rezerwacje wizyt masażu dla pracowników przedsiębiorstw oraz ich dalszą formalizację, prowadzony pod adresem
                             <a href="{{route('welcome')}}">www.masazplusdlafirm.pl</a>.</li>
                         <li>Regulamin – należy przez to rozumieć niniejszy Regulamin, o którym
                             jednocześnie mowa w art. 8 ustawy z dnia 18 lipca 2002 r. o świadczeniu
                             usług drogą elektroniczną.</li>
                         <li>Umowa sprzedaży – należy przez to rozumieć umowę sprzedaży, o której
                             mowa w przepisach ustawy z dnia 23 kwietnia 1964 roku Kodeks cywilny.</li>
-                        <li>Usługa – należy przez to rozumieć sprzedaż masaży lub pakietów
-                            abonamentowych masaży prowadzoną przez Masaż+ w ramach
+                        <li>Usługa – należy przez to rozumieć sprzedaż masażu prowadzoną przez Masaż+ w ramach
                             wykonywanej działalności gospodarczej oraz prowadzenie działalności
                             fizjoterapeutycznej polegającej na wykonywaniu masażu.</li>
                         <li>Użytkownik – należy przez to rozumieć osobę, która dokonała aktywacji
                             usługi lub posiada zarejestrowane konto użytkownika serwisu.
-                            Użytkownik ma dostęp do usługi z poziomu „szef” dla przedsiębiorcy
-                            dokonującego zakupu i korzystającego z aktywowanej usługi oraz z poziomu „pracownik” dla pracownika
-                            korzystającego z aktywowanej usługi.</li>
+                            Użytkownik ma dostęp do usługi z poziomu „szef” dla przedsiębiorcy 
+                            oraz z poziomu „pracownik” dla pracownika korzystającego z aktywowanej usługi.</li>
                     </ol>
                 </p>
                 <p class="text-center">
@@ -81,9 +78,8 @@
                 </p>
                 <p>
                     <ol>
-                        <li>Użytkownik dokonuje zakupu usługi poprzez rejestrację, atywacje pakietów masaży
-                            (zaznaczenie checkbox'u, następnie kliknięcie przycisku 'Aktywuj') 
-                            oraz nastepnie wybór jednej lub wielu opcji masażu w serwisie 
+                        <li>Użytkownik dokonuje zakupu usługi poprzez rejestrację, nastepnie rezerwację jednej 
+                            lub wielu opcji masażu w serwisie 
                             <a href="{{route('welcome')}}">www.masazplusdlafirm.pl</a>.</li>
                         <li>Rejestracja jest możliwa poprzez jej zlecenie administratorowi
                             serwisu lub przy pomocy kodu rejestracyjnego otrzymanego od
@@ -91,10 +87,11 @@
                             prowadzonych przez Masaż+.</li>
                         <li>Warunkiem zawarcia umowy sprzedaży jest akceptacja Regulaminu oraz
                             Polityki Prywatności.</li>
-                        <li>Po potwierdzeniu wyboru usługi, Użytkownik otrzymuje kody
-                            rejestracyjne dla poszczególnych osób, dla których ma zostać wykonany
-                            masaż. Kody rejestracyjne są przydzielane z poziomu „szef”. Pracownik
-                            może się zarejestrować z użyciem przekazanego mu kodu.</li>
+                        <li>Po stworzeniu konta na poziomie „szef”, Użytkownik otrzymuje możliwość generacji kodów
+                            rejestracyjnych dla poszczególnych osób, dla których ma być wykonywany
+                            masaż. Pracownik może się zarejestrować z użyciem przekazanego mu, 
+                            wcześniej wygenerowanego przez swojego pracodawce kodu.</li>
+                        
                         <li>
                             Dla zawarcia umowy sprzedaży, Użytkownik zobowiązany jest podać
                             swoje dane:
@@ -109,15 +106,11 @@
                                 <li>Dane niezbędne do poprawnego wystawienia faktury;</li>
                             </ul>
                         </li>
-                        <li>Z momentem zawarcia umowy sprzedaży Użytkownik uzyskuje dostęp do
+                        <li>Z momentem zarejestrowania Użytkownik uzyskuje dostęp do
                             panelu użytkownika poziomu „szef”, który umożliwia przydzielanie
                             pracowników do pakietów, generowanie kodów rejestracyjnych i ich
                             przydzielanie pracownikom, korzystanie z kalendarza, śledzenie
                             przebiegu rezerwacji, podgląd stanu płatności.</li>
-                        <li>Zakup usługi następuje jednorazowo lub na określone okresy
-                            abonamentowe i nie jest automatycznie przedłużany. W celu
-                            kontynuowania masaży, Użytkownik powinien dokonać ich zakupu na
-                            kolejny wybrany przez siebie okres.</li>
                     </ol>
                 </p>
                 <p class="text-center">
@@ -135,12 +128,9 @@
                             zakończeniu okresu rozliczeniowego Użytkownik otrzyma drogą
                             elektroniczną fakturę i zobowiązany jest do jej opłacenia w sposób i w
                             terminie weń wskazanych.</li>
-                        <li>Płatność naliczana jest według ceny wykupionego masażu lub pakietu
-                            masaży, niezależnie od liczby faktycznie wykorzystanych przez
-                            Użytkownika masaży, z zastrzeżeniem ust. 4.</li>
-                        <li>Jeżeli masaż nie zostanie zrealizowany z winy Masaż+, płatność za okres
-                            abonamentowy pomniejszana jest proporcjonalnie do wartości
-                            niezrealizowanych masaży.</li>
+                        <li>Płatność naliczana jest według ceny wykupionego masażu i może zostać 
+                            pomniejszona w zależności od spełnienia określonych kryteriów przydzielania 
+                            zniżek.</li>
                         <li>Masaż wykonywany jest w siedzibie Użytkownika. Przedstawiciele
                             Masaż+ posiadają wszelkie niezbędne sprzęty umożliwiające
                             profesjonalne wykonanie masażu.</li>
@@ -233,9 +223,9 @@
                 <div class="row text-center">
                     <div class="col-1"></div>
                     <div class="col-10">
-                        <span>Masaż klasyczny (20 min) - 45zł / osoba</span>
+                        <span>Masaż klasyczny (20 min) - 50zł / osoba</span>
                         <br>
-                        <span>Masaż klasyczny (40 min) - 80zł / osoba</span>
+                        <span>Masaż klasyczny (40 min) - 100zł / osoba</span>
                     </div>
                     <div class="col-1"></div>
                 </div>
@@ -243,55 +233,102 @@
                     Pakiety abonamentowe:
                     <ul style="list-style-type: circle;">
                         <li>
-                            <strong>1 x masaż klasyczny (20 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>42.75 zł (zniżka 5%)</strong> / osoba
+                            <strong>
+                                1 x masaż klasyczny (20 min)
+                            </strong>
+                            w miesiącu - 
+                            <strong>
+                                47.50 zł (zniżka 5%)
+                            </strong> 
+                            / osoba
                         </li>
                         <li>
-                            <strong>2 x masaż klasyczny (20 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>81 zł (zniżka 10%)</strong> / osoba
+                            <strong>
+                                2 x masaż klasyczny (20 min)
+                            </strong> 
+                            w miesiącu - 
+                            <strong>
+                                90 zł (zniżka 10%)
+                            </strong> 
+                            / osoba
                         </li>
                         <li>
-                            <strong>3 x masaż klasyczny (20 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>114.75 zł (zniżka 15%)</strong> / osoba
+                            <strong>
+                                3 x masaż klasyczny (20 min)
+                            </strong> 
+                            w miesiącu - 
+                            <strong>
+                                127,50 zł (zniżka 15%)
+                            </strong> 
+                            / osoba
                         </li>
                         <li>
-                            <strong>4 x masaż klasyczny (20 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>144 zł (zniżka 20%)</strong> / osoba
+                            <strong>
+                                4 x masaż klasyczny (20 min)
+                            </strong> 
+                            w miesiącu - 
+                            <strong>
+                                160 zł (zniżka 20%)
+                            </strong> 
+                            / osoba
                         </li>
                     </ul>
                     <ul style="list-style-type: circle;">
                         <li>
-                            <strong>1 x masaż klasyczny (40 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>76 zł (zniżka 5%)</strong> / osoba
+                            <strong>
+                                1 x masaż klasyczny (40 min)
+                            </strong> 
+                            w miesiącu - 
+                            <strong>
+                                95 zł (zniżka 5%)
+                            </strong> 
+                            / osoba
                         </li>
                         <li>
-                            <strong>2 x masaż klasyczny (40 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>144 zł (zniżka 10%)</strong> / osoba
+                            <strong>
+                                2 x masaż klasyczny (40 min)
+                            </strong> 
+                            w miesiącu - 
+                            <strong>
+                                180 zł (zniżka 10%)
+                            </strong> 
+                            / osoba
                         </li>
                         <li>
-                            <strong>3 x masaż klasyczny (40 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>204 zł (zniżka 15%)</strong> / osoba
+                            <strong>
+                                3 x masaż klasyczny (40 min)
+                            </strong> 
+                            w miesiącu - 
+                            <strong>
+                                255 zł (zniżka 15%)
+                            </strong> 
+                            / osoba
                         </li>
                         <li>
-                            <strong>4 x masaż klasyczny (40 min)</strong> w miesiącu (łączny czas trwania - 12
-                            miesięcy) - <strong>256 zł (zniżka 20%)</strong> / osoba
+                            <strong>
+                                4 x masaż klasyczny (40 min)
+                            </strong> 
+                            w miesiącu - 
+                            <strong>
+                                320 zł (zniżka 20%)
+                            </strong> 
+                            / osoba
                         </li>
                     </ul>
-                    Progi wzrostu zniżki abonamentowej (<strong>zniżka</strong> w pakietach
-                    abonamentowych <strong>może wzrosnąć</strong> w zależności od tego <strong>ile osób w
+                    <strong>Progi wzrostu zniżki abonamentowej</strong> (zniżka <strong>może wzrosnąć</strong> w zależności od tego <strong>ile osób w
                     danym miesiącu skorzysta z masażu</strong>):
                     <ul style="list-style-type: circle;">
                         <li>
-                            wzrost zniżki abonamentowej o <strong>5%</strong> gdy osób korzystających jest <strong>więcej niż 5</strong>
+                            wzrost zniżki abonamentowej o <strong>5%</strong> gdy osób korzystających w danym miesiącu jest <strong>więcej niż 5</strong>
                         </li>
                         <li>
-                            wzrost zniżki abonamentowej o <strong>15%</strong> gdy osób korzystających jest <strong>więcej niż 25</strong>
+                            wzrost zniżki abonamentowej o <strong>15%</strong> gdy osób korzystających w danym miesiącu jest <strong>więcej niż 25</strong>
                         </li>
                         <li>
-                            wzrost zniżki abonamentowej o <strong>30%</strong> gdy osób korzystających jest <strong>więcej niż 50</strong>
+                            wzrost zniżki abonamentowej o <strong>30%</strong> gdy osób korzystających w danym miesiącu jest <strong>więcej niż 50</strong>
                         </li>
                         <li>
-                            wzrost zniżki abonamentowej o <strong>50%</strong> gdy osób korzystających jest <strong>więcej niż 100</strong>
+                            wzrost zniżki abonamentowej o <strong>50%</strong> gdy osób korzystających w danym miesiącu jest <strong>więcej niż 100</strong>
                         </li>
                     </ul>
                 </p>
@@ -302,7 +339,7 @@
                 </p>
                 <p>
                     <ol>
-                        <li>Regulamin wchodzi w życie 13 grudnia 2019 roku.</li>
+                        <li>Regulamin wchodzi w życie 13 stycznia 2020 roku.</li>
                         <li>W razie zmiany koncepcji prowadzenia serwisu, udostępniania szkoleń
                             lub wystąpienia innych ważnych przyczyn Masaż+ zastrzega sobie prawo
                             do jednostronnej zmiany Regulaminu. Zmiany Regulaminu wchodzą w
