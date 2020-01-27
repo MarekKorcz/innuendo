@@ -6,7 +6,17 @@
 
 <div class="container">
     
-    <div class="row" style="padding-top: 1rem;">
+    <div class="row text-center" style="padding: 2rem 0 1rem 0;">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('boss/calendar/' . $property->id . '/0/0/0') }}">
+                @lang('common.back_to_calendar')
+            </a>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    
+    <div class="row">
         <div class="col-12">
             <h1 class="text-center">
                 @if ($property !== null)
@@ -44,6 +54,30 @@
                         </select>
                     </div>
                 </div>
+            
+                @if (count($payments) > 0)
+                    <div id="monthly-payments" class="text-center" style="padding: 1rem 0 1rem 0;">
+                        <h3>
+                            @lang('common.total_amount_for_done_appointments')
+                            @if (Session('locale') == "en")
+                                {{$monthEn}}
+                            @else
+                                {{$month}}
+                            @endif
+                            ({{$currentInterval['start_date']->format('Y-m-d')}} - {{$currentInterval['end_date']->format('Y-m-d')}}):
+                        </h3>
+                        <p>
+                            <strike>
+                                {{$payments['totalAmountWithoutDiscounts']}} zł
+                            </strike>
+                            &nbsp;
+                            <strong>
+                                {{$payments['totalAmount']}} zł
+                            </strong>
+                            (@lang('common.discount') - {{$payments['totalDiscountPercentage']}}%)
+                        </p>
+                    </div>
+                @endif
             
                 <div id="appointments-table">
                     <table class="table table-striped table-bordered">

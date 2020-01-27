@@ -43,7 +43,7 @@ return [
     'profile_image' => 'Profie image',
     'profile' => 'Profile',
     'subscription_massages' => 'Massages regarding subscription - ',
-    'write_your_name_and_lastname' => 'Write your name and lastname',
+    'write_your_name_and_lastname' => 'Write your name or lastname',
     'subscription_first_time_activation_info' => 'Subscription has not been activated yet. Activation will occur along with the implementation of the first massage',
     'all_massages' => 'All massages',
     'all_massages_in_localization' => 'All massages in localization',
@@ -490,5 +490,7 @@ return [
     'public_promo_copy_code_description' => 'To use the promotion, register using the code',
     'click_to_copy' => 'Click to copy code',
     'calendars' => 'Calendars',
-    'calendars_list_in_properties' => 'List of calendars allocated to locations'
+    'calendars_list_in_properties' => 'List of calendars allocated to locations',
+    'total_amount_for_done_appointments' => 'Total amount for done appointments in ',
+    'no_payments_description' => 'There are no appointments performed in a given month'
 ];

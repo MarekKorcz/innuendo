@@ -492,5 +492,7 @@ return [
     'public_promo_copy_code_description' => 'By skorzystać z promocji, zarejestruj się przy użyciu kodu',
     'click_to_copy' => 'Kliknij by skopiować kod',
     'calendars' => 'Kalendarze',
-    'calendars_list_in_properties' => 'Lista kalendarzy przydzielonych do lokalizacji'
+    'calendars_list_in_properties' => 'Lista kalendarzy przydzielonych do lokalizacji',
+    'total_amount_for_done_appointments' => 'Łączna kwota za wykonane zabiegi w ',
+    'no_payments_description' => 'W danym miesiącu nie ma jeszcze żadnych zrealizowanych zabiegów'
 ];

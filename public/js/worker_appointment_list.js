@@ -67,7 +67,7 @@ $(document).ready(function() {
         
         let monthId = $(this).children("option:selected").data('month_id');
         let propertyId = $(this).data("property_id");
-
+        
         if (userId == undefined || userId == '')
         {
             getUsersAppointmentsFromDatabase(propertyId, monthId);
@@ -76,7 +76,80 @@ $(document).ready(function() {
             
             getUserAppointmentsFromDatabase(userId, propertyId, monthId);
         }
+        
+        getMonthlyPaymentsForDoneAppointments(monthId);
     });
+    
+    function getMonthlyPaymentsForDoneAppointments(monthId)
+    {
+        return fetch('http://localhost:8000/boss/get-monthly-payments-for-done-appointments', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-type': 'application/json',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            body: JSON.stringify({
+                monthId: monthId
+            })
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            
+            if (data.type === "success")
+            {      
+                let monthlyPaymentsParentElement = $("#monthly-payments");
+                monthlyPaymentsParentElement.html('');
+                
+                if (data.locale == "en")
+                {
+                    console.log('angielski')
+                    
+                    monthlyPaymentsParentElement.append(`
+                        <h3>
+                            ` + data.total_amount_for_done_appointments_description + `
+                            ` + data.monthEn + `
+                            (` + data.monthStartDateTime + ` - ` + data.monthEndDateTime + `)
+                        </h3>
+                    `);
+                    
+                } else {
+                    
+                    monthlyPaymentsParentElement.append(`
+                        <h3>
+                            ` + data.total_amount_for_done_appointments_description + `
+                            ` + data.month + `
+                            (` + data.monthStartDateTime + ` - ` + data.monthEndDateTime + `)
+                        </h3>
+                    `);
+                }
+                
+                if (Object.keys(data.payments).length > 0)
+                {
+                    monthlyPaymentsParentElement.append(`
+                        <p>
+                            <strike>
+                                ` + data.payments['totalAmountWithoutDiscounts'] + ` zł  
+                            </strike>
+                            &nbsp;
+                            <strong>
+                                ` + data.payments['totalAmount'] + ` zł
+                            </strong>
+                            (` + data.discount_description + ` - ` + data.payments['totalDiscountPercentage'] + `%)
+                        </p>
+                    `)
+                    
+                } else {
+                    
+                    monthlyPaymentsParentElement.append(`
+                        <p>
+                            ` + data.no_payments_description + `
+                        </p>
+                    `)
+                }
+            }
+        });
+    }
     
     function getUsersFromDatabase(searchField, propertyId)
     {
@@ -159,7 +232,7 @@ $(document).ready(function() {
                     $("div#appointments-table > table > tbody#appointments").append(`
                         <tr>
                             <td>
-                                <a href="http://localhost:8000/boss/calendar/` + value.calendar_id + `/` + value.year + `/` + value.month + `/` + value.day + `" target="_blank">
+                                <a href="http://localhost:8000/boss/calendar/` + data.propertyId + `/` + value.year + `/` + value.month + `/` + value.day + `" target="_blank">
                                     ` + value.date + `
                                 </a>
                             </td>
@@ -230,7 +303,7 @@ $(document).ready(function() {
                     $("div#appointments-table > table > tbody#appointments").append(`
                         <tr>
                             <td>
-                                <a href="http://localhost:8000/boss/calendar/` + value.calendar_id + `/` + value.year + `/` + value.month + `/` + value.day + `" target="_blank">
+                                <a href="http://localhost:8000/boss/calendar/` + data.propertyId + `/` + value.year + `/` + value.month + `/` + value.day + `" target="_blank">
                                     ` + value.date + `
                                 </a>
                             </td>

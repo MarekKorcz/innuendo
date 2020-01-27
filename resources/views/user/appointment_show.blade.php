@@ -17,7 +17,7 @@
         </div>
         <div class="col-4">
             <a class="btn btn-primary" href="{{ URL::to('/appointment/index') }}">
-                @lang('common.all_massages')
+                @lang('common.your_appointments')
             </a>
         </div>
         <div class="col-4">

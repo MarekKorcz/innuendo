@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Calendar;
 use App\Category;
 use App\Item;
 use App\Graphic;
@@ -12,8 +11,6 @@ use App\Month;
 use App\Day;
 use App\Appointment;
 use App\Property;
-use App\ChosenProperty;
-use App\Subscription;
 use App\Purchase;
 use App\Substart;
 use App\Interval;
@@ -355,12 +352,12 @@ class WorkerController extends Controller
                     $appointment['employee_name'] = $employee->name . " " . $employee->surname;
                     $appointment['employee_slug'] = $employee->slug;
                 }
-
-                return view('employee.backend_appointment_index')->with([
-                    'appointments' => $appointments,
-                    'user' => $user
-                ]);
             }
+            
+            return view('employee.backend_appointment_index')->with([
+                'appointments' => $appointments,
+                'user' => $user
+            ]);
         }
         
         return redirect()->route('welcome');
@@ -1311,9 +1308,9 @@ class WorkerController extends Controller
             if ($year === null)
             {
                 return false;
-            }
-            else
-            {
+                
+            } else {
+                
                 $month = Month::where([
                     'year_id' => $year->id,
                     'month_number' => 12
@@ -1324,9 +1321,9 @@ class WorkerController extends Controller
                     return false;
                 }
             }
-        }
-        else
-        {
+            
+        } else {
+            
             $month = Month::where([
                 'year_id' => $year->id,
                 'month_number' => ($month->month_number - 1)
@@ -1353,9 +1350,9 @@ class WorkerController extends Controller
             if ($year === null)
             {
                 return false;
-            }
-            else
-            {
+                
+            } else {
+                
                 $month = Month::where([
                     'year_id' => $year->id,
                     'month_number' => 1
@@ -1366,9 +1363,9 @@ class WorkerController extends Controller
                     return false;
                 }
             }
-        }
-        else
-        {
+            
+        } else {
+            
             $month = Month::where([
                 'year_id' => $year->id,
                 'month_number' => ($month->month_number + 1)

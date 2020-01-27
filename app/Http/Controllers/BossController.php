@@ -14,7 +14,7 @@ use App\Appointment;
 use App\Day;
 use App\Month;
 use App\Year;
-use App\Calendar;
+use App\Discount;
 use App\Graphic;
 use App\Substart;
 use App\Purchase;
@@ -27,6 +27,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
+use Session;
 
 class BossController extends Controller
 {    
@@ -1060,12 +1061,24 @@ class BossController extends Controller
                 }
             }
             
+            $payments = [];
+            
+            if (count($currentInterval) > 0)
+            {
+                $payments = $this->countMonthlyPaymentsForDoneAppointments($currentInterval['month_id']);
+            }
+            
+            $month = Month::where('id', $currentInterval['month_id'])->first();
+            
             return view('boss.worker_appointment_list')->with([
                 'appointments' => $appointmentsCollection->sortByDesc('date_time'),
                 'worker' => $userId !== 0 ? $worker : null,
                 'property' => $property,
                 'currentInterval' => $currentInterval,
-                'intervals' => $propertyTimeIntervals
+                'intervals' => $propertyTimeIntervals,
+                'payments' => $payments,
+                'month' => $month->month,
+                'monthEn' => $month->month_en
             ]);
         }
         
@@ -2552,7 +2565,7 @@ class BossController extends Controller
                     }
                 }
                 // <<
-
+                              
                 $data = [
                     'type' => 'success',
                     'worker_name' => $user->name,
@@ -2704,5 +2717,167 @@ class BossController extends Controller
         return new JsonResponse(array(
             'type'    => 'error'        
         ));
+    }
+    
+    public function getMonthlyPaymentsForDoneAppointments(Request $request)
+    {        
+        if ($request->get('monthId'))
+        {
+            $month = Month::where('id', $request->get('monthId'))->with('year')->first();
+            
+            if ($month !== null)
+            {
+                // >> get month start and end datetimes + payments 
+                $monthNumber = (string)$month->month_number;
+                
+                if (strlen($monthNumber) == 1)
+                {
+                    $monthNumber = "0" . $month->month_number;
+                }
+
+                $monthStartDateTime = new \DateTime($month->year->year . '-' . $monthNumber . '-' . 1);
+                $monthEndDateTime = new \DateTime($month->year->year . '-' . $monthNumber . '-' . cal_days_in_month(CAL_GREGORIAN, $month->month_number, $month->year->year));
+                
+                $payments = $this->countMonthlyPaymentsForDoneAppointments($month->id);
+                // <<
+
+                $data = [
+                    'type' => 'success',
+                    'monthStartDateTime' => $monthStartDateTime->format('Y-m-d'),
+                    'monthEndDateTime' => $monthEndDateTime->format('Y-m-d'),
+                    'month' => $month->month,
+                    'monthEn' => $month->month_en,
+                    'payments' => $payments,
+                    'locale' => Session::get('locale') == "pl" ? "pl" : "en",
+                    'total_amount_for_done_appointments_description' => \Lang::get('common.total_amount_for_done_appointments'),
+                    'discount_description' => \Lang::get('common.discount'),
+                    'no_payments_description' => \Lang::get('common.no_payments_description')
+                ];       
+
+                return new JsonResponse($data, 200, array(), true);
+            }
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error'        
+        ));
+    }
+    
+    private function countMonthlyPaymentsForDoneAppointments($monthId)
+    {
+        $month = Month::where('id', $monthId)->with('days.appointments')->first();
+        $usersWithAppointments = [];
+        
+        if ($month !== null && count($month->days) > 0)
+        {
+            foreach ($month->days as $day)
+            {
+                if (count($day->appointments) > 0)
+                {
+                    foreach ($day->appointments as $appointment)
+                    {
+                        if ($appointment->status == 1)
+                        {
+                            $appointment->load([
+                                'user',
+                                'item'
+                            ]);
+                            
+                            if (count($usersWithAppointments) == 0)
+                            {
+                                $usersWithAppointments[] = [
+                                    'user' => $appointment->user,
+                                    'appointments' => collect([$appointment])
+                                ];
+                                
+                            } else {
+                                
+                                $existsInArray = false;
+                                
+                                foreach ($usersWithAppointments as $userWithAppointments)
+                                {
+                                    if ($userWithAppointments['user']->id == $appointment->user->id)
+                                    {
+                                        $existsInArray = true;
+                                        
+                                        $userWithAppointments['appointments']->push($appointment);
+                                    }
+                                }
+                                
+                                if ($existsInArray == false)
+                                {
+                                    $usersWithAppointments[] = [
+                                        'user' => $appointment->user,
+                                        'appointments' => collect([$appointment])
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (count($usersWithAppointments) > 0)
+        {
+            // >> get discount that rely from number of users who had massage in given month
+            $highestDiscount = null;
+            $discountsThatMatchNumberOfUsers = Discount::where('worker_threshold', '<=', count($usersWithAppointments))->get();
+            
+            if (count($discountsThatMatchNumberOfUsers) > 0)
+            {
+                $highestDiscount = $discountsThatMatchNumberOfUsers->last();
+            }
+            // <<
+            
+            // >> get total amount with discounts from number of appointments per persona per month + discount that rely from number of users who had massage in given month
+            $totalAmount = 0;
+            $totalAmountWithoutDiscounts = 0;
+            
+            foreach ($usersWithAppointments as $userWithAppointments)
+            {
+                if (count($userWithAppointments['appointments']) > 0)
+                {
+                    // >> add it all together
+                    $userAppointmentsAmount = 0;
+                    
+                    foreach ($userWithAppointments['appointments'] as $appointment)
+                    {
+                        $userAppointmentsAmount += $appointment->item->price;
+                    }
+                    // <<
+                    
+                    if ($userAppointmentsAmount !== 0)
+                    {
+                        // if user has more then 4 appointments made in given month, mark it as 4 anyway
+                        $userAppointmentsCount = count($userWithAppointments['appointments']) > 4 ? 4 : count($userWithAppointments['appointments']);
+
+                        // >> get both discounts and made discount multiplier out of them
+                        $discountFromNumberOfDoneAppointmentsInAGivenMonth = config('appointment-monthly-discount.' . $userAppointmentsCount);
+                        $highestDiscountMultiplier = $highestDiscount !== null ? 1 + ($highestDiscount->percent / 100) : 1;
+                        $totalDiscount =  $discountFromNumberOfDoneAppointmentsInAGivenMonth * $highestDiscountMultiplier;
+                        $totalDiscountMultiplier = 1 - ($totalDiscount / 100);
+                        // <<
+
+                        // count and add total amount for appointments made by user in a given month
+                        $totalAmount += $userAppointmentsAmount * $totalDiscountMultiplier;
+                        $totalAmountWithoutDiscounts += $userAppointmentsAmount;
+                    }
+                }
+            }
+            
+            if ($totalAmount !== 0)
+            {
+                $totalDiscountPercentage = round(100 - ($totalAmount * 100) / $totalAmountWithoutDiscounts, 2);
+
+                return [
+                    'totalAmountWithoutDiscounts' => $totalAmountWithoutDiscounts,
+                    'totalAmount' => $totalAmount,
+                    'totalDiscountPercentage' => $totalDiscountPercentage
+                ];
+            }
+        }
+        
+        return [];
     }
 }
