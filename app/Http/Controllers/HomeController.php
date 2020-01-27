@@ -197,7 +197,7 @@ class HomeController extends Controller
     
     public function promoShow()
     {
-        $promotions = Promo::where('isActive', true)->with('promoCodes')->get();
+        $promotions = Promo::where('is_active', 1)->with('promoCodes')->get();
         $code = '';
         
         if (count($promotions) > 0)

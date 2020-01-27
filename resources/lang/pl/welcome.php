@@ -23,62 +23,54 @@ return [
     'productivity_and_profits' => 'produktywności i zysków',
     'concentration_and_motivation' => 'koncentracji i motywacji w pracy',
     'employee_satisfaction' => 'zadowolenia wśród pracowników',
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     'us_vs_other_header' => 'Co wyróżnia nas na tle konkurencji?',
     'our_site_header' => 'Nasza strona została stworzona tak by umożliwić Ci:',
     
-    'our_site_first_li' => 'wykupienie wybranych pakietów masażu dla Twoich pracowników',
-    'our_site_first_li_p' => 'Po podjęciu decyzji o rozpoczęciu z nami współpracy, im częściej będziesz korzystać z naszych usług, tym tańsze one dla Twojej firmy będą
+    'our_site_first_li' => 'nawiązanie oraz przebieg naszej dalszej współpracy',
+    'our_site_first_li_p' => 'Im częściej będziesz korzystać z naszych usług, tym tańsze one dla Twojej firmy będą
                               (łącznie nawet do 30% ceny detalicznej mniej)',
     
-    'our_site_second_li' => 'wygenerowanie kodów rejestracyjnych dla swoich pracowników które przypiszą ich podczas rejestracji do wybranych przez Ciebie pakietów masażu',
-    'our_site_second_li_p' => 'Dodatkowo, w razie rotacji pracowników, posiadasz pełną kontrole i możliwość manualnej zmiany uczestnictwa poszczególnych osób w wybranych pakietach',
-    
-    'our_site_third_li' => 'dostęp do kalendarza z grafikami umożliwiającymi Tobie i Twoim pracownikom zapisanie się na wybraną godzinę, wybranego dnia, w wybranym miejscu',
-    'our_site_third_li_p' => 'Kiedy jesteś już zalogowany, dajemy Ci możliwość bardzo łatwego ustalenia z nami tego kiedy mają być otwarte grafiki dla Twojej firmy! 
+    'our_site_second_li' => 'dostęp do kalendarza z grafikami umożliwiającymi Tobie i Twoim pracownikom zapisanie się na wybraną godzinę, wybranego dnia, w wybranym miejscu',
+    'our_site_second_li_p' => 'Kiedy jesteś już zalogowany, dajemy Ci możliwość bardzo łatwego ustalenia z nami tego kiedy mają być otwarte grafiki dla Twojej firmy! 
                               Wystarczy wejść w kalendarz, wybrać interesujący Cie dzień i wysłać do nas zapytanie. Odpowiadamy najszybciej jak tylko możemy!',
     
-    'our_site_fourth_li' => 'wgląd w aktualny przebieg naszej współpracy w postaci statystyk wykorzystanych w danych miesiącach masaży',
+    'our_site_third_li' => 'wgląd w aktualny przebieg naszej współpracy w postaci statystyk wykorzystanych w danych miesiącach masaży',
     
-    'our_site_fifth_li' => 'automatyczne generowanie faktur',
-    'our_site_fifth_li_p' => 'Wraz z zakończeniem każdego okresu rozliczeniowego (pierwszy dzień po zakończeniu każdego miesiąca licząc od dnia startu danego pakietu) dla Twojej firmy
-                              zostanie wygenerowana faktura, uwzględniająca tylko wykonane przez nas zabiegi oraz wszelkie zniżki wynikające z ilości korzystających z naszych usług w danym miesiącu osób',
+    'our_site_fourth_li' => 'wygenerowanie kodów rejestracyjnych dla swoich pracowników które przypiszą ich podczas rejestracji do wybranych przez Ciebie pakietów masażu',
+//    'our_site_fourth_li_p' => 'Dodatkowo, w razie rotacji pracowników, posiadasz pełną kontrole i możliwość manualnej zmiany uczestnictwa poszczególnych osób w wybranych pakietach',
+    
+    
+    
+//    'our_site_fifth_li' => 'automatyczne generowanie faktur',
+//    'our_site_fifth_li_p' => 'Wraz z zakończeniem każdego okresu rozliczeniowego (pierwszy dzień po zakończeniu każdego miesiąca licząc od dnia startu danego pakietu) dla Twojej firmy
+//                              zostanie wygenerowana faktura, uwzględniająca tylko wykonane przez nas zabiegi oraz wszelkie zniżki wynikające z ilości korzystających z naszych usług w danym miesiącu osób',
     
     'subscriptions' => 'Pakiety abonamentowe',
     'all_subscriptions' => 'Wszystkie pakiety',
     'all_discounts' => 'Wszystkie zniżki',
-    'massage_20' => 'Masaż 20 min (cena regularna - 45zł)',
+    'massage_20' => 'Masaż 20 min (cena regularna - 50zł)',
     
-    '1_massage_20_per_month' => '1 masaż 20 min w miesiącu - 42.75 zł za osobę',
-    '2_massages_20_per_month' => '2 masaże 20 min w miesiącu - 81 zł za osobę',
-    '3_massages_20_per_month' => '3 masaże 20 min w miesiącu - 114.75 zł za osobę',
-    '4_massages_20_per_month' => '4 masaże 20 min w miesiącu - 144 zł za osobę',
+    '1_massage_20_per_month' => '1 masaż 20 min w miesiącu - 47,5 zł za osobę',
+    '2_massages_20_per_month' => '2 masaże 20 min w miesiącu - 90 zł za osobę',
+    '3_massages_20_per_month' => '3 masaże 20 min w miesiącu - 127,5 zł za osobę',
+    '4_massages_20_per_month' => '4 masaże 20 min w miesiącu - 160 zł za osobę',
     
-    '1_massage_20_price' => 'Cena jednego masażu - 42.75 zł',
-    '2_massages_20_price' => 'Cena jednego masażu - 40.5 zł',
-    '3_massages_20_price' => 'Cena jednego masażu - 38.25 zł',
-    '4_massages_20_price' => 'Cena jednego masażu - 36 zł',
+    '1_massage_20_price' => 'Cena jednego masażu - 47.5 zł',
+    '2_massages_20_price' => 'Cena jednego masażu - 45 zł',
+    '3_massages_20_price' => 'Cena jednego masażu - 42.5 zł',
+    '4_massages_20_price' => 'Cena jednego masażu - 40 zł',
     
-    'massage_40' => 'Masaż 40 min (cena regularna - 80zł)',
+    'massage_40' => 'Masaż 40 min (cena regularna - 100zł)',
     
-    '1_massage_40_per_month' => '1 masaż 40 min w miesiącu - 76 zł za osobę',
-    '2_massages_40_per_month' => '2 masaże 40 min w miesiącu - 144 zł za osobę',
-    '3_massages_40_per_month' => '3 masaże 40 min w miesiącu - 204 zł za osobę',
-    '4_massages_40_per_month' => '4 masaże 40 min w miesiącu - 256 zł za osobę',
+    '1_massage_40_per_month' => '1 masaż 40 min w miesiącu - 95 zł za osobę',
+    '2_massages_40_per_month' => '2 masaże 40 min w miesiącu - 180 zł za osobę',
+    '3_massages_40_per_month' => '3 masaże 40 min w miesiącu - 255 zł za osobę',
+    '4_massages_40_per_month' => '4 masaże 40 min w miesiącu - 320 zł za osobę',
     
-    '1_massage_40_price' => 'Cena jednego masażu - 76 zł',
-    '2_massages_40_price' => 'Cena jednego masażu - 72 zł',
-    '3_massages_40_price' => 'Cena jednego masażu - 68 zł',
-    '4_massages_40_price' => 'Cena jednego masażu - 64 zł',
+    '1_massage_40_price' => 'Cena jednego masażu - 95 zł',
+    '2_massages_40_price' => 'Cena jednego masażu - 90 zł',
+    '3_massages_40_price' => 'Cena jednego masażu - 85 zł',
+    '4_massages_40_price' => 'Cena jednego masażu - 80 zł',
     
     'additional_discounts' => 'Dodatkowe zniżki',
     'discounts' => 'Zniżki',
@@ -101,16 +93,17 @@ return [
     'when_we_arrive_header' => 'Kiedy już was odwiedzimy...',
     
     'meeting_methodology_first_li' => 'Stanowiska do masażu aranżujemy przy użyciu parawanów lub umieszczamy 
-                                       w oddzielnym pomieszczeniu (np. salce konferencyjnej)',
-    'meeting_methodology_second_li' => 'Masaże wykonywane są na krzesłach do masażu lub stołach w zależnosći od zapotrzebowania',
-    'meeting_methodology_third_li' => 'Pracownicy przychodzą na masaż w kolejności wynikającej z zapisów do grafiku',
-    'meeting_methodology_fourth_li' => 'Masaże trwają na ogół od 15 do 30 minut, w zależności od wykupionych przez Państwa pakietów abonamentowych.
-                                        W czasie tym zawsze zawiera się czas dla nas na przygotowanie stanowiska po poprzedniej osobie, dla Państwa natomiast, ewntualne rozebranie i ubranie się',
-    'meeting_methodology_fifth_li' => 'Skupiamiy się głównie na plecach, karku, ramionach oraz rękach.
-                                       Wynika to z faktu, że są to miejsca które narażamy najbardziej w naszej codziennej pracy',
-    'meeting_methodology_sixth_li' => 'Masaż wywołuję rozluźnia, sprawia, że można się odprężyć w przerwie od pracy oraz pomaga w uwolnieniu się od uporczywych 
+                                       w oddzielnym pomieszczeniu (np. salce konferencyjnej).',
+//    'meeting_methodology_second_li' => 'Masaże wykonywane są na krzesłach do masażu lub stołach w zależnosći od zapotrzebowania.',
+    'meeting_methodology_second_li' => 'Masaże wykonywane są na stołach do masażu.',
+    'meeting_methodology_third_li' => 'Pracownicy przychodzą na masaż w kolejności wynikającej z zapisów do grafiku.',
+    'meeting_methodology_fourth_li' => 'Masaże trwają na ogół od 20 do 40 minut. '
+                                     . 'W czasie tym zawiera się czas dla nas na przygotowanie stanowiska po poprzedniej osobie, czas dla Państwa na odsłonięcie masowanej powierzchni ciała oraz ubranie się.',
+    'meeting_methodology_fifth_li' => 'Skupiamiy się głównie na plecach, karku oraz ramionach.
+                                       Wynika to z faktu, że są to miejsca które narażamy najbardziej w naszej codziennej pracy.',
+    'meeting_methodology_sixth_li' => 'Masaż wywołuję rozluźnienie, sprawia, że można się odprężyć w przerwie od pracy oraz pomaga w uwolnieniu się od uporczywych 
                                        napięć często towarzyszących na przestrzeni całego dnia. Pozwala na naładowanie mentalnych oraz fizycznych baterii, 
-                                       przez co, na powrót do pracy bardziej skoncentrowanym i wypoczętym',
+                                       przez co, na powrót do pracy bardziej skoncentrowanym i pełnym energii.',
     
 //    'about_header' => 'O nas',
 //    'about_paragraph' => 'Masaże wykonywane w Twoim biurze, wykonywane są przez wykwalifikowanych techników masażu, którzy są prezentowani na stronie internetowej wraz z opisami i zdjęciami.'

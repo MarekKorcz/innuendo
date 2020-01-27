@@ -43,9 +43,9 @@
     
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item" style="margin-right: 9px;">
+<!--                <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ route('promo') }}">@lang('navbar.promotion')</a>
-                </li>
+                </li>-->
                 <li class="nav-item" style="margin-right: 9px;">
                     <a class="nav-link" href="{{ url('subscriptions') }}">@lang('navbar.subscriptions')</a>
                 </li>
@@ -140,12 +140,14 @@
             <div class="col-5">
                 <div class="position-center">
                     <p>
-                        <span id="footer-name" class="logo-text">
-                            {{ config('app.name') }}
-                            <span style="font-size: 21px;">
-                                {{ config('app.name_2nd_part') }}
+                        <a href="{{ route('welcome') }}">
+                            <span id="footer-name" class="logo-text">
+                                {{ config('app.name') }}
+                                <span style="font-size: 21px;">
+                                    {{ config('app.name_2nd_part') }}
+                                </span>
                             </span>
-                        </span>
+                        </a>
                     </p>
                 </div>
             </div>

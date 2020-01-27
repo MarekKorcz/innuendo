@@ -492,5 +492,6 @@ return [
     'calendars' => 'Calendars',
     'calendars_list_in_properties' => 'List of calendars allocated to locations',
     'total_amount_for_done_appointments' => 'Total amount for done appointments in ',
-    'no_payments_description' => 'There are no appointments performed in a given month'
+    'no_payments_description' => 'There are no appointments performed in a given month',
+    'not_active' => 'Not active'
 ];

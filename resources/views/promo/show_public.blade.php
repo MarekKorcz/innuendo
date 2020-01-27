@@ -26,10 +26,10 @@
                 </h4>
                 <p>@lang('common.promo_status'): 
                     <strong>
-                        @if ($promo->isActive == 1)
+                        @if ($promo->is_active == 1)
                             @lang('common.is_active')
                         @else
-                            @lang('common.disabled')
+                            @lang('common.not_active')
                         @endif
                     </strong>
                 </p>

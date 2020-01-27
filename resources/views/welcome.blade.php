@@ -175,12 +175,13 @@
                     <li>
                         <h4>@lang('welcome.our_site_third_li')</h4>
                     </li>
-                    <p>@lang('welcome.our_site_third_li_p')</p>
+                    <p>@lang('welcome.discount_paragraph')</p>
                     
                     <li>
                         <h4>@lang('welcome.our_site_fourth_li')</h4>
                     </li>
-                    <p>@lang('welcome.discount_paragraph')</p>
+                    <!--<p>@lang('welcome.our_site_fourth_li_p')</p>-->
+                    
                     
 <!--                    <li>
                         <h4>@lang('welcome.our_site_fifth_li')</h4>
