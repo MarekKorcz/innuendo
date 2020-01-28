@@ -40,20 +40,4 @@ $(document).ready(function()
 
         backgroundDiv.classList.add("dark");
     });
-    
-    $(".delete-calendar").on('click', function(event) 
-    {
-        event.preventDefault();
-        
-        let modalFormElement = document.querySelector("div#deleteCalendar form");
-        
-        modalFormElement.action = ("http://localhost:8000/calendar/" + event.target.dataset.calendar_id);
-        
-        let modalElement = document.getElementById('deleteCalendar');
-        
-        modalElement.classList.add("modal-open");
-        modalElement.classList.add("show");
-
-        backgroundDiv.classList.add("dark");
-    });
 });
