@@ -6,8 +6,6 @@ use App\User;
 use App\TempUser;
 use App\Property;
 use App\TempProperty;
-use App\Subscription;
-use App\Calendar;
 use App\Year;
 use App\Month;
 use App\Day;
@@ -151,8 +149,6 @@ class RegisterController extends Controller
             'boss_phone_number'     => 'required|numeric|regex:/[0-9]/|min:7',
             'password'              => 'required|min:7|confirmed',
             'property_name'         => 'required|min:3',
-//            'property_email'        => 'required|email|unique:properties,email',
-//            'property_phone_number' => 'required|numeric|regex:/[0-9]/|min:7',
             'street'                => 'required|min:3',
             'street_number'         => 'required',
             'house_number'          => 'required'
@@ -169,77 +165,44 @@ class RegisterController extends Controller
                 'isBoss' => 1
             ])->first();
             
-            $tempBossPropertyEntity = TempProperty::where('temp_user_id', $tempBossEntity->id)->with('subscriptions')->first();
+            $tempBossPropertyEntity = TempProperty::where('temp_user_id', $tempBossEntity->id)->first();
             
             if ($tempBossEntity !== null && $tempBossPropertyEntity !== null)
             {            
-                $boss = User::create([
-                    'name' => Input::get('name'),
-                    'surname' => Input::get('surname'),
-                    'email' => Input::get('boss_email'),
-                    'phone_number' => Input::get('boss_phone_number'),
-                    'password' => Hash::make(Input::get('password')),
-                    'isBoss' => 1
-                ]);
+                $boss = new User();
+                $boss->name = Input::get('name');
+                $boss->surname = Input::get('surname');
+                $boss->email = Input::get('boss_email');
+                $boss->phone_number = Input::get('boss_phone_number');
+                $boss->password = Hash::make(Input::get('password'));
+                $boss->isBoss = 1;
+                $boss->save();
 
                 if ($boss !== null)
                 {
-                    $property = Property::create([
-                        'name' => Input::get('property_name'),
-                        'slug' => str_slug(Input::get('property_name')),
-                        'street' => Input::get('street'),
-                        'street_number' => Input::get('street_number'),
-                        'house_number' => Input::get('house_number'),
-                        'city' => "Warszawa",
-                        'boss_id' => $boss->id
-                    ]);
+                    $property = new Property();
+                    $property->name = Input::get('property_name');
+                    $property->slug = str_slug(Input::get('property_name'));
+                    $property->street = Input::get('street');
+                    $property->street_number = Input::get('street_number');
+                    $property->house_number = Input::get('house_number');
+                    $property->city = "Warszawa";
+                    $property->boss_id = $boss->id;
+                    $property->save();
 
                     if ($property !== null)
                     {                        
                         // delete temporary entities
                         $tempBossEntity->delete();
                         $tempBossPropertyEntity->delete();
-                        
-                        // add all available subscriptions
-                        $subscriptions = Subscription::where([
-                            ['id', '!=', null],
-                            ['add_by_default', '=', 1]
-                        ])->get();
-                        
-                        if (count($subscriptions) > 0)
-                        {
-                            foreach ($subscriptions as $sub)
-                            {
-                                $property->subscriptions()->attach($sub);
-                            }
-                        }
-                        
-                        // create calendar and sign employee (for now, myself) to it
-                        $employee = User::where([
-                            'name' => 'Marek',
-                            'surname' => 'Korcz',
-                            'isEmployee' => 1
-                        ])->first();
 
-                        if ($employee !== null)
-                        {                            
-                            $calendar = Calendar::create([
-                                'is_active' => 1,
-                                'property_id' => $property->id,
-                                'employee_id' => $employee->id
-                            ]);
+                        $this->addCalendarToPropery($property->id, 12);
 
-                            if ($calendar !== null)
-                            {
-                                $this->addCalendarToPropery($calendar->id, 3);
-                                
-                                \Mail::to($boss)->send(new AdminTempBossCreate2ndStep($boss));
+                        \Mail::to($boss)->send(new AdminTempBossCreate2ndStep($boss));
 
-                                auth()->login($boss);
+                        auth()->login($boss);
 
-                                return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją zostały stworzone!');
-                            }
-                        }
+                        return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją zostały stworzone!');
                         
                     } else {
 
@@ -322,7 +285,7 @@ class RegisterController extends Controller
 
                     if ($bossProperty !== null)
                     {
-                        $this->addCalendarToPropery($bossProperty->id, 6);
+                        $this->addCalendarToPropery($bossProperty->id, 12);
                          
                         $promoCode->activation_date = date('Y-m-d H:i:s');
                         $promoCode->is_active = 1;
@@ -423,15 +386,15 @@ class RegisterController extends Controller
             
             if ($tempEmployeeEntity !== null)
             {
-                $employee = User::create([
-                    'name' => Input::get('name'),
-                    'surname' => Input::get('surname'),
-                    'slug' => str_slug(Input::get('name') . "_" . Input::get('surname')),
-                    'email' => Input::get('email'),
-                    'phone_number' => Input::get('phone_number'),
-                    'password' => Hash::make(Input::get('password')),
-                    'isEmployee' => 1
-                ]);
+                $employee = User();
+                $employee->name = Input::get('name');
+                $employee->surname = Input::get('surname');
+                $employee->slug = str_slug(Input::get('name') . "_" . Input::get('surname'));
+                $employee->email = Input::get('email');
+                $employee->phone_number = Input::get('phone_number');
+                $employee->password = Hash::make(Input::get('password'));
+                $employee->isEmployee = 1;
+                $employee->save();
 
                 if ($employee !== null)
                 {
@@ -513,7 +476,6 @@ class RegisterController extends Controller
             $monthNameEn = "";
             $todayInParts = explode("-", $today);
             $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, (int)$todayInParts[1], (int)$todayInParts[0]);
-            $month = null;
 
             switch ((int)$todayInParts[1]) 
             {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Calendar;
 use App\Graphic;
 use App\Property;
 use App\User;
@@ -146,11 +145,28 @@ class UserController extends Controller
         
         if (count($bossProperties) == 1)
         {
-            return redirect()->action(
-                'UserController@property', [
-                    'id' => $bossProperties->first()->id,
-                ]
-            );
+            if ($user->isBoss)
+            {
+                return redirect()->action(
+                    'BossController@calendar', [
+                        'property_id' => $bossProperties->first()->id,
+                        'year' => 0,
+                        'month_number' => 0,
+                        'day_number' => 0,
+                    ]
+                );
+                
+            } else if ($user->boss_id !== null) {
+                
+                return redirect()->action(
+                    'UserController@calendar', [
+                        'property_id' => $bossProperties->first()->id,
+                        'year' => 0,
+                        'month_number' => 0,
+                        'day_number' => 0,
+                    ]
+                );
+            }
         }
 
         return view('user.property_index')->with([

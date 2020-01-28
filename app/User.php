@@ -138,7 +138,7 @@ class User extends Authenticatable
      * Get boss properties assigned to worker
      */
     public function getBossProperties()
-    {                
+    {        
         if ($this->isAdmin == 0 && $this->isBoss == 0 && $this->isEmployee == 0 && $this->boss_id !== null)
         {
             return Property::where([

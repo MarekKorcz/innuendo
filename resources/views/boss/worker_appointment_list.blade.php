@@ -6,17 +6,19 @@
 
 <div class="container">
     
-    <div class="row text-center" style="padding: 2rem 0 1rem 0;">
-        <div class="col-4"></div>
-        <div class="col-4">
-            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('boss/calendar/' . $property->id . '/0/0/0') }}">
-                @lang('common.back_to_calendar')
-            </a>
+    @if (count($appointments) > 0)
+        <div class="row text-center" style="padding-top: 2rem;">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('boss/calendar/' . $property->id . '/0/0/0') }}">
+                    @lang('common.back_to_calendar')
+                </a>
+            </div>
+            <div class="col-4"></div>
         </div>
-        <div class="col-4"></div>
-    </div>
+    @endif
     
-    <div class="row">
+    <div class="row" style="padding-top: 1rem;">
         <div class="col-12">
             <h1 class="text-center">
                 @if ($property !== null)
