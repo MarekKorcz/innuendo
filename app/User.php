@@ -112,7 +112,7 @@ class User extends Authenticatable
      */
     public function promoCode()
     {
-        return $this->hasOne('App\PromoCode');
+        return $this->hasOne('App\PromoCode', 'boss_id');
     }
 
     /**

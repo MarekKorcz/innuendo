@@ -25,7 +25,7 @@
     
         <table class="table table-striped">
             <tr>
-                <th>@lang('common.name'):</th>
+                <th>@lang('common.label'):</th>
                 <th>@lang('common.street'):</th>
                 <th>@lang('common.street_number'):</th>
                 <th>@lang('common.house_number'):</th>
@@ -38,40 +38,17 @@
                 <td>{{ $tempProperty->street_number }}</td>
                 <td>{{ $tempProperty->house_number }}</td>
                 <td>{{ $tempProperty->city }}</td>
-                @if ($tempProperty->temp_user_id > 0)
-                    <td>{{ $tempProperty->owner->name }} {{ $tempProperty->owner->surname }}</td>
+                @if ($tempProperty->tempUser->id !== null)
+                    <td>
+                        <a href="{{ URL::to('admin/temp-user/boss/show/' . $tempProperty->tempUser->id) }}">
+                            {{ $tempProperty->tempUser->name }} {{ $tempProperty->tempUser->surname }}
+                        </a>
+                    </td>
                 @else
                     <td>@lang('common.none')</td>
                 @endif
             </tr>
         </table>
-        
-        <h3 class="text-center">@lang('common.subscriptions')</h3>
-
-        @if (count($subscriptions) > 0)
-            <table class="table table-striped">
-                <tr>
-                    <th>@lang('common.name'):</th>
-                    <th>@lang('common.description'):</th>
-                    <th>@lang('common.old_price'):</th>
-                    <th>@lang('common.new_price'):</th>
-                    <th>@lang('common.quantity'):</th>
-                    <th>@lang('common.duration'):</th>
-                </tr>
-                    @foreach ($subscriptions as $subscription)
-                        <tr>
-                            <td>{!! $subscription->name !!}</td>
-                            <td>{!! $subscription->description !!}</td>
-                            <td>{{ $subscription->old_price }}</td>
-                            <td>{{ $subscription->new_price }}</td>
-                            <td>{{ $subscription->quantity }}</td>
-                            <td>{{ $subscription->duration }}</td>
-                        </tr>
-                    @endforeach
-            </table>
-        @else
-            <p class="text-center">@lang('common.there_is_no_subscriptions_attached')</p>
-        @endif
     </div>
     
     <div id="deleteTempProperty" class="modal hide">

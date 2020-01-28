@@ -265,7 +265,7 @@ return [
     'assign_calendar_to_employee' => 'Assign calendar to employee',
     'edit_property' => 'Edit location',
     'all_properties' => 'All locations',
-    'properties_owned_by_bosses' => 'Location owned by bosses',
+    'properties_owned_by_boss' => 'Location owned by boss',
     'create_employee_account' => 'Create employee account',
     'values' => 'Values',
     'year' => 'Year',

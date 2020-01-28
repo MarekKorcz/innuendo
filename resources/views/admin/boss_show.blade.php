@@ -7,7 +7,7 @@
         <div class="col-10">
             
             <div class="text-center">
-                <h2>@lang('common.bosses'):</h2>
+                <h2>@lang('common.boss'):</h2>
             </div>
 
             <table class="table table-striped table-bordered">
@@ -31,14 +31,14 @@
                         <td>{{$boss->created_at}}</td>
                         @if ($boss->promoCode !== null)
                             <td>
-                                @if ($boss->isApproved == 0)
+                                @if ($boss->is_approved == 0)
                                     @lang('common.no')
                                 @else
                                     @lang('common.yes')
                                 @endif
                             </td>
                             <td>
-                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/admin/approve/messages/' . $boss->id) }}">
+                                <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/admin/approve/messages/' . $boss->id . '/' . $boss->promoCode->promo_id) }}">
                                     @lang('common.show')
                                 </a>
                             </td>
@@ -48,7 +48,7 @@
             </table>
 
             <div class="text-center">
-                <h2>@lang('common.properties_owned_by_bosses'):</h2>
+                <h2>@lang('common.properties_owned_by_boss'):</h2>
             </div>
 
             <table class="table table-striped table-bordered">

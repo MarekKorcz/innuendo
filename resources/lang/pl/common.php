@@ -266,7 +266,7 @@ return [
     'assign_calendar_to_employee' => 'Przydziel kalendarz do pracownika',
     'edit_property' => 'Edytuj lokalizacje',
     'all_properties' => 'Wszystkie lokalizacje',
-    'properties_owned_by_bosses' => 'Lokalizacje należące do szefów',
+    'properties_owned_by_boss' => 'Lokalizacje należące do szefa',
     'create_employee_account' => 'Stwórz konto pracownika',
     'values' => 'Wartości',
     'year' => 'Rok',

@@ -7,13 +7,11 @@ use App\TempUser;
 use App\TempProperty;
 use App\GraphicRequest;
 use App\Message;
-use App\Calendar;
 use App\Property;
 use App\Subscription;
 use App\Promo;
 use App\PromoCode;
 use App\InvoiceData;
-use App\Graphic;
 use App\Mail\AdminTempBossCreate;
 use App\Mail\AdminTempEmployeeCreate;
 use Illuminate\Http\Request;
@@ -160,26 +158,18 @@ class AdminController extends Controller
      */
     public function bossShow($id)
     {
-        if ($id !== null)
-        {
-            $boss = User::where([
-                'id' => $id,
-                'isBoss' => 1
-            ])->first();
-            
-            $boss['promoCode'] = null;
-            $bossPromoCode = PromoCode::where('boss_id', $boss->id)->first();
+        $boss = User::where([
+            'id' => $id,
+            'isBoss' => 1
+        ])->with([
+            'promoCode',
+            'properties'
+        ])->first();
 
-            if ($bossPromoCode !== null)
-            {
-                $boss['promoCode'] = $bossPromoCode;
-            }
-
-            return view('admin.boss_show')->with([
-                'boss' => $boss,
-                'properties' => $boss->getPlaces()
-            ]);
-        }
+        return view('admin.boss_show')->with([
+            'boss' => $boss,
+            'properties' => $boss->properties
+        ]);
         
         return redirect()->route('welcome');
     }
@@ -319,88 +309,17 @@ class AdminController extends Controller
         $employee = User::where([
             'isEmployee' => 1,
             'slug' => $slug
-        ])->first();
+        ])->with('graphics.property')->first();
         
         if ($employee !== null)
         {
-            $user = auth()->user();
+            dd($employee);
             
-            $calendars = new Collection();
-            $properties = [];
-            
-            if ($user !== null)
-            {
-                $calendars = Calendar::where([
-                    'employee_id' => $employee->id,
-                    'isActive' => 1
-                ])->get();
-
-                if ($user->isBoss) 
-                {                
-                    if (count($calendars) > 0)
-                    {
-                        foreach ($calendars as $key => $calendar)
-                        {
-                            if ($calendar->property->boss_id !== $user->id)
-                            {
-                                $calendars->forget($key);
-                            }
-                        }
-                    }
-
-                } else if ($user->boss_id !== null) {
-
-                    $user = User::where('id', $user->id)->with('chosenProperties')->first();
-
-                    $calendarsAvailableToWorker = new Collection();
-
-                    if (count($user->chosenProperties) > 0 && count($calendars) > 0)
-                    {
-                        foreach ($calendars as $calendar)
-                        {
-                            foreach ($user->chosenProperties as $chosenProperty)
-                            {
-                                if ($calendar->property->id === $chosenProperty->property_id)
-                                {
-                                    $calendarsAvailableToWorker->push($calendar);
-                                }
-                            }
-                        }
-                    }
-
-                    if (count($calendarsAvailableToWorker) > 0)
-                    {
-                        $calendars = new Collection();
-
-                        foreach ($calendarsAvailableToWorker as $calendar)
-                        {
-                            $calendars->push($calendar);
-                        }
-                    }
-                }
-
-                for ($i = 0; $i < count($calendars); $i++)
-                {
-                    $properties[$i] = Property::where('id', $calendars[$i]->property_id)->first();
-                }
-            }
-            
-            $calendarsArray = [];
-
-            if (count($calendars) > 0)
-            {
-                for ($i = 0; $i < count($calendars); $i++)
-                {
-                    $calendarsArray[$i + 1] = $calendars[$i];
-                }
-            }
-            
-            // todo: (na póżniej, będzie trzeba zrobić system wewnętrznego rozliczania się z pracownikami)
+            // todo: (na póżniej, będzie trzeba zrobić system wewnętrznego rozliczania się z pracownikami). 
+            // zastanów się co ma się tam wyświetlać dokładnie
 
             return view('admin.employee_show')->with([
-                'employee' => $employee,
-                'calendars' => $calendarsArray,
-                'properties' => $properties
+                'employee' => $employee
             ]);
         }
         

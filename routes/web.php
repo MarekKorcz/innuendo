@@ -116,13 +116,13 @@ Route::get('/property/index', 'PropertyController@index')->name('property_index'
 Route::get('/property/create', 'PropertyController@create');
 Route::post('/property/store', 'PropertyController@store');
 Route::get('/property/{id}', 'PropertyController@show');
-Route::get('/temp-property/{id}', 'PropertyController@tempPropertyShow');
 Route::get('/property/{id}/edit', 'PropertyController@edit');
-Route::get('/temp-property/{id}/edit', 'PropertyController@tempPropertyEdit');
 Route::put('/property/{id}', 'PropertyController@update');
 Route::get('/property/can-show/change/{id}', 'PropertyController@canShowChange');
-Route::put('/temp-property/{id}', 'PropertyController@tempPropertyUpdate');
 Route::delete('/property/{id}', 'PropertyController@destroy');
+Route::get('/temp-property/{id}', 'PropertyController@tempPropertyShow');
+Route::get('/temp-property/{id}/edit', 'PropertyController@tempPropertyEdit');
+Route::put('/temp-property/{id}', 'PropertyController@tempPropertyUpdate');
 Route::delete('/temp-property/{id}', 'PropertyController@tempPropertyDestroy');
 
 Route::get('/year/{id}', 'YearController@create');

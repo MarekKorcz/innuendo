@@ -386,7 +386,7 @@ class RegisterController extends Controller
             
             if ($tempEmployeeEntity !== null)
             {
-                $employee = User();
+                $employee = new User();
                 $employee->name = Input::get('name');
                 $employee->surname = Input::get('surname');
                 $employee->slug = str_slug(Input::get('name') . "_" . Input::get('surname'));

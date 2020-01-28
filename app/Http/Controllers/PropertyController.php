@@ -188,18 +188,12 @@ class PropertyController extends Controller
      */
     public function tempPropertyShow($id)
     {
-        $tempProperty = TempProperty::where('id', $id)->with('subscriptions')->first();
+        $tempProperty = TempProperty::where('id', $id)->with('tempUser')->first();
         
         if ($tempProperty !== null)
-        {
-            if ($tempProperty->temp_user_id > 0)
-            {
-                $tempProperty['owner'] = TempUser::where('id', $tempProperty->temp_user_id)->first();
-            }
-            
+        {            
             return view('property.temp_property_show')->with([
-                'tempProperty' => $tempProperty,
-                'subscriptions' => $tempProperty->subscriptions
+                'tempProperty' => $tempProperty
             ]);
         }
         
@@ -276,7 +270,6 @@ class PropertyController extends Controller
     {
         $rules = array(
             'name'          => 'required',
-            'email'         => 'required',
             'street'        => 'required',
             'city'          => 'required'
         );
@@ -334,8 +327,10 @@ class PropertyController extends Controller
     {
         $rules = array(
             'name'          => 'required',
-            'email'         => 'required',
-            'street'        => 'required'
+            'street'        => 'required',
+            'street_number' => 'required',
+            'house_number'  => 'required',
+            'city'          => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -347,7 +342,6 @@ class PropertyController extends Controller
             $tempProperty = TempProperty::where('id', $id)->first();
             $tempProperty->name          = Input::get('name');
             $tempProperty->slug          = str_slug(Input::get('name'));
-            $tempProperty->description   = Input::get('description');
             $tempProperty->street        = Input::get('street');
             $tempProperty->street_number = Input::get('street_number');
             $tempProperty->house_number  = Input::get('house_number');
@@ -386,18 +380,10 @@ class PropertyController extends Controller
      */
     public function tempPropertyDestroy($id)
     {
-        $tempProperty = TempProperty::where('id', $id)->with('subscriptions')->first();
+        $tempProperty = TempProperty::where('id', $id)->first();
         
         if ($tempProperty !== null)
-        {
-            if ($tempProperty->subscriptions)
-            {
-                foreach ($tempProperty->subscriptions as $subscription)
-                {
-                    $tempProperty->subscriptions()->detach($subscription);
-                }
-            }
-            
+        {            
             $tempProperty->delete();
 
             return redirect('/property/index')->with('success', 'Temporary property deleted!');
