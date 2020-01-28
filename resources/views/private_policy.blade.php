@@ -15,9 +15,9 @@
                         „{{ config('app.name') }} {{ config('app.name_2nd_part') }}”
                     </strong>
                 </p>
-<!--                <h6>
-                    (obowiązuje od 13-12-2019)
-                </h6>-->
+                <h6>
+                    (obowiązuje od 13-01-2020)
+                </h6>
             </div>
         </div>
     </div>
@@ -46,7 +46,8 @@
                     </strong>
                     <br>
                     Administratorem, czyli podmiotem decydującym o tym, jak będą wykorzystywane Twoje
-                    dane osobowe, jest Marek Korcz ................... w dalszej części dokumentu zwanym „Masaż+”.
+                    dane osobowe, jest MAREK KORCZ, pod adresem WARSZAWA 02-672, ul. DOMANIEWSKA 17/19/109, 
+                    REGON: 147199810, NIP: 5213533415 w dalszej części dokumentu zwanym „Masaż+”.
 
                 </p>
                 <p>

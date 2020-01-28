@@ -20,7 +20,6 @@ use App\Substart;
 use App\Purchase;
 use App\Interval;
 use App\PromoCode;
-use App\Mail\SubscriptionPurchased;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -384,9 +383,9 @@ class BossController extends Controller
             if ($year === null)
             {
                 return false;
-            }
-            else
-            {
+                
+            } else {
+                
                 $month = Month::where([
                     'year_id' => $year->id,
                     'month_number' => 12
@@ -397,9 +396,9 @@ class BossController extends Controller
                     return false;
                 }
             }
-        }
-        else
-        {
+            
+        } else {
+            
             $month = Month::where([
                 'year_id' => $year->id,
                 'month_number' => ($month->month_number - 1)
@@ -426,9 +425,9 @@ class BossController extends Controller
             if ($year === null)
             {
                 return false;
-            }
-            else
-            {
+                
+            } else {
+                
                 $month = Month::where([
                     'year_id' => $year->id,
                     'month_number' => 1
@@ -439,9 +438,9 @@ class BossController extends Controller
                     return false;
                 }
             }
-        }
-        else
-        {
+            
+        } else {
+            
             $month = Month::where([
                 'year_id' => $year->id,
                 'month_number' => ($month->month_number + 1)
@@ -516,6 +515,61 @@ class BossController extends Controller
     }
     
     /**
+     * Creates new code
+     * 
+     * @return type
+     */
+    public function addCode()
+    {
+        $code = new Code();
+        $code->boss_id = auth()->user()->id;
+        $code->save();
+        
+        if ($code->id !== null)
+        {
+            $type = 'success';
+            $message = 'Dodano nowy kod.';
+            
+        } else {
+            
+            $type = 'error';
+            $message = 'Błąd dodawania nowego kodu';
+        }
+        
+        return redirect()->action(
+            'BossController@code'
+        )->with($type, $message);
+    }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroyCode($id)
+    {
+        $code = Code::where('id', $id)->first();
+        
+        if ($code !== null)
+        {     
+            $code->delete();
+
+            $type = 'success';
+            $message = 'Kod został usunięty';
+            
+        } else {
+            
+            $type = 'error';
+            $message = 'Podany kod nie istnieje';
+        }
+        
+        return redirect()->action(
+            'BossController@code'
+        )->with($type, $message);
+    }
+    
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -573,316 +627,6 @@ class BossController extends Controller
             return redirect('boss/subscription/list/' . $property->id . '/0')->with('success', 'Lokalizacja została zaktualizowana');
         }
     }
-        
-    /**
-     * Shows subscription's purchase view.
-     * 
-     * @param type $propertyId
-     * @param type $subscriptionId
-     * @return type
-     */
-    public function subscriptionPurchase($propertyId, $subscriptionId)
-    {        
-        $propertyId = htmlentities((int)$propertyId, ENT_QUOTES, "UTF-8");
-        $property = Property::where('id', (int)$propertyId)->first();
-        
-        $subscriptionId = htmlentities((int)$subscriptionId, ENT_QUOTES, "UTF-8");
-        $subscription = Subscription::where('id', (int)$subscriptionId)->with('items')->first();
-            
-        if ($property !== null && $subscription !== null)
-        {
-            $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-
-            if ($boss !== null && count($boss->chosenProperties) > 0)
-            {
-                $today = new \DateTime(date('Y-m-d'));
-//                $today = date('Y-m-d', strtotime("+13 month", strtotime($today->format("Y-m-d"))));
-                
-                foreach ($boss->chosenProperties as $chosenProperty)
-                {
-                    if ($chosenProperty->property_id == $property->id)
-                    {
-                        $chosenProperty->load('purchases');
-
-                        if (count($chosenProperty->purchases) > 0)
-                        {
-                            foreach ($chosenProperty->purchases as $purchase)
-                            {
-                                $purchase->load('subscription');
-                                
-                                if ($purchase->subscription !== null && $purchase->subscription->id == $subscription->id)
-                                {
-                                    $substart = Substart::where([
-                                        'property_id' => $property->id,
-                                        'subscription_id' => $subscription->id,
-                                        'purchase_id' => $purchase->id
-                                    ])->first();
-                                    
-                                    if ($substart !== null && $substart->start_date <= $today && $substart->end_date >= $today)
-                                    {
-                                        return redirect()->action(
-                                            'BossController@subscriptionList', [
-                                                'propertyId' => $property->id,
-                                                'subscriptionId' => $subscription->id
-                                            ]
-                                        )->with('success', 'Posiadasz już te subskrypcje');
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-            $formAction = 'BossController@subscriptionPurchased';
-            
-            $allSubstarts = Substart::where([
-                'boss_id' => $boss->id,
-                'property_id' => $property->id,
-                'subscription_id' => $subscription->id
-            ])->orderBy('id')->get();
-            
-            if (count($allSubstarts) > 0)
-            {                
-                if ($allSubstarts->last()->end_date < $today)
-                {
-                    $formAction = 'BossController@subscriptionPurchasedRefresh';
-                }
-            }
-
-            return view('boss.subscription_purchase')->with([
-                'property' => $property,
-                'subscription' => $subscription,
-                'formAction' => $formAction
-            ]);
-        }
-        
-        return redirect()->route('welcome');
-    }
-    
-    /**
-     * Subscription purchase method.
-     * 
-     * @return type
-     */
-    public function subscriptionPurchased()
-    {
-        $rules = array(
-            'terms'             => 'required',
-            'property_id'       => 'required',
-            'subscription_id'   => 'required'
-        );
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails()) {
-            return Redirect::to('boss/subscription/purchase/' . Input::get('property_id') . '/' . Input::get('subscription_id'))
-                ->withErrors($validator);
-        } else {
-
-            $subscription = Subscription::where('id', Input::get('subscription_id'))->first();
-            $property = Property::where('id', Input::get('property_id'))->first();
-            
-            if ($subscription !== null && $property !== null)
-            {
-                $chosenProperty = ChosenProperty::where([
-                    'property_id' => $property->id,
-                    'user_id' => auth()->user()->id
-                ])->first();
-
-                if ($chosenProperty === null)
-                {
-                    $chosenProperty = new ChosenProperty();
-                    $chosenProperty->property_id = $property->id;
-                    $chosenProperty->user_id = auth()->user()->id;
-                    $chosenProperty->save();
-                }
-                
-                // >> check if such a subscription hasn't already been purchased!
-                $isPurchasable = true;
-                $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-
-                if (count($boss->chosenProperties) > 0)
-                {
-                    foreach ($boss->chosenProperties as $chosenProperty)
-                    {
-                        if ($chosenProperty->property_id == $property->id)
-                        {
-                            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-
-                            if ($chosenProperty->purchases)
-                            {
-                                foreach ($chosenProperty->purchases as $purchase)
-                                {
-                                    if ($purchase->subscription_id == $subscription->id)
-                                    {
-                                        $isPurchasable = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                // <<
-
-                if ($isPurchasable)
-                {
-                    $purchase = new Purchase();
-                    $purchase->subscription_id = $subscription->id;
-                    $purchase->chosen_property_id = $chosenProperty->id;
-                    $purchase->save();
-                    
-                        $startDate = date('Y-m-d');
-
-                        $substart = new Substart();
-                        $substart->start_date = $startDate;
-                        $endDate = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate)));
-                        $endDate = date('Y-m-d', strtotime("-1 day", strtotime($endDate)));
-                        $substart->end_date = $endDate;
-                        $substart->boss_id = auth()->user()->id;
-                        $substart->property_id = $property->id;
-                        $substart->subscription_id = $subscription->id;
-                        $substart->purchase_id = $purchase->id;
-                        $substart->save();
-                    
-                    $purchase->substart_id = $substart->id;
-                    $purchase->save();
-                    
-                    $chosenProperty->subscriptions()->attach($subscription);
-                    $chosenProperty->save();
-
-                    if ($purchase !== null && $substart !== null)
-                    {                        
-                        // >> create interval
-                        $startDate = date('Y-m-d');
-                                    
-                        $interval = new Interval();
-                        $interval->available_units = $subscription->quantity;
-                        $interval->start_date = $startDate;
-                        $startDate = date('Y-m-d', strtotime("+" . $subscription->duration . " month", strtotime($startDate)));
-
-                        $endDate = date('Y-m-d', strtotime("-1 day", strtotime($startDate)));
-                        $interval->end_date = $endDate;
-
-                        $interval->substart_id = $substart->id;
-                        $interval->purchase_id = $purchase->id;
-                        $interval->save();
-                        // <<
-
-                        \Mail::to($boss)->send(new SubscriptionPurchased($boss, $subscription));
-
-                        // redirect
-                        return redirect()->action(
-                            'BossController@subscriptionList', [
-                                'propertyId' => $property->id,
-                                'subscriptionId' => $subscription->id
-                            ]
-                        )->with('success', 'Subskrypcja dodana. Wiadomość z informacjami została wysłana na maila');
-                    }
-                }
-            }
-            
-            return redirect()->route('welcome')->with('error', 'Niedozwolona próba');
-        }
-    }
-    
-    /**
-     * Subscription purchase refresh method.
-     * 
-     * @return type
-     */
-    public function subscriptionPurchasedRefresh()
-    {
-        $rules = array(
-            'terms'             => 'required',
-            'property_id'       => 'required',
-            'subscription_id'   => 'required'
-        );
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails()) {
-            return Redirect::to('boss/subscription/purchase/' . Input::get('property_id') . '/' . Input::get('subscription_id'))
-                ->withErrors($validator);
-        } else {
-
-            $boss = User::where('id', auth()->user()->id)->with('chosenProperties')->first();
-            
-            $substarts = Substart::where([
-                'boss_id' => $boss->id,
-                'property_id' => Input::get('property_id'),
-                'subscription_id' => Input::get('subscription_id')
-            ])->orderBy('id')->get();
-            
-            if (count($substarts) > 0)
-            {
-                // dodaj sprawdzenie czy dziś jest już większe od ostatniego substartu
-
-
-
-                dd($substarts);
-            
-            
-            
-            
-            }
-            
-            return redirect()->route('welcome')->with('error', 'Niedozwolona próba');
-        }
-    }
-    
-    /**
-     * Creates new code
-     * 
-     * @return type
-     */
-    public function addCode()
-    {
-        $code = new Code();
-        $code->boss_id = auth()->user()->id;
-        $code->save();
-        
-        if ($code->id !== null)
-        {
-            $type = 'success';
-            $message = 'Dodano nowy kod.';
-            
-        } else {
-            
-            $type = 'error';
-            $message = 'Błąd dodawania nowego kodu';
-        }
-        
-        return redirect()->action(
-            'BossController@code'
-        )->with($type, $message);
-    }
-    
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroyCode($id)
-    {
-        $code = Code::where('id', $id)->first();
-        
-        if ($code !== null)
-        {     
-            $code->delete();
-
-            $type = 'success';
-            $message = 'Kod został usunięty';
-            
-        } else {
-            
-            $type = 'error';
-            $message = 'Podany kod nie istnieje';
-        }
-        
-        return redirect()->action(
-            'BossController@code'
-        )->with($type, $message);
-    }
     
     /**
      * Shows properties list with links to appointments views.
@@ -905,184 +649,6 @@ class BossController extends Controller
         return view('boss.property_appointments_index')->with([
             'properties' => $boss->properties
         ]);
-    }
-    
-    /**
-     * Shows a list of appointments assigned to given property.
-     * 
-     * @param type $propertyId
-     * @param type $userId
-     * 
-     * @return type
-     */
-    public function workerAppointmentList($propertyId, $userId = 0)
-    {
-        $property = Property::where('id', $propertyId)->with('years.months')->first();
-        
-        $userId = htmlentities((int)$userId, ENT_QUOTES, "UTF-8");
-        $userId = (int)$userId;
-        
-        if ($property !== null)
-        {
-            // >> get boss and its workers
-            $boss = auth()->user();
-            $boss->load([
-                'appointments.day.month.year.property'
-            ]);
-                    
-            if ($userId !== 0 && is_int($userId))
-            {              
-                if ($boss->id !== $userId)
-                {
-                    $worker = User::where([
-                        'id' => $userId,
-                        'boss_id' => $boss->id
-                    ])->with([
-                        'appointments.day.month.year.property'
-                    ])->first();
-                    
-                } else if ($boss->id == $userId) {
-                    
-                    $worker = $boss;
-                }
-                
-                $workers = new Collection();
-                
-                if ($worker !== null)
-                {
-                    $workers->push($worker);
-                }
-                
-            } else {
-                
-                $workers = User::where('boss_id', $boss->id)->with([
-                    'appointments.day.month.year.property'
-                ])->get();
-                $workers->prepend($boss);
-            }
-            // <<
-            
-            
-            // >> get property calendar time intervals (in months)
-            $propertyTimeIntervals = new Collection();
-            $currentInterval = [];
-            $today = new \DateTime(date('Y-m-d'));
-//            $today = new \DateTime(date('Y-m-d', strtotime("+9 month", strtotime($today->format("Y-m-d")))));
-            
-            if (count($property->years) > 0)
-            {
-                foreach ($property->years as $year)
-                {
-                    if (count($year->months) > 0)
-                    {
-                        foreach ($year->months as $month)
-                        {
-                            // variables needed to check whether current month is current
-                            $numberOfDaysInAGivenMonth = cal_days_in_month(CAL_GREGORIAN, $month->month_number, $year->year);
-                            $givenMonthStartDateTime = new \DateTime(date($year->year . '-' . $month->month_number . '-' . 1));
-                            $givenMonthEndDateTime = new \DateTime(date($year->year . '-' . $month->month_number . '-' . $numberOfDaysInAGivenMonth));
-                            
-                            $timeInterval = [
-                                'start_date' => $givenMonthStartDateTime,
-                                'end_date' => $givenMonthEndDateTime,
-                                'month_id' => $month->id
-                            ];
-                            
-                            if ($givenMonthStartDateTime <= $today && $today <= $givenMonthEndDateTime)
-                            {
-                                // set current interval
-                                $currentInterval = $timeInterval;
-                            }
-                            
-                            // add it to collection
-                            $propertyTimeIntervals->push($timeInterval);
-                        }
-                    }
-                }
-            }
-            
-            // in case today is later than the last time interval
-            if (count($currentInterval) == 0)
-            {                
-                $currentInterval = $propertyTimeIntervals->last();
-            }
-            // <<
-            
-            
-            // >> get time interval appointments
-            $appointmentsCollection = new Collection();
-//            $currentInterval = new \DateTime(date('Y-m-d', strtotime("+1 month", strtotime($currentInterval->format("Y-m-d")))));
-            
-            if (count($workers) > 0)
-            {
-                foreach ($workers as $worker)
-                {                    
-                    if (count($worker->appointments) > 0)
-                    {
-                        foreach ($worker->appointments as $appointment)
-                        {
-                            if ($appointment->day->month->year->property->id == $property->id)
-                            {
-                                // variables needed to check whether appointments are in given month
-                                $givenMonthStartDateTime = $currentInterval['start_date'];
-                                $givenMonthEndDateTime = $currentInterval['end_date'];
-
-                                if ($givenMonthStartDateTime <= $today && $today <= $givenMonthEndDateTime)
-                                {
-                                    $appointment['day'] = $appointment->day;
-                                    $appointment['day_number'] = $appointment['day']->day_number;
-                                    $appointment['month'] = $appointment->day->month;
-                                    $appointment['month_number'] = $appointment['month']->month_number;
-                                    $appointment['year'] = $appointment->day->month->year;
-
-                                    $appointment['date'] = $appointment['day']->day_number. ' ' . $appointment['month']->month . ' ' . $appointment['year']->year;
-                                    
-                                    $monthNumber = (string)$appointment['month']->month_number;
-                                    
-                                    if (strlen($monthNumber) == 1)
-                                    {
-                                        $monthNumber = "0" . $appointment['month']->month_number;
-                                    }
-                                    
-                                    $appointment['date_time'] = new \DateTime($appointment['year']->year. '-' . $monthNumber . '-' . $appointment['day']->day_number . ' ' . $appointment->start_time);
-
-                                    $employee = User::where('id', $appointment->graphic->employee_id)->first();
-                                    $appointment['employee_name'] = $employee->name . " " . $employee->surname;
-                                    $appointment['employee_slug'] = $employee->slug;
-
-                                    $appointment['user'] = $worker;
-                                    $appointment['property'] = $property;
-
-                                    $appointmentsCollection->push($appointment);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-            $payments = [];
-            
-            if (count($currentInterval) > 0)
-            {
-                $payments = $this->countMonthlyPaymentsForDoneAppointments($currentInterval['month_id']);
-            }
-            
-            $month = Month::where('id', $currentInterval['month_id'])->first();
-            
-            return view('boss.worker_appointment_list')->with([
-                'appointments' => $appointmentsCollection->sortByDesc('date_time'),
-                'worker' => $userId !== 0 ? $worker : null,
-                'property' => $property,
-                'currentInterval' => $currentInterval,
-                'intervals' => $propertyTimeIntervals,
-                'payments' => $payments,
-                'month' => $month->month,
-                'monthEn' => $month->month_en
-            ]);
-        }
-        
-        return redirect()->route('welcome');
     }
         
     /**
@@ -2245,93 +1811,207 @@ class BossController extends Controller
             
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
-    }    
+    }   
     
-    private function getWorkersFrom($substartId)
-    {
-        $substart = Substart::where('id', $substartId)->first();
-
-        if ($substart !== null)
+    public function markMessageAsDisplayed(Request $request)
+    {        
+        if ($request->get('messageId'))
         {
-            $boss = User::where([
-                'id' => auth()->user()->id,
-                'isBoss' => 1
-            ])->with('chosenProperties')->first();
+            $messageId = htmlentities((int)$request->get('messageId'), ENT_QUOTES, "UTF-8");
+            $message = Message::where('id', $messageId)->first();
             
-            $workers = User::where('boss_id', $boss->id)->with('chosenProperties')->get();
-            $workersCollection = new Collection();
-
-            foreach ($workers as $worker)
+            if ($message !== null)
             {
-                if (count($worker->chosenProperties) > 0)
-                {
-                    foreach ($worker->chosenProperties as $chosenProperty)
-                    {
-                        if ($chosenProperty->property_id == $substart->property_id)
-                        {
-                            $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
+                $message->status = 1;
+                $message->save();
 
-                            if (count($chosenProperty->purchases) > 0)
-                            {
-                                foreach($chosenProperty->purchases as $purchase)
-                                {
-                                    if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
-                                    {
-                                        $interval = Interval::where('purchase_id', $purchase->id)->get();
-                                        
-                                        if (count($interval) > 0)
-                                        {
-                                            $workersCollection->push($worker);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                return new JsonResponse([
+                    'type' => 'success'
+                ], 200, array(), true);
             }
-            
-            if (count($boss->chosenProperties) > 0)
-            {
-                foreach ($boss->chosenProperties as $chosenProperty)
-                {
-                    if ($chosenProperty->property_id == $substart->property_id)
-                    {
-                        $chosenProperty = ChosenProperty::where('id', $chosenProperty->id)->with('purchases')->first();
-
-                        if (count($chosenProperty->purchases) > 0)
-                        {
-                            foreach($chosenProperty->purchases as $purchase)
-                            {
-                                if ($purchase->subscription_id == $substart->subscription_id && $purchase->substart_id == $substart->id)
-                                {
-                                    $workersCollection->push($boss);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $workersArr = [];
-
-            foreach ($workersCollection as $workerCollection)
-            {
-                $workersArr[] = [
-                    'id' => $workerCollection->id,
-                    'name' => $workerCollection->name,
-                    'surname' => $workerCollection->surname,
-                    'email' => $workerCollection->email,
-                    'phone_number' => $workerCollection->phone_number,
-                    'workers_appointment_show_button' => route('workerAppointmentList', [
-                        'substartId' => $substart->id,
-                        'userId' => $workerCollection->id
-                    ]),
-                ];
-            }
-            
-            return $workersArr;
         }
+        
+        return new JsonResponse(array(
+            'type'    => 'error'        
+        ));
+    }
+    
+    /**
+     * Shows a list of appointments assigned to given property.
+     * 
+     * @param type $propertyId
+     * @param type $userId
+     * 
+     * @return type
+     */
+    public function workerAppointmentList($propertyId, $userId = 0)
+    {
+        $property = Property::where('id', $propertyId)->with('years.months')->first();
+        
+        $userId = htmlentities((int)$userId, ENT_QUOTES, "UTF-8");
+        $userId = (int)$userId;
+        
+        if ($property !== null)
+        {
+            // >> get boss and its workers
+            $boss = auth()->user();
+            $boss->load([
+                'appointments.day.month.year.property'
+            ]);
+                    
+            if ($userId !== 0 && is_int($userId))
+            {              
+                if ($boss->id !== $userId)
+                {
+                    $worker = User::where([
+                        'id' => $userId,
+                        'boss_id' => $boss->id
+                    ])->with([
+                        'appointments.day.month.year.property'
+                    ])->first();
+                    
+                } else if ($boss->id == $userId) {
+                    
+                    $worker = $boss;
+                }
+                
+                $workers = new Collection();
+                
+                if ($worker !== null)
+                {
+                    $workers->push($worker);
+                }
+                
+            } else {
+                
+                $workers = User::where('boss_id', $boss->id)->with([
+                    'appointments.day.month.year.property'
+                ])->get();
+                $workers->prepend($boss);
+            }
+            // <<
+            
+            
+            // >> get property calendar time intervals (in months)
+            $propertyTimeIntervals = new Collection();
+            $currentInterval = [];
+            $today = new \DateTime(date('Y-m-d'));
+//            $today = new \DateTime(date('Y-m-d', strtotime("+9 month", strtotime($today->format("Y-m-d")))));
+            
+            if (count($property->years) > 0)
+            {
+                foreach ($property->years as $year)
+                {
+                    if (count($year->months) > 0)
+                    {
+                        foreach ($year->months as $month)
+                        {
+                            // variables needed to check whether current month is current
+                            $numberOfDaysInAGivenMonth = cal_days_in_month(CAL_GREGORIAN, $month->month_number, $year->year);
+                            $givenMonthStartDateTime = new \DateTime(date($year->year . '-' . $month->month_number . '-' . 1));
+                            $givenMonthEndDateTime = new \DateTime(date($year->year . '-' . $month->month_number . '-' . $numberOfDaysInAGivenMonth));
+                            
+                            $timeInterval = [
+                                'start_date' => $givenMonthStartDateTime,
+                                'end_date' => $givenMonthEndDateTime,
+                                'month_id' => $month->id
+                            ];
+                            
+                            if ($givenMonthStartDateTime <= $today && $today <= $givenMonthEndDateTime)
+                            {
+                                // set current interval
+                                $currentInterval = $timeInterval;
+                            }
+                            
+                            // add it to collection
+                            $propertyTimeIntervals->push($timeInterval);
+                        }
+                    }
+                }
+            }
+            
+            // in case today is later than the last time interval
+            if (count($currentInterval) == 0)
+            {                
+                $currentInterval = $propertyTimeIntervals->last();
+            }
+            // <<
+            
+            
+            // >> get time interval appointments
+            $appointmentsCollection = new Collection();
+//            $currentInterval = new \DateTime(date('Y-m-d', strtotime("+1 month", strtotime($currentInterval->format("Y-m-d")))));
+            
+            if (count($workers) > 0)
+            {
+                foreach ($workers as $worker)
+                {                    
+                    if (count($worker->appointments) > 0)
+                    {
+                        foreach ($worker->appointments as $appointment)
+                        {
+                            if ($appointment->day->month->year->property->id == $property->id)
+                            {
+                                // variables needed to check whether appointments are in given month
+                                $givenMonthStartDateTime = $currentInterval['start_date'];
+                                $givenMonthEndDateTime = $currentInterval['end_date'];
+
+                                if ($givenMonthStartDateTime <= $today && $today <= $givenMonthEndDateTime)
+                                {
+                                    $appointment['day'] = $appointment->day;
+                                    $appointment['day_number'] = $appointment['day']->day_number;
+                                    $appointment['month'] = $appointment->day->month;
+                                    $appointment['month_number'] = $appointment['month']->month_number;
+                                    $appointment['year'] = $appointment->day->month->year;
+
+                                    $appointment['date'] = $appointment['day']->day_number. ' ' . $appointment['month']->month . ' ' . $appointment['year']->year;
+                                    
+                                    $monthNumber = (string)$appointment['month']->month_number;
+                                    
+                                    if (strlen($monthNumber) == 1)
+                                    {
+                                        $monthNumber = "0" . $appointment['month']->month_number;
+                                    }
+                                    
+                                    $appointment['date_time'] = new \DateTime($appointment['year']->year. '-' . $monthNumber . '-' . $appointment['day']->day_number . ' ' . $appointment->start_time);
+
+                                    $employee = User::where('id', $appointment->graphic->employee_id)->first();
+                                    $appointment['employee_name'] = $employee->name . " " . $employee->surname;
+                                    $appointment['employee_slug'] = $employee->slug;
+
+                                    $appointment['user'] = $worker;
+                                    $appointment['property'] = $property;
+
+                                    $appointmentsCollection->push($appointment);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            $payments = [];
+            
+            if (count($currentInterval) > 0)
+            {
+                $payments = $this->countMonthlyPaymentsForDoneAppointments($currentInterval['month_id']);
+            }
+            
+            $month = Month::where('id', $currentInterval['month_id'])->first();
+            
+            return view('boss.worker_appointment_list')->with([
+                'appointments' => $appointmentsCollection->sortByDesc('date_time'),
+                'worker' => $userId !== 0 ? $worker : null,
+                'property' => $property,
+                'currentInterval' => $currentInterval,
+                'intervals' => $propertyTimeIntervals,
+                'payments' => $payments,
+                'month' => $month->month,
+                'monthEn' => $month->month_en
+            ]);
+        }
+        
+        return redirect()->route('welcome');
     }
     
     public function getPropertyUsersFromDatabase(Request $request)
@@ -2387,72 +2067,6 @@ class BossController extends Controller
             'type'    => 'error',
             'message' => 'Pusty request'            
         ));
-    }
-
-    private function turnSubstartObjectsToArrays($substarts)
-    {
-        $substartArray = [];
-        $today = new \DateTime(date('Y-m-d'));
-        
-        if (!is_a($substarts, 'Illuminate\Database\Eloquent\Collection') && $substarts !== null)
-        {
-            $isActiveMessage = "";
-            
-            if ($substarts->end_date < $today)
-            {
-                $isActiveMessage = \Lang::get('common.duration_is_over');
-            
-            } elseif ($substarts->start_date <= $today && $today <= $substarts->end_date) {
-                
-                $isActiveMessage = $substarts->isActive == 1 ? \Lang::get('common.activated') : \Lang::get('common.not_activated');
-            }
-                                        
-            $substartArray[] = [
-                'id' => $substarts->id,
-                'start_date' => $substarts->start_date->format('Y-m-d'),
-                'start_date_description' => \Lang::get('common.from'),
-                'end_date' => $substarts->end_date->format('Y-m-d'),
-                'end_date_description' => \Lang::get('common.to'),
-                'button' => route('subscriptionInvoices', [
-                    'substartId' => $substarts->id
-                ]),
-                'button_description' => \Lang::get('common.invoices'),
-                'isActiveMessage' => $isActiveMessage,
-                'isActive' => $substarts->isActive,
-            ];
-            
-        } else if (is_a($substarts, 'Illuminate\Database\Eloquent\Collection') && count($substarts) > 0) {
-            
-            foreach ($substarts as $substart)
-            {
-                $isActiveMessage = "";
-                
-                if ($substart->end_date < $today)
-                {
-                    $isActiveMessage = \Lang::get('common.duration_is_over');
-
-                } elseif ($substart->start_date <= $today && $today <= $substart->end_date) {
-
-                    $isActiveMessage = $substart->isActive == 1 ? \Lang::get('common.activated') : \Lang::get('common.not_activated');
-                }
-            
-                $substartArray[] = [
-                    'id' => $substart->id,
-                    'start_date' => $substart->start_date->format('Y-m-d'),
-                    'start_date_description' => \Lang::get('common.from'),
-                    'end_date' => $substart->end_date->format('Y-m-d'),
-                    'end_date_description' => \Lang::get('common.to'),
-                    'button' => route('subscriptionInvoices', [
-                        'substartId' => $substart->id
-                    ]),
-                    'button_description' => \Lang::get('common.invoices'),
-                    'isActiveMessage' => $isActiveMessage,
-                    'isActive' => $substart->isActive
-                ];
-            }
-        }
-        
-        return $substartArray;
     }
     
     public function getUserAppointmentsFromDatabase(Request $request)
@@ -2693,29 +2307,6 @@ class BossController extends Controller
         return new JsonResponse(array(
             'type'    => 'error',
             'message' => 'Pusty request'         
-        ));
-    }
-    
-    public function markMessageAsDisplayed(Request $request)
-    {        
-        if ($request->get('messageId'))
-        {
-            $messageId = htmlentities((int)$request->get('messageId'), ENT_QUOTES, "UTF-8");
-            $message = Message::where('id', $messageId)->first();
-            
-            if ($message !== null)
-            {
-                $message->status = 1;
-                $message->save();
-
-                return new JsonResponse([
-                    'type' => 'success'
-                ], 200, array(), true);
-            }
-        }
-        
-        return new JsonResponse(array(
-            'type'    => 'error'        
         ));
     }
     

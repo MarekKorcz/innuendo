@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Property;
 use App\TempProperty;
-use App\Calendar;
-use App\Year;
 use App\User;
 use App\TempUser;
-use App\Purchase;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;

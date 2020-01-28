@@ -4,16 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Graphic;
 use App\Appointment;
-use App\Calendar;
-use App\Category;
 use App\Item;
 use App\Year;
 use App\Month;
 use App\Day;
-use App\Subscription;
-use App\Purchase;
-use App\Interval;
-use App\ChosenProperty;
 use App\Mail\AppointmentStore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;

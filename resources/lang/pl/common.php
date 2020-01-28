@@ -2,7 +2,6 @@
 
 return [
     'show' => 'Pokaż',
-    'order' => 'Zamów',
     'description' => 'Opis',
     'name' => 'Imię',
     'surname' => 'Nazwisko',
@@ -27,11 +26,8 @@ return [
     'schedule_in' => 'Grafik w',
     'report_your_company' => 'Zgłoś swoją firmę',
     'create_first_property' => 'Stwórz pierwszą lokalizację',
-    'your_employees' => 'Twoi pracownicy',
-    'no_employee_assigned_to_property' => 'Obecnie żaden z naszych pracowników nie jest przypisany do tej lokalizacji. Przepraszamy!',
     'people_assigned_to_subscription' => 'Osoby przypisane do pakietu',
     'select_a_billing_period' => 'Wybierz okres rozliczeniowy',
-    'to_period_from' => 'do okresu od',
     'from' => 'od',
     'to' => 'do',
     'turn_on' => 'Włącz',

@@ -6,8 +6,6 @@ use App\User;
 use App\TempUser;
 use App\Property;
 use App\TempProperty;
-use App\ChosenProperty;
-use App\Purchase;
 use App\Subscription;
 use App\Calendar;
 use App\Year;

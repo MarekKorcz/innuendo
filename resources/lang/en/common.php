@@ -2,7 +2,6 @@
 
 return [
     'show' => 'Show',
-    'order' => 'Order',
     'description' => 'Description',
     'name' => 'Name',
     'surname' => 'Last name',
@@ -27,11 +26,8 @@ return [
     'schedule_in' => 'Schedule in',
     'report_your_company' => 'Report your company',
     'create_first_property' => 'Create first company',
-    'your_employees' => 'Your employees',
-    'no_employee_assigned_to_property' => 'Currently, none of your employees are assigned to this location',
     'people_assigned_to_subscription' => 'People assigned to subscription',
     'select_a_billing_period' => 'Select a billing period',
-    'to_period_from' => 'to period from',
     'from' => 'from',
     'to' => 'to',
     'turn_on' => 'Turn on',

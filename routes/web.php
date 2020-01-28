@@ -85,8 +85,6 @@ Route::get('/admin/discount/create', 'DiscountController@create');
 Route::post('/admin/discount/store', 'DiscountController@store');
 Route::get('/admin/discount/index', 'DiscountController@index');
 Route::delete('/admin/discount/{id}', 'DiscountController@destroy');
-Route::get('/employee/assign/{id}', 'EmployeeController@assign')->name('assign');
-Route::post('/employee/assign/store', 'EmployeeController@store');
 
 // load image
 Route::get('/userimage/{fileName}', [
@@ -110,11 +108,9 @@ Route::get('/employee/backend-appointment/create', 'WorkerController@appointment
 Route::post('/employee/backend-appointment/store', 'WorkerController@appointmentStore');
 Route::get('/employee/backend-appointment/edit/{id}', 'WorkerController@appointmentEdit');
 Route::put('/employee/backend-appointment', 'WorkerController@appointmentUpdate');
-Route::get('/employee/activate-subscription/{purchase_id}/{appointment_id}', 'WorkerController@activateSubscription');
 
 Route::get('/employees', 'UserController@employeesList')->name('employees');
 Route::get('/employee/{slug}', 'UserController@employee')->name('employee');
-Route::get('/employee/calendar/{calendar_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
 
 Route::get('/property/index', 'PropertyController@index')->name('property_index');
 Route::get('/property/create', 'PropertyController@create');
@@ -170,22 +166,13 @@ Route::get('/item/{id}/edit', 'ItemController@edit');
 Route::put('/item/update', 'ItemController@update');
 
 // user >> routings
+// 
+// show properties list to user or boss
+Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
+
 // user calendar
 Route::get('/user/calendar/{property_id}/{year}/{month_number}/{day_number}', 'UserController@calendar')->name('calendar');
 Route::post('/user/employee/get-graphic', 'UserController@getEmployeeGraphic');
-
-// show employees to user
-Route::get('/user/properties', 'UserController@propertiesList')->name('properties');
-Route::get('/user/property/{id}', 'UserController@property')->name('property');
-
-// user subscription dashboard
-Route::get('/user/subscription/list/{substartId}', 'UserController@subscriptionList');
-Route::post('/user/get/property/subscription', 'UserController@getPropertySubscriptions');
-Route::post('/user/get/subscription/substarts', 'UserController@getSubscriptionSubstarts');
-
-// user show purchased subscription and its appointment
-Route::get('/user/subscription/purchased/show/{id}', 'UserController@subscriptionPurchasedShow')->name('subscriptionPurchasedShow');
-Route::post('/user/get-user-appointments-from-database', 'UserController@getUserAppointmentsFromDatabase');
 
 // >> boss routings
 // calendars routing
@@ -202,11 +189,6 @@ Route::delete('/code/{id}', 'BossController@destroyCode');
 Route::get('/boss/property/{id}/edit', 'BossController@propertyEdit');
 Route::put('/boss/property/update', 'BossController@propertyUpdate');
 
-// subscription purchase
-Route::get('/boss/subscription/purchase/{propertyId}/{subscriptionId}', 'BossController@subscriptionPurchase')->name('subscriptionPurchaseView');
-Route::post('/boss/subscription/purchased', 'BossController@subscriptionPurchased');
-Route::post('/boss/subscription/purchased/refresh', 'BossController@subscriptionPurchasedRefresh');
-
 // boss and workers subscription appointment list
 Route::get('/boss/property/appointments', 'BossController@propertyAppointments');
 Route::get('/boss/worker/appointment/list/{propertyId}/{userId?}', 'BossController@workerAppointmentList')->name('workerAppointmentList');
@@ -218,17 +200,17 @@ Route::post('/boss/get-users-appointments-from-database', 'BossController@getUse
 // worker show (temporarily off)
 //Route::get('/boss/worker/show/{workerId}/{substartId?}/{intervalId?}', 'BossController@workerShow');
 
-// subscription worker edit
-Route::get('/boss/subscription/workers/edit/{substartId}/{intervalId}', 'BossController@subscriptionWorkersEdit')->name('subscriptionWorkersEdit');
-Route::post('/boss/subscription/workers/update', 'BossController@subscriptionWorkersUpdate');
+// subscription worker edit (you may need it later to turn on and off boss employees)
+//Route::get('/boss/subscription/workers/edit/{substartId}/{intervalId}', 'BossController@subscriptionWorkersEdit')->name('subscriptionWorkersEdit');
+//Route::post('/boss/subscription/workers/update', 'BossController@subscriptionWorkersUpdate');
 
-// invoices
-Route::get('/boss/subscription/invoice/create/{substartId}', 'BossController@invoiceDataCreate');
-Route::post('/boss/subscription/invoice/store', 'BossController@invoiceDataStore');
-Route::get('/boss/subscription/invoice/{intervalId}', 'BossController@subscriptionInvoice');
-Route::get('/boss/subscription/invoices/{substartId}', 'BossController@subscriptionInvoices')->name('subscriptionInvoices');
-Route::get('/boss/subscription/invoice/edit/{invoiceDataId}/{substartId}', 'BossController@invoiceDataEdit');
-Route::put('/boss/subscription/invoice/update', 'BossController@invoiceDataUpdate');
+// invoices (later when, invoice views will be done)
+//Route::get('/boss/subscription/invoice/create/{substartId}', 'BossController@invoiceDataCreate');
+//Route::post('/boss/subscription/invoice/store', 'BossController@invoiceDataStore');
+//Route::get('/boss/subscription/invoice/{intervalId}', 'BossController@subscriptionInvoice');
+//Route::get('/boss/subscription/invoices/{substartId}', 'BossController@subscriptionInvoices')->name('subscriptionInvoices');
+//Route::get('/boss/subscription/invoice/edit/{invoiceDataId}/{substartId}', 'BossController@invoiceDataEdit');
+//Route::put('/boss/subscription/invoice/update', 'BossController@invoiceDataUpdate');
 
 // graphic requests and approve messages
 Route::post('/boss/make-a-graphic-request', 'BossController@makeAGraphicRequest');

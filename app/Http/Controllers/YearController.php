@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Property;
 use App\Year;
-use App\Month;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
