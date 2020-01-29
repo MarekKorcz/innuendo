@@ -80,6 +80,13 @@ Route::get('/admin/approve/messages', 'AdminController@approveMessages');
 Route::get('/admin/approve/messages/{bossId}/{promoId}', 'AdminController@approveMessageShow');
 Route::get('/admin/contact/messages', 'AdminController@contactMessages');
 Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminController@approveMessageStatusChange');
+
+
+
+// maybe all messages in one view?
+Route::get('/admin/user/messages', 'AdminController@userMessages');
+
+
 Route::post('/admin/make-an-approve-message', 'AdminController@makeAnApproveMessage');
 Route::get('/admin/discount/create', 'DiscountController@create');
 Route::post('/admin/discount/store', 'DiscountController@store');
