@@ -20,7 +20,10 @@
                 <tbody>
                     @foreach($promoCodes as $promoCode)
                         <tr>
-                            <td>{{$promoCode->boss->name}} {{$promoCode->boss->surname}}</td>
+                            <td>
+                                <a href="{{ URL::to('/admin/boss/show/' . $promoCode->boss->id) }}">
+                                    {{$promoCode->boss->name}} {{$promoCode->boss->surname}}</td>
+                                </a>
                             <td>
                                 @if ($promoCode->boss->is_approved == 0)
                                     @lang('common.no')

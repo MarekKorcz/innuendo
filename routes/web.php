@@ -86,7 +86,7 @@ Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminControlle
 
 
 // maybe all messages in one view?
-Route::get('/admin/user/messages', 'AdminController@userMessages');
+//Route::get('/admin/user/messages', 'AdminController@userMessages');
 
 
 Route::post('/admin/make-an-approve-message', 'AdminController@makeAnApproveMessage');

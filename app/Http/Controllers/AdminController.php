@@ -661,60 +661,60 @@ class AdminController extends Controller
         }
     }
     
-    public function userMessages()
-    {
-        
-        
-        
-        
-        $contactMessages = Message::where([
-            'graphic_request_id' => null,
-            'promo_code_id' => null
-        ])->get();
-        
-        
-        
-        
-        $promoCodes = PromoCode::where([
-            ['id', '!=', null],
-            ['boss_id', '!=', null],
-            ['is_active', '!=', 0]
-        ])->with([
-            'promo',
-            'boss'
-        ])
-        ->orderBy('activation_date', 'desc')
-        ->get();
-        
-        
-        
-        
-        $graphicRequests = GraphicRequest::where('id', '!=', null)->with([
-            'property',
-            'day.month.year',
-            'employees'
-        ])->get();
-
-        foreach ($graphicRequests as $graphicRequest)
-        {                   
-            $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
-        }
-        
-        
-        
-        
-        
-        
-        dd($contactMessages, $promoCodes, $graphicRequests);
-        
-        return view('admin.contact_messages')->with([
-            'contactMessages' => $contactMessages
-        ]);
-        
-        
-        
-        
-    }
+//    public function userMessages()
+//    {
+//        
+//        
+//        
+//        
+//        $contactMessages = Message::where([
+//            'graphic_request_id' => null,
+//            'promo_code_id' => null
+//        ])->get();
+//        
+//        
+//        
+//        
+//        $promoCodes = PromoCode::where([
+//            ['id', '!=', null],
+//            ['boss_id', '!=', null],
+//            ['is_active', '!=', 0]
+//        ])->with([
+//            'promo',
+//            'boss'
+//        ])
+//        ->orderBy('activation_date', 'desc')
+//        ->get();
+//        
+//        
+//        
+//        
+//        $graphicRequests = GraphicRequest::where('id', '!=', null)->with([
+//            'property',
+//            'day.month.year',
+//            'employees'
+//        ])->get();
+//
+//        foreach ($graphicRequests as $graphicRequest)
+//        {                   
+//            $graphicRequest['boss'] = User::where('id', $graphicRequest->property->boss_id)->first();
+//        }
+//        
+//        
+//        
+//        
+//        
+//        
+//        dd($contactMessages, $promoCodes, $graphicRequests);
+//        
+//        return view('admin.contact_messages')->with([
+//            'contactMessages' => $contactMessages
+//        ]);
+//        
+//        
+//        
+//        
+//    }
     
     public function approveMessages()
     {
