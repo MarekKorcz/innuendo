@@ -7,7 +7,6 @@ use App\TempUser;
 use App\TempProperty;
 use App\GraphicRequest;
 use App\Message;
-use App\Property;
 use App\Subscription;
 use App\Promo;
 use App\PromoCode;
@@ -21,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\JsonResponse;
 use Redirect;
 
 class AdminController extends Controller
@@ -36,8 +36,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
      * @return Response
      */
     public function userList()
@@ -48,17 +46,110 @@ class AdminController extends Controller
             'isEmployee' => null
         ])->orderBy('created_at', 'desc')->get();
         
-        $tempUsers = TempUser::where('isBoss', 0)->orderBy('created_at', 'desc')->get();
+        if (count($users) > 0)
+        {
+            foreach ($users as $user)
+            {
+                $user['boss'] = $user->getBoss();
+            }
+        }
 
         return view('admin.user_list')->with([
-            'users' => $users,
-            'tempUsers' => $tempUsers
+            'users' => $users
         ]);
     }
     
     /**
-     * Display a listing of the resource.
-     *
+     * @param integer $id
+     * @return Response
+     */
+    public function userShow($id)
+    {
+        $user = User::where([
+            'id' => $id,
+            'isBoss' => null,
+            'isEmployee' => null,
+            'isAdmin' => null
+        ])->first();
+        
+        if ($user !== null)
+        {            
+            return view('admin.user_show')->with([
+                'user' => $user,
+                'userBoss' => $user->getBoss(),
+                'bosses' => User::where('isBoss', '!=', null)->get()
+            ]);
+        }
+        
+        return redirect()->route('welcome');
+    }
+    
+    /**
+     * @return Response
+     */
+    public function userUpdate()
+    {
+        $rules = array(
+            'name'           => 'required',
+            'surname'        => 'required',
+            'email'           => 'required',
+            'phone_number'   => 'required',
+            'isBoss'          => 'required',
+            'boss_id'          => 'required',
+            'user_id'          => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('admin/user/show/' . Input::get('user_id'))
+                ->withErrors($validator);
+        } else {
+            
+            $user = User::where([
+                'id' => Input::get('user_id')
+            ])->first();
+            
+            if ($user !== null)
+            {
+                $user->name = Input::get('name');
+                $user->surname = Input::get('surname');
+                $user->email = Input::get('email');
+                $user->phone_number = Input::get('phone_number');
+                
+                if (Input::get('isBoss'))
+                {
+                    $user->isBoss = 1;
+                    $user->boss_id = null;
+                    
+                } else {
+                    
+                    $boss = User::where([
+                        'id' => Input::get('boss_id'),
+                        'isBoss' => 1
+                    ])->first();
+                    
+                    if ($boss !== null)
+                    {
+                        $user->isBoss = null;
+                        $user->boss_id = $boss->id;
+                    }
+                }
+                
+                $user->save();
+                
+                if ($user->isBoss)
+                {
+                    return redirect('admin/boss/show/' . $user->id)->with('success', 'Entity has been successfully updated!');
+                    
+                } else {
+                    
+                    return redirect('admin/user/show/' . $user->id)->with('success', 'Entity has been successfully updated!');
+                }
+            }
+        }
+    }
+    
+    /**
      * @return Response
      */
     public function bossList()
@@ -73,86 +164,6 @@ class AdminController extends Controller
     }
     
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function employeeList()
-    {
-        $employees = User::where('isEmployee', '!=', null)->orderBy('created_at', 'desc')->get();
-        $tempEmployees = TempUser::where('isEmployee', 1)->orderBy('created_at', 'desc')->get();
-
-        return view('admin.employee_list')->with([
-            'employees' => $employees,
-            'tempEmployees' => $tempEmployees
-        ]);
-    }
-    
-    /**
-     * Display specific resource.
-     *
-     * @param integer $id
-     * @return Response
-     */
-    public function userShow($id)
-    {
-        if ($id !== null)
-        {
-            $user = User::where('id', $id)->with('chosenProperties')->first();
-            
-            // todo: (na póżniej) wyświetl wszystkie wykupione subskrypcje (z podziałem na prywatne i publiczne) + zrób button do wyświetlania tych wizyt
-            // zrób button do wyświetlania wszystkich wizyt
-            
-//            dump($user);die;
-            
-            $properties = new Collection();
-            
-            if ($user->chosenProperties)
-            {
-                foreach ($user->chosenProperties as $chosenProperty)
-                {
-                    $property = Property::where('id', $chosenProperty->property_id)->first();
-
-                    if ($property->boss_id !== 0 || $property->boss_id !== null)
-                    {
-                        $owner = User::where('id', $property->boss_id)->first();
-                        
-                        if ($owner !== null)
-                        {
-                            $property['owner'] = $owner;
-                            
-                        } else {
-                            
-                            $property['owner'] = 'public';
-                        }
-                        
-                    } else {
-                        
-                        $property['owner'] = 'public';
-                    }
-                    
-                    
-                    
-                    $properties->push($property);
-                }
-            }
-            
-            // todo: (na póżniej) zrób tak żeby były wyświetlone dane user'a z buttonami do zmiany jego danych
-            // na dole lista propertisów w któych wykupione subskrypcje wraz z listą subskrypcji zaczętych z buttonami do widoków z wizytami
-            // dodaj jeszcze button z wszystkimi wizytami w danych okresach
-            dump($properties);die;
-
-            return view('admin.user_show')->with([
-                'user' => $user
-            ]);
-        }
-        
-        return redirect()->route('welcome');
-    }
-    
-    /**
-     * Display specific resource.
-     *
      * @param integer $id
      * @return Response
      */
@@ -168,15 +179,143 @@ class AdminController extends Controller
 
         return view('admin.boss_show')->with([
             'boss' => $boss,
-            'properties' => $boss->properties
+            'properties' => $boss->properties,
+            'workers' => $boss->getWorkers()
         ]);
         
         return redirect()->route('welcome');
     }
     
+    public function getPotentiallyNewBosses(Request $request)
+    {
+        if ($request->get('bossId'))
+        {
+            $boss = User::where([
+                'id' => $request->get('bossId'),
+                'isBoss' => 1
+            ])->first();
+            
+            if ($boss !== null)
+            {
+                $newBossesArr = [];
+                $potentiallyNewBosses = $boss->getWorkers();
+
+                if (count($potentiallyNewBosses) > 0)
+                {
+                    foreach ($potentiallyNewBosses as $boss)
+                    {
+                        $newBossesArr[] = [
+                            'id' => $boss->id,
+                            'name' => $boss->name . ' ' . $boss->surname
+                        ];
+                    }
+                }
+
+                return new JsonResponse([
+                    'type' => 'success',
+                    'bosses' => $newBossesArr,
+                    'label_description' => \Lang::get('common.choose_new_boss') . ':'
+                ], 200, array(), true);
+            }
+        }
+        
+        return new JsonResponse(array(
+            'type'    => 'error'        
+        ));
+    }
+    
     /**
-     * Display specific resource.
-     *
+     * @return Response
+     */
+    public function bossUpdate()
+    {
+        $rules = array(
+            'name'         => 'required',
+            'surname'      => 'required',
+            'email'        => 'required',
+            'phone_number' => 'required',
+            'is_boss'      => 'required',
+            'boss_id'      => 'required',
+            'new_boss'     => 'sometimes|required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('admin/user/show/' . Input::get('boss_id'))
+                ->withErrors($validator);
+        } else {
+            
+            $boss = User::where([
+                'id' => Input::get('boss_id')
+            ])->with('properties')->first();
+            
+            if ($boss !== null)
+            {
+                $boss->name = Input::get('name');
+                $boss->surname = Input::get('surname');
+                $boss->email = Input::get('email');
+                $boss->phone_number = Input::get('phone_number');
+                
+                // if turn 'boss' off, get 'new boss', asign its id to 'boss workers' and 'boss properties'
+                // plus change 'boss' into 'new boss' worker
+                if (Input::get('isBoss') == false && Input::get('new_boss') !== null) {
+                    
+                    // getting 'new boss' from 'boss workers'
+                    $newBoss = User::where([
+                        'id' => Input::get('new_boss'),
+                        'boss_id' => $boss->id
+                    ])->first();
+                    
+                    if ($newBoss !== null)
+                    {
+                        $bossWorkers = $boss->getWorkers();                        
+                        
+                        if (count($bossWorkers) > 0)
+                        {
+                            foreach ($bossWorkers as $worker)
+                            {
+                                if ($worker->id !== $newBoss->id)
+                                {
+                                    $worker->boss_id = $newBoss->id;
+                                }
+                            }
+                        }
+                        
+                        $bossProperties = $boss->properties;
+                        
+                        if (count($bossProperties) > 0)
+                        {
+                            foreach ($bossProperties as $property)
+                            {
+                                $property->boss_id = $newBoss->id;
+                                $property->save();
+                            }
+                        }
+                        
+                        $newBoss->isBoss = 1;
+                        $newBoss->boss_id = null;
+                        $newBoss->save();
+
+                        $boss->isBoss = null;
+                        $boss->boss_id = $newBoss->id;
+                    }
+                }
+                
+                $boss->save();
+                
+                if ($boss->isBoss)
+                {
+                    return redirect('admin/boss/show/' . $boss->id)->with('success', 'Entity has been successfully updated!');
+                    
+                } else {
+                    
+                    return redirect('admin/user/show/' . $boss->id)->with('success', 'Entity has been successfully updated!');
+                }
+            }
+        }
+    }
+    
+    /**
      * @param integer $id
      * @return Response
      */
@@ -199,26 +338,35 @@ class AdminController extends Controller
     }
     
     /**
-     * Display specific resource.
-     *
-     * @param integer $id
      * @return Response
      */
-    public function tempUserUserShow($id)
+    public function employeeList()
     {
-        if ($id !== null)
-        {
-            $boss = TempUser::where([
-                'id' => $id,
-                'isBoss' => 0
-            ])->with('appointments')->first();
-            
-            dump($boss);die;
+        $employees = User::where('isEmployee', '!=', null)->orderBy('created_at', 'desc')->get();
+        $tempEmployees = TempUser::where('isEmployee', 1)->orderBy('created_at', 'desc')->get();
 
-            // zrób ten widok
-//            return view('admin.temp_user_user_show')->with([
-//                'boss' => $boss
-//            ]);
+        return view('admin.employee_list')->with([
+            'employees' => $employees,
+            'tempEmployees' => $tempEmployees
+        ]);
+    }
+    
+    /**
+     * @param string $slug
+     * @return Response
+     */
+    public function employeeShow($slug)
+    {
+        $employee = User::where([
+            'isEmployee' => 1,
+            'slug' => $slug
+        ])->with('graphics.property')->first();
+        
+        if ($employee !== null)
+        {
+            return view('admin.employee_show')->with([
+                'employee' => $employee
+            ]);
         }
         
         return redirect()->route('welcome');
@@ -299,39 +447,11 @@ class AdminController extends Controller
     }
     
     /**
-     * Display specific resource.
-     *
-     * @param string $slug
-     * @return Response
-     */
-    public function employeeShow($slug)
-    {
-        $employee = User::where([
-            'isEmployee' => 1,
-            'slug' => $slug
-        ])->with('graphics.property')->first();
-        
-        if ($employee !== null)
-        {
-            dd($employee);
-            
-            // todo: (na póżniej, będzie trzeba zrobić system wewnętrznego rozliczania się z pracownikami). 
-            // zastanów się co ma się tam wyświetlać dokładnie
-
-            return view('admin.employee_show')->with([
-                'employee' => $employee
-            ]);
-        }
-        
-        return redirect()->route('welcome');
-    }
-    
-    /**
      * Updates employee data.
      *
      * @return Response
      */
-    public function employeeUpdate(Request $request)
+    public function employeeUpdate()
     {
         $rules = array(
             'name'           => 'required',
@@ -378,15 +498,9 @@ class AdminController extends Controller
         }
     }
     
-    /**
-     * Edits specific resource.
-     *
-     * @return Response
-     */
-    public function userEdit(Request $request)
-    {
-        dump($request->request->all());die;
-    }
+    
+    
+    
     
     /**
      * Display view to create boss account.

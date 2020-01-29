@@ -19,7 +19,7 @@
     <div id="calendar" class="table-responsive">
         <div class="text-center" style="padding-bottom: 3px;">
             <h2>@lang('common.schedule_in') <strong>{{$property->name}}</strong></h2>
-            <h4>{{$property->street}} {{$property->street_number}} / {{$property->house_number}}, {{$property->city}}</h4>
+            <h4>{{$property->street}} {{$property->street_number}} {{$property->house_number}}, {{$property->city}}</h4>
         </div>
         
         <div id="table-nav-bar">

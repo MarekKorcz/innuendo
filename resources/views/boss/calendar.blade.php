@@ -17,10 +17,14 @@
         </div>
         <div class="col-4"></div>
     </div>
+    
+    <div class="text-center" style="padding-top: 18px;">
+        <h1>{{$property->name}}</h1>
+    </div>
 
     <div id="calendar" class="table-responsive">
         <div id="table-nav-bar">
-            <div class="head-tile text-center" style="width: 25%; padding-top: 30px;">
+            <div class="head-tile text-center" style="width: 25%;">
                 @if ($availablePreviousMonth && $month->month_number == 1)
                     <a href="{{ URL::to('boss/calendar/' . $property->id . '/' . ($year->year - 1) . '/12/' . $current_day) }}">
                         @svg('solid/angle-left')

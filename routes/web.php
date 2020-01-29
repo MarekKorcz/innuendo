@@ -43,18 +43,20 @@ Route::post('/register/new-boss', 'Auth\RegisterController@registerNewBoss');
 
 // >> admin routings
 Route::get('/admin/user/list', 'AdminController@userList');
-Route::get('/admin/boss/list', 'AdminController@bossList');
-Route::get('/admin/employee/list', 'AdminController@employeeList');
 Route::get('/admin/user/show/{id}', 'AdminController@userShow');
+Route::put('/admin/user/edit', 'AdminController@userUpdate');
+Route::get('/admin/boss/list', 'AdminController@bossList');
 Route::get('/admin/boss/show/{id}', 'AdminController@bossShow');
+Route::post('/admin/get-potentially-new-bosses', 'AdminController@getPotentiallyNewBosses');
+Route::put('/admin/boss/edit', 'AdminController@bossUpdate');
 Route::get('/admin/temp-user/boss/show/{id}', 'AdminController@tempUserBossShow');
-Route::get('/admin/temp-user/user/show/{id}', 'AdminController@tempUserUserShow');
+Route::get('/admin/employee/list', 'AdminController@employeeList');
+Route::get('/admin/employee/show/{slug}', 'AdminController@employeeShow');
 Route::get('/admin/employee/create', 'AdminController@employeeCreate');
 Route::post('/admin/employee/add', 'AdminController@employeeAdd');
 Route::get('/admin/temp-user/employee/send-activation-email/{id}', 'AdminController@tempUserEmployeeSendActivationEmail');
-Route::get('/admin/employee/show/{id}', 'AdminController@employeeShow');
 Route::post('/admin/employee/update', 'AdminController@employeeUpdate');
-Route::put('/admin/user/edit', 'AdminController@userEdit');
+
 Route::get('/admin/boss/create', 'AdminController@bossCreate');
 Route::post('/admin/boss/store', 'AdminController@bossStore');
 Route::get('/admin/graphic-requests', 'AdminController@graphicRequests');

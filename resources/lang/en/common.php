@@ -246,10 +246,8 @@ return [
     'temp_user_boss_values' => 'Bosses TempUser values',
     'temp_user_boss_properties' => 'Bosses TempUser locations',
     'temp_user_employee_entites' => 'Employees TempUser entities',
-    'temp_user_user_entites' => 'Users TempUser entities',
     'active_bosses' => 'Active bosses',
     'active_employees' => 'Active employees',
-    'active_users' => 'Active users',
     'bosses' => 'Bosses',
     'delete' => 'Delete',
     'turn_registration_on' => 'Turn registration on',
@@ -294,7 +292,6 @@ return [
     'temporary_properties' => 'Location TempProperty entities',
     'edit_temporary_property' => 'Edit location TempProperty entity',
     'temporary_property' => 'Location TempProperty entity',
-    'property_values' => 'Location values',
     'create_subscription' => 'Create subscription',
     'subscription_edit' => 'Edit subscription',
     'public' => 'Public',
@@ -365,7 +362,6 @@ return [
     'no_temp_properties_description' => 'There are currently no TempProperty locations',
     'no_temp_employees_description' => 'There are currently no TempUser employees',
     'no_temp_bosses_description' => 'There are currently no TempUser bosses',
-    'no_temp_users_description' => 'There are currently no TempUser users',
     'no_employees_description' => 'There are currently no employees',
     'no_bosses_description' => 'There are currently no bosses',
     'no_users_description' => 'There are currently no users',
@@ -490,5 +486,6 @@ return [
     'total_amount_for_done_appointments' => 'Total amount for done appointments in ',
     'no_payments_description' => 'There are no appointments performed in a given month',
     'not_active' => 'Not active',
-    'and' => ' and '
+    'and' => ' and ',
+    'choose_new_boss' => 'Choose new boss'
 ];

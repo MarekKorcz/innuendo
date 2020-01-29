@@ -1,57 +1,29 @@
 $(document).ready(function() {
     
-    $(document).on("change", "#appointment-status", function () {
-        
-        let statusId = this.value;
-        let appointmentId = $(this).find('option:selected').data('appointment');
-        
-        setAppointmentStatus(statusId, appointmentId);
-    });
-    
-    let backgroundDiv = document.getElementById('background');
-    
-    document.addEventListener("click", function(event) 
+    $(document).on("change", "#is-boss", function () 
     {
-        let clickedElement = event.target;
+        let selectElement = document.getElementById('is-boss')
+        let selectedValue = selectElement.options[selectElement.selectedIndex].value
         
-        if (clickedElement.classList.contains('modal-open') && clickedElement.classList.contains('show'))
+        if (selectedValue == 'false')
         {
-            clickedElement.classList.remove("modal-open");
-            clickedElement.classList.remove("show");
-
-            backgroundDiv.classList.remove("dark");
+            let bossId = selectElement.dataset.boss_id
+            
+            getPotentiallyNewBosses(bossId)
+            
+        } else if (selectedValue == 'true') {
+            
+            // grab 'new boss element' and remove everything from it
+            let newBossElement = document.getElementById('new-boss-element')
+            newBossElement.innerText = ''
         }
     });
     
-    $(".close").on('click', function(event) 
+    // function for insterting boss option elements to choose in order to 
+    // give admin a chance to change boss_id for its employees
+    function getPotentiallyNewBosses(bossId)
     {
-        let clickedModalWindow = event.target.parentElement.parentElement.parentElement;
-        
-        clickedModalWindow.classList.remove("modal-open");
-        clickedModalWindow.classList.remove("show");
-        
-        backgroundDiv.classList.remove("dark");
-    });
-    
-    $(".delete").on('click', function(event) 
-    {
-        event.preventDefault();
-        
-        let modalFormElement = document.querySelector("div#deleteAppointment form");
-        
-        modalFormElement.action = ("http://localhost:8000/appointment/" + event.target.dataset.appointment_id);
-        
-        let modalElement = document.getElementById('deleteAppointment');
-        
-        modalElement.classList.add("modal-open");
-        modalElement.classList.add("show");
-
-        backgroundDiv.classList.add("dark");
-    });
-    
-    function setAppointmentStatus(statusId, appointmentId)
-    {
-        return fetch('http://localhost:8000/employee/backend-appointment/set-appointment-status', {
+        return fetch('http://localhost:8000/admin/get-potentially-new-bosses', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
@@ -59,15 +31,57 @@ $(document).ready(function() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             body: JSON.stringify({
-                statusId: parseInt(statusId),
-                appointmentId: appointmentId
+                bossId: bossId
             })
         })
         .then((res) => res.json())
         .then((data) => {
             if (data.type === "success")
             {
-                $("strong#status").html(data.status);
+                if (data.bosses.length > 0)
+                {
+                    // grab 'new boss element'
+                    let newBossElement = document.getElementById('new-boss-element')
+                    
+                    let labelElement = document.createElement('label')
+                    labelElement.setAttribute('for', 'new_boss')
+                    labelElement.innerText = data.label_description
+                    
+                    newBossElement.append(labelElement)
+                    
+                    // creates 'select element'
+                    let newBossSelectElement = document.createElement('select')
+                    newBossSelectElement.setAttribute('id', 'new-boss')
+                    newBossSelectElement.setAttribute('class', 'form-control')
+                    newBossSelectElement.setAttribute('name', 'new_boss')
+
+                    // creates 'select option elements'
+                    data.bosses.forEach((boss) => {
+
+                        // creates 'select option element'
+                        let newBossOptionElement = document.createElement('option')
+                        newBossOptionElement.setAttribute('value', boss.id)
+                        newBossOptionElement.setAttribute('selected', false)
+                        newBossOptionElement.innerText = boss.name
+                        
+                        // appends 'select option element' to 'select element'
+                        newBossSelectElement.append(newBossOptionElement)
+                    })
+
+                    // appends 'select element' to 'new boss element'
+                    newBossElement.append(newBossSelectElement)
+                }
+                
+                
+                
+                
+                
+//                1. zrób pojawianie się selectu z pytaniem do jakiego szefa mają zostać przypisani pracownicy
+
+//               2.   jesli is-boss zostanie ustawione na true to to co się pojawi wyżej ma zniknąć
+                
+                
+                
             }
         });
     }

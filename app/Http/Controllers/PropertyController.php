@@ -212,7 +212,7 @@ class PropertyController extends Controller
         
         if ($property !== null)
         {
-            $users = User::where([
+            $bosses = User::where([
                 'isAdmin' => null,
                 'isEmployee' => null,
                 'isBoss' => 1,
@@ -230,10 +230,10 @@ class PropertyController extends Controller
             {
                 foreach ($admins as $admin)
                 {
-                    $users->push($admin);
+                    $bosses->push($admin);
                 }
                 
-                $property['users'] = $users;
+                $property['bosses'] = $bosses;
 
                 return view('property.edit')->with('property', $property);
             }
@@ -280,40 +280,45 @@ class PropertyController extends Controller
                 ->withErrors($validator);
         } else {
             
-            $boss = null;
-            
-            if (Input::get('user') !== 0)
-            {
-                $boss = User::where([
-                    'id' => Input::get('user'),
-                    'isAdmin' => null,
-                    'isEmployee' => null,
-                    'isBoss' => 1,
-                    'boss_id' => null
-                ])->first();
-                
-            }
-            
             $property = Property::where('id', $id)->first();
-            $property->name          = Input::get('name');
-            $property->slug          = str_slug(Input::get('name'));
-            $property->street        = Input::get('street');
-            $property->street_number = Input::get('street_number');
-            $property->house_number  = Input::get('house_number');
-            $property->city          = Input::get('city');
             
-            if ($boss !== null)
+            if ($property !== null)
             {
-                $property->boss_id = $boss->id; 
-                
-            } else {
-                
-                $property->boss_id = 0;
+                $property->name          = Input::get('name');
+                $property->slug          = str_slug(Input::get('name'));
+                $property->street        = Input::get('street');
+                $property->street_number = Input::get('street_number');
+                $property->house_number  = Input::get('house_number');
+                $property->city          = Input::get('city');
+
+                $boss = null;
+
+                if (Input::get('boss_id') !== 0)
+                {
+                    $boss = User::where([
+                        'id' => Input::get('boss_id'),
+                        'isAdmin' => null,
+                        'isEmployee' => null,
+                        'isBoss' => 1,
+                        'boss_id' => null
+                    ])->first();
+                }
+
+                if ($boss !== null)
+                {
+                    $property->boss_id = $boss->id; 
+
+                } else {
+
+                    $property->boss_id = 0;
+                }
+
+                $property->save();
+
+                return redirect('/property/' . $property->id)->with('success', 'Property successfully updated!');
             }
             
-            $property->save();
-
-            return redirect('/property/index')->with('success', 'Property successfully updated!');
+            return redirect()->route('welcome')->with('error', 'There is no such property');
         }
     }
     

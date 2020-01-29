@@ -247,10 +247,8 @@ return [
     'temp_user_boss_values' => 'Wartości TempUser szefów',
     'temp_user_boss_properties' => 'Lokalizacje TempUser szefów',
     'temp_user_employee_entites' => 'Encje TempUser pracowników',
-    'temp_user_user_entites' => 'Encje TempUser userów',
     'active_bosses' => 'Aktywni szefowie',
     'active_employees' => 'Aktywni pracownicy',
-    'active_users' => 'Aktywni userzy',
     'bosses' => 'Szefowie',
     'delete' => 'Usuń',
     'turn_registration_on' => 'Włącz rejestracje',
@@ -295,7 +293,6 @@ return [
     'temporary_properties' => 'Encje TempProperty lokalizacji',
     'edit_temporary_property' => 'Edytuj encje TempProperty lokalizacji',
     'temporary_property' => 'Encja TempProperty lokalizacji',
-    'property_values' => 'Właściwości lokalizacji',
     'create_subscription' => 'Stwórz pakiet',
     'subscription_edit' => 'Edytuj pakiet',
     'public' => 'Publiczny',
@@ -367,7 +364,6 @@ return [
     'no_temp_properties_description' => 'Obecnie nie ma żadnych lokalizacji TempProperty',
     'no_temp_employees_description' => 'Obecnie nie ma żadnych pracowników TempUser',
     'no_temp_bosses_description' => 'Obecnie nie ma żadnych szefów TempUser',
-    'no_temp_users_description' => 'Obecnie nie ma żadnych userów TempUser',
     'no_employees_description' => 'Obecnie nie ma żadnych pracowników',
     'no_bosses_description' => 'Obecnie nie ma żadnych szefów',
     'no_users_description' => 'Obecnie nie ma żadnych userów',
@@ -492,5 +488,6 @@ return [
     'total_amount_for_done_appointments' => 'Łączna kwota za wykonane zabiegi w ',
     'no_payments_description' => 'W danym miesiącu nie ma jeszcze żadnych zrealizowanych zabiegów',
     'not active' => 'Nieaktywna',
-    'and' => ' i '
+    'and' => ' i ',
+    'choose_new_boss' => 'Wybierz nowego szefa'
 ];

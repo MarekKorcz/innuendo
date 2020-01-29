@@ -103,8 +103,6 @@ $(document).ready(function() {
                 
                 if (data.locale == "en")
                 {
-                    console.log('angielski')
-                    
                     monthlyPaymentsParentElement.append(`
                         <h3>
                             ` + data.total_amount_for_done_appointments_description + `
