@@ -4,10 +4,8 @@ namespace App\Mail;
 
 use App\User;
 use App\Day;
-use App\Month;
-use App\Year;
-use App\Calendar;
 use App\Appointment;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -44,13 +42,29 @@ class AppointmentStore extends Mailable
         {        
             $this->appointment['day'] = $appointmentDay->day_number;
             
-            if (Session::get('locale') == "pl")
+            if (Session::get('locale'))
             {
-                $this->appointment['month'] = $appointmentDay->month->month;
+                if (Session::get('locale') == "pl")
+                {
+                    $this->appointment['month'] = $appointmentDay->month->month;
 
-            } else if (Session::get('locale') == "en") {
+                } else if (Session::get('locale') == "en") {
+
+                    $this->appointment['month'] = $appointmentDay->month->month_en;
+                }
                 
-                $this->appointment['month'] = $appointmentDay->month->month_en;
+            } else {
+                
+                $browserDefaultLanguage = mb_substr(\Request::server('HTTP_ACCEPT_LANGUAGE'), 0, 2, 'utf-8');
+                
+                if ($browserDefaultLanguage == "pl")
+                {
+                    $this->appointment['month'] = $appointmentDay->month->month;
+
+                } else if ($browserDefaultLanguage == "en") {
+
+                    $this->appointment['month'] = $appointmentDay->month->month_en;
+                }
             }
                 
             $this->appointment['year'] = $appointmentDay->month->year->year;

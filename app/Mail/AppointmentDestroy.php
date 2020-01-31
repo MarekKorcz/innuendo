@@ -3,10 +3,6 @@
 namespace App\Mail;
 
 use App\User;
-use App\Day;
-use App\Month;
-use App\Year;
-use App\Calendar;
 use App\Appointment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -29,49 +25,48 @@ class AppointmentDestroy extends Mailable
      */
     public function __construct(User $user, Appointment $appointment)
     {
+        $appointment->load([
+            'graphic.property',
+            'day.month.year'
+        ]);
+        
         $this->user = $user;
         $this->appointment = $appointment;
         $this->loginUrl = route('login');
         
-        $this->appointment['day'] = null;
         $this->appointment['month'] = null;
-        $this->appointment['year'] = null;
-        $this->appointment['property'] = null;
         
-        $appointmentDay = Day::where('id', $this->appointment->day_id)->first();
-        
-        if ($appointmentDay !== null)
-        {        
-            $this->appointment['day'] = $appointmentDay->day_number;
-            $appointmentMonth = Month::where('id', $appointmentDay->month_id)->first();
-            
-            if ($appointmentMonth !== null)
+        $appointmentMonth = $appointment->day->month;
+
+        if (Session::get('locale'))
+        {
+            if (Session::get('locale') == "pl")
             {
-                if (Session::get('locale') == "pl")
-                {
-                    $this->appointment['month'] = $appointmentMonth->month;
-                    
-                } else if (Session::get('locale') == "en") {
-                    
-                    $this->appointment['month'] = $appointmentMonth->month_en;
-                }
-                
-                $appointmentYear = Year::where('id', $appointmentMonth->year_id)->first();
-                
-                if ($appointmentYear !== null)
-                {
-                    $this->appointment['year'] = $appointmentYear->year;
-                    
-                    $calendar = Calendar::where('id', $appointmentYear->calendar_id)->with('property')->first();
-                    
-                    if ($calendar !== null)
-                    {
-                        $this->appointment['property'] = $calendar->property;
-                    }
-                }
+                $this->appointment['month'] = $appointmentMonth->month;
+
+            } else if (Session::get('locale') == "en") {
+
+                $this->appointment['month'] = $appointmentMonth->month_en;
+            }
+
+        } else {
+
+            $browserDefaultLanguage = mb_substr(\Request::server('HTTP_ACCEPT_LANGUAGE'), 0, 2, 'utf-8');
+
+            if ($browserDefaultLanguage == "pl")
+            {
+                $this->appointment['month'] = $appointmentMonth->month;
+
+            } else if ($browserDefaultLanguage == "en") {
+
+                $this->appointment['month'] = $appointmentMonth->month_en;
             }
         }
         
+        $this->appointment['property'] = $appointment->graphic->property;
+        $this->appointment['year'] = $appointment->day->month->year->year;
+        $this->appointment['day'] = $appointment->day->day_number;
+                
         $this->subject(
             \Lang::get('common.appointment_removal') . ' ' .
             \Lang::get('common.in') . ' ' .

@@ -71,17 +71,6 @@ $(document).ready(function() {
                     // appends 'select element' to 'new boss element'
                     newBossElement.append(newBossSelectElement)
                 }
-                
-                
-                
-                
-                
-//                1. zrób pojawianie się selectu z pytaniem do jakiego szefa mają zostać przypisani pracownicy
-
-//               2.   jesli is-boss zostanie ustawione na true to to co się pojawi wyżej ma zniknąć
-                
-                
-                
             }
         });
     }
