@@ -487,5 +487,6 @@ return [
     'no_payments_description' => 'There are no appointments performed in a given month',
     'not_active' => 'Not active',
     'and' => ' and ',
-    'choose_new_boss' => 'Choose new boss'
+    'choose_new_boss' => 'Choose new boss',
+    'contact_with_us' => 'Contact with us!'
 ];

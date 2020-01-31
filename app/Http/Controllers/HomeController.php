@@ -14,6 +14,7 @@ use App\Month;
 use App\Year;
 use App\TempUser;
 use App\Mail\BossCreateWithPromoCode;
+use App\Mail\ContactMessageCreate;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
@@ -173,6 +174,8 @@ class HomeController extends Controller
             $message->email = Input::get('email');
             $message->text  = Input::get('message');     
             $message->save();
+            
+            \Mail::to('mark.korcz@gmail.com')->send(new ContactMessageCreate($message));
 
             return redirect()->route('welcome')->with('success', 'Wiadomość została wysłana!');
         }

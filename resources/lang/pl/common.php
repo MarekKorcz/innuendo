@@ -489,5 +489,6 @@ return [
     'no_payments_description' => 'W danym miesiącu nie ma jeszcze żadnych zrealizowanych zabiegów',
     'not active' => 'Nieaktywna',
     'and' => ' i ',
-    'choose_new_boss' => 'Wybierz nowego szefa'
+    'choose_new_boss' => 'Wybierz nowego szefa',
+    'contact_with_us' => 'Skontaktuj się z nami!'
 ];

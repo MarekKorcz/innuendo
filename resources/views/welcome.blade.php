@@ -120,6 +120,16 @@
         </div>
     </div>
     <hr>
+    <div class="row text-center" style="padding: 20px;">
+        <div class="col-12">
+            <h2>
+                <a href="{{ URL::to('/contact') }}" target="_blank">
+                    @lang('common.contact_with_us')
+                </a>
+            </h2>
+        </div>            
+    </div>
+    <hr>
     <div class="container-fluid">
         <div class="row welcome text-center">
             <div class="col-12">
@@ -234,6 +244,16 @@
             </div>
         </div>
         <hr>
+        <div class="row text-center" style="padding: 20px;">
+            <div class="col-12">
+                <h2>
+                    <a href="{{ URL::to('/contact') }}" target="_blank">
+                        @lang('common.contact_with_us')
+                    </a>
+                </h2>
+            </div>            
+        </div>
+        <hr>
         <h2 class="text-center padding">@lang('welcome.massage_40')</h2>
         <div class="row text-center">
             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -286,6 +306,16 @@
                 @svg('regular/laugh-beam')
                 <h3>@lang('welcome.from_twenty_five')</h3>
             </div>
+        </div>
+        <hr>
+        <div class="row text-center" style="padding: 20px;">
+            <div class="col-12">
+                <h2>
+                    <a href="{{ URL::to('/contact') }}" target="_blank">
+                        @lang('common.contact_with_us')
+                    </a>
+                </h2>
+            </div>            
         </div>
         <hr>
         <div class="row text-center padding">
