@@ -75,12 +75,26 @@
     
     <div class="container-fluid">
         <div class="row welcome">
-            <div class="col-12">
+            <div class="col-12" style="padding-bottom: 1rem;">
                 <h2 class="text-center">@lang('welcome.main_header')</h2>
             </div>
-            <hr>
             <div class="col-12">
                 <p class="lead text-center">@lang('welcome.first_paragraph')</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid" style="margin-top: 1rem;">
+        <div class="row welcome text-center" style="border: 2px blue dotted; border-radius: 30px; padding: 2rem 0 2rem 0;">
+            <div class="col-12">
+                <p class="lead" style="font-size: 21px; font-weight: 600;">
+                    @lang('welcome.additional_copy_1')
+                </p>
+                <h2>
+                    <a href="{{ URL::to('/about') }}" target="_blank">
+                        @lang('welcome.about_us_copy_button')
+                    </a>
+                </h2>
             </div>
         </div>
     </div>
@@ -89,7 +103,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6">
-                    <p class="lead">@lang('welcome.third_paragraph')</p>
+                    <!--<p class="lead">@lang('welcome.third_paragraph')</p>-->
+                    <p class="lead" style="font-size: 24px;">@lang('welcome.meeting_methodology_sixth_li')</p>
                 </div>
                 <div class="col-sm-6 text-center box">
                     <img src="img/główna.jpg" class="img-fluid">
@@ -112,33 +127,53 @@
     <div class="container-fluid">
         <div class="row welcome text-center">
             <div class="col-12">
-                <p class="lead text-center">@lang('welcome.second_paragraph')</p>
+                <p class="lead" style="font-weight: 600;">@lang('welcome.second_paragraph')</p>
             </div>
             <div class="col-12">
-                <p class="lead" style="font-size: 21px;">@lang('welcome.meeting_methodology_sixth_li')</p>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row text-center" style="padding: 20px;">
-        <div class="col-12">
-            <h2>
-                <a href="{{ URL::to('/contact') }}" target="_blank">
-                    @lang('common.contact_with_us')
-                </a>
-            </h2>
-        </div>            
-    </div>
-    <hr>
-    <div class="container-fluid">
-        <div class="row welcome text-center">
-            <div class="col-12">
-                <p class="lead" style="font-size: 27px;">
-                    @lang('welcome.forth_paragraph')
+                <p class="lead" style="font-size: 21px;">
+                    @lang('welcome.additional_copy_2')
                 </p>
+                <p class="lead" style="font-weight: 600;">
+                    @lang('welcome.additional_copy_3')
+                </p>                
             </div>
         </div>
     </div>
+
+    <!--Special promo banner-->
+    <div class="container-fluid">
+        <div class="row welcome text-center" style="border: 3px blue dotted;">
+            <div class="col-12" style="padding-bottom: 1rem;">
+                <strong style="font-size: 27px;">
+                    @lang('welcome.promo_title')
+                </strong>
+            </div>
+            <div class="col-12">
+                <p class="lead" style="font-size: 21px;">
+                    @lang('welcome.promo_copy_1')
+                    <i style="font-weight: 600;"> 
+                        @lang('welcome.promo_copy_2')   
+                    </i>
+                </p>
+                <p class="lead" style="font-size: 24px;">
+                    @lang('welcome.promo_copy_3')
+                </p>
+                <p class="lead" style="font-size: 24px;">
+                    @lang('welcome.promo_copy_4')
+                </p>
+                <div class="row text-center" style="padding: 1rem 0 1rem 0;">
+                    <div class="col-12">
+                        <h2>
+                            <a href="{{ URL::to('/contact') }}" target="_blank">
+                                @lang('common.contact_with_us')
+                            </a>
+                        </h2>
+                    </div>            
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------>
     
     <div class="welcome">
         <div class="container">
@@ -163,6 +198,16 @@
         </div>
     </div>
     
+    <div class="container-fluid" style="padding-bottom: 2rem;">
+        <div class="row welcome text-center">
+            <div class="col-12">
+                <p class="lead" style="font-size: 27px;">
+                    @lang('welcome.forth_paragraph')
+                </p>
+            </div>
+        </div>
+    </div>
+    
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-12 text-center" style="padding-top: 1rem;">
@@ -171,7 +216,7 @@
         </div>
     </div>
     
-    <div class="container">
+    <div class="container" style="padding-bottom: 2rem;">
         <div class="row welcome text-center">
             <div class="col-12">
                 <h3 style="font-size: 33px;">@lang('welcome.our_site_header')</h3>
@@ -244,7 +289,7 @@
             </div>
         </div>
         <hr>
-        <div class="row text-center" style="padding: 20px;">
+        <div class="row text-center" style="padding: 2rem 0 2rem 0;">
             <div class="col-12">
                 <h2>
                     <a href="{{ URL::to('/contact') }}" target="_blank">
@@ -273,7 +318,7 @@
         <div class="row">
             <div class="col-12">
                 <h2 class="text-center" style="padding: 1rem;">
-                    <a href="{{ URL::to('subscriptions') }}" class="btn btn-lg pallet-1-3" style="color: white;">
+                    <a href="{{ URL::to('subscriptions') }}" class="btn btn-lg pallet-1-3" style="color: white;" target="_blank">
                         @lang('welcome.all_subscriptions')
                     </a>
                 </h2>
@@ -308,7 +353,7 @@
             </div>
         </div>
         <hr>
-        <div class="row text-center" style="padding: 20px;">
+        <div class="row text-center" style="padding: 2rem 0 2rem 0;">
             <div class="col-12">
                 <h2>
                     <a href="{{ URL::to('/contact') }}" target="_blank">

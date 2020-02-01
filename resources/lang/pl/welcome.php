@@ -109,4 +109,14 @@ return [
     
 //    'about_header' => 'O nas',
 //    'about_paragraph' => 'Masaże wykonywane w Twoim biurze, wykonywane są przez wykwalifikowanych techników masażu, którzy są prezentowani na stronie internetowej wraz z opisami i zdjęciami.'
+
+    'additional_copy_1' => 'Jesteśmy prężnie rozwijającą się firmą, z wieloletnim doświadczeniem w świadczeniu usług masażu na terenie Warszawy, która obecnie zdobywa coraz większe uznanie wśród pracowników firm! Tak jak marce samochodów Ford, zależy nam by naszę usługi były dostępne dla jak najszerszego grona odbiorców oraz cechowały się najwyższym możliwym współczynnikiem ceny do jakości!',
+    'about_us_copy_button' => 'Dowiedz się więcej o nas',
+    'additional_copy_2' => 'Naszą misją jest upowszechnienie się usług masażu w pracy i możliwie jak największa ich dostępność na rynku pracy. Doskonale zdajemy sobie sprawe z pozytywnego wpływu regularnego i dobrze wykonywanego masażu na końcową efektywność pracy. Zwiększona efektywność przekłada się bezpośrednio na wyższe zyski generowane przez Twoją firmę, a przez to wyrażnie odczuwalne zwiększenie prestiżu związanego z pracą w niej!',
+    'additional_copy_3' => 'Zostań częscią tego pozytywnego nurtu i spraw by Twoja firma przeżyła prawdziwą biznesową rewolucję!',
+    'promo_title' => 'Promocja na start - Pierwsza sesja masaży w Twojej firmie za pół ceny!',
+    'promo_copy_1' => 'Wychodzimy naprzeciw rosnącym wymaganiom wśród pracowników firm, dostarczając im usługi na najwyższym poziomie!',
+    'promo_copy_2' => 'Nasza oferta jest potencjalnie najlepszym benefitem pracowniczym na który można sobie w dziesiejszych czasach pozwolić!',
+    'promo_copy_3' => 'Ponieważ szanujemy Ciebie i Twoją firme, przygotowaliśmy 50% zniżke od ceny detalicznej na naszą pierwszą wizytę!',
+    'promo_copy_4' => 'Skorzystaj z naszego formularza kontaktowego by dowiedzieć się więcej!'
 ];
