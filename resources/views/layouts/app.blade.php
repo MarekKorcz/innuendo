@@ -23,6 +23,17 @@
     
     <!-- Fonts -->
     <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-157515210-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-157515210-1');
+    </script>
+
 </head>
 <body>
 
