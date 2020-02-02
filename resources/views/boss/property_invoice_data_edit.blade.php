@@ -10,7 +10,11 @@
             <div class="col-1"></div>
             <div class="col-10">
                 
-                <h1 class="text-center">@lang('common.edit_invoice_data')</h1>
+                <h1 class="text-center">
+                    @lang('common.edit_invoice_data')
+                    @lang('common.in')
+                    {{$property->name}}
+                </h1>
 
                 {{ Form::open(['id' => 'property-invoice-data', 'action' => ['BossController@invoiceDataUpdate'], 'method' => 'POST']) }}
 
@@ -46,7 +50,7 @@
                     </div>-->
 
                     {{ Form::hidden('invoice_data_id', $invoiceData->id) }}
-                    {{ Form::hidden('substart_id', $substart->id) }}
+                    {{ Form::hidden('property_id', $property->id) }}
                     {{ Form::hidden('_method', 'PUT') }}
 
                     <div class="text-center">

@@ -29,8 +29,7 @@ class InvoiceData extends Model
      * @var array
      */
     protected $fillable = [
-        'company_name', 
-        'address', 
+        'company_name',
         'email', 
         'phone_number', 
         'nip', 

@@ -51,7 +51,7 @@
                     <div class="warning"></div>
                 </div>-->
 
-                <input type="hidden" id="substart_id" name="substart_id" value="{{$substart->id}}">
+                <input type="hidden" id="property_id" name="property_id" value="{{$property->id}}">
 
                 <div class="text-center">
                     <input type="submit" value="@lang('common.add')" class="btn pallet-1-3" style="color: white;">

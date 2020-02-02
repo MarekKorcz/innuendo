@@ -68,7 +68,7 @@
                                 @lang('common.graphic_requests_management_panel_description')
                             </p>
                             <div class="text-center">
-                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('boss/graphic-requests') }}">
+                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/boss/graphic-requests') }}">
                                     @lang('common.show')
                                 </a>
                             </div>
@@ -82,7 +82,21 @@
                                 @lang('common.register_code_generation_description')
                             </p>
                             <div class="text-center">
-                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('boss/code/') }}">
+                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/boss/code') }}">
+                                    @lang('common.show')
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title text-center">@lang('common.invoices')</h4>
+                            <p class="card-text text-center">
+                                @lang('common.invoices_description')
+                            </p>
+                            <div class="text-center">
+                                <a class="btn pallet-1-3 btn-lg" style="color: white;" href="{{ URL::to('/boss/invoices') }}">
                                     @lang('common.show')
                                 </a>
                             </div>

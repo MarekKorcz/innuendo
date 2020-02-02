@@ -213,13 +213,13 @@ Route::post('/boss/get-users-appointments-from-database', 'BossController@getUse
 //Route::get('/boss/subscription/workers/edit/{substartId}/{intervalId}', 'BossController@subscriptionWorkersEdit')->name('subscriptionWorkersEdit');
 //Route::post('/boss/subscription/workers/update', 'BossController@subscriptionWorkersUpdate');
 
-// invoices (later when, invoice views will be done)
-//Route::get('/boss/subscription/invoice/create/{substartId}', 'BossController@invoiceDataCreate');
-//Route::post('/boss/subscription/invoice/store', 'BossController@invoiceDataStore');
-//Route::get('/boss/subscription/invoice/{intervalId}', 'BossController@subscriptionInvoice');
-//Route::get('/boss/subscription/invoices/{substartId}', 'BossController@subscriptionInvoices')->name('subscriptionInvoices');
-//Route::get('/boss/subscription/invoice/edit/{invoiceDataId}/{substartId}', 'BossController@invoiceDataEdit');
-//Route::put('/boss/subscription/invoice/update', 'BossController@invoiceDataUpdate');
+// invoices
+Route::get('/boss/invoices', 'BossController@invoices');
+Route::get('/boss/invoices/in/{propertyId}', 'BossController@invoicesIn');
+Route::get('/boss/invoice/create/{propertyId}', 'BossController@invoiceDataCreate');
+Route::post('/boss/subscription/invoice/store', 'BossController@invoiceDataStore');
+Route::get('/boss/invoice/edit/{propertyId}', 'BossController@invoiceDataEdit');
+Route::put('/boss/invoice/update', 'BossController@invoiceDataUpdate');
 
 // graphic requests and approve messages
 Route::post('/boss/make-a-graphic-request', 'BossController@makeAGraphicRequest');
