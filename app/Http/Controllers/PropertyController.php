@@ -377,10 +377,12 @@ class PropertyController extends Controller
         
         if ($invoice !== null)
         {           
-            $property = $invoice->property;            
+            $property = $invoice->property;
             
-            // todo: also, work a way to remove file from storage folder
             $invoice->delete();
+            
+            // remove file from storage folder
+            Storage::disk('local_pdf')->delete($invoice->invoice);
             
             return redirect()->action(
                 'PropertyController@invoiceList', [
@@ -413,7 +415,6 @@ class PropertyController extends Controller
             $month = Month::where('id', Input::get('month_id'))->with('year')->first();
 
             $file = Input::file('invoice');
-            
 
             if ($property !== null && $month !== null && $file !== null)
             {
@@ -428,12 +429,12 @@ class PropertyController extends Controller
                     time() . 
                     '.pdf';
 
-                Storage::disk('local')->put($fileName, File::get($file));
+                Storage::disk('local_pdf')->put($fileName, File::get($file));
 
                 $invoice->invoice = $fileName;
                 $invoice->save();
                 
-                return redirect('/property/add-invoice/' . $property->id)->with('success', 'Invoice has been successfully added!');
+                return redirect('/property/invoice/list/' . $property->id)->with('success', 'Invoice has been successfully added!');
             }
 
             return redirect('/property/index');

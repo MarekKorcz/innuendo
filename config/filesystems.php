@@ -47,6 +47,11 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
         ],
+        
+        'local_pdf' => [
+            'driver' => 'local',
+            'root' => storage_path('app/storage'),
+        ],
 
         'public' => [
             'driver' => 'local',

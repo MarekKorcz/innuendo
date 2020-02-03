@@ -26,9 +26,11 @@
             <h1>{{$invoice->invoice}}</h1>
             <p>
                 @lang('common.date'): 
-                <strong>
-                    {{$invoice->month->year->year}} - {{$invoice->month->month}}
-                </strong>
+                <a download="{{$invoice->invoice}}" href="{{ Storage::url($invoice->invoice) }}">
+                    <strong>
+                        {{$invoice->month->year->year}} - {{$invoice->month->month}}
+                    </strong>
+                </a>
             </p>
         </div>
     </div>
