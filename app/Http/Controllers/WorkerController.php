@@ -469,8 +469,12 @@ class WorkerController extends Controller
                     $startTime = date('G:i', strtotime($graphic->start_time));
                     $endTime = date('G:i', strtotime($graphic->end_time));
                     $appointmentTerm = date('G:i', strtotime($appointmentTerm));
+                    
+                    $startTimeDateTimeObject = new \DateTime(date('G:i', strtotime($graphic->start_time)));
+                    $endTimeDateTimeObject = new \DateTime(date('G:i', strtotime($graphic->end_time)));
+                    $appointmentTermDateTimeObject = new \DateTime(date('G:i', strtotime($appointmentTerm)));
 
-                    if ($appointmentTerm >= $startTime && $appointmentTerm < $endTime)
+                    if ($appointmentTermDateTimeObject >= $startTimeDateTimeObject && $appointmentTermDateTimeObject < $endTimeDateTimeObject)
                     {
                         $chosenAppointment = Appointment::where([
                             'graphic_id' => $graphicId,
@@ -480,17 +484,17 @@ class WorkerController extends Controller
                         if ($chosenAppointment == null)
                         {
                             $appointmentLength = 1;
-                            $appointmentTermIncremented = $appointmentTerm;
+                            $appointmentTermIncremented = $appointmentTermDateTimeObject;
 
                             for ($i = 0; $i < 2; $i++)
                             {
-                                $appointmentTermIncremented = date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented)));
+                                $appointmentTermIncremented = new \DateTime(date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented->format('G:i')))));
 
-                                if ($appointmentTermIncremented >= $startTime && $appointmentTermIncremented < $endTime)
+                                if ($appointmentTermIncremented >= $startTimeDateTimeObject && $appointmentTermIncremented < $endTimeDateTimeObject)
                                 {
                                     $nextAppointmentAvailable = Appointment::where([
                                         'graphic_id' => $graphicId,
-                                        'start_time' => $appointmentTermIncremented
+                                        'start_time' => $appointmentTermIncremented->format('G:i')
                                     ])->first();
 
                                     if ($nextAppointmentAvailable === null)
@@ -913,8 +917,12 @@ class WorkerController extends Controller
             $startTime = date('G:i', strtotime($graphic->start_time));
             $endTime = date('G:i', strtotime($graphic->end_time));
             $appointmentTerm = date('G:i', strtotime($appointmentTerm));
+            
+            $startTimeDateTimeObject = new \DateTime(date('G:i', strtotime($graphic->start_time)));
+            $endTimeDateTimeObject = new \DateTime(date('G:i', strtotime($graphic->end_time)));
+            $appointmentTermDateTimeObject = new \DateTime(date('G:i', strtotime($appointmentTerm)));
 
-            if ((int)$appointmentTerm >= (int)$startTime && (int)$appointmentTerm < (int)$endTime)
+            if ($appointmentTermDateTimeObject >= $startTimeDateTimeObject && $appointmentTermDateTimeObject < $endTimeDateTimeObject)
             {
                 $chosenAppointment = Appointment::where([
                     'graphic_id' => $graphicId,
@@ -926,17 +934,17 @@ class WorkerController extends Controller
                     $appointmentLength = [
                         0 => true
                     ];
-                    $appointmentTermIncremented = $appointmentTerm;
+                    $appointmentTermIncremented = $appointmentTermDateTimeObject;
 
                     for ($i = 0; $i < 5; $i++)
                     {
-                        $appointmentTermIncremented = date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented)));
+                        $appointmentTermIncremented = new \DateTime(date('G:i', strtotime("+15 minutes", strtotime($appointmentTermIncremented->format('G:i')))));
 
-                        if ((int)$appointmentTermIncremented >= (int)$startTime && (int)$appointmentTermIncremented < (int)$endTime)
+                        if ($appointmentTermIncremented >= $startTimeDateTimeObject && $appointmentTermIncremented < $endTimeDateTimeObject)
                         {
                             $nextAppointmentAvailable = Appointment::where([
                                 'graphic_id' => $graphicId,
-                                'start_time' => $appointmentTermIncremented
+                                'start_time' => $appointmentTermIncremented->format('G:i')
                             ])->first();
 
                             if ($nextAppointmentAvailable === null)

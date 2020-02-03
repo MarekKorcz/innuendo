@@ -84,10 +84,13 @@ class AppointmentController extends Controller
                 {
                     $startTime = date('G:i', strtotime($graphic->start_time));
                     $endTime = date('G:i', strtotime($graphic->end_time));
-                    
                     $appointmentTerm = date('G:i', strtotime($appointmentTerm));
+                    
+                    $startTimeDateTimeObejct = new \DateTime($startTime);
+                    $endTimeDateTimeObject = new \DateTime($endTime);
+                    $appointmentTermDateTimeObject = new \DateTime($appointmentTerm);
 
-                    if ($appointmentTerm >= $startTime && $appointmentTerm < $endTime)
+                    if ($appointmentTermDateTimeObject >= $startTimeDateTimeObejct && $appointmentTermDateTimeObject < $endTimeDateTimeObject)
                     {
                         $chosenAppointment = Appointment::where([
                             'graphic_id' => $graphicId,
@@ -97,17 +100,17 @@ class AppointmentController extends Controller
                         if ($chosenAppointment == null)
                         {
                             $appointmentLength = 1;
-                            $appointmentTermIncremented = $appointmentTerm;
+                            $appointmentTermIncremented = $appointmentTermDateTimeObject;
 
                             for ($i = 0; $i < 5; $i++)
                             {
-                                $appointmentTermIncremented = date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented)));
+                                $appointmentTermIncremented = new \DateTime(date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented->format('G:i')))));
 
-                                if ($appointmentTermIncremented >= $startTime && $appointmentTermIncremented < $endTime)
+                                if ($appointmentTermIncremented >= $startTimeDateTimeObejct && $appointmentTermIncremented < $endTimeDateTimeObject)
                                 {
                                     $nextAppointmentAvailable = Appointment::where([
                                         'graphic_id' => $graphicId,
-                                        'start_time' => $appointmentTermIncremented
+                                        'start_time' => $appointmentTermIncremented->format('G:i')
                                     ])->first();
 
                                     if ($nextAppointmentAvailable === null)
@@ -147,14 +150,28 @@ class AppointmentController extends Controller
                         $message = 'Niepoprawny termin wizyty';
                     }
 
-                    return redirect()->action(
-                        'UserController@calendar', [
-                            'property_id' => $graphic->day->month->year->property->id,
-                            'year' => $graphic->day->month->year->year, 
-                            'month_number' => $graphic->day->month->month_number, 
-                            'day_number' => $graphic->day->day_number
-                        ]
-                    )->with('error', $message);
+                    if (auth()->user()->isBoss)
+                    {
+                        return redirect()->action(
+                            'BossController@calendar', [
+                                'property_id' => $graphic->day->month->year->property->id,
+                                'year' => $graphic->day->month->year->year, 
+                                'month_number' => $graphic->day->month->month_number, 
+                                'day_number' => $graphic->day->day_number
+                            ]
+                        )->with('error', $message);
+                        
+                    } else {
+                        
+                        return redirect()->action(
+                            'UserController@calendar', [
+                                'property_id' => $graphic->day->month->year->property->id,
+                                'year' => $graphic->day->month->year->year, 
+                                'month_number' => $graphic->day->month->month_number, 
+                                'day_number' => $graphic->day->day_number
+                            ]
+                        )->with('error', $message);
+                    }
                 }
 
                 return redirect()->route('welcome')->with('error', 'Grafik nie istnieje');
@@ -171,7 +188,7 @@ class AppointmentController extends Controller
      * @return type
      */
     public function store(Request $request)
-    {
+    {        
         $appointmentTerm = $request->get('appointmentTerm');
         $item = $request->get('item');
         $propertyId = $request->get('propertyId');
@@ -200,6 +217,7 @@ class AppointmentController extends Controller
                 $month = htmlentities($month, ENT_QUOTES, "UTF-8");
                 $day = htmlentities($day, ENT_QUOTES, "UTF-8");
                 
+                $user = auth()->user();
                 $item = Item::where('id', $item)->first();
                 
                 if ($item !== null && $this->checkIfStillCanMakeAnAppointment($graphicId, $appointmentTerm, $item->minutes))
@@ -222,8 +240,6 @@ class AppointmentController extends Controller
                         'month_id' => $month->id
                     ])->first();
                     
-                    $user = auth()->user();
-                    
                     $appointment = new Appointment();
                     $appointment->start_time = $appointmentTerm;
                     $appointment->end_time = $endTime;
@@ -243,14 +259,28 @@ class AppointmentController extends Controller
                     )->with('success', 'Wizyta została zarezerwowana. Informacja potwierdzająca została wysłana na maila!');
                 }
                 
-                return redirect()->action(
-                    'UserController@calendar', [
-                        'propertyId' => $propertyId,
-                        'year' => $year,
-                        'month_number' => $month,
-                        'day_number' => $day
-                    ]
-                )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
+                if ($user->isBoss)
+                {
+                    return redirect()->action(
+                        'BossController@calendar', [
+                            'propertyId' => $propertyId,
+                            'year' => $year,
+                            'month_number' => $month,
+                            'day_number' => $day
+                        ]
+                    )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
+                
+                } else {
+                    
+                    return redirect()->action(
+                        'UserController@calendar', [
+                            'propertyId' => $propertyId,
+                            'year' => $year,
+                            'month_number' => $month,
+                            'day_number' => $day
+                        ]
+                    )->with('error', 'Nie można zarezerwować wizyty! Być może jest już zajęta!');
+                }
             }
         }
         
@@ -262,7 +292,7 @@ class AppointmentController extends Controller
      * 
      * @param type $graphicId
      * @param type $appointmentTerm
-     * @param type $length
+     * @param type $itemLength
      * 
      * @return boolean|int
      */
@@ -275,8 +305,12 @@ class AppointmentController extends Controller
             $startTime = date('G:i', strtotime($graphic->start_time));
             $endTime = date('G:i', strtotime($graphic->end_time));
             $appointmentTerm = date('G:i', strtotime($appointmentTerm));
+            
+            $startTimeDateTimeObject = new \DateTime($startTime);
+            $endTimeDateTimeObject = new \DateTime($endTime);
+            $appointmentTermDateTimeObject = new \DateTime($appointmentTerm);
 
-            if ($appointmentTerm >= $startTime && $appointmentTerm < $endTime)
+            if ($appointmentTermDateTimeObject >= $startTimeDateTimeObject && $appointmentTermDateTimeObject < $endTimeDateTimeObject)
             {
                 $chosenAppointment = Appointment::where([
                     'graphic_id' => $graphicId,
@@ -288,17 +322,17 @@ class AppointmentController extends Controller
                     $appointmentLength = [
                         0 => true
                     ];
-                    $appointmentTermIncremented = $appointmentTerm;
+                    $appointmentTermIncremented = $appointmentTermDateTimeObject;
 
                     for ($i = 0; $i < 5; $i++)
                     {
-                        $appointmentTermIncremented = date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented)));
+                        $appointmentTermIncremented = new \DateTime(date('G:i', strtotime("+20 minutes", strtotime($appointmentTermIncremented->format('G:i')))));
 
-                        if ($appointmentTermIncremented >= $startTime && $appointmentTermIncremented < $endTime)
+                        if ($appointmentTermIncremented >= $startTimeDateTimeObject && $appointmentTermIncremented < $endTimeDateTimeObject)
                         {
                             $nextAppointmentAvailable = Appointment::where([
                                 'graphic_id' => $graphicId,
-                                'start_time' => $appointmentTermIncremented
+                                'start_time' => $appointmentTermIncremented->format('G:i')
                             ])->first();
 
                             if ($nextAppointmentAvailable === null)
