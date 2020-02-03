@@ -32,6 +32,17 @@
     
     <div class="jumbotron">
         <div class="text-center">
+            
+            <div class="row" style="padding-bottom: 2rem;">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <a class="btn pallet-2-4" style="color: white;" href="{{ URL::to('/property/invoice/list/' . $property->id) }}">
+                        @lang('common.invoices')
+                    </a>
+                </div>
+                <div class="col-4"></div>
+            </div>
+            
             <h1>{{$property->name}}</h1>
                 <p>
                     @lang('common.address'): 

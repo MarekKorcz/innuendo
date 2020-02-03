@@ -4,8 +4,19 @@
 {!! Html::script('js/property_invoice_data.js') !!}
 
 <div class="container">
+    
+    <div class="row text-center" style="padding-top: 1rem;">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <a href="{{ URL::to('/boss/invoices/in/' . $property->id) }}" class="btn pallet-1-3" style="color: white;">
+                @lang('common.invoices_in')
+                {{$property->name}}
+            </a>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    
     <div class="jumbotron" style="margin: 15px;">
-        
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">

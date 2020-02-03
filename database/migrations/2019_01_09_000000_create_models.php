@@ -206,6 +206,15 @@ class CreateModels extends Migration
             $table->softDeletes();
         });
         
+        Schema::create('invoices', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('invoice');
+            $table->integer('property_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("properties");
+            $table->integer('month_id')->nullable()->unsigned()->index()->foreign()->references("id")->on("months");
+            $table->timestamps();
+            $table->softDeletes();
+        });
+        
         Schema::create('discounts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -251,7 +260,8 @@ class CreateModels extends Migration
         Schema::dropIfExists('codes');
         Schema::dropIfExists('promos');
         Schema::dropIfExists('promo_codes');
-        Schema::dropIfExists('invoice_data');
+        Schema::dropIfExists('invoice_datas');
+        Schema::dropIfExists('invoices');
         Schema::dropIfExists('discounts');
         Schema::dropIfExists('policy_confirmations');
     }

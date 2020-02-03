@@ -492,5 +492,8 @@ return [
     'not_active' => 'Not active',
     'and' => ' and ',
     'choose_new_boss' => 'Choose new boss',
-    'contact_with_us' => 'Contact with us!'
+    'contact_with_us' => 'Contact with us!',
+    'add_invoice' => 'Add invoice',
+    'no_invoices' => 'No invoices',
+    'invoice_delete' => 'Do you want to delete invoice?'
 ];

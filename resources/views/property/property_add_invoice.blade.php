@@ -6,60 +6,53 @@
 
 <div class="container">
 
-    <h1 class="text-center padding">{{ $employee->name }} {{$employee->surname}}</h1>
+    <div class="text-center padding">
+        <h1>
+            @lang('common.add_invoice')
+            @lang('common.to')
+            {{$property->name}}
+        </h1>
+    </div>
     
     <div class="jumbotron">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                {{ Form::open(['action' => 'AdminController@employeeUpdate', 'method' => 'POST', 'enctype' => 'multipart/form-data']) }}
-    
-                    <div class="form-group">
-                        <label for="name">@lang('common.name')</label>
-                        {{ Form::text('name', $employee->name, array('class' => 'form-control')) }}
-                    </div>
-                    <div class="form-group">
-                        <label for="surname">@lang('common.surname')</label>
-                        {{ Form::text('surname', $employee->surname, array('class' => 'form-control')) }}
-                    </div>
-                    <div class="form-group">
-                        {{ Form::label('slug', 'Slug') }}
-                        {{ Form::text('slug', $employee->slug, array('class' => 'form-control')) }}
-                    </div>
-                    <div class="form-group">
-                        <label for="email">@lang('common.email_address')</label>
-                        {{ Form::text('email', $employee->email, array('class' => 'form-control')) }}
-                    </div>
-                    <div class="form-group">
-                        <label for="phone_number">@lang('common.phone_number')</label>
-                        {{ Form::number('phone_number', $employee->phone_number, array('class' => 'form-control')) }}
-                    </div>
-                    <div class="form-group">
-                        <label for="profile_image">@lang('common.profile_image')</label><br>
-                        {{ Form::file('profile_image', null, array('class' => 'form-control')) }}
-                    </div>
-                
-                    {{ Form::hidden('id', $employee->id) }}
+        <div class="row text-center">
+            <div class="col-12">
+                @if ($property->invoiceData !== null)
+                    {{ Form::open(['action' => 'PropertyController@addInvoiceUpdate', 'method' => 'POST', 'enctype' => 'multipart/form-data']) }}
 
-                    <div class="text-center">
-                        <input type="submit" value="@lang('common.update')" class="btn pallet-2-4" style="color: white;">
-                    </div>                    
-
-                {{ Form::close() }}
-            </div>
-            <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-                <div class="text-center">
-                    @if (Storage::disk('local')->has($employee->profile_image))
-                        <div style="padding: 1rem;">
-                            <img src="{{ route('account.image', ['fileName' => $employee->profile_image]) }}" 
-                                 alt="{{$employee->name}} {{$employee->surname}}" 
-                                 style="width:100%;"
-                                 border="0"
-                            >
+                        <div class="form-group">
+                            <label for="month_id">@lang('common.months'):</label>
+                            <select name="month_id" class="form-control">
+                                @if (count($property->years) > 0)
+                                    @foreach ($property->years as $year)
+                                        @if (count($year->months) > 0)
+                                            @foreach ($year->months as $month)
+                                                <option value="{{$month->id}}">
+                                                    {{$year->year}} - {{$month->month}}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
-                    @else
-                        todo: doać defaultowe zdjęcie?
-                    @endif
-                </div>
+                            
+                        <div class="form-group">
+                            {{ Form::file('invoice', null, array('class' => 'form-control')) }}
+                        </div>
+
+                        {{ Form::hidden('property_id', $property->id) }}
+
+                        <div class="text-center">
+                            <input type="submit" value="@lang('common.add_invoice')" class="btn pallet-2-4" style="color: white;">
+                        </div>                    
+
+                    {{ Form::close() }}
+                @else
+                    <p>
+                        @lang('common.no_invoice_datas')
+                    </p>
+                @endif
             </div>
         </div>
     </div>

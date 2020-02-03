@@ -76,6 +76,14 @@ class Property extends Model
     }
     
     /**
+     * Get invoices which belongs to property.
+     */
+    public function invoices()
+    {
+        return $this->hasMany('App\Invoice');
+    }
+    
+    /**
      * Get graphicRequests which belongs to property.
      */
     public function graphicRequests()

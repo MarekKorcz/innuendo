@@ -72,4 +72,12 @@ class Month extends Model
     {
         return $this->hasMany('App\Day');
     }
+    
+    /**
+     * Get invoices associated with month.
+     */
+    public function invoices()
+    {
+        return $this->hasMany('App\Invoice');
+    }
 }

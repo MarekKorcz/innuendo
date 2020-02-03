@@ -5,17 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class InvoiceData extends Model
+class Invoice extends Model
 {
     use SoftDeletes;
-    
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'invoice_datas';
-    
+        
     /**
      * The attributes that should be mutated to dates.
      *
@@ -29,12 +22,7 @@ class InvoiceData extends Model
      * @var array
      */
     protected $fillable = [
-        'company_name',
-        'email', 
-        'phone_number', 
-        'nip', 
-        'bank_name', 
-        'account_number'
+        'invoice'
     ];
     
     /**
@@ -43,7 +31,8 @@ class InvoiceData extends Model
      * @var array
      */
     protected $hidden = [
-        'property_id'
+        'property_id',
+        'month_id',
     ];
     
     /**
@@ -52,16 +41,23 @@ class InvoiceData extends Model
      * @var array
      */
     protected $casts = [
-        'phone_number' => 'integer',
-        'account_number' => 'integer',
-        'property_id' => 'integer'
+        'property_id' => 'integer',
+        'month_id' => 'integer'
     ];
     
     /**
-     * Get property associated to invoiceData.
+     * Get property associated to invoice.
      */
     public function property()
     {
         return $this->belongsTo('App\Property');
+    }
+    
+    /**
+     * Get month associated to invoice.
+     */
+    public function month()
+    {
+        return $this->belongsTo('App\Month');
     }
 }

@@ -1214,8 +1214,11 @@ class BossController extends Controller
                 
             } else {
                 
+                $invoices = [];
+                
                 return view('boss.invoices_in')->with([
-                    'property' => $property
+                    'property' => $property,
+                    'invoices' => $invoices
                 ]);
             }
         }

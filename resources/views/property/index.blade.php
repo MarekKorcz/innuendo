@@ -42,7 +42,11 @@
                             @endif
                         </td>
                         @if ($value->boss_id > 0)
-                            <td>{{ $value->boss->name }} {{ $value->boss->surname }}</td>
+                            @if ($value->boss !== null)
+                                <td>{{ $value->boss->name }} {{ $value->boss->surname }}</td>
+                            @else
+                                <td>@lang('common.public')</td>
+                            @endif
                         @else
                             <td>@lang('common.public')</td>
                         @endif

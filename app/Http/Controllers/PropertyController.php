@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Property;
+use App\Month;
+use App\Invoice;
 use App\TempProperty;
 use App\User;
 use App\TempUser;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Redirect;
 
 class PropertyController extends Controller
@@ -131,8 +135,6 @@ class PropertyController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
      * @param  int  $id
      * @return Response
      */
@@ -322,12 +324,122 @@ class PropertyController extends Controller
         }
     }
     
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
+    public function invoice($id)
+    {
+        $invoice = Invoice::where('id', $id)->with([
+            'month.year',
+            'property'
+        ])->first();
+        
+        if ($invoice !== null)
+        {           
+            return view('property.property_invoice')->with([
+                'invoice' => $invoice
+            ]);
+        }
+    }
+    
+    public function invoiceList($id)
+    {
+        $property = Property::where('id', $id)->with('invoices.month.year')->first();
+        
+        if ($property !== null)
+        {
+            return view('property.property_invoices')->with([
+                'property' => $property,
+                'invoices' => $property->invoices
+            ]);
+        }
+    }
+    
+    public function addInvoice($id)
+    {
+        $property = Property::where('id', $id)->with([
+            'invoiceData',
+            'years.months'
+        ])->first();
+        
+        if ($property !== null)
+        {            
+            return view('property.property_add_invoice')->with([
+                'property' => $property
+            ]);
+        }
+        
+        return redirect()->route('welcome')->with('error', 'There is no such property');
+    }
+    
+    public function invoiceDestroy($id)
+    {
+        $invoice = Invoice::where('id', $id)->with([
+            'property'
+        ])->first();
+        
+        if ($invoice !== null)
+        {           
+            $property = $invoice->property;            
+            
+            // todo: also, work a way to remove file from storage folder
+            $invoice->delete();
+            
+            return redirect()->action(
+                'PropertyController@invoiceList', [
+                    'property' => $property->id
+                ]
+            )->with('success', 'Invoice has been succesfully deleted!');
+        }
+        
+        return redirect()->route('welcome')->with('error', 'There is no such invoice');
+    }
+    
+    public function addInvoiceUpdate()
+    {
+        $rules = array(
+            'property_id' => 'required',
+            'invoice'     => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('/property/add-invoice/' . Input::get('property_id'))
+                ->withErrors($validator);
+        } else {
+            
+            $property = Property::where('id', Input::get('property_id'))->with([
+                'invoiceData',
+                'invoices'
+            ])->first();
+            
+            $month = Month::where('id', Input::get('month_id'))->with('year')->first();
+
+            $file = Input::file('invoice');
+            
+
+            if ($property !== null && $month !== null && $file !== null)
+            {
+                $invoice = new Invoice();
+                $invoice->month_id = $month->id;
+                $invoice->property_id = $property->id;
+
+                $fileName = 
+                    $property->name . '_' .
+                    $month->month . '_' . 
+                    $month->year->year . '_' . 
+                    time() . 
+                    '.pdf';
+
+                Storage::disk('local')->put($fileName, File::get($file));
+
+                $invoice->invoice = $fileName;
+                $invoice->save();
+                
+                return redirect('/property/add-invoice/' . $property->id)->with('success', 'Invoice has been successfully added!');
+            }
+
+            return redirect('/property/index');
+        }
+    }
+    
     public function tempPropertyUpdate($id)
     {
         $rules = array(

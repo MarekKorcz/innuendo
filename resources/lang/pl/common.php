@@ -494,5 +494,8 @@ return [
     'not active' => 'Nieaktywna',
     'and' => ' i ',
     'choose_new_boss' => 'Wybierz nowego szefa',
-    'contact_with_us' => 'Skontaktuj się z nami!'
+    'contact_with_us' => 'Skontaktuj się z nami!',
+    'add_invoice' => 'Dodaj fakture',
+    'no_invoices' => 'Brak faktur',
+    'invoice_delete' => 'Czy usunąć fakture?'
 ];

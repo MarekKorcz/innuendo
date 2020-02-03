@@ -16,27 +16,36 @@
         <div class="col-4"></div>
     </div>
     
-    <div class="jumbotron">
-        <div class="text-center">
-            <h2>
-                @lang('common.invoices_in') 
-                {{$property->name}}
-                @lang('common.for_period') 
-            </h2>
-        </div>
-        
-        <div class="row">
-            <div class="col"></div>
-            <div class="col-9">
-                
-                show invoices!!
-                
-<!--                <ul id="invoices" class="list-group">
-                    
-                </ul>-->
+    <div class="jumbotron" style="padding: 1rem;">
+        @if (count($invoices) > 0)
+            <div class="text-center">
+                <h2>
+                    @lang('common.invoices_in') 
+                    {{$property->name}}
+                    @lang('common.for_period') 
+                </h2>
             </div>
-            <div class="col"></div>
-        </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col-9">
+
+                    show invoices!!
+
+    <!--                <ul id="invoices" class="list-group">
+
+                    </ul>-->
+                </div>
+                <div class="col"></div>
+            </div>
+        @else
+            <div class="text-center">
+                <h2>
+                    @lang('common.invoices_in') 
+                    {{$property->name}}
+                </h2>
+                <p>Brak faktur</p>
+            </div>
+        @endif
     </div>
 </div>
 @endsection

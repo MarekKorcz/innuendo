@@ -51,11 +51,11 @@ Route::post('/admin/get-potentially-new-bosses', 'AdminController@getPotentially
 Route::put('/admin/boss/edit', 'AdminController@bossUpdate');
 Route::get('/admin/temp-user/boss/show/{id}', 'AdminController@tempUserBossShow');
 Route::get('/admin/employee/list', 'AdminController@employeeList');
-Route::get('/admin/employee/show/{slug}', 'AdminController@employeeShow');
 Route::get('/admin/employee/create', 'AdminController@employeeCreate');
 Route::post('/admin/employee/add', 'AdminController@employeeAdd');
-Route::get('/admin/temp-user/employee/send-activation-email/{id}', 'AdminController@tempUserEmployeeSendActivationEmail');
+Route::get('/admin/employee/show/{slug}', 'AdminController@employeeShow');
 Route::post('/admin/employee/update', 'AdminController@employeeUpdate');
+Route::get('/admin/temp-user/employee/send-activation-email/{id}', 'AdminController@tempUserEmployeeSendActivationEmail');
 
 Route::get('/admin/boss/create', 'AdminController@bossCreate');
 Route::post('/admin/boss/store', 'AdminController@bossStore');
@@ -129,6 +129,11 @@ Route::get('/property/{id}/edit', 'PropertyController@edit');
 Route::put('/property/{id}', 'PropertyController@update');
 Route::get('/property/can-show/change/{id}', 'PropertyController@canShowChange');
 Route::delete('/property/{id}', 'PropertyController@destroy');
+Route::get('/property/invoice/list/{id}', 'PropertyController@invoiceList');
+Route::get('/property/invoice/{id}', 'PropertyController@invoice');
+Route::get('/property/add-invoice/{id}', 'PropertyController@addInvoice');
+Route::post('/property/add-invoice/update', 'PropertyController@addInvoiceUpdate');
+Route::delete('/property/invoice/{id}', 'PropertyController@invoiceDestroy');
 Route::get('/temp-property/{id}', 'PropertyController@tempPropertyShow');
 Route::get('/temp-property/{id}/edit', 'PropertyController@tempPropertyEdit');
 Route::put('/temp-property/{id}', 'PropertyController@tempPropertyUpdate');
