@@ -408,7 +408,7 @@ return [
     'for_additional_information' => 'for additional information',
     'removal_of_reservation_from' => 'Removal of reservation from ',
     'has_been_removed' => ' has been removed',
-    'book_other_appointment_info' => 'To book a different date, log in to your account, select the schedule of one of our employees, and then choose a different date',
+    'book_other_appointment_info' => 'To book a different date, log in to your account, select the schedule, and then choose a different date',
     'go_to_subscription_list_description' => 'Currently, you do not have any activated subscription to generate registration codes for your employees.',
     'per_person' => 'per person',
     'per_person_2' => 'per person',

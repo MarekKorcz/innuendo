@@ -8,7 +8,6 @@ $(document).ready(function()
         {            
             if (!element.hasClass('clicked') && element.hasClass('existing-invoice'))
             {
-                
                 $("ul.list-group").children().each(function() 
                 {
                     if (this.nodeName === "A")

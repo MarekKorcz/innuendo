@@ -410,7 +410,7 @@ return [
     'for_additional_information' => 'w celu uzyskania dodatkowych informacji',
     'removal_of_reservation_from' => 'Usunięcie rezerwacji z dnia ',
     'has_been_removed' => ' została usunięta',
-    'book_other_appointment_info' => 'W celu rezerwacji innego terminu zaloguj się na swoję konto, wybierz grafik jednego z naszych pracowników, a następnie wybierz inny termin',
+    'book_other_appointment_info' => 'W celu rezerwacji innego terminu zaloguj się na swoję konto, wybierz  grafik, a następnie wybierz inny termin',
     'go_to_subscription_list_description' => 'Obecnie, nie posiadasz jeszcze żadnego aktywowanego pakietu by wygenerować kody rejestracyjne dla swoich pracowników.',
     'per_person' => 'za osobe',
     'per_person_2' => 'na osobe',

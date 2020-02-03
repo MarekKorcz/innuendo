@@ -8,7 +8,7 @@
     
     <div class="row text-center" style="padding: 2rem 0 2rem 0;">
         <div class="col-4">
-            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/employee/backend-graphic') }}">
+            <a class="btn pallet-1-3" style="color: white;" href="{{ URL::to('/home') }}">
                 @lang('common.go_back')
             </a>
         </div>
