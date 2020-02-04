@@ -449,7 +449,6 @@ return [
     'topic' => 'Topic',
     'text' => 'Text',
     'invoice_datas' => 'Invoice datas',
-    'invoice_datas_description' => 'View with list od invoice datas',
     'no_invoice_datas' => 'No invoice datas',
     'create_invoice_data' => 'Create invoice data',
     'canceled' => 'Canceled',

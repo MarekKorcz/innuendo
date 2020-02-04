@@ -26,16 +26,19 @@
                 </h2>
             </div>
             <div class="row">
-                <div class="col"></div>
-                <div class="col-9">
-
-                    show invoices!!
-
-    <!--                <ul id="invoices" class="list-group">
-
-                    </ul>-->
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <ul id="invoices" class="list-group text-center" style="padding: 2rem;">
+                        @foreach ($invoices as $invoice)
+                            <a download="{{$invoice->invoice}}" href="{{ Storage::url($invoice->invoice) }}">
+                                <li class="list-group-item">
+                                    {{$invoice->invoice}}
+                                </li>
+                            </a>
+                        @endforeach
+                    </ul>
                 </div>
-                <div class="col"></div>
+                <div class="col-1"></div>
             </div>
         @else
             <div class="text-center">

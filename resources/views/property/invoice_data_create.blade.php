@@ -5,18 +5,17 @@
         <div class="col-1"></div>
         <div class="col-10">
             <div class="jumbotron" style="margin-top: 15px;">
-                {{ Form::open(['action' => 'AdminController@invoiceDataStore', 'method' => 'POST']) }}
+                {{ Form::open(['action' => 'PropertyController@invoiceDataStore', 'method' => 'POST']) }}
 
-                    <h2 class="text-center" style="padding-bottom: 1rem;">@lang('common.create_invoice_data')</h2>
+                    <h2 class="text-center" style="padding-bottom: 1rem;">
+                        @lang('common.create_invoice_data')
+                        @lang('common.in')
+                        {{$property->name}}
+                    </h2>
 
                     <div class="form-group">
                         <label for="company_name">@lang('common.company_name'):</label>
                         {{ Form::text('company_name', Input::old('company_name'), array('class' => 'form-control')) }}
-                        <div class="warning"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">@lang('common.address'):</label>
-                        {{ Form::text('address', Input::old('address'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
@@ -34,6 +33,8 @@
                         {{ Form::text('nip', Input::old('nip'), array('class' => 'form-control')) }}
                         <div class="warning"></div>
                     </div>
+                
+                    {{ Form::hidden('property_id', $property->id) }}
 
                     <div class="text-center">
                         <input type="submit" value="@lang('common.create')" class="btn pallet-1-3" style="color: white;">

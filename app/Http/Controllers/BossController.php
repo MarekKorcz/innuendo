@@ -1200,7 +1200,8 @@ class BossController extends Controller
             'boss_id' => auth()->user()->id
         ])->with([
             'years.months',
-            'invoiceData'
+            'invoiceData',
+            'invoices'
         ])->first();
         
         if ($property !== null)
@@ -1214,11 +1215,9 @@ class BossController extends Controller
                 
             } else {
                 
-                $invoices = [];
-                
                 return view('boss.invoices_in')->with([
                     'property' => $property,
-                    'invoices' => $invoices
+                    'invoices' => $property->invoices->sortBy('month.id')
                 ]);
             }
         }

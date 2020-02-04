@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Property;
 use App\Month;
 use App\Invoice;
+use App\InvoiceData;
 use App\TempProperty;
 use App\User;
 use App\TempUser;
@@ -244,12 +245,6 @@ class PropertyController extends Controller
         return redirect()->route('welcome');
     }
     
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
     public function tempPropertyEdit($id)
     {
         $tempProperty = TempProperty::where('id', $id)->first();
@@ -261,13 +256,7 @@ class PropertyController extends Controller
         
         return redirect()->route('welcome');
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
+    
     public function update($id)
     {
         $rules = array(
@@ -324,6 +313,114 @@ class PropertyController extends Controller
         }
     }
     
+    public function invoiceDataCreate($id)
+    {
+        $property = Property::where('id', $id)->with([
+            'invoiceData'
+        ])->first();
+        
+        if ($property !== null)
+        {
+            if ($property->invoiceData == null)
+            {
+                return view('property.invoice_data_create')->with('property', $property);
+            
+            } else {
+                
+                return redirect()->action(
+                    'PropertyController@invoiceList', [
+                        'property' => $property->id
+                    ]
+                )->with('success', 'Invoice data has been already added!');
+            }
+        }
+    }
+    
+    public function invoiceDataStore()
+    {
+        $rules = array(
+            'company_name' => 'required',
+            'email'        => 'required',
+            'phone_number' => 'required',
+            'nip'          => 'required',
+            'property_id'  => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('property/invoice-data/create/' . Input::get('property_id'))
+                ->withErrors($validator);
+        } else {
+            
+            $property = Property::where('id', Input::get('property_id'))->with([
+                'invoiceData'
+            ])->first();
+
+            if ($property !== null && $property->invoiceData == null)
+            {
+                $invoiceData = new InvoiceData();
+                $invoiceData->company_name  = Input::get('company_name');
+                $invoiceData->email         = Input::get('email');
+                $invoiceData->phone_number  = Input::get('phone_number');
+                $invoiceData->nip           = Input::get('nip');          
+                $invoiceData->property_id   = Input::get('property_id');  
+                $invoiceData->save();
+
+                return redirect('/property/invoice/list/' . $property->id)->with('success', 'Invoice data has been created!');
+            }
+        }
+    }
+    
+    public function invoiceDataEdit($id)
+    {
+        $property = Property::where('id', $id)->with([
+            'invoiceData'
+        ])->first();
+
+        if ($property !== null && $property->invoiceData !== null)
+        {
+            return view('property.invoice_data_edit')->with([
+                'property' => $property,
+                'invoiceData' => $property->invoiceData
+            ]);
+        }
+        
+        return redirect()->route('home');
+    }
+    
+    public function invoiceDataUpdate()
+    {
+        $rules = array(
+            'company_name' => 'required',
+            'email'        => 'required',
+            'phone_number' => 'required',
+            'nip'          => 'required',
+            'property_id'  => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('/property/invoice-data/edit/' . Input::get('property_id'))
+                ->withErrors($validator);
+        } else {
+            
+            $property = Property::where('id', Input::get('property_id'))->with('invoiceData')->first();
+            
+            if ($property !== null && $property->invoiceData !== null)
+            {
+                $invoiceData = $property->invoiceData;
+                
+                $invoiceData->company_name  = Input::get('company_name');
+                $invoiceData->email         = Input::get('email');
+                $invoiceData->phone_number  = Input::get('phone_number');
+                $invoiceData->nip           = Input::get('nip');
+                $invoiceData->save();
+
+                return redirect('/property/invoice/list/' . $property->id)->with('success', 'Invoice data has been successfully updated!');
+            }
+        }
+    }
+    
     public function invoice($id)
     {
         $invoice = Invoice::where('id', $id)->with([
@@ -341,13 +438,16 @@ class PropertyController extends Controller
     
     public function invoiceList($id)
     {
-        $property = Property::where('id', $id)->with('invoices.month.year')->first();
+        $property = Property::where('id', $id)->with([
+            'invoices.month.year',
+            'invoiceData'
+        ])->first();
         
         if ($property !== null)
         {
             return view('property.property_invoices')->with([
                 'property' => $property,
-                'invoices' => $property->invoices
+                'invoices' => $property->invoices->sortBy('month.id')
             ]);
         }
     }

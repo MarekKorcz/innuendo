@@ -25,3 +25,12 @@
 a:hover { 
     text-decoration: none; 
 }
+
+.link-class:hover {
+    background-color: #f1f1f1;
+}
+
+.list-group-item:hover {
+    background-color: #37AEA8;
+    color: white;
+}

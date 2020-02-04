@@ -451,7 +451,6 @@ return [
     'topic' => 'Temat',
     'text' => 'Treść',
     'invoice_datas' => 'Dane do faktury',
-    'invoice_datas_description' => 'Widok listy z danymi do faktur',
     'no_invoice_datas' => 'Brak danych do faktur',
     'create_invoice_data' => 'Dodaj dane do faktur',
     'canceled' => 'Anulowana',

@@ -11,11 +11,19 @@
                 </a>
             </div>
             <div class="col-4">
-                <a href="{{ URL::to('property/add-invoice/' . $property->id) }}" class="btn pallet-1-3" style="color: white;">
-                    @lang('common.add_invoice')
-                </a>
+                @if ($property->invoiceData !== null)
+                    <a href="{{ URL::to('property/add-invoice/' . $property->id) }}" class="btn pallet-1-3" style="color: white;">
+                        @lang('common.add_invoice')
+                    </a>
+                @endif
             </div>
-            <div class="col-4"></div>
+            <div class="col-4">
+                @if ($property->invoiceData !== null)
+                    <a href="{{ URL::to('property/invoice-data/edit/' . $property->id) }}" class="btn pallet-1-2" style="color: white;">
+                        @lang('common.edit_invoice_data')
+                    </a>
+                @endif
+            </div>
         </div>
 
         
@@ -52,7 +60,13 @@
             </table>
         @else
             <div class="text-center">
-                <h3>@lang('common.no_invoices')</h3>
+                @if ($property->invoiceData !== null)
+                    <h3>@lang('common.no_invoices')</h3>
+                @else
+                    <a class="btn btn-small pallet-1-3" style="color: white;" href="{{ URL::to('property/invoice-data/create/' . $property->id) }}">
+                        @lang('common.create_invoice_data')
+                    </a>
+                @endif
             </div>
         @endif
     </div>
