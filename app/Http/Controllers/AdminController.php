@@ -1122,4 +1122,14 @@ class AdminController extends Controller
         
         return redirect()->route('welcome')->with('error', 'Something went wrong');
     }
+    
+    
+    
+    
+    
+    // maps
+    public function map()
+    {        
+        return view('admin.map');
+    }
 }

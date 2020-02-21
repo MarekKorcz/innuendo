@@ -1,0 +1,66 @@
+#map {
+    width: 98vw;
+    height: 97vh;
+}
+
+#search {
+    position: absolute;
+    width: auto;
+    max-width: 360px;
+    height: auto;
+    left: 15px;
+    top: 15px;
+    padding: 6px 3px 6px 3px;
+    background-color: white;
+    
+    /*box highlight*/
+    -webkit-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+}
+
+.search-box {
+    max-width: 330px;
+    height: 36px;
+    padding: 1rem 1rem 0 1rem;
+    display: inline;
+}
+
+ul > li {
+    padding-right: 18px;
+    cursor: pointer;
+}
+
+li {
+    /*disable highlighting*/
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    
+    padding-bottom: 3px;
+}
+
+.delete-span:hover {
+    color: red;
+}
+
+.search-box input { 
+    position: relative;
+    width: 258px;
+/*    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-style: hidden;*/
+    border-radius: 12px;
+}
+
+input:focus {
+    outline: none;
+}
+
+#add-input-button > a {
+    cursor: pointer;
+}

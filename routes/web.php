@@ -79,6 +79,14 @@ Route::get('/admin/approve/message/status/change/{promoCodeId}', 'AdminControlle
 
 
 
+
+
+// maps
+Route::get('/map', 'AdminController@map')->name('map');
+
+
+
+
 // maybe all messages in one view?
 //Route::get('/admin/user/messages', 'AdminController@userMessages');
 

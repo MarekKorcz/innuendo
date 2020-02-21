@@ -1213,7 +1213,7 @@ class BossController extends Controller
                         'propertyId' => $property->id,
                 ]);
                 
-            } else {
+            } else {                
                 
                 return view('boss.invoices_in')->with([
                     'property' => $property,
