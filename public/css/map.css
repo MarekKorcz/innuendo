@@ -7,10 +7,9 @@
     position: absolute;
     width: auto;
     max-width: 360px;
-    height: auto;
     left: 15px;
     top: 15px;
-    padding: 6px 3px 6px 3px;
+    padding: 9px 3px 9px 3px;
     background-color: white;
     
     /*box highlight*/
@@ -19,10 +18,8 @@
     box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
 }
 
-.search-box {
-    max-width: 330px;
-    height: 36px;
-    padding: 1rem 1rem 0 1rem;
+#inputs {
+    max-width: 360px;
     display: inline;
 }
 
@@ -47,13 +44,9 @@ li {
     color: red;
 }
 
-.search-box input { 
+#inputs input { 
     position: relative;
     width: 258px;
-/*    border-top-style: hidden;
-    border-right-style: hidden;
-    border-left-style: hidden;
-    border-bottom-style: hidden;*/
     border-radius: 12px;
 }
 
@@ -61,6 +54,16 @@ input:focus {
     outline: none;
 }
 
-#add-input-button > a {
+#buttons > a {
     cursor: pointer;
+    margin-left: 1rem;
+}
+
+.show {
+    max-width: 328px;
+}
+
+.btn-block:hover {
+    background-color: #21B556;
+    color: white !important;
 }

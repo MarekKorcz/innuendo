@@ -25,7 +25,7 @@
 //    map.addControl(new tt.NavigationControl());
     
     
-    document.querySelector("#add-input-button a").addEventListener("click", () => {
+    document.querySelector("#add-input-button").addEventListener("click", () => {
                 
         let input = document.createElement('input')
         input.setAttribute('type', 'text')
@@ -59,15 +59,6 @@
         })
     }
     
-    function deleteInput(inputElement) {
-        
-        let spanElements = document.querySelectorAll(".delete-span")
-        
-        if (spanElements.length > 2)
-        {
-            inputElement.parentNode.remove()
-        }
-    }
     
     let liElements = document.querySelectorAll("#inputs li")
     
@@ -77,6 +68,47 @@
         liElements[i].addEventListener('dragstart', dragstart)
         liElements[i].addEventListener('dragover', dragover)
         liElements[i].addEventListener('dragend', dragend)
+    }
+    
+    
+    let buttonElements = document.getElementById('buttons').children
+            
+    for(var i = 0; i < buttonElements.length; i++) {
+        
+        buttonElements[i].addEventListener("click", () => {
+        
+            closeConfigPanels()
+            
+            let clickedElementId = event.target.getAttribute('id')
+            
+            if (clickedElementId !== null && clickedElementId == 'add-input-button')
+                closeConfig()
+        })
+    }
+    
+    
+    let configButtons = document.getElementsByClassName('config-button')
+    
+    for(var i = 0; i < configButtons.length; i++) {
+        
+        configButtons[i].addEventListener("click", (event) => {
+            
+            let clickedElementHrefAttribute = event.target.getAttribute('href').substring(1)
+            let clickedElementDescriptionElement = document.getElementById(clickedElementHrefAttribute)
+            
+            if(!clickedElementDescriptionElement.classList.contains('show'))
+                closeConfigPanels()
+        })
+    }
+    
+    function deleteInput(inputElement) {
+        
+        let spanElements = document.querySelectorAll(".delete-span")
+        
+        if (spanElements.length > 2) {
+            
+            inputElement.parentNode.remove()
+        }
     }
     
     function dragstart() {
@@ -90,14 +122,14 @@
         
         let draggedElement = document.getElementsByClassName('dragged')[0]
         
-        if (draggedElement.children[0] !== this.children[0])
-        {
+        if (draggedElement.children[0] !== this.children[0]) {
+            
             let draggedElementKey = 0;
             let hoveredElementKey = 0;
             
             let liElements = document.querySelectorAll("#inputs li")
         
-            for(var i = 0; i < liElements.length; i++) {
+            for(let i = 0; i < liElements.length; i++) {
 
                 if (liElements[i] == draggedElement)
                 {
@@ -133,6 +165,26 @@
                 liElements[i].classList.remove('dragged')
             }
         }
+    }
+    
+    function closeConfigPanels() {
+        
+        let config = document.getElementById('config-panel')
+        let configPanels = config.getElementsByClassName('collapse')
+        
+        for (var i = 0; i < configPanels.length; i++) {
+            
+            if (configPanels[i].classList.contains('show'))
+                configPanels[i].classList.remove('show')
+        }
+    }
+    
+    function closeConfig() {
+        
+        let config = document.getElementById('collapseConfig')
+        
+        if (config.classList.contains('show'))
+            config.classList.remove('show')
     }
 })();
 
