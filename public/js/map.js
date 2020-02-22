@@ -39,6 +39,10 @@
         })
         
         let listElement = document.createElement('li')
+        listElement.setAttribute('draggable', true)
+        listElement.addEventListener('dragover', dragover)
+        listElement.addEventListener('dragstart', dragstart)
+        listElement.addEventListener('dragend', dragend)
         listElement.appendChild(input)
         listElement.appendChild(inputSpanDelete)
         
@@ -62,6 +66,72 @@
         if (spanElements.length > 2)
         {
             inputElement.parentNode.remove()
+        }
+    }
+    
+    let liElements = document.querySelectorAll("#inputs li")
+    
+    for(var i = 0; i < liElements.length; i++) {
+        
+        liElements[i].setAttribute('draggable', true)
+        liElements[i].addEventListener('dragstart', dragstart)
+        liElements[i].addEventListener('dragover', dragover)
+        liElements[i].addEventListener('dragend', dragend)
+    }
+    
+    function dragstart() {
+        
+        this.classList.add('dragged')
+    }
+    
+    function dragover(event) {
+        
+        event.preventDefault()
+        
+        let draggedElement = document.getElementsByClassName('dragged')[0]
+        
+        if (draggedElement.children[0] !== this.children[0])
+        {
+            let draggedElementKey = 0;
+            let hoveredElementKey = 0;
+            
+            let liElements = document.querySelectorAll("#inputs li")
+        
+            for(var i = 0; i < liElements.length; i++) {
+
+                if (liElements[i] == draggedElement)
+                {
+                    draggedElementKey = i
+                    
+                } else if (liElements[i] == this) {
+                    
+                    hoveredElementKey = i
+                }
+            }
+            
+            let ulElement = document.querySelector("#inputs ul")
+            
+            if (draggedElementKey > hoveredElementKey)
+            {
+                ulElement.insertBefore(draggedElement, this)
+                
+            } else if (hoveredElementKey > draggedElementKey) {
+                
+                ulElement.insertBefore(this, draggedElement)
+            }
+        }
+    }
+    
+    function dragend() {
+        
+        let liElements = document.querySelectorAll("#inputs li")
+        
+        for(var i = 0; i < liElements.length; i++) {
+        
+            if (liElements[i].classList.contains('dragged'))
+            {
+                liElements[i].classList.remove('dragged')
+            }
         }
     }
 })();
