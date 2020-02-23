@@ -18,11 +18,6 @@
     box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
 }
 
-#inputs {
-    max-width: 360px;
-    display: inline;
-}
-
 ul > li {
     padding-right: 18px;
     cursor: pointer;
@@ -44,14 +39,30 @@ li {
     color: red;
 }
 
-#inputs input { 
-    position: relative;
-    width: 258px;
+input {
     border-radius: 12px;
 }
 
 input:focus {
     outline: none;
+}
+
+#inputs {
+    max-width: 360px;
+    display: inline;
+}
+
+#inputs input { 
+    position: relative;
+    width: 258px;
+}
+
+#collapseVehicleSpecification label, #collapseSkip label {
+    font-size: 12px;
+}
+
+#collapseVehicleSpecification input, #collapseSkip input {
+    width: 63px;
 }
 
 #buttons > a {

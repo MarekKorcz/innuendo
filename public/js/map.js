@@ -171,7 +171,7 @@
         
         let config = document.getElementById('config-panel')
         let configPanels = config.getElementsByClassName('collapse')
-        
+
         for (var i = 0; i < configPanels.length; i++) {
             
             if (configPanels[i].classList.contains('show'))

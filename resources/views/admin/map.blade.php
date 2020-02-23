@@ -46,9 +46,9 @@
             <hr>
             <div id="config-panel">
                 <div id="config-panel-buttons" class="text-center">
-                    <a class="btn btn-block btn-sm config-button" data-toggle="collapse" href="#collapseDateTime">
+<!--                    <a class="btn btn-block btn-sm config-button" data-toggle="collapse" href="#collapseDateTime">
                         Czas wyjazdu
-                    </a>
+                    </a>-->
                     <a class="btn btn-block btn-sm config-button" data-toggle="collapse" href="#collapseSkip">
                         Omijanie
                     </a>
@@ -57,19 +57,129 @@
                     </a>
                 </div>
                 <div id="config-panel-info" style="padding-top: 1rem;">
-                    <div class="collapse" id="collapseDateTime">
+<!--                    <div class="collapse" id="collapseDateTime">
                         <div class="card card-body">
                             pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
                         </div>
-                    </div>
+                    </div>-->
                     <div class="collapse" id="collapseSkip">
                         <div class="card card-body">
-                            cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                            <div id="highway">
+                                <label style="padding-right: 121px;">
+                                    <strong>
+                                        Autostrady
+                                    </strong>
+                                </label>
+                                <input type="radio">
+                            </div>
+                            <div id="dirt-road">
+                                <label style="padding-right: 93px;">
+                                    <strong>
+                                        Droga gruntowa
+                                    </strong>
+                                </label>
+                                <input type="radio">
+                            </div>
+                            <div id="toll-road">
+                                <label style="padding-right: 111px;">
+                                    <strong>
+                                        Droga płatna
+                                    </strong>
+                                </label>
+                                <input type="radio">
+                            </div>
+                            <div id="roads-for-vehicles-with-passengers">
+                                <label>
+                                    <strong>
+                                        Pasy dla pojazdów z pasażerami
+                                    </strong>
+                                </label>
+                                <input type="radio">
+                            </div>
+                            <div id="ferry">
+                                <label style="padding-right: 65px;">
+                                    <strong>
+                                        Promy / autokuszetki
+                                    </strong>
+                                </label>
+                                <input type="radio">
+                            </div>
+                            
+                            <div class="text-center" style="margin-top: 1rem;">
+                                <a class="btn btn-info btn-sm" 
+                                   style="color: white;" 
+                                   data-toggle="collapse" 
+                                   href="#collapseConfig">Gotowe</a>
+                            </div>
                         </div>
                     </div>
                     <div class="collapse" id="collapseVehicleSpecification">
                         <div class="card card-body">
-                            reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                            <div id="truck-length">
+                                <label style="padding-right: 99px;"><strong>Długość</strong> (0 - 25,25 m)</label>
+                                <input type="text">
+                            </div>
+                            <div id="truck-width">
+                                <label style="padding-right: 93px;"><strong>Szerokość</strong> (0 - 2,60 m)</label>
+                                <input type="text">
+                            </div>
+                            <div id="truck-height">
+                                <label style="padding-right: 94px;"><strong>Wysokość</strong> (0 - 4,95 m)</label>
+                                <input type="text">
+                            </div>
+                            <div id="truck-weight">
+                                <label style="padding-right: 101px;"><strong>Masa brutto</strong> (0 - 60 t)</label>
+                                <input type="text">
+                            </div>
+                            <div id="truck-axle-pressure">
+                                <label style="padding-right: 110px;"><strong>Nacisk osi</strong> (0 - 13 t)</label>
+                                <input type="text">
+                            </div>
+                            <div id="truck-max-speed">
+                                <label style="padding-right: 12px;"><strong>Maksymalna prędkość</strong> (0 - 100 km/h)</label>
+                                <input type="text">
+                            </div>
+                            
+                            <div id="hazardous-materials">
+                                <label data-toggle="collapse" href="#collapseHazardousMaterials">
+                                    <strong style="cursor: pointer;"> > Materiały niebiezpieczne</strong>
+                                </label>
+                                <div class="collapse" id="collapseHazardousMaterials">
+                                    <div class="card card-body">
+                                        <div id="explosives">
+                                            <label style="padding-right: 51px;">
+                                                <strong>
+                                                    Materiały wybuchowe
+                                                </strong>
+                                            </label>
+                                            <input type="radio">
+                                        </div>
+                                        <div id="other-hazardous-materials">
+                                            <label style="padding-right: 9px;">
+                                                <strong>
+                                                    Inne materiały niebezpieczne
+                                                </strong>
+                                            </label>
+                                            <input type="radio">
+                                        </div>
+                                        <div id="water-contamination">
+                                            <label style="padding-right: 62px;">
+                                                <strong>
+                                                    Szkodliwe dla wody
+                                                </strong>
+                                            </label>
+                                            <input type="radio">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center" style="margin-top: 1rem;">
+                                <a class="btn btn-info btn-sm" 
+                                   style="color: white;" 
+                                   data-toggle="collapse" 
+                                   href="#collapseConfig">Gotowe</a>
+                            </div>
                         </div>
                     </div>
                 </div>
