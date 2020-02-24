@@ -115,28 +115,28 @@
                         <div class="card card-body">
                             <form id="vehicle-specification" method="post">
                                 <div id="truck-length">
-                                    <label for="truck-length" style="padding-right: 99px;"><strong>Długość</strong> (0 - 25,25 m)</label>
-                                    <input name="truck-length" type="text">
+                                    <label for="truck-length" style="padding-right: 99px;"><strong>Długość</strong> (0 - 25.25 m)</label>
+                                    <input name="truck-length" min="0" max="25.25" style="height: 22px;" type="text">
                                 </div>
                                 <div id="truck-width">
-                                    <label for="truck-width" style="padding-right: 93px;"><strong>Szerokość</strong> (0 - 2,60 m)</label>
-                                    <input name="truck-width" type="text">
+                                    <label for="truck-width" style="padding-right: 93px;"><strong>Szerokość</strong> (0 - 2.60 m)</label>
+                                    <input name="truck-width" min="0" max="2.60" style="height: 22px;" type="text">
                                 </div>
                                 <div id="truck-height">
-                                    <label for="truck-height" style="padding-right: 94px;"><strong>Wysokość</strong> (0 - 4,95 m)</label>
-                                    <input name="truck-height" type="text">
+                                    <label for="truck-height" style="padding-right: 94px;"><strong>Wysokość</strong> (0 - 4.95 m)</label>
+                                    <input name="truck-height" min="0" max="4.95" style="height: 22px;" type="text">
                                 </div>
                                 <div id="truck-weight">
                                     <label for="truck-weight" style="padding-right: 101px;"><strong>Masa brutto</strong> (0 - 60 t)</label>
-                                    <input name="truck-weight" type="text">
+                                    <input name="truck-weight" min="0" max="60" style="height: 22px;" type="text">
                                 </div>
                                 <div id="truck-axle-pressure">
                                     <label style="padding-right: 110px;"><strong>Nacisk osi</strong> (0 - 13 t)</label>
-                                    <input name="truck-axle-pressure" type="text">
+                                    <input name="truck-axle-pressure" min="0" max="13" style="height: 22px;" type="text">
                                 </div>
                                 <div id="truck-max-speed">
                                     <label for="truck-max-speed" style="padding-right: 12px;"><strong>Maksymalna prędkość</strong> (0 - 100 km/h)</label>
-                                    <input name="truck-max-speed" type="text">
+                                    <input name="truck-max-speed" min="0" max="100" style="height: 22px;" type="text">
                                 </div>
 
                                 <div id="hazardous-materials">

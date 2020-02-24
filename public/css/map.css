@@ -41,6 +41,7 @@ li {
 
 input {
     border-radius: 12px;
+    padding: 0 3px 0 3px;
 }
 
 input:focus {
@@ -55,6 +56,10 @@ input:focus {
 #inputs input { 
     position: relative;
     width: 258px;
+}
+
+.input-warning {
+    border: 2px solid #ff6666;
 }
 
 #collapseVehicleSpecification label, #collapseSkip label {

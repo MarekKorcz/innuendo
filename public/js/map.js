@@ -114,6 +114,29 @@
             event.target.classList.add('config-button-clicked')
         })
     }
+    
+    
+    let textInputElements = document.querySelectorAll("#vehicle-specification input[type='text']")
+    
+    for(var i = 0; i < textInputElements.length; i++) {
+        
+        textInputElements[i].addEventListener("keyup", (event) => {
+            
+            let targetInput = event.target
+            let targetValue = targetInput.value
+                          
+            if (targetValue == '' || !isNaN(targetValue) && 
+                Number(targetInput.getAttribute('min')) <= Number(targetValue) && Number(targetValue) <= Number(targetInput.getAttribute('max'))) {
+                
+                if (targetInput.classList.contains('input-warning'))
+                    targetInput.classList.remove('input-warning')
+                
+            } else {
+                
+                targetInput.classList.add('input-warning')
+            }
+        })
+    }
 
     
     function deleteInput(inputElement) {
@@ -214,15 +237,48 @@
             clickedConfigPanelButton.classList.remove('config-button-clicked')
     }
     
+    function setValuesToInput(...names) {
+        
+        for (let name of names) {
+            
+            let element = document.querySelector(`input[name='${name}']`)
+            let value = Number(element.value)
+            
+            if (value !== '' && !isNaN(value)) {
+            
+                let elementMinValue = Number(element.getAttribute('min'))
+                let elementMaxValue = Number(element.getAttribute('max'))
+
+                if (elementMinValue <= value && value <= elementMaxValue) {
+
+                    element.value = value
+                    Cookies.set(`${name}-map`, value)
+
+                } else if (elementMinValue > value) {
+
+                    element.value = elementMinValue
+                    Cookies.set(`${name}-map`, elementMinValue)
+
+                } else if (elementMaxValue < value) {
+
+                    element.value = elementMaxValue
+                    Cookies.set(`${name}-map`, elementMaxValue)
+                }
+                
+                if (element.classList.contains('input-warning'))
+                    element.classList.remove('input-warning')
+            }
+        }
+    }
     
-    // >>>>>> input validators
-    
-    // >>> bypassing validators
-    
-    
-    // <<< bypassing validators
-    
-    // <<<<<< input validators
+    function setValuesToCheckbox(...names) {
+        
+        for (let name of names) {
+            
+            let value = document.querySelector(`input[name='${name}']`).checked
+            Cookies.set(`${name}-map`, value)
+        }
+    }
     
     
     // >>>>>>> cookies handler
@@ -232,20 +288,13 @@
         
         event.preventDefault()
         
-        let highwayValue = document.querySelector("input[name='highway']").checked
-        Cookies.set('highway-map', highwayValue)
-        
-        let dirtRoadValue = document.querySelector("input[name='dirt-road']").checked
-        Cookies.set('dirt-road-map', dirtRoadValue)
-        
-        let tollRoadValue = document.querySelector("input[name='toll-road']").checked
-        Cookies.set('toll-road-map', tollRoadValue)
-        
-        let roadsForVehiclesWithPassengersValue = document.querySelector("input[name='roads-for-vehicles-with-passengers']").checked
-        Cookies.set('roads-for-vehicles-with-passengers-map', roadsForVehiclesWithPassengersValue)
-        
-        let ferryValue = document.querySelector("input[name='ferry']").checked
-        Cookies.set('ferry-map', ferryValue)
+        setValuesToCheckbox(...[
+            'highway',
+            'dirt-road',
+            'toll-road',
+            'roads-for-vehicles-with-passengers',
+            'ferry'
+        ])
     })
     
     
@@ -320,32 +369,20 @@
         
         event.preventDefault()
         
-        let truckLengthValue = document.querySelector("input[name='truck-length']").value
-        Cookies.set('truck-length-map', truckLengthValue)
+        setValuesToInput(...[
+            'truck-length',
+            'truck-width',
+            'truck-height',
+            'truck-weight',
+            'truck-axle-pressure',
+            'truck-max-speed'
+        ])
         
-        let truckWidthValue = document.querySelector("input[name='truck-width']").value
-        Cookies.set('truck-width-map', truckWidthValue)
-        
-        let truckHeightValue = document.querySelector("input[name='truck-height']").value
-        Cookies.set('truck-height-map', truckHeightValue)
-        
-        let truckWeightValue = document.querySelector("input[name='truck-weight']").value
-        Cookies.set('truck-weight-map', truckWeightValue)
-        
-        let truckAxlePressureValue = document.querySelector("input[name='truck-axle-pressure']").value
-        Cookies.set('truck-axle-pressure-map', truckAxlePressureValue)
-        
-        let truckMaxSpeedValue = document.querySelector("input[name='truck-max-speed']").value
-        Cookies.set('truck-max-speed-map', truckMaxSpeedValue)
-        
-        let explosivesValue = document.querySelector("input[name='explosives']").checked
-        Cookies.set('explosives-map', explosivesValue)
-        
-        let otherHazardousMaterialsValue = document.querySelector("input[name='other-hazardous-materials']").checked
-        Cookies.set('other-hazardous-materials-map', otherHazardousMaterialsValue)
-        
-        let waterContaminationValue = document.querySelector("input[name='water-contamination']").checked
-        Cookies.set('water-contamination-map', waterContaminationValue)
+        setValuesToCheckbox(...[
+            'explosives',
+            'other-hazardous-materials',
+            'water-contamination'
+        ])
     })
     
     
