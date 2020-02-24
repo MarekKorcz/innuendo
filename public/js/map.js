@@ -49,6 +49,7 @@
         document.querySelector("#inputs ul").appendChild(listElement)
     })
     
+    
     let deleteSpanElements = document.querySelectorAll(".delete-span")
     
     for(var i = 0; i < deleteSpanElements.length; i++) {
@@ -100,6 +101,20 @@
                 closeConfigPanels()
         })
     }
+    
+    
+    let configPanelButtonsElements = document.querySelectorAll("#config-panel-buttons a")
+    
+    for(var i = 0; i < configPanelButtonsElements.length; i++) {
+        
+        configPanelButtonsElements[i].addEventListener("click", (event) => {
+            
+            removeStyleFromClickedConfigButton()
+            
+            event.target.classList.add('config-button-clicked')
+        })
+    }
+
     
     function deleteInput(inputElement) {
         
@@ -177,6 +192,8 @@
             if (configPanels[i].classList.contains('show'))
                 configPanels[i].classList.remove('show')
         }
+        
+        removeStyleFromClickedConfigButton()
     }
     
     function closeConfig() {
@@ -185,7 +202,206 @@
         
         if (config.classList.contains('show'))
             config.classList.remove('show')
+        
+        removeStyleFromClickedConfigButton()
     }
+    
+    function removeStyleFromClickedConfigButton() {
+        
+        let clickedConfigPanelButton = document.querySelector(".config-button-clicked")
+            
+        if (clickedConfigPanelButton !== null)
+            clickedConfigPanelButton.classList.remove('config-button-clicked')
+    }
+    
+    
+    // >>>>>> input validators
+    
+    // >>> bypassing validators
+    
+    
+    // <<< bypassing validators
+    
+    // <<<<<< input validators
+    
+    
+    // >>>>>>> cookies handler
+    
+    // >>> bypassing coockies
+    document.getElementById('bypassing').addEventListener("submit", (event) => {
+        
+        event.preventDefault()
+        
+        let highwayValue = document.querySelector("input[name='highway']").checked
+        Cookies.set('highway-map', highwayValue)
+        
+        let dirtRoadValue = document.querySelector("input[name='dirt-road']").checked
+        Cookies.set('dirt-road-map', dirtRoadValue)
+        
+        let tollRoadValue = document.querySelector("input[name='toll-road']").checked
+        Cookies.set('toll-road-map', tollRoadValue)
+        
+        let roadsForVehiclesWithPassengersValue = document.querySelector("input[name='roads-for-vehicles-with-passengers']").checked
+        Cookies.set('roads-for-vehicles-with-passengers-map', roadsForVehiclesWithPassengersValue)
+        
+        let ferryValue = document.querySelector("input[name='ferry']").checked
+        Cookies.set('ferry-map', ferryValue)
+    })
+    
+    
+    let highwayMapCookie = Cookies.get('highway-map')
+    let highwayInputElement = document.querySelector("input[name='highway']")
+    
+    if (highwayMapCookie === undefined || highwayMapCookie == 'false') {
+        
+        highwayInputElement.removeAttribute("checked")
+        
+    } else if (highwayMapCookie == 'true') {
+        
+        highwayInputElement.setAttribute('checked', highwayMapCookie)
+    }
+    
+    
+    let dirtRoadMapCookie = Cookies.get('dirt-road-map')
+    let dirtRoadInputElement = document.querySelector("input[name='dirt-road']")
+    
+    if (dirtRoadMapCookie === undefined || dirtRoadMapCookie == 'false') {
+        
+        dirtRoadInputElement.removeAttribute("checked")
+        
+    } else if (dirtRoadMapCookie == 'true') {
+        
+        dirtRoadInputElement.setAttribute('checked', dirtRoadMapCookie)
+    }
+    
+    
+    let tollRoadMapCookie = Cookies.get('toll-road-map')
+    let tollRoadInputElement = document.querySelector("input[name='toll-road']")
+    
+    if (tollRoadMapCookie === undefined || tollRoadMapCookie == 'false') {
+        
+        tollRoadInputElement.removeAttribute("checked")
+        
+    } else if (tollRoadMapCookie == 'true') {
+        
+        tollRoadInputElement.setAttribute('checked', tollRoadMapCookie)
+    }
+    
+    
+    let roadsForVehiclesWithPassengersMapCookie = Cookies.get('roads-for-vehicles-with-passengers-map')
+    let roadsForVehiclesWithPassengersInputElement = document.querySelector("input[name='roads-for-vehicles-with-passengers']")
+    
+    if (roadsForVehiclesWithPassengersMapCookie === undefined || roadsForVehiclesWithPassengersMapCookie == 'false') {
+        
+        roadsForVehiclesWithPassengersInputElement.removeAttribute("checked")
+        
+    } else if (roadsForVehiclesWithPassengersMapCookie == 'true') {
+        
+        roadsForVehiclesWithPassengersInputElement.setAttribute('checked', roadsForVehiclesWithPassengersMapCookie)
+    }
+    
+    
+    let ferryMapCookie = Cookies.get('ferry-map')
+    let ferryInputElement = document.querySelector("input[name='ferry']")
+    
+    if (ferryMapCookie === undefined || ferryMapCookie == 'false') {
+        
+        ferryInputElement.removeAttribute("checked")
+        
+    } else if (ferryMapCookie == 'true') {
+        
+        ferryInputElement.setAttribute('checked', ferryMapCookie)
+    }
+    // <<< bypassing coockies
+    
+    
+    // >>> vehicle-specification
+    document.getElementById('vehicle-specification').addEventListener("submit", (event) => {
+        
+        event.preventDefault()
+        
+        let truckLengthValue = document.querySelector("input[name='truck-length']").value
+        Cookies.set('truck-length-map', truckLengthValue)
+        
+        let truckWidthValue = document.querySelector("input[name='truck-width']").value
+        Cookies.set('truck-width-map', truckWidthValue)
+        
+        let truckHeightValue = document.querySelector("input[name='truck-height']").value
+        Cookies.set('truck-height-map', truckHeightValue)
+        
+        let truckWeightValue = document.querySelector("input[name='truck-weight']").value
+        Cookies.set('truck-weight-map', truckWeightValue)
+        
+        let truckAxlePressureValue = document.querySelector("input[name='truck-axle-pressure']").value
+        Cookies.set('truck-axle-pressure-map', truckAxlePressureValue)
+        
+        let truckMaxSpeedValue = document.querySelector("input[name='truck-max-speed']").value
+        Cookies.set('truck-max-speed-map', truckMaxSpeedValue)
+        
+        let explosivesValue = document.querySelector("input[name='explosives']").checked
+        Cookies.set('explosives-map', explosivesValue)
+        
+        let otherHazardousMaterialsValue = document.querySelector("input[name='other-hazardous-materials']").checked
+        Cookies.set('other-hazardous-materials-map', otherHazardousMaterialsValue)
+        
+        let waterContaminationValue = document.querySelector("input[name='water-contamination']").checked
+        Cookies.set('water-contamination-map', waterContaminationValue)
+    })
+    
+    
+    document.querySelector("input[name='truck-length']").value = Cookies.get('truck-length-map') !== "" ? Cookies.get('truck-length-map') : ''
+    
+    document.querySelector("input[name='truck-width']").value = Cookies.get('truck-width-map') !== "" ? Cookies.get('truck-width-map') : ''
+    
+    document.querySelector("input[name='truck-height']").value = Cookies.get('truck-height-map') !== "" ? Cookies.get('truck-height-map') : ''
+
+    document.querySelector("input[name='truck-weight']").value = Cookies.get('truck-weight-map') !== "" ? Cookies.get('truck-weight-map') : ''
+    
+    document.querySelector("input[name='truck-axle-pressure']").value = Cookies.get('truck-axle-pressure-map') !== "" ? Cookies.get('truck-axle-pressure-map') : ''
+    
+    document.querySelector("input[name='truck-max-speed']").value = Cookies.get('truck-max-speed-map') !== "" ? Cookies.get('truck-max-speed-map') : ''
+    
+    
+    let explosivesMapCookie = Cookies.get('explosives-map')
+    let explosivesInputElement = document.querySelector("input[name='explosives']")
+    
+    if (explosivesMapCookie === undefined || explosivesMapCookie == 'false') {
+        
+        explosivesInputElement.removeAttribute("checked")
+        
+    } else if (explosivesMapCookie == 'true') {
+        
+        explosivesInputElement.setAttribute('checked', explosivesMapCookie)
+    }
+    
+    
+    let otherHazardousMaterialsMapCookie = Cookies.get('other-hazardous-materials-map')
+    let otherHazardousMaterialsInputElement = document.querySelector("input[name='other-hazardous-materials']")
+    
+    if (otherHazardousMaterialsMapCookie === undefined || otherHazardousMaterialsMapCookie == 'false') {
+        
+        otherHazardousMaterialsInputElement.removeAttribute("checked")
+        
+    } else if (otherHazardousMaterialsMapCookie == 'true') {
+        
+        otherHazardousMaterialsInputElement.setAttribute('checked', otherHazardousMaterialsMapCookie)
+    }
+    
+    
+    let waterContaminationMapCookie = Cookies.get('water-contamination-map')
+    let waterContaminationInputElement = document.querySelector("input[name='water-contamination']")
+    
+    if (waterContaminationMapCookie === undefined || waterContaminationMapCookie == 'false') {
+        
+        waterContaminationInputElement.removeAttribute("checked")
+        
+    } else if (waterContaminationMapCookie == 'true') {
+        
+        waterContaminationInputElement.setAttribute('checked', waterContaminationMapCookie)
+    }
+    // <<< vehicle-specification
+
+    // <<<<<< cookies handler
 })();
 
 
