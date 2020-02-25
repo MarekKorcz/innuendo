@@ -280,6 +280,31 @@
         }
     }
     
+    function putValuesToInputOnRefresh(...names) {
+        
+        for (let name of names) {
+            
+            document.querySelector(`input[name='${name}']`).value = Cookies.get(`${name}-map`) !== "" ? Cookies.get(`${name}-map`) : ''
+        }
+    }
+    
+    function putValuesToCheckboxOnRefresh(...names) {
+        
+        for (let name of names) {
+            
+            let mapCookie = Cookies.get(`${name}-map`)
+            let inputElement = document.querySelector(`input[name='${name}']`)
+
+            if (mapCookie === undefined || mapCookie == 'false') {
+
+                inputElement.removeAttribute("checked")
+
+            } else if (mapCookie == 'true') {
+
+                inputElement.setAttribute('checked', mapCookie)
+            }
+        }
+    }
     
     // >>>>>>> cookies handler
     
@@ -298,69 +323,13 @@
     })
     
     
-    let highwayMapCookie = Cookies.get('highway-map')
-    let highwayInputElement = document.querySelector("input[name='highway']")
-    
-    if (highwayMapCookie === undefined || highwayMapCookie == 'false') {
-        
-        highwayInputElement.removeAttribute("checked")
-        
-    } else if (highwayMapCookie == 'true') {
-        
-        highwayInputElement.setAttribute('checked', highwayMapCookie)
-    }
-    
-    
-    let dirtRoadMapCookie = Cookies.get('dirt-road-map')
-    let dirtRoadInputElement = document.querySelector("input[name='dirt-road']")
-    
-    if (dirtRoadMapCookie === undefined || dirtRoadMapCookie == 'false') {
-        
-        dirtRoadInputElement.removeAttribute("checked")
-        
-    } else if (dirtRoadMapCookie == 'true') {
-        
-        dirtRoadInputElement.setAttribute('checked', dirtRoadMapCookie)
-    }
-    
-    
-    let tollRoadMapCookie = Cookies.get('toll-road-map')
-    let tollRoadInputElement = document.querySelector("input[name='toll-road']")
-    
-    if (tollRoadMapCookie === undefined || tollRoadMapCookie == 'false') {
-        
-        tollRoadInputElement.removeAttribute("checked")
-        
-    } else if (tollRoadMapCookie == 'true') {
-        
-        tollRoadInputElement.setAttribute('checked', tollRoadMapCookie)
-    }
-    
-    
-    let roadsForVehiclesWithPassengersMapCookie = Cookies.get('roads-for-vehicles-with-passengers-map')
-    let roadsForVehiclesWithPassengersInputElement = document.querySelector("input[name='roads-for-vehicles-with-passengers']")
-    
-    if (roadsForVehiclesWithPassengersMapCookie === undefined || roadsForVehiclesWithPassengersMapCookie == 'false') {
-        
-        roadsForVehiclesWithPassengersInputElement.removeAttribute("checked")
-        
-    } else if (roadsForVehiclesWithPassengersMapCookie == 'true') {
-        
-        roadsForVehiclesWithPassengersInputElement.setAttribute('checked', roadsForVehiclesWithPassengersMapCookie)
-    }
-    
-    
-    let ferryMapCookie = Cookies.get('ferry-map')
-    let ferryInputElement = document.querySelector("input[name='ferry']")
-    
-    if (ferryMapCookie === undefined || ferryMapCookie == 'false') {
-        
-        ferryInputElement.removeAttribute("checked")
-        
-    } else if (ferryMapCookie == 'true') {
-        
-        ferryInputElement.setAttribute('checked', ferryMapCookie)
-    }
+    putValuesToCheckboxOnRefresh(...[
+        'highway',
+        'dirt-road',
+        'toll-road',
+        'roads-for-vehicles-with-passengers',
+        'ferry'
+    ])
     // <<< bypassing coockies
     
     
@@ -386,56 +355,21 @@
     })
     
     
-    document.querySelector("input[name='truck-length']").value = Cookies.get('truck-length-map') !== "" ? Cookies.get('truck-length-map') : ''
+    putValuesToInputOnRefresh(...[
+        'truck-length',
+        'truck-width',
+        'truck-height',
+        'truck-weight',
+        'truck-axle-pressure',
+        'truck-max-speed'
+    ])
     
-    document.querySelector("input[name='truck-width']").value = Cookies.get('truck-width-map') !== "" ? Cookies.get('truck-width-map') : ''
+    putValuesToCheckboxOnRefresh(...[
+        'explosives',
+        'other-hazardous-materials',
+        'water-contamination'
+    ])
     
-    document.querySelector("input[name='truck-height']").value = Cookies.get('truck-height-map') !== "" ? Cookies.get('truck-height-map') : ''
-
-    document.querySelector("input[name='truck-weight']").value = Cookies.get('truck-weight-map') !== "" ? Cookies.get('truck-weight-map') : ''
-    
-    document.querySelector("input[name='truck-axle-pressure']").value = Cookies.get('truck-axle-pressure-map') !== "" ? Cookies.get('truck-axle-pressure-map') : ''
-    
-    document.querySelector("input[name='truck-max-speed']").value = Cookies.get('truck-max-speed-map') !== "" ? Cookies.get('truck-max-speed-map') : ''
-    
-    
-    let explosivesMapCookie = Cookies.get('explosives-map')
-    let explosivesInputElement = document.querySelector("input[name='explosives']")
-    
-    if (explosivesMapCookie === undefined || explosivesMapCookie == 'false') {
-        
-        explosivesInputElement.removeAttribute("checked")
-        
-    } else if (explosivesMapCookie == 'true') {
-        
-        explosivesInputElement.setAttribute('checked', explosivesMapCookie)
-    }
-    
-    
-    let otherHazardousMaterialsMapCookie = Cookies.get('other-hazardous-materials-map')
-    let otherHazardousMaterialsInputElement = document.querySelector("input[name='other-hazardous-materials']")
-    
-    if (otherHazardousMaterialsMapCookie === undefined || otherHazardousMaterialsMapCookie == 'false') {
-        
-        otherHazardousMaterialsInputElement.removeAttribute("checked")
-        
-    } else if (otherHazardousMaterialsMapCookie == 'true') {
-        
-        otherHazardousMaterialsInputElement.setAttribute('checked', otherHazardousMaterialsMapCookie)
-    }
-    
-    
-    let waterContaminationMapCookie = Cookies.get('water-contamination-map')
-    let waterContaminationInputElement = document.querySelector("input[name='water-contamination']")
-    
-    if (waterContaminationMapCookie === undefined || waterContaminationMapCookie == 'false') {
-        
-        waterContaminationInputElement.removeAttribute("checked")
-        
-    } else if (waterContaminationMapCookie == 'true') {
-        
-        waterContaminationInputElement.setAttribute('checked', waterContaminationMapCookie)
-    }
     // <<< vehicle-specification
 
     // <<<<<< cookies handler
