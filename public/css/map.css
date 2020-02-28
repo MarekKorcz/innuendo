@@ -35,6 +35,21 @@ li {
     padding-bottom: 3px;
 }
 
+.search {
+    margin: 3px 0 3px 0;
+}
+
+.search div {
+    padding: 6px 3px 6px 3px;
+}
+
+.search div:hover {
+    background: lightgreen;
+    padding: 6px 3px 6px 3px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
 .delete-span:hover {
     color: red;
 }

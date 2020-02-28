@@ -1,34 +1,43 @@
 (function() 
 {
     document.cookie = 'cross-site-cookie=bar; SameSite=None; Secure';
+    
+    let tomtomApiHref = 'https://api.tomtom.com'
+    let searchVersionNumber = 2
+    let ext = 'json'
+    let apiKey = 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke'
+    let lang = 'pl-PL'
+    let countrySet = 'ESP,PRT,IRL,GBR,AND,FRA,MLT,MCO,ITA,VAT,CHE,AUT,LIE,DEU,LUX,BEL,NLD,DNK,NOR,SWE,FIN,EST,LVA,LTU,POL,BLR,UKR,CZE,SVK,SVN,HUN,HRV,BIH,SRB,ROU,MDA,MNE,ALB,MKD,BGR,GRC,TUR,RUS'
 
-//    var map = tt.map({
-//        key: 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke',
-//        container: 'map',
-//        style: 'tomtom://vector/1/basic-main',
-//        center: [21.017532,52.237049],
-//        zoom: 8
-//    });        
-//
-//    //var config = {
-//    //    key: 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke',
-//    //    style: 'tomtom://vector/1/relative',
-//    //    refresh: 30000
-//    //};
-//    //
-//    //map.on('load', function() {
-//    //    map.addTier(new tt.TrafficFlowTilesTier(config));
-//    //});
-//
-//    //map.addControl(new tt.FullscreenControl());
-//
-//    map.addControl(new tt.NavigationControl());
+    var map = tt.map({
+        key: apiKey,
+        container: 'map',
+        style: 'tomtom://vector/1/basic-main',
+        center: [21.017532,52.237049],
+        zoom: 9,
+        language: lang
+    });        
+
+    //var config = {
+    //    key: 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke',
+    //    style: 'tomtom://vector/1/relative',
+    //    refresh: 30000
+    //};
+    //
+    //map.on('load', function() {
+    //    map.addTier(new tt.TrafficFlowTilesTier(config));
+    //});
+
+    //map.addControl(new tt.FullscreenControl());
+
+    map.addControl(new tt.NavigationControl());
     
     
     document.querySelector("#add-input-button").addEventListener("click", () => {
                 
         let input = document.createElement('input')
         input.setAttribute('type', 'text')
+        searchInputEvents(input)
         
         let inputSpanDelete = document.createElement('span')
         inputSpanDelete.classList.add('delete-span')
@@ -38,6 +47,9 @@
             deleteInput(event.target.previousSibling);
         })
         
+        let searchElement = document.createElement('div')
+        searchElement.setAttribute('class', 'search')
+        
         let listElement = document.createElement('li')
         listElement.setAttribute('draggable', true)
         listElement.addEventListener('dragover', dragover)
@@ -45,9 +57,18 @@
         listElement.addEventListener('dragend', dragend)
         listElement.appendChild(input)
         listElement.appendChild(inputSpanDelete)
+        listElement.appendChild(searchElement)
         
         document.querySelector("#inputs ul").appendChild(listElement)
     })
+    
+    
+    let searchInputs = document.querySelectorAll("#inputs input")
+    
+    for (let searchInput of searchInputs) {
+        
+        searchInputEvents(searchInput)
+    }
     
     
     let deleteSpanElements = document.querySelectorAll(".delete-span")
@@ -137,13 +158,126 @@
             }
         })
     }
+    
+    
+    function searchInputEvents(input) {
+        
+        input.addEventListener("keyup", (event) => {
+            
+            let element = event.target
+            let value = element.value
+            let searchElement = element.parentNode.children[element.parentNode.children.length-1]
+            
+            if (value.length > 2) {
+                        
+                let valueEncoded = encodeURIComponent(event.target.value)    
+                let limit = 3
+
+                return fetch(`${tomtomApiHref}/search/${searchVersionNumber}/geocode/${valueEncoded}.${ext}?key=${apiKey}&limit=${limit}&language=${lang}&countrySet=${countrySet}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-type': 'application/json'
+                    }
+                })
+                .then((res) => res.json())
+                .then((data) => {     
+                    
+                    displaySearchHints(searchElement, ...data.results)
+                });
+                
+            } else if (value.length == 0) {
+                
+                clearSearchHintElements(searchElement)
+                
+                if (element.getAttribute('data-lon') !== null && element.getAttribute('data-lat') !== null) {
+                    
+                    element.removeAttribute('data-lon')
+                    element.removeAttribute('data-lon')
+                }
+            }
+        })
+        
+        
+        input.addEventListener("focus", (event) => {
+            
+            event.target.setSelectionRange(0, event.target.value.length)
+        })
+    }
+    
+    function displaySearchHints(searchElement, ...results) {
+        
+        clearSearchHintElements(searchElement)
+        
+        for (let result of results) {
+
+            let div = document.createElement('div')
+            div.setAttribute('data-lat', result.position.lat)
+            div.setAttribute('data-lon', result.position.lon)
+            div.innerHTML = `
+                ${result.address.freeformAddress}, ${result.address.country}
+            `
+            searchHintElementClickEvent(div)
+
+            searchElement.appendChild(div)
+        }
+    }
+    
+    function clearSearchHintElements(element) {
+        
+        if (element.children.length > 0) {
+            
+            element.innerHTML = ''
+        }
+    }
+    
+    function searchHintElementClickEvent(element) {
+        
+        element.addEventListener("click", (event) => {
+            
+            let searchElement = event.target
+            let searchElementParentDiv = searchElement.parentNode
+            let searchElementParentLi = searchElementParentDiv.parentNode
+            let inputElement = searchElementParentLi.firstElementChild
+            
+            searchElementLongitude = searchElement.getAttribute('data-lon')
+            searchElementLatitude = searchElement.getAttribute('data-lat')
+            
+            inputElement.value = searchElement.innerText
+            inputElement.setAttribute('data-lon', searchElementLongitude)
+            inputElement.setAttribute('data-lat', searchElementLatitude)
+            
+            clearSearchHintElements(searchElementParentDiv)
+            
+            if (isFirstSearchedElement()) {
+                
+                map.setCenter(new tt.LngLat(searchElementLongitude, searchElementLatitude));
+            }
+        })
+    }
+    
+    function isFirstSearchedElement() {
+        
+        let numberOfSelectedDestinations = 0
+        let searchInputs = document.querySelectorAll("#inputs input")
+        
+        for (let searchInput of searchInputs) {
+            
+            if (searchInput.getAttribute('data-lon') !== null && searchInput.getAttribute('data-lat') !== null) {
+                
+                numberOfSelectedDestinations += 1
+            }
+        }
+        
+        return numberOfSelectedDestinations > 1 ? false : true
+    }
 
     
     function deleteInput(inputElement) {
         
         let spanElements = document.querySelectorAll(".delete-span")
         
-        if (spanElements.length > 2) {
+        if (spanElements.length > 1) {
             
             inputElement.parentNode.remove()
         }
@@ -284,7 +418,12 @@
         
         for (let name of names) {
             
-            document.querySelector(`input[name='${name}']`).value = Cookies.get(`${name}-map`) !== "" ? Cookies.get(`${name}-map`) : ''
+            let input = document.querySelector(`input[name='${name}']`)
+                    
+            if (Cookies.get(`${name}-map`) !== "" && Cookies.get(`${name}-map`) !== undefined) {
+                
+                input.value = Cookies.get(`${name}-map`)
+            }
         }
     }
     
@@ -374,9 +513,3 @@
 
     // <<<<<< cookies handler
 })();
-
-
-
-
-
-
