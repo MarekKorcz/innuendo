@@ -61,45 +61,53 @@
                     <div class="collapse" id="collapseSkip">
                         <div class="card card-body">
                             <form id="bypassing" method="post">
-                                <div id="highway">
-                                    <label for="highway" style="padding-right: 121px;">
+                                <div id="motorways">
+                                    <label for="motorways" style="padding-right: 117px;">
                                         <strong>
                                             Autostrady
                                         </strong>
                                     </label>
-                                    <input name="highway" type="checkbox">
+                                    <input name="motorways" type="checkbox">
                                 </div>
-                                <div id="dirt-road">
-                                    <label for="dirt-road" style="padding-right: 93px;">
+                                <div id="tollRoads">
+                                    <label for="tollRoads" style="padding-right: 111px;">
                                         <strong>
-                                            Droga gruntowa
+                                            Drogi płatne
                                         </strong>
                                     </label>
-                                    <input name="dirt-road" type="checkbox">
+                                    <input name="tollRoads" type="checkbox">
                                 </div>
-                                <div id="toll-road">
-                                    <label for="toll-road" style="padding-right: 111px;">
+                                <div id="unpavedRoads">
+                                    <label for="unpavedRoads" style="padding-right: 62px;">
                                         <strong>
-                                            Droga płatna
+                                            Drogi nieutwardzone 
                                         </strong>
                                     </label>
-                                    <input name="toll-road" type="checkbox">
+                                    <input name="unpavedRoads" type="checkbox">
                                 </div>
-                                <div id="roads-for-vehicles-with-passengers">
-                                    <label for="roads-for-vehicles-with-passengers">
+                                <div id="borderCrossings">
+                                    <label for="borderCrossings" style="padding-right: 69px;">
                                         <strong>
-                                            Pasy dla pojazdów z pasażerami
+                                            Przejścia graniczne
                                         </strong>
                                     </label>
-                                    <input name="roads-for-vehicles-with-passengers" type="checkbox">
+                                    <input name="borderCrossings" type="checkbox">
                                 </div>
-                                <div id="ferry">
-                                    <label for="ferry" style="padding-right: 65px;">
+                                <div id="carpools">
+                                    <label for="carpools" style="padding-right: 125px;">
+                                        <strong>
+                                            Przejazdy
+                                        </strong>
+                                    </label>
+                                    <input name="carpools" type="checkbox">
+                                </div>
+                                <div id="ferries">
+                                    <label for="ferries" style="padding-right: 60px;">
                                         <strong>
                                             Promy / autokuszetki
                                         </strong>
                                     </label>
-                                    <input name="ferry" type="checkbox">
+                                    <input name="ferries" type="checkbox">
                                 </div>
 
                                 <div class="text-center" style="margin-top: 1rem;">
@@ -116,29 +124,29 @@
                     <div class="collapse" id="collapseVehicleSpecification">
                         <div class="card card-body">
                             <form id="vehicle-specification" method="post">
-                                <div id="truck-length">
-                                    <label for="truck-length" style="padding-right: 99px;"><strong>Długość</strong> (0 - 25.25 m)</label>
-                                    <input name="truck-length" min="0" max="25.25" style="height: 22px;" type="text">
+                                <div id="vehicleLength">
+                                    <label for="vehicleLength" style="padding-right: 99px;"><strong>Długość</strong> (0 - 25.25 m)</label>
+                                    <input name="vehicleLength" min="0" max="25.25" style="height: 22px;" type="text">
                                 </div>
-                                <div id="truck-width">
-                                    <label for="truck-width" style="padding-right: 93px;"><strong>Szerokość</strong> (0 - 2.60 m)</label>
-                                    <input name="truck-width" min="0" max="2.60" style="height: 22px;" type="text">
+                                <div id="vehicleWidth">
+                                    <label for="vehicleWidth" style="padding-right: 93px;"><strong>Szerokość</strong> (0 - 2.60 m)</label>
+                                    <input name="vehicleWidth" min="0" max="2.60" style="height: 22px;" type="text">
                                 </div>
-                                <div id="truck-height">
-                                    <label for="truck-height" style="padding-right: 94px;"><strong>Wysokość</strong> (0 - 4.95 m)</label>
-                                    <input name="truck-height" min="0" max="4.95" style="height: 22px;" type="text">
+                                <div id="vehicleHeight">
+                                    <label for="vehicleHeight" style="padding-right: 94px;"><strong>Wysokość</strong> (0 - 4.95 m)</label>
+                                    <input name="vehicleHeight" min="0" max="4.95" style="height: 22px;" type="text">
                                 </div>
-                                <div id="truck-weight">
-                                    <label for="truck-weight" style="padding-right: 101px;"><strong>Masa brutto</strong> (0 - 60 t)</label>
-                                    <input name="truck-weight" min="0" max="60" style="height: 22px;" type="text">
+                                <div id="vehicleWeight">
+                                    <label for="vehicleWeight" style="padding-right: 101px;"><strong>Masa brutto</strong> (0 - 60 t)</label>
+                                    <input name="vehicleWeight" min="0" max="60" style="height: 22px;" type="text">
                                 </div>
-                                <div id="truck-axle-pressure">
-                                    <label style="padding-right: 110px;"><strong>Nacisk osi</strong> (0 - 13 t)</label>
-                                    <input name="truck-axle-pressure" min="0" max="13" style="height: 22px;" type="text">
+                                <div id="vehicleAxleWeight">
+                                    <label for="vehicleAxleWeight" style="padding-right: 110px;"><strong>Nacisk osi</strong> (0 - 13 t)</label>
+                                    <input name="vehicleAxleWeight" min="0" max="13" style="height: 22px;" type="text">
                                 </div>
-                                <div id="truck-max-speed">
-                                    <label for="truck-max-speed" style="padding-right: 12px;"><strong>Maksymalna prędkość</strong> (0 - 100 km/h)</label>
-                                    <input name="truck-max-speed" min="0" max="100" style="height: 22px;" type="text">
+                                <div id="vehicleMaxSpeed">
+                                    <label for="vehicleMaxSpeed" style="padding-right: 12px;"><strong>Maksymalna prędkość</strong> (0 - 100 km/h)</label>
+                                    <input name="vehicleMaxSpeed" min="0" max="100" style="height: 22px;" type="text">
                                 </div>
 
                                 <div id="hazardous-materials">
@@ -147,29 +155,29 @@
                                     </label>
                                     <div class="collapse" id="collapseHazardousMaterials">
                                         <div class="card card-body">
-                                            <div id="explosives">
-                                                <label for="explosives" style="padding-right: 51px;">
+                                            <div id="otherHazmatExplosive">
+                                                <label for="otherHazmatExplosive" style="padding-right: 51px;">
                                                     <strong>
                                                         Materiały wybuchowe
                                                     </strong>
                                                 </label>
-                                                <input name="explosives" type="checkbox">
+                                                <input name="otherHazmatExplosive" type="checkbox">
                                             </div>
-                                            <div id="other-hazardous-materials">
-                                                <label for="other-hazardous-materials" style="padding-right: 9px;">
+                                            <div id="otherHazmatGeneral">
+                                                <label for="otherHazmatGeneral" style="padding-right: 9px;">
                                                     <strong>
                                                         Inne materiały niebezpieczne
                                                     </strong>
                                                 </label>
-                                                <input name="other-hazardous-materials" type="checkbox">
+                                                <input name="otherHazmatGeneral" type="checkbox">
                                             </div>
-                                            <div id="water-contamination">
-                                                <label for="water-contamination" style="padding-right: 62px;">
+                                            <div id="otherHazmatHarmfulToWater">
+                                                <label for="otherHazmatHarmfulToWater" style="padding-right: 62px;">
                                                     <strong>
                                                         Szkodliwe dla wody
                                                     </strong>
                                                 </label>
-                                                <input name="water-contamination" type="checkbox">
+                                                <input name="otherHazmatHarmfulToWater" type="checkbox">
                                             </div>
                                         </div>
                                     </div>

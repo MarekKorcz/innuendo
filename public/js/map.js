@@ -2,13 +2,45 @@
     
     document.cookie = 'cross-site-cookie=bar; SameSite=None; Secure';
     
-    let tomtomApiHref = 'https://api.tomtom.com'
-    let searchVersionNumber = 2
-    let ext = 'json'
-    let apiKey = 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke'
-    let lang = 'pl-PL'
-    let countrySet = 'ESP,PRT,IRL,GBR,AND,FRA,MLT,MCO,ITA,VAT,CHE,AUT,LIE,DEU,LUX,BEL,NLD,DNK,NOR,SWE,FIN,EST,LVA,LTU,POL,BLR,UKR,CZE,SVK,SVN,HUN,HRV,BIH,SRB,ROU,MDA,MNE,ALB,MKD,BGR,GRC,TUR,RUS'
+    const tomtomApiHref = 'https://api.tomtom.com'
+    const searchVersionNumber = 2
+    const ext = 'json'
+    const apiKey = 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke'
+    const lang = 'pl-PL'
+    const countrySet = 'ESP,PRT,IRL,GBR,AND,FRA,MLT,MCO,ITA,VAT,CHE,AUT,LIE,DEU,LUX,BEL,NLD,DNK,NOR,SWE,FIN,EST,LVA,LTU,POL,BLR,UKR,CZE,SVK,SVN,HUN,HRV,BIH,SRB,ROU,MDA,MNE,ALB,MKD,BGR,GRC,TUR,RUS'
+    
+    const avoidParameterNames = [
+        'motorways',
+        'tollRoads',
+        'unpavedRoads',
+        'borderCrossings',
+        'carpools',
+        'ferries'
+    ]
+    
+    const vehicleParameterNames = [
+        'vehicleLength',
+        'vehicleWidth',
+        'vehicleHeight',
+        'vehicleWeight',
+        'vehicleAxleWeight',
+        'vehicleMaxSpeed'
+    ]
+    
+    const vehicleLoadTypeParameterNames = [
+        'otherHazmatExplosive',
+        'otherHazmatGeneral',
+        'otherHazmatHarmfulToWater'
+    ]
+    
     let waypointMarkersArray = []
+        
+    let calculateRouteRequestParameterWithArguments = {
+        avoid: avoidParameterNames,
+        vehicleLoadType: vehicleLoadTypeParameterNames,
+        // if more arrays need to be added here, create function to concatenate them (and put to assignByKey)
+        assignByKey: vehicleParameterNames
+    }
 
     var map = tt.map({
         key: apiKey,
@@ -301,11 +333,14 @@
         
         let routes = getRoutes()
         
-        tt.services.calculateRoute({
-            batchMode: 'sync',
+        let params = {
             key: apiKey,
             locations: routes
-        })
+        }
+        
+        params = setAdditionalParametersToParamsArray(params)
+        
+        tt.services.calculateRoute(params)
             .go()
             .then(function (response) {
                 
@@ -466,6 +501,43 @@
             
             inputElement.parentNode.remove()
         }
+    }
+    
+    function setAdditionalParametersToParamsArray(params) {
+        
+        for(let parameter in calculateRouteRequestParameterWithArguments) {
+            
+            if (calculateRouteRequestParameterWithArguments[parameter] !== undefined) {
+                
+                calculateRouteRequestParameterWithArguments[parameter].forEach((par) => {
+                    
+                    let paramCookie = Cookies.get(`${par}-map`)
+
+                    if (paramCookie !== 'false' && paramCookie != 0 && paramCookie !== undefined) {
+                        
+                        if (parameter === "assignByKey") {
+                            
+                            // przypisz po kluczu
+                            params[par] = paramCookie
+                            
+                        } else {
+ 
+                            // sprawdz czy już istnieje rząd o danej nazwie, 
+                            if (params[parameter] === undefined) {
+                                
+                                params[parameter] = par
+                                
+                            } else {
+                                
+                                params[parameter] = `${params[parameter]},${par}` 
+                            }
+                        }
+                    }
+                })
+            }
+        }
+        
+        return params
     }
     
     function focusOnFirstInputElementWhenPageRefresh() {
@@ -644,23 +716,11 @@
         
         event.preventDefault()
         
-        setValuesToCheckbox(...[
-            'highway',
-            'dirt-road',
-            'toll-road',
-            'roads-for-vehicles-with-passengers',
-            'ferry'
-        ])
+        setValuesToCheckbox(...avoidParameterNames)
     })
     
     
-    putValuesToCheckboxOnRefresh(...[
-        'highway',
-        'dirt-road',
-        'toll-road',
-        'roads-for-vehicles-with-passengers',
-        'ferry'
-    ])
+    putValuesToCheckboxOnRefresh(...avoidParameterNames)
     // <<< bypassing coockies
     
     
@@ -669,37 +729,15 @@
         
         event.preventDefault()
         
-        setValuesToInput(...[
-            'truck-length',
-            'truck-width',
-            'truck-height',
-            'truck-weight',
-            'truck-axle-pressure',
-            'truck-max-speed'
-        ])
+        setValuesToInput(...vehicleParameterNames)
         
-        setValuesToCheckbox(...[
-            'explosives',
-            'other-hazardous-materials',
-            'water-contamination'
-        ])
+        setValuesToCheckbox(...vehicleLoadTypeParameterNames)
     })
     
     
-    putValuesToInputOnRefresh(...[
-        'truck-length',
-        'truck-width',
-        'truck-height',
-        'truck-weight',
-        'truck-axle-pressure',
-        'truck-max-speed'
-    ])
+    putValuesToInputOnRefresh(...vehicleParameterNames)
     
-    putValuesToCheckboxOnRefresh(...[
-        'explosives',
-        'other-hazardous-materials',
-        'water-contamination'
-    ])
+    putValuesToCheckboxOnRefresh(...vehicleLoadTypeParameterNames)
     
     // <<< vehicle-specification
 
