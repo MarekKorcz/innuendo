@@ -8,6 +8,7 @@
     let apiKey = 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke'
     let lang = 'pl-PL'
     let countrySet = 'ESP,PRT,IRL,GBR,AND,FRA,MLT,MCO,ITA,VAT,CHE,AUT,LIE,DEU,LUX,BEL,NLD,DNK,NOR,SWE,FIN,EST,LVA,LTU,POL,BLR,UKR,CZE,SVK,SVN,HUN,HRV,BIH,SRB,ROU,MDA,MNE,ALB,MKD,BGR,GRC,TUR,RUS'
+    let waypointMarkersArray = []
 
     var map = tt.map({
         key: apiKey,
@@ -31,7 +32,6 @@
     //map.addControl(new tt.FullscreenControl());
 
     map.addControl(new tt.NavigationControl());
-    
     
     document.querySelector("#add-input-button").addEventListener("click", () => {
                 
@@ -62,6 +62,10 @@
         document.querySelector("#inputs ul").appendChild(listElement)
     })
     
+    document.querySelector("#show-route-button").addEventListener("click", () => {
+                
+        displayRoutes()
+    })
     
     let searchInputs = document.querySelectorAll("#inputs input")
     
@@ -176,7 +180,6 @@
                 return fetch(`${tomtomApiHref}/search/${searchVersionNumber}/geocode/${valueEncoded}.${ext}?key=${apiKey}&limit=${limit}&language=${lang}&countrySet=${countrySet}`, {
                     method: 'GET',
                     headers: {
-                        'Accept': 'application/json, text/plain, */*',
                         'Content-type': 'application/json'
                     }
                 })
@@ -193,8 +196,10 @@
                 if (element.getAttribute('data-lon') !== null && element.getAttribute('data-lat') !== null) {
                     
                     element.removeAttribute('data-lon')
-                    element.removeAttribute('data-lon')
+                    element.removeAttribute('data-lat')
                 }
+                
+                isFirstSearchedElement()
             }
         })
         
@@ -210,7 +215,7 @@
         clearSearchHintElements(searchElement)
         
         for (let result of results) {
-
+        
             let div = document.createElement('div')
             div.setAttribute('data-lat', result.position.lat)
             div.setAttribute('data-lon', result.position.lon)
@@ -230,7 +235,7 @@
             element.innerHTML = ''
         }
     }
-    
+        
     function searchHintElementClickEvent(element) {
         
         element.addEventListener("click", (event) => {
@@ -269,9 +274,185 @@
             }
         }
         
+        checkWhetherMoreThanTwoLocationsAreChosen(numberOfSelectedDestinations)
+        
         return numberOfSelectedDestinations > 1 ? false : true
     }
+    
+    function checkWhetherMoreThanTwoLocationsAreChosen(numberOfSelectedDestinations) {
+        
+        let showRouteButton = document.getElementById('show-route-button')
+        
+        if (numberOfSelectedDestinations >= 2) {
+            
+            showRouteButton.removeAttribute('disabled')
+            
+        } else {
+            
+            showRouteButton.setAttribute('disabled', true)
+        }
+    }    
+    
+    function displayRoutes() {
+        
+        let routes = getRoutes()
+        
+        tt.services.calculateRoute({
+            batchMode: 'sync',
+            key: apiKey,
+            locations: routes
+        })
+            .go()
+            .then(function (response) {
+                
+                // deletes route from map layer
+                clearRouteIfDisplayed('route')
+        
+                // deletes each chosen localization marker from map (if already exist)
+                deleteRouteWaypointMarkers()
+                
+                // displays markers for each chosen localization
+                displayRouteWaypointMarkers(routes)
+    
+                var geojson = response.toGeoJson()
+                map.addLayer({
+                    'id': 'route',
+                    'type': 'line',
+                    'source': {
+                        'type': 'geojson',
+                        'data': geojson
+                    },
+                    'paint': {
+                        'line-color': '#02d7ff',
+                        'line-width': 6
+                    }
+                })
+                
+                var bounds = new tt.LngLatBounds()
+                
+                geojson.features[0].geometry.coordinates.forEach(function (point) {
+                    bounds.extend(tt.LngLat.convert(point))
+                })
+                
+                map.fitBounds(bounds, { padding: 20 })
+            });
+    } 
+    
+    function getRoutes() {
+        
+        let routes = ''
+        let searchInputs = document.querySelectorAll("#inputs input")
+        
+        for (let searchInput of searchInputs) {
+            
+            let inputLon = searchInput.getAttribute('data-lon')
+            let inputLat = searchInput.getAttribute('data-lat')
+            
+            if (inputLon !== null && inputLat !== null) {
+                
+                let cordinates = `${inputLon},${inputLat}`
+                
+                if (routes == '') {
+                    
+                    routes = cordinates
+                    
+                } else {
+                    
+                    routes += ':' + cordinates
+                }
+            }
+        }
+        
+        return routes
+    }
+    
+    function getRoutes() {
+        
+        let routes = ''
+        let searchInputs = document.querySelectorAll("#inputs input")
+        
+        for (let searchInput of searchInputs) {
+            
+            let inputLon = searchInput.getAttribute('data-lon')
+            let inputLat = searchInput.getAttribute('data-lat')
+            
+            if (inputLon !== null && inputLat !== null) {
+                
+                let cordinates = `${inputLon},${inputLat}`
+                
+                if (routes == '') {
+                    
+                    routes = cordinates
+                    
+                } else {
+                    
+                    routes += ':' + cordinates
+                }
+            }
+        }
+        
+        return routes
+    }
+    
+    function displayRouteWaypointMarkers(routes) {
+        
+        let routesObject = getRoutesObject(routes)
+        
+        routesObject.forEach((routeObject, index) => {
+            
+            let waypointMarker = createWaypointMarker([routeObject['lon'], routeObject['lat']], index + 1)
+            
+            waypointMarkersArray.push(waypointMarker)
+        })
+    }
+    
+    function deleteRouteWaypointMarkers() {
+        
+        if (waypointMarkersArray.length > 0) {
+            
+            waypointMarkersArray.forEach((waypointMarker) => {
 
+                waypointMarker.remove()
+            })
+
+            waypointMarkersArray = []
+        }
+    }
+    
+    function getRoutesObject(routes) {
+        
+        let routesSplited = routes.split(':')
+        let cordinates = []
+        
+        routesSplited.forEach((route) => {
+            
+            let cordinate = route.split(',')
+            
+            cordinates.push({
+                lon: cordinate[0],
+                lat: cordinate[1]
+            })
+        })
+        
+        return cordinates
+    }
+
+    function createWaypointMarker(markerCoordinates, index) {
+        
+        const waypointMarkerElement = document.createElement('div')
+        waypointMarkerElement.innerHTML = `<div class='route-waypoint-pointer'>${index}</div>`
+        
+        return new tt.Marker({element: waypointMarkerElement}).setLngLat(markerCoordinates).addTo(map)
+    }
+    
+    function clearRouteIfDisplayed(routeName) {
+        
+        if (map.getLayer(routeName) !== undefined) {
+
+            map.removeLayer(routeName)
+            map.removeSource(routeName)
+        }
+    }
     
     function deleteInput(inputElement) {
         

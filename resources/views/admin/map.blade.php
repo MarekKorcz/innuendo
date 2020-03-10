@@ -30,15 +30,20 @@
                     <div class="search"></div>
                 </li>
             </ul>
-        </div>
+        </div>  
         <div id="buttons">
-            <a id="add-input-button" 
-               class="btn btn-success btn-sm" 
-               style="color: white; background-color: #21B556;">+ Dodaj kordynaty</a>
-            <a class="btn btn-info btn-sm" 
-               style="color: white; margin-left: 81px;" 
-               data-toggle="collapse" 
-               href="#collapseConfig">Konfiguruj</a>
+            <div id="first-bar" class="bar" style="padding-bottom: 6px;">
+                <a id="add-input-button">+ Dodaj kordynaty</a>
+            </div>
+            <div id="second-bar" class="bar">
+                <a class="btn btn-info btn-sm"
+                   data-toggle="collapse" 
+                   href="#collapseConfig">Konfiguruj</a>
+                <button id="show-route-button" 
+                   class="btn btn-sm" 
+                   style="color: white; background-color: #21B556; margin-left: 81px;"
+                   disabled>Pokaż połączenie</button>
+            </div>
         </div>
         
         <div class="collapse" id="collapseConfig">
