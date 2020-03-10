@@ -47,7 +47,7 @@
         container: 'map',
         style: 'tomtom://vector/1/basic-main',
         center: [21.017532,52.237049],
-        zoom: 9,
+        zoom: 4,
         language: lang
     });        
 
@@ -353,29 +353,40 @@
                 // displays markers for each chosen localization
                 displayRouteWaypointMarkers(routes)
     
-                var geojson = response.toGeoJson()
+                // displays route info panel and fill it with info
+                displayRouteInfoPanel(response)
+                
                 map.addLayer({
                     'id': 'route',
                     'type': 'line',
                     'source': {
                         'type': 'geojson',
-                        'data': geojson
+                        'data': response.toGeoJson()
                     },
                     'paint': {
                         'line-color': '#02d7ff',
                         'line-width': 6
                     }
                 })
-                
-                var bounds = new tt.LngLatBounds()
-                
-                geojson.features[0].geometry.coordinates.forEach(function (point) {
-                    bounds.extend(tt.LngLat.convert(point))
-                })
-                
-                map.fitBounds(bounds, { padding: 20 })
             });
     } 
+    
+    function displayRouteInfoPanel(response) {
+        
+        let routeDuration = getRouteDurationInHours(response)
+        let routeLength = getRouteLengthInKilometers(response)
+        
+        let routeDurationIndicatorElement = document.getElementById("route-duration-indicator")
+        let routeLengthIndicatorElement = document.getElementById("route-length-indicator")
+        
+        routeDurationIndicatorElement.innerHTML = ''
+        routeDurationIndicatorElement.innerHTML = routeDuration
+        
+        routeLengthIndicatorElement.innerHTML = ''
+        routeLengthIndicatorElement.innerHTML = routeLength
+        
+        document.getElementById("route-info-panel").setAttribute("style", "visibility: visible;")
+    }
     
     function getRoutes() {
         
@@ -538,6 +549,41 @@
         }
         
         return params
+    }
+    
+    function getRouteDurationInHours(response) {
+        
+        let totalTime = 0
+        
+        if (response['routes'][0]['summary']['travelTimeInSeconds']) {
+        
+            let routeDurationInMinutes = response['routes'][0]['summary']['travelTimeInSeconds'] / 60
+            let routeDurationDividedByMinutesInHour = routeDurationInMinutes / 60   
+
+            let numberOfHours = routeDurationDividedByMinutesInHour.toString().split(".")[0]
+            let numberOfMinutesLeftAfterHoursSubtraction = (routeDurationInMinutes % 60).toString().split(".")[0]
+
+
+            if (numberOfHours != 0)
+                totalTime = `${numberOfHours}h`
+
+            if (numberOfMinutesLeftAfterHoursSubtraction != 0)
+                totalTime = `${totalTime} ${numberOfMinutesLeftAfterHoursSubtraction}min`
+        }
+        
+        return totalTime
+    }
+    
+    function getRouteLengthInKilometers(response) {
+        
+        let routeLengthInKilometers = 0
+        
+        if (response['routes'][0]['summary']['lengthInMeters']) {
+            
+            routeLengthInKilometers = response['routes'][0]['summary']['lengthInMeters'] / 1000
+        }
+        
+        return `${routeLengthInKilometers}km`
     }
     
     function focusOnFirstInputElementWhenPageRefresh() {

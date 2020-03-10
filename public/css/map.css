@@ -129,3 +129,23 @@ input:focus {
     -moz-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
     box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
 }
+
+#route-info-panel {
+    position: absolute;
+    width: auto;
+    height: 39px;
+    left: 351px;
+    top: 15px;
+    padding: 6px 0 6px 6px;
+    background-color: white;
+    visibility: hidden;
+    
+    /*box highlight*/
+    -webkit-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+}
+
+#route-duration-indicator #route-length-indicator {
+    padding-right: 6px;
+}

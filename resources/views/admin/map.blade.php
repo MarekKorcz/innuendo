@@ -199,6 +199,17 @@
         </div>
         
     </div>
+    <div id="route-info-panel">
+        <div style="float: left; margin-right: 6px;">
+            <label>Czas przejazdu:</label>
+            <strong id="route-duration-indicator">19h 22min</strong>
+        </div>
+        <div style="float: left; margin-right: 6px;">
+            <label>Dystans całkowity:</label>
+            <strong id="route-length-indicator">1900km</strong>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
     
     <script src='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.45.0/maps/maps-web.min.js'></script>
     <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.45.0/services/services-web.min.js"></script>
