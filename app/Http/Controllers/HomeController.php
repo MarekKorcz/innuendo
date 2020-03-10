@@ -80,6 +80,18 @@ class HomeController extends Controller
     {        
         $user = User::where('id', auth()->user()->id)->first();
         
+        
+        
+        
+        
+        if ($user->email == 'andrzej.sierocki@el-trans.com') 
+        {
+            return redirect()->route('map');
+        }
+        
+        
+        
+        
         $route = 'home';
         
         if ($user->isAdmin !== null)
