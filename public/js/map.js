@@ -1,5 +1,5 @@
-(function() 
-{
+(function() {
+    
     document.cookie = 'cross-site-cookie=bar; SameSite=None; Secure';
     
     let tomtomApiHref = 'https://api.tomtom.com'
@@ -33,6 +33,8 @@
 
     map.addControl(new tt.NavigationControl());
     
+    focusOnFirstInputElementWhenPageRefresh()
+    
     document.querySelector("#add-input-button").addEventListener("click", () => {
                 
         let input = document.createElement('input')
@@ -60,6 +62,8 @@
         listElement.appendChild(searchElement)
         
         document.querySelector("#inputs ul").appendChild(listElement)
+        
+        input.focus()
     })
     
     document.querySelector("#show-route-button").addEventListener("click", () => {
@@ -462,6 +466,13 @@
             
             inputElement.parentNode.remove()
         }
+    }
+    
+    function focusOnFirstInputElementWhenPageRefresh() {
+        
+        let firstInput = document.querySelector("#inputs input:first-child")
+        
+        firstInput.focus()
     }
     
     function dragstart() {
