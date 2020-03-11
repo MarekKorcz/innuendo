@@ -46,7 +46,7 @@
             </div>
         </div>
         
-        <div class="collapse" id="collapseConfig">
+        <div class="collapse" id="collapseConfig" style="padding-top: 1px;">
             <hr>
             <div id="config-panel">
                 <div id="config-panel-buttons" class="text-center">
@@ -62,52 +62,58 @@
                         <div class="card card-body">
                             <form id="bypassing" method="post">
                                 <div id="motorways">
-                                    <label for="motorways" style="padding-right: 117px;">
+                                    <label for="motorways" class="left">
                                         <strong>
                                             Autostrady
                                         </strong>
                                     </label>
-                                    <input name="motorways" type="checkbox">
+                                    <input name="motorways" type="checkbox" class="right">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="tollRoads">
-                                    <label for="tollRoads" style="padding-right: 111px;">
+                                    <label for="tollRoads" class="left">
                                         <strong>
                                             Drogi płatne
                                         </strong>
                                     </label>
-                                    <input name="tollRoads" type="checkbox">
+                                    <input name="tollRoads" type="checkbox" class="right">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="unpavedRoads">
-                                    <label for="unpavedRoads" style="padding-right: 62px;">
+                                    <label for="unpavedRoads" class="left">
                                         <strong>
                                             Drogi nieutwardzone 
                                         </strong>
                                     </label>
-                                    <input name="unpavedRoads" type="checkbox">
+                                    <input name="unpavedRoads" type="checkbox" class="right">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="borderCrossings">
-                                    <label for="borderCrossings" style="padding-right: 69px;">
+                                    <label for="borderCrossings" class="left">
                                         <strong>
                                             Przejścia graniczne
                                         </strong>
                                     </label>
-                                    <input name="borderCrossings" type="checkbox">
+                                    <input name="borderCrossings" type="checkbox" class="right">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="carpools">
-                                    <label for="carpools" style="padding-right: 125px;">
+                                    <label for="carpools" class="left">
                                         <strong>
                                             Przejazdy
                                         </strong>
                                     </label>
-                                    <input name="carpools" type="checkbox">
+                                    <input name="carpools" type="checkbox" class="right">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="ferries">
-                                    <label for="ferries" style="padding-right: 60px;">
+                                    <label for="ferries" class="left">
                                         <strong>
                                             Promy / autokuszetki
                                         </strong>
                                     </label>
-                                    <input name="ferries" type="checkbox">
+                                    <input name="ferries" type="checkbox" class="right">
+                                    <div class="clear"></div>
                                 </div>
                                 
                                 <div id="vehicleAdrTunnelRestrictionCodeElement">
@@ -117,36 +123,40 @@
                                     <div class="collapse" id="vehicleAdrTunnelRestrictionCode">
                                         <div class="card card-body">
                                             <div id="a">
-                                                <label for="a" style="padding-right: 151px;">
+                                                <label for="a" class="left">
                                                     <strong>
                                                         A
                                                     </strong>
                                                 </label>
-                                                <input name="a" type="checkbox">
+                                                <input name="a" type="checkbox" class="right">
+                                                <div class="clear"></div>
                                             </div>
                                             <div id="b">
-                                                <label for="b" style="padding-right: 151px;">
+                                                <label for="b" class="left">
                                                     <strong>
                                                         B
                                                     </strong>
                                                 </label>
-                                                <input name="b" type="checkbox">
+                                                <input name="b" type="checkbox" class="right">
+                                                <div class="clear"></div>
                                             </div>
                                             <div id="c">
-                                                <label for="c" style="padding-right: 151px;">
+                                                <label for="c" class="left">
                                                     <strong>
                                                         C
                                                     </strong>
                                                 </label>
-                                                <input name="c" type="checkbox">
+                                                <input name="c" type="checkbox" class="right">
+                                                <div class="clear"></div>
                                             </div>
                                             <div id="d">
-                                                <label for="d" style="padding-right: 151px;">
+                                                <label for="d" class="left">
                                                     <strong>
                                                         D
                                                     </strong>
                                                 </label>
-                                                <input name="d" type="checkbox">
+                                                <input name="d" type="checkbox" class="right">
+                                                <div class="clear"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -167,28 +177,34 @@
                         <div class="card card-body">
                             <form id="vehicle-specification" method="post">
                                 <div id="vehicleLength">
-                                    <label for="vehicleLength" style="padding-right: 99px;"><strong>Długość</strong> (0 - 25.25 m)</label>
-                                    <input name="vehicleLength" min="0" max="25.25" style="height: 22px;" type="text">
+                                    <label for="vehicleLength" class="left"><strong>Długość</strong> (0 - 25.25 m)</label>
+                                    <input name="vehicleLength" class="right" style="height: 22px;" min="0" max="25.25" type="text">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="vehicleWidth">
-                                    <label for="vehicleWidth" style="padding-right: 93px;"><strong>Szerokość</strong> (0 - 2.60 m)</label>
-                                    <input name="vehicleWidth" min="0" max="2.60" style="height: 22px;" type="text">
+                                    <label for="vehicleWidth" class="left"><strong>Szerokość</strong> (0 - 2.60 m)</label>
+                                    <input name="vehicleWidth" class="right" style="height: 22px;" min="0" max="2.60" type="text">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="vehicleHeight">
-                                    <label for="vehicleHeight" style="padding-right: 94px;"><strong>Wysokość</strong> (0 - 4.95 m)</label>
-                                    <input name="vehicleHeight" min="0" max="4.95" style="height: 22px;" type="text">
+                                    <label for="vehicleHeight" class="left"><strong>Wysokość</strong> (0 - 4.95 m)</label>
+                                    <input name="vehicleHeight" class="right" style="height: 22px;" min="0" max="4.95" type="text">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="vehicleWeight">
-                                    <label for="vehicleWeight" style="padding-right: 101px;"><strong>Masa brutto</strong> (0 - 60 t)</label>
-                                    <input name="vehicleWeight" min="0" max="60" style="height: 22px;" type="text">
+                                    <label for="vehicleWeight" class="left"><strong>Masa brutto</strong> (0 - 60 t)</label>
+                                    <input name="vehicleWeight" class="right" style="height: 22px;" min="0" max="60" type="text">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="vehicleAxleWeight">
-                                    <label for="vehicleAxleWeight" style="padding-right: 110px;"><strong>Nacisk osi</strong> (0 - 13 t)</label>
-                                    <input name="vehicleAxleWeight" min="0" max="13" style="height: 22px;" type="text">
+                                    <label for="vehicleAxleWeight" class="left"><strong>Nacisk osi</strong> (0 - 13 t)</label>
+                                    <input name="vehicleAxleWeight" class="right" style="height: 22px;" min="0" max="13" type="text">
+                                    <div class="clear"></div>
                                 </div>
                                 <div id="vehicleMaxSpeed">
-                                    <label for="vehicleMaxSpeed" style="padding-right: 12px;"><strong>Maksymalna prędkość</strong> (0 - 100 km/h)</label>
-                                    <input name="vehicleMaxSpeed" min="0" max="100" style="height: 22px;" type="text">
+                                    <label for="vehicleMaxSpeed" class="left"><strong>Maksymalna prędkość</strong> (0 - 100 km/h)</label>
+                                    <input name="vehicleMaxSpeed" class="right" style="height: 22px;" min="0" max="100" type="text">
+                                    <div class="clear"></div>
                                 </div>
 
                                 <div id="hazardous-materials">
@@ -198,28 +214,31 @@
                                     <div class="collapse" id="collapseHazardousMaterials">
                                         <div class="card card-body">
                                             <div id="otherHazmatExplosive">
-                                                <label for="otherHazmatExplosive" style="padding-right: 51px;">
+                                                <label for="otherHazmatExplosive" class="left">
                                                     <strong>
                                                         Materiały wybuchowe
                                                     </strong>
                                                 </label>
-                                                <input name="otherHazmatExplosive" type="checkbox">
+                                                <input name="otherHazmatExplosive" class="right" type="checkbox">
+                                                <div class="clear"></div>
                                             </div>
                                             <div id="otherHazmatGeneral">
-                                                <label for="otherHazmatGeneral" style="padding-right: 9px;">
+                                                <label for="otherHazmatGeneral" class="left">
                                                     <strong>
                                                         Inne materiały niebezpieczne
                                                     </strong>
                                                 </label>
-                                                <input name="otherHazmatGeneral" type="checkbox">
+                                                <input name="otherHazmatGeneral" class="right" type="checkbox">
+                                                <div class="clear"></div>
                                             </div>
                                             <div id="otherHazmatHarmfulToWater">
-                                                <label for="otherHazmatHarmfulToWater" style="padding-right: 62px;">
+                                                <label for="otherHazmatHarmfulToWater" class="left">
                                                     <strong>
                                                         Szkodliwe dla wody
                                                     </strong>
                                                 </label>
-                                                <input name="otherHazmatHarmfulToWater" type="checkbox">
+                                                <input name="otherHazmatHarmfulToWater" class="right" type="checkbox">
+                                                <div class="clear"></div>
                                             </div>
                                         </div>
                                     </div>

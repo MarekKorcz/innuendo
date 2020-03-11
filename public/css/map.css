@@ -149,3 +149,25 @@ input:focus {
 #route-duration-indicator #route-length-indicator {
     padding-right: 6px;
 }
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+#vehicleAdrTunnelRestrictionCode > div {
+    padding: 6px 93px 6px 93px; 
+    margin: 0 9px 0 9px;
+}
+
+#collapseHazardousMaterials > div {
+    padding: 6px 9px 6px 9px; 
+    margin: 0 9px 0 9px;
+}
