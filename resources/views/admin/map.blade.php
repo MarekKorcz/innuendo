@@ -109,6 +109,48 @@
                                     </label>
                                     <input name="ferries" type="checkbox">
                                 </div>
+                                
+                                <div id="vehicleAdrTunnelRestrictionCodeElement">
+                                    <label data-toggle="collapse" href="#vehicleAdrTunnelRestrictionCode">
+                                        <strong style="cursor: pointer;"> > Kody ograniczeń przejazdu przez tunele</strong>
+                                    </label>
+                                    <div class="collapse" id="vehicleAdrTunnelRestrictionCode">
+                                        <div class="card card-body">
+                                            <div id="a">
+                                                <label for="a" style="padding-right: 151px;">
+                                                    <strong>
+                                                        A
+                                                    </strong>
+                                                </label>
+                                                <input name="a" type="checkbox">
+                                            </div>
+                                            <div id="b">
+                                                <label for="b" style="padding-right: 151px;">
+                                                    <strong>
+                                                        B
+                                                    </strong>
+                                                </label>
+                                                <input name="b" type="checkbox">
+                                            </div>
+                                            <div id="c">
+                                                <label for="c" style="padding-right: 151px;">
+                                                    <strong>
+                                                        C
+                                                    </strong>
+                                                </label>
+                                                <input name="c" type="checkbox">
+                                            </div>
+                                            <div id="d">
+                                                <label for="d" style="padding-right: 151px;">
+                                                    <strong>
+                                                        D
+                                                    </strong>
+                                                </label>
+                                                <input name="d" type="checkbox">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="text-center" style="margin-top: 1rem;">
                                     <input type="submit" 

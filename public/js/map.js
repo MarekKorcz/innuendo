@@ -18,6 +18,13 @@
         'ferries'
     ]
     
+    const vehicleAdrTunnelRestrictionCode = [
+        'a',
+        'b',
+        'c',
+        'd'
+    ]
+    
     const vehicleParameterNames = [
         'vehicleLength',
         'vehicleWidth',
@@ -37,6 +44,7 @@
         
     let calculateRouteRequestParameterWithArguments = {
         avoid: avoidParameterNames,
+        vehicleAdrTunnelRestrictionCode: vehicleAdrTunnelRestrictionCode,
         vehicleLoadType: vehicleLoadTypeParameterNames,
         // if more arrays need to be added here, create function to concatenate them (and put to assignByKey)
         assignByKey: vehicleParameterNames
@@ -102,6 +110,16 @@
                 
         displayRoutes()
     })
+    
+    let adrTunnelRestrictionCheckboxes = document.querySelectorAll("#vehicleAdrTunnelRestrictionCode input[type=checkbox]")
+    
+    for (let adrTunnelRestrictionCheckbox of adrTunnelRestrictionCheckboxes) {
+        
+        adrTunnelRestrictionCheckbox.addEventListener("click", (event) => {
+                
+            uncheckOthersAdrTunnelRestrictionCheckboxesIfChecked(event.target.getAttribute("name"))
+        })
+    }
     
     let searchInputs = document.querySelectorAll("#inputs input")
     
@@ -511,6 +529,9 @@
         if (spanElements.length > 1) {
             
             inputElement.parentNode.remove()
+            
+            // hide route-info-panel
+            document.getElementById("route-info-panel").setAttribute("style", "visibility: hidden;")
         }
     }
     
@@ -591,6 +612,20 @@
         let firstInput = document.querySelector("#inputs input:first-child")
         
         firstInput.focus()
+    }
+    
+    function uncheckOthersAdrTunnelRestrictionCheckboxesIfChecked(checkboxName) {
+        
+        vehicleAdrTunnelRestrictionCode.forEach((element) => {
+            
+            if (element != checkboxName) {
+                
+                let AdrTunnelRestrictionCheckboxElement = document.querySelector(`input[name=${element}]`)
+                
+                if (AdrTunnelRestrictionCheckboxElement.checked)
+                    AdrTunnelRestrictionCheckboxElement.checked = false
+            }
+        })
     }
     
     function dragstart() {
@@ -763,10 +798,12 @@
         event.preventDefault()
         
         setValuesToCheckbox(...avoidParameterNames)
+        setValuesToCheckbox(...vehicleAdrTunnelRestrictionCode)
     })
     
     
     putValuesToCheckboxOnRefresh(...avoidParameterNames)
+    putValuesToCheckboxOnRefresh(...vehicleAdrTunnelRestrictionCode)
     // <<< bypassing coockies
     
     
