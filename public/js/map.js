@@ -13,7 +13,6 @@
         'motorways',
         'tollRoads',
         'unpavedRoads',
-        'borderCrossings',
         'carpools',
         'ferries'
     ]
@@ -310,7 +309,8 @@
             
             if (isFirstSearchedElement()) {
                 
-                map.setCenter(new tt.LngLat(searchElementLongitude, searchElementLatitude));
+                map.setCenter(new tt.LngLat(searchElementLongitude, searchElementLatitude))
+                map.setZoom(8)
             }
         })
     }
@@ -386,6 +386,8 @@
                         'line-width': 6
                     }
                 })
+                
+                map.setZoom(4)
             });
     } 
     

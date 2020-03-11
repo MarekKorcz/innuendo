@@ -88,15 +88,6 @@
                                     <input name="unpavedRoads" type="checkbox" class="right">
                                     <div class="clear"></div>
                                 </div>
-                                <div id="borderCrossings">
-                                    <label for="borderCrossings" class="left">
-                                        <strong>
-                                            Przejścia graniczne
-                                        </strong>
-                                    </label>
-                                    <input name="borderCrossings" type="checkbox" class="right">
-                                    <div class="clear"></div>
-                                </div>
                                 <div id="carpools">
                                     <label for="carpools" class="left">
                                         <strong>
