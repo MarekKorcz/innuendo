@@ -106,6 +106,8 @@
     })
     
     document.querySelector("#show-route-button").addEventListener("click", () => {
+        
+        closeConfig()
                 
         displayRoutes()
     })
@@ -387,7 +389,10 @@
                     }
                 })
                 
-                map.setZoom(4)
+                map.fitBounds(parseRouteStringToCords(routes), {
+                    padding: { top: 30, bottom: 30, left: 30, right: 30 },
+                    maxZoom: 5
+                });
             });
     } 
     
@@ -462,6 +467,24 @@
         }
         
         return routes
+    }
+    
+    function parseRouteStringToCords(routes) {
+        
+        var routesSplited = routes.split(":");
+        var routesCords = []
+        
+        routesSplited.forEach((route) => {
+            
+            var routeLngLat = route.split(",");    
+            
+            routesCords.push([
+                Number(routeLngLat[0]),
+                Number(routeLngLat[1])
+            ])
+        })
+        
+        return routesCords
     }
     
     function displayRouteWaypointMarkers(routes) {
