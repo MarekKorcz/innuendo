@@ -252,35 +252,63 @@ class HomeController extends Controller
         return redirect()->route('welcome');
     }
     
+//    public function test()
 //    {
-//        $filesDirPath = storage_path('app/notes');
+//        $filesDirPath = storage_path('app/notes');        
 //        $filesDir = scandir($filesDirPath);
 //        
 //        $textFile = storage_path('app') . "/text.txt";
 //        
+//        // 1. I used this to change files extension to zip
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
 //            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
+//            $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/" . $directory[2];
+//            $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/new.zip";
+//            rename($oldFileName, $newFileName);
+//        }
+//        
+//        // 2. this to extract files
+//        for ($i = 2; $i < count($filesDir); $i++)
+//        {
+//            $fileName = $filesDirPath . "/" . $filesDir[$i] . "/new.zip";
 //            
-//            // I used this to change files extension
-////            $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/" . $directory[5];
-////            $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/new.json";
-////            rename($oldFileName, $newFileName);
-//            
-//            // this to read notes in every file
-////            $fileName = $filesDirPath . "/" . $filesDir[$i] . "/new.json";
-////            
-////            $file = File::get($fileName);
-////            $decodedFile = json_decode($file);
-////            $memoObjectList = $decodedFile->MemoObjectList;
-////            $note = $memoObjectList[0]->DescRaw;
+//            $zip = new \ZipArchive;
+//            if ($zip->open($fileName) === TRUE) {
+//                $zip->extractTo($filesDirPath . "/" . $filesDir[$i]);
+//                $zip->close();
+//                echo 'ok';
+//            } else {
+//                echo 'failed - ' . $fileName;
+//            }
+//        }
+//        
+//        // 3. convert jlqm to json
+//        for ($i = 2; $i < count($filesDir); $i++)
+//        {
+//            $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.jlqm";
+//            $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.json";
+//            rename($oldFileName, $newFileName);
+//        }
+//        
+//        // 4. read note text
+//        for ($i = 2; $i < count($filesDir); $i++)
+//        {
+//            $fileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.json";
+//            $file = File::get($fileName);
+//            $decodedFile = json_decode($file);
+//            $memoObjectList = $decodedFile->MemoObjectList;
+//            $note = $memoObjectList[0]->DescRaw;
 //            
 //            // and this to write all notes to one file
 //            $current = file_get_contents($textFile);
-//            $current .= $note . "\n\n\n";
+//            $current .= $note . "\n\n";
 //            file_put_contents($textFile, $current);
 //        }
 //    }
+        
+        
+        
     
 //    public function test()
 //    {
