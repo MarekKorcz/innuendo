@@ -55,6 +55,9 @@
                     <a class="btn btn-block btn-sm config-button" data-toggle="collapse" href="#collapseStartDateTime">
                         Data wyjazdu
                     </a>
+                    <a class="btn btn-block btn-sm config-button" data-toggle="collapse" href="#collapseEndDateTime">
+                        Data dojazdu
+                    </a>
                     <a class="btn btn-block btn-sm config-button" data-toggle="collapse" href="#collapseSkip">
                         Omijanie
                     </a>
@@ -82,6 +85,39 @@
                                         </strong>
                                     </label>
                                     <input class="timepicker right" style="width: 102px; height: 24px;" id="travel-start-time" name="travel-start-time">
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="text-center" style="margin-top: 1rem;">
+                                    <input type="submit" 
+                                           value="Gotowe" 
+                                           class="btn btn-info btn-sm" 
+                                           style="color: white;" 
+                                           data-toggle="collapse" 
+                                           href="#collapseConfig">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="collapse" id="collapseEndDateTime">
+                        <div class="card card-body">
+                            <form id="arriveAt" method="post">
+                                <div>
+                                    <label class="left" for="travel-end-date">
+                                        <strong>
+                                            Dzień:
+                                        </strong>
+                                    </label>
+                                    <input class="right" style="width: 153px; height: 24px;" type="date" id="travel-end-date" name="travel-end-date">
+                                    <div class="clear"></div>
+                                </div>
+                                <div>
+                                    <label class="left" for="travel-end-time">
+                                        <strong>
+                                            Godzina:
+                                        </strong>
+                                    </label>
+                                    <input class="timepicker right" style="width: 102px; height: 24px;" id="travel-end-time" name="travel-end-time">
                                     <div class="clear"></div>
                                 </div>
 
@@ -290,6 +326,7 @@
         
     </div>
     <div id="route-info-panel">
+        <div id="estimated-departure-or-arrival"></div>
         <div style="float: left; margin-right: 6px;">
             <label>Czas przejazdu:</label>
             <strong id="route-duration-indicator"></strong>

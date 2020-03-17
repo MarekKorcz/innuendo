@@ -89,7 +89,7 @@ input:focus {
     border: 2px solid #ff6666;
 }
 
-#collapseVehicleSpecification label, #collapseSkip label, #collapseStartDateTime label {
+#collapseVehicleSpecification label, #collapseSkip label, #collapseStartDateTime label, #collapseEndDateTime label {
     font-size: 12px;
 }
 
@@ -172,7 +172,13 @@ input:focus {
     margin: 0 9px 0 9px;
 }
 
-#depart-at-indicator {
+#depart-at-indicator, #arrive-at-indicator {
     padding-bottom: 6px;
     font-size: 15px;
+}
+
+#estimated-departure-or-arrival {
+    float: left; 
+    margin-right: 6px;
+    display: none;
 }

@@ -21,6 +21,11 @@
         'travel-start-time'
     ]
     
+    const arriveAtParameterNames = [
+        'travel-end-date',
+        'travel-end-time'
+    ]
+    
     const avoidParameterNames = [
         'motorways',
         'tollRoads',
@@ -68,20 +73,9 @@
         center: [21.017532,52.237049],
         zoom: 4,
         language: lang
-    });        
-
-    //var config = {
-    //    key: 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke',
-    //    style: 'tomtom://vector/1/relative',
-    //    refresh: 30000
-    //};
-    //
-    //map.on('load', function() {
-    //    map.addTier(new tt.TrafficFlowTilesTier(config));
-    //});
-
-    //map.addControl(new tt.FullscreenControl());
-
+    });     
+    
+    map.addControl(new tt.FullscreenControl());
     map.addControl(new tt.NavigationControl());
     
     
@@ -402,10 +396,11 @@
                 displayRouteWaypointMarkers(routes)
     
                 // displays route info panel and fill it with info
-                displayRouteInfoPanel(response)
+                displayRouteInfoPanel(response, params)
                 
-                // display 
-                displayArrivalAtInfoPanel()
+                // display date time panels
+                displayDepartAtInfoPanel()
+                displayArriveAtInfoPanel()
                 
                 map.addLayer({
                     'id': 'route',
@@ -427,7 +422,7 @@
             });
     }  
     
-    function displayRouteInfoPanel(response) {
+    function displayRouteInfoPanel(response, params) {
         
         let routeDuration = getRouteDurationInHours(response)
         let routeLength = getRouteLengthInKilometers(response)
@@ -441,7 +436,57 @@
         routeLengthIndicatorElement.innerHTML = ''
         routeLengthIndicatorElement.innerHTML = routeLength
         
+        displayArrivalOrDepartureInfo(response, params)
+        
         document.getElementById("route-info-panel").setAttribute("style", "visibility: visible;")
+    }
+    
+    function displayArrivalOrDepartureInfo(response, params) {
+        
+        let date = null
+        let arrivalOrDepartureInfoElement = document.getElementById('estimated-departure-or-arrival')
+        arrivalOrDepartureInfoElement.innerHTML = ''
+        
+        if (params['arriveAt']) {
+            
+            let labelElement = document.createElement('label')
+            labelElement.innerHTML = 'Czas wyjazdu:'
+            
+            date = new Date(response['routes'][0]['summary']['departureTime']) 
+            
+            let strongElement = document.createElement('strong')
+            strongElement.innerHTML = `
+                ${date.getDate()} ${parseMonth(date.getMonth())} ${date.getFullYear()} 
+                ${parseTime(date.getHours(), date.getMinutes())}
+            `
+            
+            arrivalOrDepartureInfoElement.prepend(strongElement)
+            arrivalOrDepartureInfoElement.prepend(labelElement)
+            
+            arrivalOrDepartureInfoElement.setAttribute("style", "display: inline;")
+            
+        } else if (params['departAt']) {
+            
+            let labelElement = document.createElement('label')
+            labelElement.innerHTML = 'Czas dojazdu:'
+            
+            date = new Date(response['routes'][0]['summary']['arrivalTime'])
+            
+            let strongElement = document.createElement('strong')
+            strongElement.innerHTML = `
+                ${date.getDate()} ${parseMonth(date.getMonth())} ${date.getFullYear()} 
+                ${parseTime(date.getHours(), date.getMinutes())}
+            `
+            
+            arrivalOrDepartureInfoElement.prepend(strongElement)
+            arrivalOrDepartureInfoElement.prepend(labelElement)
+            
+            arrivalOrDepartureInfoElement.setAttribute("style", "display: inline;")
+            
+        } else {
+            
+            arrivalOrDepartureInfoElement.setAttribute("style", "display: none;")
+        }
     }
     
     function getRoutes() {
@@ -832,7 +877,8 @@
             }
         }
         
-        displayArrivalAtInfoPanel()
+        displayDepartAtInfoPanel()
+        displayArriveAtInfoPanel()
     }
     
     function putValuesToInputOnRefresh(...names) {
@@ -866,20 +912,57 @@
         }
     }
     
+    function clearCookiesAndRepresentingInputsByName(antagonicPanelName, ...names) {
+        
+        if (document.getElementById(antagonicPanelName)) {
+        
+            for (let name of names) {
+
+                let cookieName = `${name}-map`
+                let inputElement = document.querySelector(`input[name='${name}']`)
+
+                if (Cookies.get(cookieName)) {
+
+                    Cookies.set(cookieName, '')
+                    inputElement.value = ''
+                }
+            }
+            
+            clearIndicatorPanelElementIfExists(antagonicPanelName)
+        }
+    }
+    
     // >>>>>>> cookies handler
     
-    // >>> travel start date time coockies
+    // >>> travel start date time cookies
     document.getElementById('departAt').addEventListener("submit", (event) => {
         
         event.preventDefault()
         
         setValuesToDateAndTimeInput(...departAtParameterNames)
+        
+        // remove antagonic datetime cookies
+        clearCookiesAndRepresentingInputsByName('arrive-at-indicator', ...arriveAtParameterNames)
     })
     
     putValuesToInputOnRefresh(...departAtParameterNames)
-    // <<< travel start date time coockies
+    // <<< travel start date time cookies
+ 
+    // >>> travel end date time cookies
+    document.getElementById('arriveAt').addEventListener("submit", (event) => {
+        
+        event.preventDefault()
+        
+        setValuesToDateAndTimeInput(...arriveAtParameterNames)
+        
+        // remove antagonic datetime cookies
+        clearCookiesAndRepresentingInputsByName('depart-at-indicator', ...departAtParameterNames)
+    })
     
-    // >>> bypassing coockies
+    putValuesToInputOnRefresh(...arriveAtParameterNames)
+    // <<< travel end date time cookies
+    
+    // >>> bypassing cookies
     document.getElementById('bypassing').addEventListener("submit", (event) => {
         
         event.preventDefault()
@@ -891,7 +974,7 @@
     
     putValuesToCheckboxOnRefresh(...avoidParameterNames)
     putValuesToCheckboxOnRefresh(...vehicleAdrTunnelRestrictionCode)
-    // <<< bypassing coockies
+    // <<< bypassing cookies
     
     
     // >>> vehicle-specification
@@ -914,29 +997,34 @@
     // <<<<<< cookies handler
     
     
-    displayArrivalAtInfoPanel()
+    displayDepartAtInfoPanel()
+    displayArriveAtInfoPanel()
     
     function setDateTimeParametersToParamsArr(params) {
         
         let departAt = getDepartAt()
         
-        // display info panel
-        displayArrivalAtInfoPanel()
+        // add departAt datetime parameter to request params array
+        if (departAt !== null)
+            params['departAt'] = departAt.toISOString()
         
-        // add datetime params to request params array
-        params['departAt'] = departAt.toISOString()
+        let arriveAt = getArriveAt()
+        
+        // add arriveAt datetime parameter to request params array
+        if (arriveAt !== null)
+            params['arriveAt'] = arriveAt.toISOString()
          
         return params
     }
     
-    function displayArrivalAtInfoPanel() {
-        
-        // clear existing panels if they already exist
-        clearDepartAtIndicatorElementIfExists()
+    function displayDepartAtInfoPanel() {
         
         let departAtDateTime = getDepartAt()
         
         if (departAtDateTime !== null) {
+            
+            // clear existing panel if already exist
+            clearIndicatorPanelElementIfExists('depart-at-indicator')
             
             let departAtIndicator = document.createElement('div')
             departAtIndicator.setAttribute('id', 'depart-at-indicator')
@@ -959,13 +1047,43 @@
         }
     }
     
-    function clearDepartAtIndicatorElementIfExists() {
+    function displayArriveAtInfoPanel() {
         
-        let departAtIndicatorElement = document.getElementById('depart-at-indicator')
+        let arriveAtDateTime = getArriveAt()
+        
+        if (arriveAtDateTime !== null) {
+            
+            // clear existing panel if already exist
+            clearIndicatorPanelElementIfExists('arrive-at-indicator')
+            
+            let arriveAtIndicator = document.createElement('div')
+            arriveAtIndicator.setAttribute('id', 'arrive-at-indicator')
+            arriveAtIndicator.setAttribute('class', 'text-center')
 
-        if (departAtIndicatorElement !== null) {
+            let arriveAtLabel = document.createElement('label')
+            arriveAtLabel.innerHTML = 'Dojazd o:'
 
-            departAtIndicatorElement.parentNode.removeChild(departAtIndicatorElement);
+            let arriveAtInfo = document.createElement('strong')
+            arriveAtInfo.innerHTML = `
+                ${arriveAtDateTime.getDate()} ${parseMonth(arriveAtDateTime.getMonth())} ${arriveAtDateTime.getFullYear()} 
+                ${parseTime(arriveAtDateTime.getHours(), arriveAtDateTime.getMinutes())}
+            `
+            
+            arriveAtIndicator.appendChild(arriveAtLabel)
+            arriveAtIndicator.appendChild(arriveAtInfo)
+            
+            let searchElement = document.getElementById('search')
+            searchElement.prepend(arriveAtIndicator)
+        }
+    }
+    
+    function clearIndicatorPanelElementIfExists(indicatorName) {
+        
+        let panelElement = document.getElementById(indicatorName)
+
+        if (panelElement !== null) {
+
+            panelElement.parentNode.removeChild(panelElement)
         }
     }
     
@@ -994,6 +1112,33 @@
         }
         
         return departAt
+    }
+    
+    function getArriveAt() {
+        
+        let arriveAt = null
+        
+        // if date value exists, create date object
+        let arriveAtTravelEndDateElementValue = document.getElementById('travel-end-date').value
+        
+        if (arriveAtTravelEndDateElementValue) {
+            
+            arriveAtDateArr = arriveAtTravelEndDateElementValue.split("-")
+            
+            arriveAt = new Date(arriveAtDateArr[0], arriveAtDateArr[1] - 1, arriveAtDateArr[2])
+            
+            // if time value also exists, add it to date object
+            let arriveAtTravelEndTimeElementValue = document.getElementById('travel-end-time').value
+            
+            if (arriveAtTravelEndTimeElementValue) {
+                
+                arriveAtTimeArr = arriveAtTravelEndTimeElementValue.split(":")
+                
+                arriveAt.setHours(arriveAtTimeArr[0], arriveAtTimeArr[1])
+            }
+        }
+        
+        return arriveAt
     }
     
     function parseMonth(monthNumber) {
