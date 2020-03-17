@@ -1,5 +1,12 @@
 (function() {
     
+    $('.timepicker').timepicker({
+        timeFormat: 'H:i',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
+    });
+    
     document.cookie = 'cross-site-cookie=bar; SameSite=None; Secure';
     
     const tomtomApiHref = 'https://api.tomtom.com'
@@ -8,6 +15,11 @@
     const apiKey = 'OmjUSjU5i4johYgNQfvhLGWqzbCmdZke'
     const lang = 'pl-PL'
     const countrySet = 'ESP,PRT,IRL,GBR,AND,FRA,MLT,MCO,ITA,VAT,CHE,AUT,LIE,DEU,LUX,BEL,NLD,DNK,NOR,SWE,FIN,EST,LVA,LTU,POL,BLR,UKR,CZE,SVK,SVN,HUN,HRV,BIH,SRB,ROU,MDA,MNE,ALB,MKD,BGR,GRC,TUR,RUS'
+    
+    const departAtParameterNames = [
+        'travel-start-date',
+        'travel-start-time'
+    ]
     
     const avoidParameterNames = [
         'motorways',
@@ -72,7 +84,10 @@
 
     map.addControl(new tt.NavigationControl());
     
+    
     focusOnFirstInputElementWhenPageRefresh()
+    
+    setHighlightEventToTimeInputsWhenClicked()
     
     document.querySelector("#add-input-button").addEventListener("click", () => {
                 
@@ -347,7 +362,20 @@
             
             showRouteButton.setAttribute('disabled', true)
         }
-    }    
+    }  
+    
+    function setHighlightEventToTimeInputsWhenClicked() {
+        
+        let timeInputs = document.querySelectorAll('.timepicker')
+        
+        for (let timeInput of timeInputs) {
+            
+            timeInput.addEventListener("click", (event) => {
+
+                event.target.setSelectionRange(0, event.target.value.length)
+            })
+        }
+    }
     
     function displayRoutes() {
         
@@ -376,6 +404,9 @@
                 // displays route info panel and fill it with info
                 displayRouteInfoPanel(response)
                 
+                // display 
+                displayArrivalAtInfoPanel()
+                
                 map.addLayer({
                     'id': 'route',
                     'type': 'line',
@@ -394,7 +425,7 @@
                     maxZoom: 5
                 });
             });
-    } 
+    }  
     
     function displayRouteInfoPanel(response) {
         
@@ -471,12 +502,12 @@
     
     function parseRouteStringToCords(routes) {
         
-        var routesSplited = routes.split(":");
+        var routesSplited = routes.split(":")
         var routesCords = []
         
         routesSplited.forEach((route) => {
             
-            var routeLngLat = route.split(",");    
+            var routeLngLat = route.split(",")   
             
             routesCords.push([
                 Number(routeLngLat[0]),
@@ -562,6 +593,7 @@
     
     function setAdditionalParametersToParamsArray(params) {
         
+        // >> fill array with single value parameters
         for(let parameter in calculateRouteRequestParameterWithArguments) {
             
             if (calculateRouteRequestParameterWithArguments[parameter] !== undefined) {
@@ -593,6 +625,9 @@
                 })
             }
         }
+        
+        // >> fill array with datetime parameters
+        params = setDateTimeParametersToParamsArr(params)
         
         return params
     }
@@ -784,6 +819,22 @@
         }
     }
     
+    function setValuesToDateAndTimeInput(...names) {
+        
+        for (let name of names) {
+            
+            let element = document.querySelector(`input[name='${name}']`)
+            let value = element.value
+            
+            if (value !== '' || value != 0 || value !== undefined) {
+            
+                Cookies.set(`${name}-map`, value)
+            }
+        }
+        
+        displayArrivalAtInfoPanel()
+    }
+    
     function putValuesToInputOnRefresh(...names) {
         
         for (let name of names) {
@@ -816,6 +867,17 @@
     }
     
     // >>>>>>> cookies handler
+    
+    // >>> travel start date time coockies
+    document.getElementById('departAt').addEventListener("submit", (event) => {
+        
+        event.preventDefault()
+        
+        setValuesToDateAndTimeInput(...departAtParameterNames)
+    })
+    
+    putValuesToInputOnRefresh(...departAtParameterNames)
+    // <<< travel start date time coockies
     
     // >>> bypassing coockies
     document.getElementById('bypassing').addEventListener("submit", (event) => {
@@ -850,4 +912,147 @@
     // <<< vehicle-specification
 
     // <<<<<< cookies handler
+    
+    
+    displayArrivalAtInfoPanel()
+    
+    function setDateTimeParametersToParamsArr(params) {
+        
+        let departAt = getDepartAt()
+        
+        // display info panel
+        displayArrivalAtInfoPanel()
+        
+        // add datetime params to request params array
+        params['departAt'] = departAt.toISOString()
+         
+        return params
+    }
+    
+    function displayArrivalAtInfoPanel() {
+        
+        // clear existing panels if they already exist
+        clearDepartAtIndicatorElementIfExists()
+        
+        let departAtDateTime = getDepartAt()
+        
+        if (departAtDateTime !== null) {
+            
+            let departAtIndicator = document.createElement('div')
+            departAtIndicator.setAttribute('id', 'depart-at-indicator')
+            departAtIndicator.setAttribute('class', 'text-center')
+
+            let departAtLabel = document.createElement('label')
+            departAtLabel.innerHTML = 'Wyjazd o:'
+
+            let departAtInfo = document.createElement('strong')
+            departAtInfo.innerHTML = `
+                ${departAtDateTime.getDate()} ${parseMonth(departAtDateTime.getMonth())} ${departAtDateTime.getFullYear()} 
+                ${parseTime(departAtDateTime.getHours(), departAtDateTime.getMinutes())}
+            `
+            
+            departAtIndicator.appendChild(departAtLabel)
+            departAtIndicator.appendChild(departAtInfo)
+            
+            let searchElement = document.getElementById('search')
+            searchElement.prepend(departAtIndicator)
+        }
+    }
+    
+    function clearDepartAtIndicatorElementIfExists() {
+        
+        let departAtIndicatorElement = document.getElementById('depart-at-indicator')
+
+        if (departAtIndicatorElement !== null) {
+
+            departAtIndicatorElement.parentNode.removeChild(departAtIndicatorElement);
+        }
+    }
+    
+    function getDepartAt() {
+        
+        let departAt = null
+        
+        // if date value exists, create date object
+        let departAtTravelStartDateElementValue = document.getElementById('travel-start-date').value
+        
+        if (departAtTravelStartDateElementValue) {
+            
+            departAtDateArr = departAtTravelStartDateElementValue.split("-")
+            
+            departAt = new Date(departAtDateArr[0], departAtDateArr[1] - 1, departAtDateArr[2])
+            
+            // if time value also exists, add it to date object
+            let departAtTravelStartTimeElementValue = document.getElementById('travel-start-time').value
+            
+            if (departAtTravelStartTimeElementValue) {
+                
+                departAtTimeArr = departAtTravelStartTimeElementValue.split(":")
+                
+                departAt.setHours(departAtTimeArr[0], departAtTimeArr[1])
+            }
+        }
+        
+        return departAt
+    }
+    
+    function parseMonth(monthNumber) {
+        
+        let month = ''
+        
+        switch (monthNumber) {
+            case 0:
+              month = 'Styczeń'
+              break;
+            case 1:
+              month = 'Luty'
+              break;
+            case 2:
+              month = 'Marzec'
+              break;
+            case 3:
+              month = 'Kwiecień'
+              break;
+            case 4:
+              month = 'Maj'
+              break;
+            case 5:
+              month = 'Czerwiec'
+              break;
+            case 6:
+              month = 'Lipiec'
+              break;
+            case 7:
+              month = 'Sierpień'
+              break;
+            case 8:
+              month = 'Wrzesień'
+              break;
+            case 9:
+              month = 'Pażdziernik'
+              break;
+            case 10:
+              month = 'Listopad'
+              break;
+            case 11:
+              month = 'Grudzień'
+              break;
+        }
+        
+        return month
+    }
+    
+    function parseTime(hours, minutes) {
+        
+        let hoursString = hours.toString()
+        let minutesString = minutes.toString()
+        
+        if (hoursString.length == 1)
+            hoursString = 0 + hoursString
+        
+        if (minutesString.length == 1)
+            minutesString = minutesString + 0
+        
+        return `${hoursString}:${minutesString}`
+    }
 })();

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class='use-all-space'>
+<html>
 <head>
     <meta http-equiv='X-UA-Compatible' content='IE=Edge' />
     <meta charset='UTF-8'>
@@ -11,6 +11,7 @@
     <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.45.0/maps/css-styles/traffic-incidents.css'/>
     <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.45.0/maps/css-styles/routing.css'/>
     <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.45.0/maps/css-styles/poi.css'/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css">
     <link href="/css/map.css" rel="stylesheet" type="text/css">
     
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
@@ -18,6 +19,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>
 </head>
 <body>
     <div id="map" class="map"></div>
@@ -50,6 +52,9 @@
             <hr>
             <div id="config-panel">
                 <div id="config-panel-buttons" class="text-center">
+                    <a class="btn btn-block btn-sm config-button" data-toggle="collapse" href="#collapseStartDateTime">
+                        Data wyjazdu
+                    </a>
                     <a class="btn btn-block btn-sm config-button" data-toggle="collapse" href="#collapseSkip">
                         Omijanie
                     </a>
@@ -58,6 +63,39 @@
                     </a>
                 </div>
                 <div id="config-panel-info" style="padding-top: 1rem;">
+                    <div class="collapse" id="collapseStartDateTime">
+                        <div class="card card-body">
+                            <form id="departAt" method="post">
+                                <div>
+                                    <label class="left" for="travel-start-date">
+                                        <strong>
+                                            Dzień:
+                                        </strong>
+                                    </label>
+                                    <input class="right" style="width: 153px; height: 24px;" type="date" id="travel-start-date" name="travel-start-date">
+                                    <div class="clear"></div>
+                                </div>
+                                <div>
+                                    <label class="left" for="travel-start-time">
+                                        <strong>
+                                            Godzina:
+                                        </strong>
+                                    </label>
+                                    <input class="timepicker right" style="width: 102px; height: 24px;" id="travel-start-time" name="travel-start-time">
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="text-center" style="margin-top: 1rem;">
+                                    <input type="submit" 
+                                           value="Gotowe" 
+                                           class="btn btn-info btn-sm" 
+                                           style="color: white;" 
+                                           data-toggle="collapse" 
+                                           href="#collapseConfig">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="collapse" id="collapseSkip">
                         <div class="card card-body">
                             <form id="bypassing" method="post">
@@ -254,11 +292,11 @@
     <div id="route-info-panel">
         <div style="float: left; margin-right: 6px;">
             <label>Czas przejazdu:</label>
-            <strong id="route-duration-indicator">19h 22min</strong>
+            <strong id="route-duration-indicator"></strong>
         </div>
         <div style="float: left; margin-right: 6px;">
             <label>Dystans całkowity:</label>
-            <strong id="route-length-indicator">1900km</strong>
+            <strong id="route-length-indicator"></strong>
         </div>
         <div style="clear: both;"></div>
     </div>

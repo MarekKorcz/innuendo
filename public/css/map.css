@@ -89,7 +89,7 @@ input:focus {
     border: 2px solid #ff6666;
 }
 
-#collapseVehicleSpecification label, #collapseSkip label {
+#collapseVehicleSpecification label, #collapseSkip label, #collapseStartDateTime label {
     font-size: 12px;
 }
 
@@ -170,4 +170,9 @@ input:focus {
 #collapseHazardousMaterials > div {
     padding: 6px 9px 6px 9px; 
     margin: 0 9px 0 9px;
+}
+
+#depart-at-indicator {
+    padding-bottom: 6px;
+    font-size: 15px;
 }
