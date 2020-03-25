@@ -263,51 +263,68 @@ class HomeController extends Controller
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
 //            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
-//            $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/" . $directory[2];
-//            $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/new.zip";
-//            rename($oldFileName, $newFileName);
+//            
+//            if (count($directory) > 2)
+//            {
+//                $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/" . $directory[count($directory) - 1];              
+//                $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/new.zip";
+//                rename($oldFileName, $newFileName);
+//            }
 //        }
 //        
 //        // 2. this to extract files
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
-//            $fileName = $filesDirPath . "/" . $filesDir[$i] . "/new.zip";
+//            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
 //            
-//            $zip = new \ZipArchive;
-//            if ($zip->open($fileName) === TRUE) {
-//                $zip->extractTo($filesDirPath . "/" . $filesDir[$i]);
-//                $zip->close();
-//                echo 'ok';
-//            } else {
-//                echo 'failed - ' . $fileName;
+//            if (count($directory) > 2)
+//            {
+//                $fileName = $filesDirPath . "/" . $filesDir[$i] . "/new.zip";
+//
+//                $zip = new \ZipArchive;
+//                if ($zip->open($fileName) === TRUE) {
+//                    $zip->extractTo($filesDirPath . "/" . $filesDir[$i]);
+//                    $zip->close();
+//                    echo 'ok';
+//                } else {
+//                    echo 'failed - ' . $fileName;
+//                }
 //            }
 //        }
 //        
 //        // 3. convert jlqm to json
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
-//            $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.jlqm";
-//            $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.json";
-//            rename($oldFileName, $newFileName);
+//            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
+//            
+//            if (count($directory) > 2)
+//            {
+//                $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.jlqm";
+//                $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.json";
+//                rename($oldFileName, $newFileName);
+//            }
 //        }
 //        
 //        // 4. read note text
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
-//            $fileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.json";
-//            $file = File::get($fileName);
-//            $decodedFile = json_decode($file);
-//            $memoObjectList = $decodedFile->MemoObjectList;
-//            $note = $memoObjectList[0]->DescRaw;
+//            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
 //            
-//            // and this to write all notes to one file
-//            $current = file_get_contents($textFile);
-//            $current .= $note . "\n\n";
-//            file_put_contents($textFile, $current);
+//            if (count($directory) > 2)
+//            {
+//                $fileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.json";
+//                $file = File::get($fileName);
+//                $decodedFile = json_decode($file);
+//                $memoObjectList = $decodedFile->MemoObjectList;
+//                $note = $memoObjectList[0]->DescRaw;
+//
+//                // and this to write all notes to one file
+//                $current = file_get_contents($textFile);
+//                $current .= $note . "\n\n";
+//                file_put_contents($textFile, $current);
+//            }
 //        }
 //    }
-        
-        
         
     
 //    public function test()
