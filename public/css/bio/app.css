@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css?family=Forum&subset=latin,latin-ext");
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+* {
+    padding: 0px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Forum', sans-serif;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+#logo-text {
+    font-size: 21px;
+    letter-spacing: 2px;
+}
+
+#logo-text-name {
+    padding-left: 45px;
+    font-size: 30px;
+    font-family: 'Great Vibes', cursive;
+}
+
+a#facebook {
+    font-size: 19px; 
+    display: table-cell; 
+    vertical-align: middle;
+}
+
+a#facebook:hover {
+    color: #3b5998;
+}
+
+footer {
+    height: auto;
+    width: 100%;
+    padding-top: 15px;;
+}
+
+#copyright {
+    font-size: 0.7em;
+}

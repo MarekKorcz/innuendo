@@ -252,6 +252,11 @@ class HomeController extends Controller
         return redirect()->route('welcome');
     }
     
+    public function bioHome() {
+        
+        return view('bio.home');
+    }
+    
 //    public function test()
 //    {
 //        $filesDirPath = storage_path('app/notes');        

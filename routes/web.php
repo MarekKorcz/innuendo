@@ -244,3 +244,9 @@ Route::post('/boss/make-an-approve-message', 'BossController@makeAnApproveMessag
 Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisplayed');
 
 //Route::get('/test', 'HomeController@test');
+
+
+
+
+
+Route::get('/bio/home', 'HomeController@bioHome')->name('bioHome');
