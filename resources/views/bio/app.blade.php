@@ -63,7 +63,7 @@
     
     @yield('content')
     
-    <footer class="container-fluid text-center">
+    <footer class="container text-center">
         <div class="row">
             <div class="col-sm-12">
                 <p id="copyright">

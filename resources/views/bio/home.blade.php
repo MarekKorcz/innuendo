@@ -7,8 +7,10 @@
         <div class="header-image-section-text container">
             <div class="border">
                 <p>
-                   BIOENERGOTERAPIA <br>
-                   PATRYCJA DOLATA
+                    <strong>
+                        BIOENERGOTERAPIA <br>
+                        PATRYCJA DOLATA
+                    </strong>
                 </p>
                 <p style="font-size: 27px;">Naturalne metody leczenia</p>
             </div>

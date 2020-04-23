@@ -1,12 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Forum&subset=latin,latin-ext");
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
-* {
-    padding: 0px;
-    margin: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: 'Forum', sans-serif;
     font-size: 18px;
