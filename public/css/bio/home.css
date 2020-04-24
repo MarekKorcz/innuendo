@@ -1,5 +1,5 @@
 .header-image-section {
-    height: 91vh;
+    height: 87vh;
     position: relative;
     background-position: center;
     background-size: cover;
@@ -9,12 +9,63 @@
 }
 
 .header-image-section-text {
-    padding-top: 7rem;
+    padding-top: 8rem;
 }
 
 .border {
     color: white;
     text-align: center;
-    font-size: 2.4rem;
+    font-size: 2.1rem;
     border: none !important;
+}
+
+
+.first-section-header {
+    padding: 5rem 0 .6rem 0;
+    text-align: center;
+    font-size: 2.7rem;
+}
+
+
+.row {
+    margin: 0;
+}
+
+.three-column-section {
+    text-align: center;
+    margin: 1.5rem .9rem 1.5rem .9rem;
+    padding: 1.8rem;
+}
+
+.box {
+    margin-bottom: 6.3rem;
+    height: 72vh;
+}
+
+.box-image {
+    height: 43vh;
+}
+
+.first-image-in-box {
+    width: 100%;
+    height: 100%;
+    background-image: url("/img/woman-lying.jpg");
+    background-size: contain;
+}
+
+.box-text {
+    height: 38vh;
+    background-color: #e0f4f4;
+    padding: 3rem 1rem 1rem 1rem;
+    font-size: 1.5rem; 
+    color: #95a2a2;
+}
+
+
+.quote-section {
+    text-align: center; 
+    margin: 0 3rem 0 3rem;
+    background-color: #f7f7f7;
+    height: 81vh;
+    padding-top: 12rem;
 }
