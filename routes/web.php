@@ -250,3 +250,4 @@ Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisp
 
 
 Route::get('/bio/home', 'HomeController@bioHome')->name('bioHome');
+Route::post('/contact/message', 'HomeController@bioContactMessage');

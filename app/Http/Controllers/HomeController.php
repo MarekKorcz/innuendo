@@ -252,10 +252,47 @@ class HomeController extends Controller
         return redirect()->route('welcome');
     }
     
+    
+    
+    
+    
+    
     public function bioHome() {
         
         return view('bio.home');
     }
+    
+    public function bioContactMessage()
+    {
+        
+        dd(Input::all());
+        
+        $rules = array(
+            'name'        => 'required',
+            'email'       => 'required|email',
+            'topic'       => 'required|string',
+            'description' => 'required|string'
+        );
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('/bio/home')
+                ->withErrors($validator);
+        } else {
+            
+//            $message = new Message();
+//            $message->topic = Input::get('topic');
+//            $message->email = Input::get('email');
+//            $message->text  = Input::get('message');     
+//            $message->save();
+//            
+//            \Mail::to('mark.korcz@gmail.com')->send(new ContactMessageCreate($message));
+//
+//            return redirect()->route('welcome')->with('success', 'Wiadomość została wysłana!');
+        }
+    }
+    
+    
     
 //    public function test()
 //    {
