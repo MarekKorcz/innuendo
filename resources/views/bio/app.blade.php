@@ -41,10 +41,10 @@
                     <a class="nav-link" href="{{ route('bioHome') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('bioHome') }}">Rezerwacja</a>
+                    <a class="nav-link" href="{{ route('bioReservation') }}">Rezerwacja</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('bioHome') }}">Blog</a>
+                    <a class="nav-link" href="{{ route('bioHome') }}">Blog</a>
                 </li>
                 <li class="nav-item">
                     <a id="facebook" class="nav-link" href="https://www.facebook.com/Bioenergoterapia-Patrycja-Dolata-107696647457410/" target="_blank">
