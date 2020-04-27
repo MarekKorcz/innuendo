@@ -251,4 +251,5 @@ Route::post('/boss/mark-message-as-displayed', 'BossController@markMessageAsDisp
 
 Route::get('/bio/home', 'HomeController@bioHome')->name('bioHome');
 Route::get('/bio/reservation', 'HomeController@bioReservation')->name('bioReservation');
+Route::get('/bio/session', 'HomeController@bioSession')->name('bioSession');
 Route::post('/contact/message', 'HomeController@bioContactMessage');

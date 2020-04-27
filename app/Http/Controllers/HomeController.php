@@ -297,6 +297,11 @@ class HomeController extends Controller
         return view('bio.reservation');
     }
     
+    public function bioSession() {
+        
+        return view('bio.session');
+    }
+    
     
     
 //    public function test()

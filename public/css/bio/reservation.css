@@ -43,7 +43,7 @@
 
 .box-button {
     padding-left: 1rem;
-    text-align: left;
+    text-align: center;
     color: white;
 }
 
@@ -53,10 +53,12 @@
     padding: .3rem 1.2rem .3rem 1.2rem;
     border-radius: 0;
     font-size: 1.2rem;
+    color: white;
 }
 
 .box-button > a:hover {
     border-color: #f0e7ce;
     background-color: #f0e7ce;
+    color: white;
     cursor: pointer;
 }

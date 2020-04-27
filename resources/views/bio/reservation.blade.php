@@ -25,7 +25,7 @@
                                 150 zł
                             </p>
                             <div class="box-button">
-                                <a class="btn btn-info">Więcej info</a>
+                                <a class="btn" href="{{ route('bioSession') }}">Więcej info</a>
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                                 55 zł
                             </p>
                             <div class="box-button">
-                                <a class="btn btn-info">Więcej info</a>
+                                <a class="btn">Więcej info</a>
                             </div>
                         </div>
                     </div>
