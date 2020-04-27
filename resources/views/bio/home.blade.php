@@ -133,4 +133,24 @@
         </div>
     </div>
 
+    <div id="map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2442.396527698532!2d20.99462861579763!3d52.254344079764785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spl!2spl!4v1587961912509!5m2!1spl!2spl" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+
+    </div>
+
+    <div id="blog-links">
+        <div class="row">
+            <div class="col-6">
+                <div class="blog-post">
+                    Miejsce na link do postu na blogu
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="blog-post">
+                    Miejsce na link do postu na blogu
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
