@@ -5,15 +5,17 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-image: url("/img/pink-cristals.jpg");
+/*    background-image: url("/img/pink-cristals.jpg");*/
+    background-image: url("/img/person-on-a-bridge.jpg");
 }
 
 .header-image-section-text {
-    padding-top: 8rem;
+    padding-top: 7rem;
 }
 
 .border {
-    color: white;
+    /*color: white;*/
+    color: black;
     text-align: center;
     font-size: 2.1rem;
     border: none !important;
@@ -33,8 +35,8 @@
 
 .three-column-section {
     text-align: center;
-    margin: 1.5rem .9rem 1.5rem .9rem;
-    padding: 1.8rem;
+    margin: 1.2rem .9rem 1.2rem .9rem;
+    padding: 1.8rem 1.2rem 1.8rem 1.2rem;
 }
 
 .box {
@@ -43,18 +45,16 @@
 }
 
 .box-image {
-    height: 43vh;
+    height: 36vh;
 }
 
 .first-image-in-box {
     width: 100%;
     height: 100%;
-    background-image: url("/img/woman-lying.jpg");
-    background-size: contain;
 }
 
 .box-text {
-    height: 38vh;
+    height: auto;
     background-color: #e0f4f4;
     padding: 3rem 1rem 1rem 1rem;
     font-size: 1.5rem; 
@@ -73,7 +73,7 @@
 
 .contact-section {
     margin-top: 3rem;
-    padding: 5rem 0 5rem 0;
+    padding: 5rem 0 .9rem 0;
     height: auto;
     background-color: #f7f7f7;
 }

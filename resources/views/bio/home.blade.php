@@ -27,7 +27,7 @@
             <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="box">
                     <div class="box-image">
-                        <img class="first-image-in-box" src="/img/woman-lying.jpg">
+                        <img class="first-image-in-box" src="/img/first-column.png">
                     </div>
                     <div class="box-text">
                         <p>
@@ -41,7 +41,7 @@
             <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="box">
                     <div class="box-image">
-                        <img class="first-image-in-box" src="/img/woman-praying.jpg">
+                        <img class="first-image-in-box" src="/img/second-column.png">
                     </div>
                     <div class="box-text">
                         <p>TRENING RELAKSACYJNY</p>
@@ -52,7 +52,7 @@
             <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="box">
                     <div class="box-image">
-                        <img class="first-image-in-box" src="/img/head-massage.jpg">
+                        <img class="first-image-in-box" src="/img/third-column.png">
                     </div>
                     <div class="box-text">
                         <p>BIOENERGOTERAPIA</p>
@@ -125,6 +125,8 @@
                                 </div>
 
                             {{ Form::close() }} 
+                            
+                            <div id="confirm"></div>
                         </div>
                     </div>
                     <div class="col-1"></div>

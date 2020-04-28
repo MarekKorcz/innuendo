@@ -38,3 +38,19 @@ footer {
 #copyright {
     font-size: 0.7em;
 }
+
+#confirm {
+    margin: 1rem;
+    padding: .4rem 0 .4rem 0;
+    text-align: center;
+    font-size: 1.3rem;
+    visibility: hidden;
+}
+
+.confirm-positive {
+    background-color: #98FB98;
+}
+
+.confirm-negative {
+    background-color: #F98A91;
+}

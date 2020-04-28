@@ -19,6 +19,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
 use Session;
+use App\Mail\BioSendContactMessage;
 
 use App\Code;
 use App\PromoCode;
@@ -31,6 +32,7 @@ use App\PolicyConfirmation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Redirect;
 
 class HomeController extends Controller
@@ -262,34 +264,27 @@ class HomeController extends Controller
         return view('bio.home');
     }
     
-    public function bioContactMessage()
+    public function bioContactMessage(Request $request)
     {
+        $name = $request->get('name');
+        $email = $request->get('email');
+        $topic = $request->get('topic');
+        $description = $request->get('description');
         
-        dd(Input::all());
-        
-        $rules = array(
-            'name'        => 'required',
-            'email'       => 'required|email',
-            'topic'       => 'required|string',
-            'description' => 'required|string'
-        );
-        $validator = Validator::make(Input::all(), $rules);
+        if ($name && $email && $topic && $description)
+        {
+            \Mail::to($email)->send(new BioSendContactMessage($name, $email, $topic, $description));
 
-        if ($validator->fails()) {
-            return Redirect::to('/bio/home')
-                ->withErrors($validator);
-        } else {
-            
-//            $message = new Message();
-//            $message->topic = Input::get('topic');
-//            $message->email = Input::get('email');
-//            $message->text  = Input::get('message');     
-//            $message->save();
-//            
-//            \Mail::to('mark.korcz@gmail.com')->send(new ContactMessageCreate($message));
-//
-//            return redirect()->route('welcome')->with('success', 'Wiadomość została wysłana!');
+            return new JsonResponse([
+                'type' => 'success',
+                'message' => 'Wiadomość została wysłana'
+            ], 200, array(), true);
         }
+        
+        return new JsonResponse(array(
+            'type'    => 'error',
+            'message' => 'Nie udało się wysłać wiadomości'
+        ));
     }
     
     public function bioReservation() {
@@ -302,6 +297,10 @@ class HomeController extends Controller
         return view('bio.session');
     }
     
+    public function bioCandling() {
+        
+        return view('bio.candling');
+    }
     
     
 //    public function test()

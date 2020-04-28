@@ -45,7 +45,7 @@
                                 55 zł
                             </p>
                             <div class="box-button">
-                                <a class="btn">Więcej info</a>
+                                <a class="btn" href="{{ route('bioCandling') }}">Więcej info</a>
                             </div>
                         </div>
                     </div>
