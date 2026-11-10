@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('slug')->nullable();
             $table->integer('phone_number');
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('profile_image')->nullable();
             $table->boolean('is_approved')->default(1);
@@ -30,7 +31,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        
+
     }
 
     /**

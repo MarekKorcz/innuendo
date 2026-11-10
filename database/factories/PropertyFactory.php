@@ -5,6 +5,8 @@ use Faker\Generator as Faker;
 $admin = $factory->define(App\User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
+        'surname' => $faker->lastName,
+        'phone_number' => $faker->numerify('#########'),
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
         'password' => bcrypt("secret"),
