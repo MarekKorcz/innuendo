@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/welcome.css') !!}
+<link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
     <div class="container-fluid">
         <div class="row jumbotron">
@@ -21,7 +21,7 @@
             </div>
         </div>
     </div>
-        
+
     <div class="container">
         <div class="row" style="padding-bottom: 1rem;">
             <div class="col-1"></div>
@@ -49,7 +49,7 @@
                             fizjoterapeutycznej polegającej na wykonywaniu masażu.</li>
                         <li>Użytkownik – należy przez to rozumieć osobę, która dokonała aktywacji
                             usługi lub posiada zarejestrowane konto użytkownika serwisu.
-                            Użytkownik ma dostęp do usługi z poziomu „szef” dla przedsiębiorcy 
+                            Użytkownik ma dostęp do usługi z poziomu „szef” dla przedsiębiorcy
                             oraz z poziomu „pracownik” dla pracownika korzystającego z aktywowanej usługi.</li>
                     </ol>
                 </p>
@@ -78,8 +78,8 @@
                 </p>
                 <p>
                     <ol>
-                        <li>Użytkownik dokonuje zakupu usługi poprzez rejestrację, nastepnie rezerwację jednej 
-                            lub wielu opcji masażu w serwisie 
+                        <li>Użytkownik dokonuje zakupu usługi poprzez rejestrację, nastepnie rezerwację jednej
+                            lub wielu opcji masażu w serwisie
                             <a href="{{route('welcome')}}">www.masazplusdlafirm.pl</a>.</li>
                         <li>Rejestracja jest możliwa poprzez jej zlecenie administratorowi
                             serwisu lub przy pomocy kodu rejestracyjnego otrzymanego od
@@ -89,9 +89,9 @@
                             Polityki Prywatności.</li>
                         <li>Po stworzeniu konta na poziomie „szef”, Użytkownik otrzymuje możliwość generacji kodów
                             rejestracyjnych dla poszczególnych osób, dla których ma być wykonywany
-                            masaż. Pracownik może się zarejestrować z użyciem przekazanego mu, 
+                            masaż. Pracownik może się zarejestrować z użyciem przekazanego mu,
                             wcześniej wygenerowanego przez swojego pracodawce kodu.</li>
-                        
+
                         <li>
                             Dla zawarcia umowy sprzedaży, Użytkownik zobowiązany jest podać
                             swoje dane:
@@ -128,8 +128,8 @@
                             zakończeniu okresu rozliczeniowego Użytkownik otrzyma drogą
                             elektroniczną fakturę i zobowiązany jest do jej opłacenia w sposób i w
                             terminie weń wskazanych.</li>
-                        <li>Płatność naliczana jest według ceny wykupionego masażu i może zostać 
-                            pomniejszona w zależności od spełnienia określonych kryteriów przydzielania 
+                        <li>Płatność naliczana jest według ceny wykupionego masażu i może zostać
+                            pomniejszona w zależności od spełnienia określonych kryteriów przydzielania
                             zniżek.</li>
                         <li>Masaż wykonywany jest w siedzibie Użytkownika. Przedstawiciele
                             Masaż+ posiadają wszelkie niezbędne sprzęty umożliwiające
@@ -182,7 +182,7 @@
                 <p>
                     <ol>
                         <li>
-                            Reklamacje należy kierować mailowo na adres e-mail: 
+                            Reklamacje należy kierować mailowo na adres e-mail:
                             <ul>
                                 <li>masazplus@masazplusdlafirm.pl</li>
                             </ul>
@@ -204,7 +204,7 @@
                             technicznej i zobowiązuje się usunąć bez zbędnej zwłoki, w rozsądnym
                             terminie wszelkie nieprawidłowości zgłoszone przez Użytkowników.</li>
                         <li>Użytkownik może zgłaszać wszelkie nieprawidłowości oraz przerwy w
-                            funkcjonowaniu serwisu oraz w dostępie na adres e-mail: 
+                            funkcjonowaniu serwisu oraz w dostępie na adres e-mail:
                             <ul>
                                 <li>masazplus@masazplusdlafirm.pl</li>
                             </ul>
@@ -236,40 +236,40 @@
                             <strong>
                                 1 x masaż klasyczny (20 min)
                             </strong>
-                            w miesiącu - 
+                            w miesiącu -
                             <strong>
                                 47.50 zł (zniżka 5%)
-                            </strong> 
+                            </strong>
                             / osoba
                         </li>
                         <li>
                             <strong>
                                 2 x masaż klasyczny (20 min)
-                            </strong> 
-                            w miesiącu - 
+                            </strong>
+                            w miesiącu -
                             <strong>
                                 90 zł (zniżka 10%)
-                            </strong> 
+                            </strong>
                             / osoba
                         </li>
                         <li>
                             <strong>
                                 3 x masaż klasyczny (20 min)
-                            </strong> 
-                            w miesiącu - 
+                            </strong>
+                            w miesiącu -
                             <strong>
                                 127,50 zł (zniżka 15%)
-                            </strong> 
+                            </strong>
                             / osoba
                         </li>
                         <li>
                             <strong>
                                 4 x masaż klasyczny (20 min)
-                            </strong> 
-                            w miesiącu - 
+                            </strong>
+                            w miesiącu -
                             <strong>
                                 160 zł (zniżka 20%)
-                            </strong> 
+                            </strong>
                             / osoba
                         </li>
                     </ul>
@@ -277,41 +277,41 @@
                         <li>
                             <strong>
                                 1 x masaż klasyczny (40 min)
-                            </strong> 
-                            w miesiącu - 
+                            </strong>
+                            w miesiącu -
                             <strong>
                                 95 zł (zniżka 5%)
-                            </strong> 
+                            </strong>
                             / osoba
                         </li>
                         <li>
                             <strong>
                                 2 x masaż klasyczny (40 min)
-                            </strong> 
-                            w miesiącu - 
+                            </strong>
+                            w miesiącu -
                             <strong>
                                 180 zł (zniżka 10%)
-                            </strong> 
+                            </strong>
                             / osoba
                         </li>
                         <li>
                             <strong>
                                 3 x masaż klasyczny (40 min)
-                            </strong> 
-                            w miesiącu - 
+                            </strong>
+                            w miesiącu -
                             <strong>
                                 255 zł (zniżka 15%)
-                            </strong> 
+                            </strong>
                             / osoba
                         </li>
                         <li>
                             <strong>
                                 4 x masaż klasyczny (40 min)
-                            </strong> 
-                            w miesiącu - 
+                            </strong>
+                            w miesiącu -
                             <strong>
                                 320 zł (zniżka 20%)
-                            </strong> 
+                            </strong>
                             / osoba
                         </li>
                     </ul>

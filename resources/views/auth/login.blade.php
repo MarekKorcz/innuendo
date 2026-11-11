@@ -2,7 +2,7 @@
 
 @section('content')
 
-{!! Html::script('js/login.js') !!}
+<script src="{{ asset('js/login.js') }}"></script>
 
 <div class="container" style="padding: 2rem;">
     <div class="row justify-content-center">
@@ -27,7 +27,7 @@
                                         <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
-                                
+
                                 <div id="email-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
-                                
+
                                 <div id="password-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>

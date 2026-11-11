@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/temp_property_show.css') !!}
-{!! Html::script('js/temp_property_show.js') !!}
+<link rel="stylesheet" href="{{ asset('css/temp_property_show.css') }}">
+<script src="{{ asset('js/temp_property_show.js') }}"></script>
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
@@ -22,7 +22,7 @@
         </nav>
 
         <h2 class="text-center">@lang('common.temporary_property')</h2>
-    
+
         <table class="table table-striped">
             <tr>
                 <th>@lang('common.label'):</th>
@@ -50,7 +50,7 @@
             </tr>
         </table>
     </div>
-    
+
     <div id="deleteTempProperty" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -68,8 +68,8 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
-    
+
 </div>
 @endsection

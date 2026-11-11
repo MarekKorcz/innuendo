@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/property_invoice.css') !!}
-{!! Html::script('js/property_invoice.js') !!}
+<link rel="stylesheet" href="{{ asset('css/property_invoice.css') }}">
+<script src="{{ asset('js/property_invoice.js') }}"></script>
 
 <div class="container" style="padding-top: 2rem;">
-    
+
     <div class="row text-center" style="padding-bottom: 1rem;">
         <div class="col-4">
         </div>
@@ -20,12 +20,12 @@
             </a>
         </div>
     </div>
-    
+
     <div class="jumbotron">
         <div class="text-center">
             <h1>{{$invoice->invoice}}</h1>
             <p>
-                @lang('common.date'): 
+                @lang('common.date'):
                 <a download="{{$invoice->invoice}}" href="{{ Storage::url($invoice->invoice) }}">
                     <strong>
                         {{$invoice->month->year->year}} - {{$invoice->month->month}}
@@ -34,7 +34,7 @@
             </p>
         </div>
     </div>
-    
+
     <div id="deleteInvoice" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -52,8 +52,8 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
-    
+
 </div>
 @endsection

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    
+
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>
         <div class="col-4"></div>
@@ -16,31 +16,32 @@
         <h1>@lang('common.create_month')</h1>
     </div>
 
-    {{ Form::open(['action' => 'MonthController@store', 'method' => 'POST']) }}
+    <form action="{{ action([App\Http\Controllers\MonthController::class, 'store']) }}" method="POST">
+        @csrf
 
         <div class="form-group">
             <label for="month">@lang('common.month')</label>
-            {{ Form::text('month', Input::old('month'), array('class' => 'form-control')) }}
+            <input type="text" name="month" value="{{ old('month') }}" class="form-control">
         </div>
         <div class="form-group">
             <label for="month_en">@lang('common.month_en')</label>
-            {{ Form::text('month_en', Input::old('month_en'), array('class' => 'form-control')) }}
+            <input type="text" name="month_en" value="{{ old('month_en') }}" class="form-control">
         </div>
         <div class="form-group">
             <label for="month_number">@lang('common.month_number')</label>
-            {{ Form::number('month_number', Input::old('month_number'), array('class' => 'form-control')) }}
+            <input type="number" name="month_number" value="{{ old('month_number') }}" class="form-control">
         </div>
         @if ($year)
-            {{ Form::hidden('year_id', $year->id) }}
+            <input type="hidden" name="year_id" value="{{ $year->id }}">
         @else
-            {{ Form::hidden('year_id', Input::old('year_id')) }}
+            <input type="hidden" name="year_id" value="{{ old('year_id') }}">
         @endif
-        
+
         <div class="text-center" style="padding-bottom: 1rem;">
             <input type="submit" value="@lang('common.create')" class="btn btn-primary">
         </div>
+    </form>
 
-    {{ Form::close() }}
 
 </div>
 @endsection

@@ -2,7 +2,7 @@
 
 @section('content')
 
-{!! Html::style('css/employee_index.css') !!}
+<link rel="stylesheet" href="{{ asset('css/employee_index.css') }}">
 
 <div class="container">
     <h1 class="text-center padding-top">@lang('common.employees'):</h1>
@@ -15,9 +15,9 @@
                             <h3 class="card-title text-center">{{$employees[$i]->name}} {{$employees[$i]->surname}}</h3>
                             @if (Storage::disk('local')->has($employees[$i]->profile_image))
                                 <div style="padding: 1rem;">
-                                    <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
-                                         alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
-                                         style="width: 100%;"; 
+                                    <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}"
+                                         alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}"
+                                         style="width: 100%;";
                                          border="0"
                                     >
                                 </div>
@@ -40,9 +40,9 @@
                             <h3 class="card-title text-center">{{$employees[$i]->name}} {{$employees[$i]->surname}}</h3>
                             @if (Storage::disk('local')->has($employees[$i]->profile_image))
                                 <div style="padding: 1rem;">
-                                    <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
-                                         alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
-                                         style="width: 100%;"; 
+                                    <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}"
+                                         alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}"
+                                         style="width: 100%;";
                                          border="0"
                                     >
                                 </div>
@@ -66,9 +66,9 @@
                         <h3 class="card-title text-center">{{$employees[$i]->name}} {{$employees[$i]->surname}}</h3>
                         @if (Storage::disk('local')->has($employees[$i]->profile_image))
                             <div style="padding: 1rem;">
-                                <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}" 
-                                     alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}" 
-                                     style="width: 100%;"; 
+                                <img src="{{ route('account.image', ['fileName' => $employees[$i]->profile_image]) }}"
+                                     alt="{{$employees[$i]->name}} {{$employees[$i]->surname}}"
+                                     style="width: 100%;";
                                      border="0"
                                 >
                             </div>
@@ -85,8 +85,8 @@
                 </div>
             </div>
         @endif
-    @endfor   
-    
+    @endfor
+
     @if (count($employees) % 3 != 0)
         </div>
     @endif

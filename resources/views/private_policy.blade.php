@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/welcome.css') !!}
+<link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
     <div class="container-fluid">
         <div class="row jumbotron">
@@ -21,7 +21,7 @@
             </div>
         </div>
     </div>
-        
+
     <div class="container">
         <div class="row" style="padding-bottom: 1rem;">
             <div class="col-1"></div>
@@ -46,7 +46,7 @@
                     </strong>
                     <br>
                     Administratorem, czyli podmiotem decydującym o tym, jak będą wykorzystywane Twoje
-                    dane osobowe, jest MAREK KORCZ, pod adresem WARSZAWA 02-672, ul. DOMANIEWSKA 17/19/109, 
+                    dane osobowe, jest MAREK KORCZ, pod adresem WARSZAWA 02-672, ul. DOMANIEWSKA 17/19/109,
                     REGON: 147199810, NIP: 5213533415 w dalszej części dokumentu zwanym „Masaż+”.
 
                 </p>
@@ -107,7 +107,7 @@
                     Pozostałe dane, które uzupełnisz na swoim koncie użytkownika mają charakter dobrowolny,
                     pomogą Ci lepiej i pełniej korzystać z usługi, a nam podnosić jej jakość i dostosować ją do
                     Twoich potrzeb.
-                </p>    
+                </p>
                 <p>
                     Jeżeli wymagają tego przepisy prawa, możemy wymagać od Ciebie ewentualnie podania
                     innych danych niezbędnych np. ze względów rachunkowych lub podatkowych.
@@ -210,7 +210,7 @@
                     </strong>
                     <br>
                     Nie.
-                </p> 
+                </p>
                 <p>
                     <strong>
                         Czy przetwarzamy dane osobowe automatycznie (w tym poprzez profilowanie) w sposób

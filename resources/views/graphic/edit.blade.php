@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    
+
     <div class="row text-center" style="padding: 2rem 0 2rem 0;">
         <div class="col-4"></div>
         <div class="col-4"></div>
@@ -17,7 +17,9 @@
             <h1>@lang('common.edit_schedule')</h1>
         </div>
 
-        {{ Form::open(['action' => ['GraphicController@update'], 'method' => 'POST']) }}
+        <form action="{{ action([App\Http\Controllers\GraphicController::class, 'update']) }}" method="POST">
+            @csrf
+            @method('PUT')
 
             <div class="form-group">
                 <label for="start_time">@lang('common.start_time')</label>
@@ -40,15 +42,13 @@
                 </select>
             </div>
 
-            {{ Form::hidden('graphic_id', $graphic->id) }}
-        
-            {{ Form::hidden('_method', 'PUT') }}
+            <input type="hidden" name="graphic_id" value="{{ $graphic->id }}">
 
             <div class="text-center">
                 <input type="submit" value="@lang('common.update')" class="btn btn-primary">
             </div>
+        </form>
 
-        {{ Form::close() }}
     </div>
 </div>
 @endsection

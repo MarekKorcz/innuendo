@@ -2,32 +2,32 @@
 @section('content')
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
-        {{ Form::open(['action' => 'AdminController@employeeAdd', 'method' => 'POST']) }}
-        
+        <form action="{{ action([\App\Http\Controllers\AdminController::class, 'employeeAdd']) }}" method="POST">
+            @csrf
+
             <h2 class="text-center">@lang('common.create_employee_account'):</h2>
 
             <div class="form-group">
                 <label for="name">@lang('common.name'):</label>
-                {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
+                <input type="text" name="name" id="name" value="{{ old('name') }}" class="form-control">
             </div>
             <div class="form-group">
                 <label for="surname">@lang('common.surname'):</label>
-                {{ Form::text('surname', Input::old('surname'), array('class' => 'form-control')) }}
+                <input type="text" name="surname" id="surname" value="{{ old('surname') }}" class="form-control">
             </div>
             <div class="form-group">
                 <label for="email">@lang('common.email_address'):</label>
-                {{ Form::text('email', Input::old('email'), array('class' => 'form-control')) }}
+                <input type="text" name="email" id="email" value="{{ old('email') }}" class="form-control">
             </div>
             <div class="form-group">
                 <label for="phone_number">@lang('common.phone_number'):</label>
-                {{ Form::number('phone_number', Input::old('phone_number'), array('class' => 'form-control')) }}
+                <input type="number" name="phone_number" id="phone_number" value="{{ old('phone_number') }}" class="form-control">
             </div>
 
             <div class="text-center">
                 <input type="submit" value="@lang('common.create')" class="btn pallet-2-4" style="color: white;">
             </div>
-
-        {{ Form::close() }}
+        </form>
     </div>
 </div>
 @endsection

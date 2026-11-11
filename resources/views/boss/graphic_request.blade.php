@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/graphic_request.css') !!}
-<!--{!! Html::script('js/graphic_request_show.js') !!}-->
+<link rel="stylesheet" href="{{ asset('css/graphic_request.css') }}">
+<!--<script src="{{ asset('js/graphic_request_show.js') }}"></script>-->
 
     <div id="title" class="container">
         <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from'): {{$graphicRequest->day->day_number}} {{$graphicRequest->day->month->month}} {{$graphicRequest->day->month->year->year}}</h2>
@@ -80,19 +80,19 @@
                     @endforeach
                 @endif
                 <div class="row" style="margin-top: 2rem;">
-                    {{ Form::open(['id' => 'send-message', 'action' => ['BossController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}
+                    <form id="send-message" action="{{ action([\App\Http\Controllers\BossController::class, 'makeAMessage']) }}" method="POST" style="width: 100%;">
+                        @csrf
 
                         <div class="form-group text-center">
-                            <input id="text" name="text" type="text" style="width: 60%;" value="{{Input::old('text')}}" placeholder="@lang('common.send_a_message_to_us')" autocomplete="off">
+                            <input id="text" name="text" type="text" style="width: 60%;" value="{{ old('text') }}" placeholder="@lang('common.send_a_message_to_us')" autocomplete="off">
                         </div>
 
-                        {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}
+                        <input type="hidden" name="graphic_request_id" value="{{ $graphicRequest->id }}">
 
                         <div class="text-center">
                             <input type="submit" value="@lang('common.send')" class="btn btn-primary">
                         </div>
-
-                    {{ Form::close() }}
+                    </form>
                 </div>
             </div>
         </div>

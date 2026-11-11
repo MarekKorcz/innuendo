@@ -2,13 +2,13 @@
 
 @section('content')
 
-{!! Html::style('css/property_index.css') !!}
+<link rel="stylesheet" href="{{ asset('css/property_index.css') }}">
 
 <div class="container">
     <div class="text-center padding-top">
         <h2>@lang('common.pick_property_to_see_invoices')</h2>
     </div>
-    
+
     <div class="wrapper">
         @foreach ($properties as $property)
             <div class="card">

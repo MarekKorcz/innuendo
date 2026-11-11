@@ -1,26 +1,26 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/subscription_workers_edit.css') !!}
-{!! Html::script('js/subscription_workers_edit.js') !!}
+<link rel="stylesheet" href="{{ asset('css/subscription_workers_edit.css') }}">
+<script src="{{ asset('js/subscription_workers_edit.js') }}"></script>
 
 <div class="container" style="padding: 1rem 0 1rem 0;">
-    
+
     <div class="row">
         <div class="col-1"></div>
         <div class="col-10">
-            
+
             <div class="text-center" style="padding: 1rem 0 1rem 0;">
                 <h2>
                     @lang('common.people_assigned_to_subscription'): {!! $subscription->name !!}
                 </h2>
             </div>
-            
+
             @if (count($substartIntervals) > 1)
                 <div class="row text-center">
                     <div class="col-3"></div>
                         <div class="col-6">
-                            <label for="timePeriod" style="font-size: 24px;">@lang('common.select_a_billing_period'):</label>                        
+                            <label for="timePeriod" style="font-size: 24px;">@lang('common.select_a_billing_period'):</label>
                             <ul id="timePeriod" class="list-group">
                                 @foreach ($substartIntervals as $substartInterval)
                                     <a href="{{ URL::to('/boss/subscription/workers/edit/' . $substart->id . '/' . $substartInterval->id) }}" style="margin: 1px;">
@@ -39,13 +39,13 @@
                         </div>
                     <div class="col-3"></div>
                 </div>
-            
+
                 <div class="text-center" style="padding-top: 2rem;">
                     <h2>
                         @lang('common.employees')
                         @if ($chosenInterval !== null)
                             @lang('common.asigned_from')
-                            {{$chosenInterval->start_date->format('Y-m-d')}} 
+                            {{$chosenInterval->start_date->format('Y-m-d')}}
                             @lang('common.to')
                             {{$chosenInterval->end_date->format('Y-m-d')}}
                         @endif
@@ -65,7 +65,9 @@
                             </tr>
                         </thead>
                         <tbody id="workers">
-                            {{ Form::open(['id' => 'subscription-workers-update', 'action' => ['BossController@subscriptionWorkersUpdate'], 'method' => 'POST']) }}
+
+                            <form id="subscription-workers-update" action="{{ action([App\Http\Controllers\BossController::class, 'subscriptionWorkersUpdate']) }}" method="POST">
+                                @csrf
 
                                 <div class="form-row">
                                     @if ($substart->isActive == 1)
@@ -135,7 +137,7 @@
                                                 <td>
                                                     <a href="{{ URL::to('/boss/worker/appointment/list/' . $substart->id . '/' . $worker->id) }}">
                                                         {{$worker->name}} {{$worker->surname}}
-                                                    </a>                                                    
+                                                    </a>
                                                 </td>
                                                 <td>{{$worker->email}}</td>
                                             </tr>
@@ -166,12 +168,12 @@
                                                                 @lang('common.do_not_have_subscription')
                                                             </div>
                                                         </td>
-                                                    @endif                                 
+                                                    @endif
                                                 @endif
                                                 <td>
                                                     <a href="{{ URL::to('/boss/worker/appointment/list/' . $substart->id . '/' . $worker->id) }}">
                                                         {{$worker->name}} {{$worker->surname}}
-                                                    </a> 
+                                                    </a>
                                                 </td>
                                                 <td>{{$worker->email}}</td>
                                             </tr>
@@ -180,16 +182,15 @@
                                 </div>
 
                                 <div class="text-center">
-                                    {{ Form::hidden('substart_id', $substart->id) }}
-                                    {{ Form::hidden('interval_id', $chosenInterval->id) }}
+                                    <input type="hidden" name="substart_id" value="{{ $substart->id }}">
+                                    <input type="hidden" name="interval_id" value="{{ $chosenInterval->id }}">
 
                                     <div class="text-center" style="margin: 1rem;">
-                                        <input type="submit" value="@lang('common.update')" class="btn pallet-1-3" style="color: white;">                                    
+                                        <input type="submit" value="@lang('common.update')" class="btn pallet-1-3" style="color: white;">
                                         <div id="submit-warning" class="warning"></div>
                                     </div>
                                 </div>
-
-                            {{ Form::close() }}
+                            </form>
                         </tbody>
                     </table>
                 </div>

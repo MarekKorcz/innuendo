@@ -5,7 +5,8 @@
         <div class="col-1"></div>
         <div class="col-10">
             <div class="jumbotron" style="margin-top: 15px;">
-                {{ Form::open(['action' => 'PropertyController@invoiceDataUpdate', 'method' => 'POST']) }}
+                <form action="{{ action([App\Http\Controllers\PropertyController::class, 'invoiceDataUpdate']) }}" method="POST">
+                    @csrf
 
                     <h2 class="text-center" style="padding-bottom: 1rem;">
                         @lang('common.edit_invoice_data')
@@ -15,32 +16,31 @@
 
                     <div class="form-group">
                         <label for="company_name">@lang('common.company_name'):</label>
-                        {{ Form::text('company_name', $invoiceData->company_name, array('class' => 'form-control')) }}
+                        <input type="text" name="company_name" value="{{ $invoiceData->company_name }}" class="form-control">
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
                         <label for="email">@lang('common.email_address'):</label>
-                        {{ Form::email('email', $invoiceData->email, array('class' => 'form-control')) }}
+                        <input type="email" name="email" value="{{ $invoiceData->email }}" class="form-control">
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
                         <label for="phone_number">@lang('common.phone_number'):</label>
-                        {{ Form::text('phone_number', $invoiceData->phone_number, array('class' => 'form-control')) }}
+                        <input type="text" name="phone_number" value="{{ $invoiceData->phone_number }}" class="form-control">
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
-                        {{ Form::label('nip', ' NIP') }}:
-                        {{ Form::text('nip', $invoiceData->nip, array('class' => 'form-control')) }}
+                        <label for="nip"> NIP</label>:
+                        <input type="text" name="nip" value="{{ $invoiceData->nip }}" class="form-control">
                         <div class="warning"></div>
                     </div>
-                
-                    {{ Form::hidden('property_id', $property->id) }}
+
+                    <input type="hidden" name="property_id" value="{{ $property->id }}">
 
                     <div class="text-center">
                         <input type="submit" value="@lang('common.update')" class="btn pallet-1-3" style="color: white;">
                     </div>
-
-                {{ Form::close() }}
+                </form>
             </div>
         </div>
         <div class="col-1"></div>

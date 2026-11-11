@@ -1,22 +1,24 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::script('js/graphic_request.js') !!}
+<script src="{{ asset('js/graphic_request.js') }}"></script>
 
 <div class="container">
     <div class="jumbotron" style="margin: 15px;">
         <h1 class="text-center">@lang('common.edit_graphic_request')</h1>
 
-        {{ Form::open(['id' => 'request-form', 'action' => ['BossController@graphicRequestUpdate'], 'method' => 'POST']) }}
-                
+        <form id="request-form" action="{{ action([\App\Http\Controllers\BossController::class, 'graphicRequestUpdate']) }}" method="POST">
+            @csrf
+            @method('PUT')
+
             <div class="form-group">
                 <label for="start_time">@lang('common.start_time')</label>
-                {{ Form::time('start_time', $graphicRequest->start_time, array('class' => 'form-control')) }}
+                <input type="time" id="start_time" name="start_time" value="{{ old('start_time', $graphicRequest->start_time) }}" class="form-control">
                 <div class="warning"></div>
             </div>
             <div class="form-group">
                 <label for="end_time">@lang('common.end_time')</label>
-                {{ Form::time('end_time', $graphicRequest->end_time, array('class' => 'form-control')) }}
+                <input type="time" id="end_time" name="end_time" value="{{ old('end_time', $graphicRequest->end_time) }}" class="form-control">
                 <div class="warning"></div>
             </div>
 
@@ -36,23 +38,21 @@
 
             <div class="form-group">
                 <label for="comment">@lang('common.comment')</label>
-                {{ Form::textarea('comment', $graphicRequest->comment, array('class' => 'form-control')) }}
+                <textarea id="comment" name="comment" class="form-control">{{ old('comment', $graphicRequest->comment) }}</textarea>
             </div>
-            
+
             @foreach($graphicRequest->allEmployees as $employee)
                 @if ($employee->isChosen == true)
                     <input type="hidden" name="employees[]" value="{{$employee->id}}"/>
                 @endif
             @endforeach
-        
-            {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}
-            {{ Form::hidden('_method', 'PUT') }}
-            
+
+            <input type="hidden" name="graphic_request_id" value="{{ $graphicRequest->id }}">
+
             <div class="text-center">
                 <input type="submit" value="@lang('common.update')" class="btn btn-primary">
             </div>
-
-        {{ Form::close() }}
+        </form>
     </div>
 </div>
 @endsection

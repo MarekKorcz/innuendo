@@ -2,7 +2,7 @@
 
 @section('content')
 
-{!! Html::script('js/worker_show.js') !!}
+<script src="{{ asset('js/worker_show.js') }}"></script>
 
 <div class="container">
 
@@ -16,8 +16,8 @@
             </h4>
             <h5 id="intervalPeriod" class="text-center">
                 @lang('common.for_the_period_from')
-                {{$interval->start_date->format('Y-m-d')}} 
-                @lang('common.to') 
+                {{$interval->start_date->format('Y-m-d')}}
+                @lang('common.to')
                 {{$interval->end_date->format('Y-m-d')}}
             </h5>
 
@@ -53,7 +53,7 @@
             <div id="appointments-table">
                 <table class="table table-striped table-bordered">
                     <thead>
-                        <tr>                
+                        <tr>
                             <td>@lang('common.date')</td>
                             <td>@lang('common.hour')</td>
                             <td>@lang('common.massage')</td>

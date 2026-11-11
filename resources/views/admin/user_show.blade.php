@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/appointment_show.css') !!}
+<link rel="stylesheet" href="{{ asset('css/appointment_show.css') }}">
 
 <div class="container">
 
@@ -16,11 +16,13 @@
                 </a>
             </p>
         </div>
-        
+
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
-                {{ Form::open(['action' => ['AdminController@userUpdate'], 'method' => 'POST']) }}
+                <form action="{{ action([\App\Http\Controllers\AdminController::class, 'userUpdate']) }}" method="POST">
+                    @csrf
+                    @method('PUT')
 
                     <div class="form-group">
                         <label for="name">@lang('common.name'):</label>
@@ -76,14 +78,12 @@
                         </div>
                     @endif
 
-                    {{ Form::hidden('user_id', $user->id) }}
-                    {{ Form::hidden('_method', 'PUT') }}
+                    <input type="hidden" name="user_id" value="{{ $user->id }}">
 
                     <div class="text-center">
                         <input type="submit" value="@lang('common.update')" class="btn pallet-2-4" style="color: white;">
                     </div>
-
-                {{ Form::close() }}
+                </form>
             </div>
             <div class="col-1"></div>
         </div>

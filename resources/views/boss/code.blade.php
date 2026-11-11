@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/code.css') !!}
-{!! Html::script('js/code.js') !!}
+<link rel="stylesheet" href="{{ asset('css/code.css') }}">
+<script src="{{ asset('js/code.js') }}"></script>
 
 <div class="container">
-    
-    <div style="padding: 1rem 0 1rem 0">        
+
+    <div style="padding: 1rem 0 1rem 0">
         @if ($code !== null)
             <div class="text-center" style="padding-top: 1rem;">
                 <h2>@lang('common.register_code')</h2>
@@ -21,7 +21,8 @@
                             </a>
                         </div>
                         <div class="text-center">
-                            {{ Form::open(['id' => 'register-code', 'action' => 'BossController@setCode', 'method' => 'POST']) }}
+                            <form id="register-code" action="{{ action([\App\Http\Controllers\BossController::class, 'setCode']) }}" method="POST">
+                                @csrf
                                 <div style="padding: 0 12px 12px 12px;">
                                     <input name="code_id" type="hidden" value="{{$code->id}}">
 
@@ -51,7 +52,7 @@
                                         </div>
                                     @endif
                                 </div>
-                            {{ Form::close() }}
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -68,7 +69,7 @@
             </div>
         @endif
     </div>
-    
+
     <div id="deleteCode" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,9 +87,9 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
-    
+
 </div>
 
 @endsection

@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::script('js/promo_show_public.js') !!}
+<script src="{{ asset('js/promo_show_public.js') }}"></script>
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
-        
+
         <div class="text-center">
             <div style="margin-bottom: 18px;">
                 <h2>
@@ -24,7 +24,7 @@
                         {{ $promo->description }}
                     @endif
                 </h4>
-                <p>@lang('common.promo_status'): 
+                <p>@lang('common.promo_status'):
                     <strong>
                         @if ($promo->is_active == 1)
                             @lang('common.is_active')
@@ -41,7 +41,7 @@
                 <div style="font-size: 21px;">
                     <a href="{{ URL::to('/contact') }}" target="_blank">
                         @lang('footer.contact')
-                    </a> 
+                    </a>
                 </div>
             </div>
             <div>
@@ -59,10 +59,10 @@
                 <div id="register" style="padding-top: 1rem; font-size: 24px; visibility: hidden;">
                     <a href="{{ URL::to('/register') }}" target="_blank">
                         @lang('common.register')
-                    </a> 
+                    </a>
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 @endsection

@@ -1,8 +1,8 @@
 @extends('bio.app')
 @section('content')
 
-{!! Html::style('css/bio/home.css') !!}
-{!! Html::script('js/bio/home.js') !!}
+<link rel="stylesheet" href="{{ asset('css/bio/home.css') }}">
+<script src="{{ asset('js/bio/home.js') }}"></script>
 
     <div class="header-image-section">
         <div class="header-image-section-text container">
@@ -31,7 +31,7 @@
                     </div>
                     <div class="box-text">
                         <p>
-                            SESJA RÓWNOWAŻENIA <br> 
+                            SESJA RÓWNOWAŻENIA <br>
                             CZAKR
                         </p>
                         <p style="color: black;">Starożytna nauka</p>
@@ -47,7 +47,7 @@
                         <p>TRENING RELAKSACYJNY</p>
                         <p style="color: black; padding-top: 2rem;">Naturalne uzdrawianie</p>
                     </div>
-                </div>        
+                </div>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="box">
@@ -87,7 +87,8 @@
                     <div class="col-1"></div>
                     <div class="col-10">
                         <div class="contact-section-form">
-                            {{ Form::open(['id' => 'contact-message', 'action' => ['HomeController@bioContactMessage'], 'method' => 'POST']) }}
+                            <form id="contact-message" action="{{ action([\App\Http\Controllers\HomeController::class, 'bioContactMessage']) }}" method="POST">
+                                @csrf
 
                                 <div class="row">
                                     <div class="col-12 col-sm-6">
@@ -123,9 +124,8 @@
                                         <button type="submit" form="contact-message" value="submit">Wyślij</button>
                                     </div>
                                 </div>
+                            </form>
 
-                            {{ Form::close() }} 
-                            
                             <div id="confirm"></div>
                         </div>
                     </div>

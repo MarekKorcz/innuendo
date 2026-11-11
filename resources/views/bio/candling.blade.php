@@ -1,8 +1,8 @@
 @extends('bio.app')
 @section('content')
 
-{!! Html::style('css/bio/service-section.css') !!}
-{!! Html::script('js/bio/service-section.js') !!}
+<link rel="stylesheet" href="{{ asset('css/bio/service-section.css') }}">
+<script src="{{ asset('js/bio/service-section.js') }}"></script>
 
     <div class="service-section">
         <div id="header">
@@ -21,14 +21,14 @@
             </div>
             <div class="offset-1"></div>
         </div>
-        
+
         <div id="service-description" class="row">
             <div class="offset-1"></div>
             <div class="col-sm-12 col-md-10">
                 <div id="description">
-                    <p>Konchowanie, czyli inaczej - świecowanie uszu. Przywraca nadzieję 
-                      osobom cierpiącym z powodu nawracających infekcji zatok, uszu oraz skarżących 
-                      się na szumy w uszach. Katar sienny czy częste bóle głowy nie będą się w stanie 
+                    <p>Konchowanie, czyli inaczej - świecowanie uszu. Przywraca nadzieję
+                      osobom cierpiącym z powodu nawracających infekcji zatok, uszu oraz skarżących
+                      się na szumy w uszach. Katar sienny czy częste bóle głowy nie będą się w stanie
                       oprzeć zbawiennemu działaniu tego zabiegu.</p>
                     @include('bio.localization')
                 </div>

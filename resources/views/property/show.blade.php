@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/property_show.css') !!}
-{!! Html::script('js/property_show.js') !!}
+<link rel="stylesheet" href="{{ asset('css/property_show.css') }}">
+<script src="{{ asset('js/property_show.js') }}"></script>
 
 <div class="container" style="padding-top: 2rem;">
-    
+
     <div class="row text-center" style="padding-bottom: 1rem;">
         <div class="col-4">
             <a class="btn pallet-2-2 delete-property" style="color: white;" data-property_id="{{$property->id}}">
@@ -29,10 +29,10 @@
             </a>
         </div>
     </div>
-    
+
     <div class="jumbotron">
         <div class="text-center">
-            
+
             <div class="row" style="padding-bottom: 2rem;">
                 <div class="col-4"></div>
                 <div class="col-4">
@@ -42,14 +42,14 @@
                 </div>
                 <div class="col-4"></div>
             </div>
-            
+
             <h1>{{$property->name}}</h1>
                 <p>
-                    @lang('common.address'): 
+                    @lang('common.address'):
                     <strong>
-                        {{$property->street}} 
+                        {{$property->street}}
                         {{$property->street_number}}
-                        {{$property->house_number}} 
+                        {{$property->house_number}}
                         {{$property->city}}
                     </strong>
                 </p>
@@ -67,7 +67,7 @@
             </p>
         </div>
     </div>
-        
+
     <div class="jumbotron">
         <div class="text-center" style="margin-bottom: 40px;">
             <h3>@lang('common.years'):</h3>
@@ -87,8 +87,8 @@
             </a>
         </div>
     </div>
-    
-    
+
+
     <div id="deleteProperty" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -106,8 +106,8 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
-    
+
 </div>
 @endsection

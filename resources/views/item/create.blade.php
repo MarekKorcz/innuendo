@@ -5,12 +5,13 @@
     <div class="jumbotron" style="margin-top: 15px;">
         <h2 class="text-center">@lang('common.create_item')</h2>
 
-        {{ Form::open(['action' => 'ItemController@store', 'method' => 'POST']) }}
+        <form action="{{ action([App\Http\Controllers\ItemController::class, 'store']) }}" method="POST">
+            @csrf
 
             <div class="form-group">
                 <label for="name">@lang('common.label'):</label>
                 <input id="name" class="form-control" type="text" name="name">
-            </div>    
+            </div>
             <div class="form-group">
                 <label for="description">@lang('common.description'):</label>
                 <input id="description" class="form-control" type="text" name="description">
@@ -23,18 +24,18 @@
                 <label for="price">@lang('common.price'):</label>
                 <input id="price" class="form-control" type="text" name="price">
             </div>
-        
+
             @if ($category !== null)
-                {{ Form::hidden('category_id', $category->id) }}
+                <input type="hidden" name="category_id" value="{{ $category->id }}">
             @else
-                {{ Form::hidden('category_id', Input::old('category_id')) }}
+                <input type="hidden" name="category_id" value="{{ old('category_id') }}">
             @endif
-                        
+
             <div class="text-center">
                 <input type="submit" value="@lang('common.create')" class="btn btn-primary">
             </div>
+        </form>
 
-        {{ Form::close() }}
     </div>
 </div>
 @endsection

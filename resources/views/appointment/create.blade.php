@@ -18,25 +18,26 @@
             </ul>
         </nav>
     </div>
-    
+
     <div class="container" style="padding: 1rem 0 1rem 0;">
-        
+
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
                 <h1 class="text-center">@lang('common.reserve_appointment')</h1>
 
-                {{ Form::open(['id' => 'appointment-create', 'action' => 'AppointmentController@store', 'method' => 'POST']) }}
+                <form id="appointment-create" action="{{ action([\App\Http\Controllers\AppointmentController::class, 'store']) }}" method="POST">
+                    @csrf
 
                     <div class="form-group">
                         <p class="text-center" style="font-size: 20px;">
-                            @lang('common.hour'): 
+                            @lang('common.hour'):
                             <strong style="font-size: 27px;">{{$appointmentTerm}}</strong>
                         </p>
                         @if ($appointmentTerm)
-                            {{ Form::hidden('appointmentTerm', $appointmentTerm) }}
+                            <input type="hidden" name="appointmentTerm" value="{{ $appointmentTerm }}">
                         @else
-                            {{ Form::hidden('appointmentTerm', Input::old('appointmentTerm')) }}
+                            <input type="hidden" name="appointmentTerm" value="{{ old('appointmentTerm') }}">
                         @endif
                     </div>
 
@@ -51,43 +52,43 @@
                             @endforeach
                         </select>
                         <div id="item-warning"></div>
-                    </div>     
+                    </div>
 
                     @if ($propertyId)
-                        {{ Form::hidden('propertyId', $propertyId) }}
+                        <input type="hidden" name="propertyId" value="{{ $propertyId }}">
                     @else
-                        {{ Form::hidden('propertyId', Input::old('propertyId')) }}
+                        <input type="hidden" name="propertyId" value="{{ old('propertyId') }}">
                     @endif
 
                     @if ($graphicId)
-                        {{ Form::hidden('graphicId', $graphicId) }}
+                        <input type="hidden" name="graphicId" value="{{ $graphicId }}">
                     @else
-                        {{ Form::hidden('graphicId', Input::old('graphicId')) }}
+                        <input type="hidden" name="graphicId" value="{{ old('graphicId') }}">
                     @endif
 
                     @if ($year)
-                        {{ Form::hidden('year', $year) }}
+                        <input type="hidden" name="year" value="{{ $year }}">
                     @else
-                        {{ Form::hidden('year', Input::old('year')) }}
+                        <input type="hidden" name="year" value="{{ old('year') }}">
                     @endif
 
                     @if ($month)
-                        {{ Form::hidden('month', $month) }}
+                        <input type="hidden" name="month" value="{{ $month }}">
                     @else
-                        {{ Form::hidden('month', Input::old('month')) }}
+                        <input type="hidden" name="month" value="{{ old('month') }}">
                     @endif
 
                     @if ($day)
-                        {{ Form::hidden('day', $day) }}
+                        <input type="hidden" name="day" value="{{ $day }}">
                     @else
-                        {{ Form::hidden('day', Input::old('day')) }}
+                        <input type="hidden" name="day" value="{{ old('day') }}">
                     @endif
 
                     <div class="text-center">
                         <input type="submit" value="@lang('common.reserve')" class="btn pallet-2-1" style="color: white;">
                     </div>
+                </form>
 
-                {{ Form::close() }}
             </div>
             <div class="col-1"></div>
         </div>

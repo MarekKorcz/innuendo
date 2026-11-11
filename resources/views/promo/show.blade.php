@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/codes.css') !!}
+<link rel="stylesheet" href="{{ asset('css/codes.css') }}">
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
-        
+
         <div class="text-center" style="margin-bottom: 18px;">
             <h2>
                 @if (Session('locale') == "en")
@@ -29,7 +29,7 @@
             <p>@lang('common.used_code_count'): <strong>{{ $promo->used_code_count }}</strong></p>
             <p>@lang('common.total_code_count'): <strong>{{ $promo->total_code_count }}</strong></p>
             <p>@lang('common.code'): <strong>{{ $code }}</strong></p>
-            <p>@lang('common.is_active'): 
+            <p>@lang('common.is_active'):
                 <strong style="padding-left: 1rem;">
                     @if ($promo->isActive == 1)
                         <a class="btn btn-danger" href="{{ URL::to('/admin/promo/activation/toggle/' . $promo->id) }}">
@@ -43,7 +43,7 @@
                 </strong>
             </p>
         </div>
-        
+
         @if (count($promo->promoCodes) > 0)
             <h3 class="text-center">@lang('common.promo_codes_list'):</h3>
             <div class="form-group">
@@ -68,8 +68,8 @@
                         @endif
                     @endforeach
                 </ul>
-            </div> 
+            </div>
         @endif
-    </div> 
+    </div>
 </div>
 @endsection

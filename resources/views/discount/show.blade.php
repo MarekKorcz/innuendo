@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/backend_subscription_show.css') !!}
-{!! Html::script('js/backend_subscription_show.js') !!}
+<link rel="stylesheet" href="{{ asset('css/backend_subscription_show.css') }}">
+<script src="{{ asset('js/backend_subscription_show.js') }}"></script>
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
@@ -20,7 +20,7 @@
                 </li>
             </ul>
         </nav>
-        
+
         <div class="text-center" style="margin-bottom: 40px;">
             <h2>{!! $subscription->name !!}</h2>
         </div>
@@ -31,7 +31,7 @@
         <p>@lang('common.new_price'): <strong>{{ $subscription->new_price }}</strong></p>
         <p>@lang('common.quantity_per_month'): <strong>{{ $subscription->quantity }}</strong></p>
         <p>@lang('common.how_many_months_since_start'): <strong>{{ $subscription->duration }}</strong></p>
-        <p>@lang('common.worker_quantity'): 
+        <p>@lang('common.worker_quantity'):
             <strong>
                 @if ($subscription->worker_quantity == 0)
                     @lang('common.infinity')
@@ -77,9 +77,9 @@
                     @endif
                 @endforeach
             </ul>
-        </div> 
+        </div>
     </div>
-    
+
     <div id="deleteSubscription" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -97,7 +97,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
 </div>
 @endsection

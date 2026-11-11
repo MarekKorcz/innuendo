@@ -1,7 +1,7 @@
 @extends('bio.app')
 @section('content')
 
-{!! Html::style('css/bio/reservation.css') !!}
+<link rel="stylesheet" href="{{ asset('css/bio/reservation.css') }}">
 
     <div class="reservation-section">
         <div id="header">

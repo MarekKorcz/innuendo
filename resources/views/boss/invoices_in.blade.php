@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/invoices_in.css') !!}
-{!! Html::script('js/invoices_in.js') !!}
+<link rel="stylesheet" href="{{ asset('css/invoices_in.css') }}">
+<script src="{{ asset('js/invoices_in.js') }}"></script>
 
 <div class="container" style="padding: 1rem 0 1rem 0;">
-    
+
     <div class="row text-center" style="padding-bottom: 1rem;">
         <div class="col-4"></div>
         <div class="col-4">
@@ -15,14 +15,14 @@
         </div>
         <div class="col-4"></div>
     </div>
-    
+
     <div class="jumbotron" style="padding: 1rem;">
         @if (count($invoices) > 0)
             <div class="text-center">
                 <h2>
-                    @lang('common.invoices_in') 
+                    @lang('common.invoices_in')
                     {{$property->name}}
-                    @lang('common.for_period') 
+                    @lang('common.for_period')
                 </h2>
             </div>
             <div class="row">
@@ -43,7 +43,7 @@
         @else
             <div class="text-center">
                 <h2>
-                    @lang('common.invoices_in') 
+                    @lang('common.invoices_in')
                     {{$property->name}}
                 </h2>
                 <p>Brak faktur</p>

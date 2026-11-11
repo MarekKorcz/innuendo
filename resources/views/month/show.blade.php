@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/month_show.css') !!}
-{!! Html::script('js/month_show.js') !!}
+<link rel="stylesheet" href="{{ asset('css/month_show.css') }}">
+<script src="{{ asset('js/month_show.js') }}"></script>
 
 <div class="container">
-    
+
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4">
             @if ($year)
@@ -31,7 +31,7 @@
             @endif
         </h2>
     </div>
-    
+
     <div class="jumbotron">
         @if (count($days) > 0)
             <table class="table table-striped">
@@ -87,7 +87,7 @@
             </a>
         </div>
     </div>
-    
+
     <div id="deleteMonth" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
 </div>
 @endsection

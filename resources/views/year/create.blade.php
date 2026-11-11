@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    
+
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>
         <div class="col-4"></div>
@@ -15,21 +15,22 @@
     <div class="text-center" style="padding: 1rem;">
         <h1>@lang('common.create_year')</h1>
 
-        {{ Form::open(['action' => 'YearController@store', 'method' => 'POST']) }}
+        <form action="{{ action([App\Http\Controllers\YearController::class, 'store']) }}" method="POST">
+            @csrf
 
             <div class="form-group">
                 <label for="year">@lang('common.year')</label>
-                {{ Form::number('year', Input::old('year'), array('class' => 'form-control')) }}
+                <input type="number" name="year" value="{{ old('year') }}" class="form-control">
             </div>
             @if ($property !== null)
-                {{ Form::hidden('property_id', $property->id) }}
+                <input type="hidden" name="property_id" value="{{ $property->id }}">
             @else
-                {{ Form::hidden('property_id', Input::old('property_id')) }}
+                <input type="hidden" name="property_id" value="{{ old('property_id') }}">
             @endif
 
             <input type="submit" value="@lang('common.create')" class="btn btn-primary">
+        </form>
 
-        {{ Form::close() }}
     </div>
 
 </div>

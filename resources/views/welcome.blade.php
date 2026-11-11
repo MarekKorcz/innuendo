@@ -2,9 +2,9 @@
 
 @section('content')
 
-{!! Html::script('js/welcome.js') !!}
-{!! Html::style('css/welcome.css') !!}
-    
+<script src="{{ asset('js/welcome.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
+
     <!--Carousel Wrapper-->
     <div id="carousel-example-2" class="carousel slide carousel-fade" data-ride="carousel">
         <!--Indicators-->
@@ -62,7 +62,7 @@
         <!--/.Controls-->
     </div>
     <!--/.Carousel Wrapper-->
-    
+
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-12">
@@ -72,7 +72,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid">
         <div class="row welcome">
             <div class="col-12" style="padding-bottom: 1rem;">
@@ -83,7 +83,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid" style="margin-top: 1rem;">
         <div class="row welcome text-center" style="border: 2px blue dotted; border-radius: 30px; padding: 2rem 0 2rem 0;">
             <div class="col-12">
@@ -98,7 +98,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="welcome">
         <div class="container">
             <div class="row">
@@ -112,7 +112,7 @@
             </div>
         </div>
     </div>
-    
+
     <!--Fixed background-->
 <!--    <div id="fixed">
         <div class="landing-text">
@@ -123,7 +123,7 @@
             </a>
         </div>
     </div>-->
-    
+
     <div class="container-fluid">
         <div class="row welcome text-center">
             <div class="col-12">
@@ -135,7 +135,7 @@
                 </p>
                 <p class="lead" style="font-weight: 600;">
                     @lang('welcome.additional_copy_3')
-                </p>                
+                </p>
             </div>
         </div>
     </div>
@@ -151,8 +151,8 @@
             <div class="col-12">
                 <p class="lead" style="font-size: 21px;">
                     @lang('welcome.promo_copy_1')
-                    <i style="font-weight: 600;"> 
-                        @lang('welcome.promo_copy_2')   
+                    <i style="font-weight: 600;">
+                        @lang('welcome.promo_copy_2')
                     </i>
                 </p>
                 <p class="lead" style="font-size: 24px;">
@@ -168,13 +168,13 @@
                                 @lang('common.contact_with_us')
                             </a>
                         </h2>
-                    </div>            
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!------>
-    
+
     <div class="welcome">
         <div class="container">
             <div class="row" style="font-size: 24px;">
@@ -197,7 +197,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid" style="padding-bottom: 2rem;">
         <div class="row welcome text-center">
             <div class="col-12">
@@ -207,7 +207,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-12 text-center" style="padding-top: 1rem;">
@@ -215,12 +215,12 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container" style="padding-bottom: 2rem;">
         <div class="row welcome text-center">
             <div class="col-12">
                 <h3 style="font-size: 33px;">@lang('welcome.our_site_header')</h3>
-                
+
                 <ul>
                     <li>
                         <h4>@lang('welcome.our_site_first_li')</h4>
@@ -231,12 +231,12 @@
                             @lang('welcome.check_by_yourself')
                         </a>
                     </p>
-                    
+
                     <li>
                         <h4>@lang('welcome.our_site_second_li')</h4>
                     </li>
                     <p>@lang('welcome.our_site_second_li_p')</p>
-                    
+
                     <li>
                         <h4>@lang('welcome.our_site_third_li')</h4>
                     </li>
@@ -246,13 +246,13 @@
                             @lang('welcome.see_by_yourself')
                         </a>
                     </p>
-                    
+
                     <li>
                         <h4>@lang('welcome.our_site_fourth_li')</h4>
                     </li>
                     <!--<p>@lang('welcome.our_site_fourth_li_p')</p>-->
-                    
-                    
+
+
 <!--                    <li>
                         <h4>@lang('welcome.our_site_fifth_li')</h4>
                     </li>
@@ -261,7 +261,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-12 text-center" style="padding-top: 1rem;">
@@ -272,8 +272,8 @@
                 </h2>
             </div>
         </div>
-    </div>  
-    
+    </div>
+
     <div class="container">
         <h2 class="text-center">@lang('welcome.massage_20')</h2>
         <div class="row text-center padding">
@@ -296,7 +296,7 @@
                         @lang('common.contact_with_us')
                     </a>
                 </h2>
-            </div>            
+            </div>
         </div>
         <hr>
         <h2 class="text-center padding">@lang('welcome.massage_40')</h2>
@@ -313,7 +313,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -324,8 +324,8 @@
                 </h2>
             </div>
         </div>
-    </div>  
-    
+    </div>
+
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-12 text-center" style="padding-top: 1rem;">
@@ -336,8 +336,8 @@
                 </h2>
             </div>
         </div>
-    </div> 
-    
+    </div>
+
     <div class="container">
         <h3 class="text-center">
             @lang('welcome.discount_paragraph')
@@ -360,7 +360,7 @@
                         @lang('common.contact_with_us')
                     </a>
                 </h2>
-            </div>            
+            </div>
         </div>
         <hr>
         <div class="row text-center padding">
@@ -374,7 +374,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -386,7 +386,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-fluid">
         <div class="row jumbotron">
             <div class="col-12 text-center" style="padding-top: 1rem;">
@@ -394,7 +394,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container">
         <div class="row welcome text-center" style="padding-bottom: 3rem;">
             <div class="col-12">
@@ -402,19 +402,19 @@
                     <li>
                         <h4>@lang('welcome.meeting_methodology_first_li')</h4>
                     </li>
-                    
+
                     <li>
                         <h4>@lang('welcome.meeting_methodology_second_li')</h4>
                     </li>
-                    
+
                     <li>
                         <h4>@lang('welcome.meeting_methodology_third_li')</h4>
                     </li>
-                    
+
                     <li>
                         <h4>@lang('welcome.meeting_methodology_fourth_li')</h4>
                     </li>
-                    
+
                     <li>
                         <h4>@lang('welcome.meeting_methodology_fifth_li')</h4>
                     </li>
@@ -422,7 +422,7 @@
             </div>
         </div>
     </div>
-    
+
 <!--    <div class="padding welcome">
         <div class="container">
             <div class="row">

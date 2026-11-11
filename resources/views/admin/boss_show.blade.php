@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::script('js/admin_boss_show.js') !!}
+<script src="{{ asset('js/admin_boss_show.js') }}"></script>
 
 <div class="container" style="padding: 18px;">
-    
+
     <div class="row">
         <div class="col-1"></div>
         <div class="col-10">
@@ -13,11 +13,13 @@
                     <h2>@lang('common.boss'):</h2>
                     <p>{{$boss->created_at}}</p>
                 </div>
-                
+
                 <div class="row" style="padding-bottom: 1rem;">
                     <div class="col-1"></div>
                     <div class="col-10">
-                        {{ Form::open(['action' => ['AdminController@bossUpdate'], 'method' => 'POST']) }}
+                        <form action="{{ action([\App\Http\Controllers\AdminController::class, 'bossUpdate']) }}" method="POST">
+                            @csrf
+                            @method('PUT')
 
                             <div class="form-group">
                                 <label for="name">@lang('common.name'):</label>
@@ -51,22 +53,20 @@
                                     @endif
                                 </select>
                             </div>
-                        
+
                             <div id="new-boss-element" class="form-group"></div>
 
-                            {{ Form::hidden('boss_id', $boss->id) }}
-                            {{ Form::hidden('_method', 'PUT') }}
+                            <input type="hidden" name="boss_id" value="{{ $boss->id }}">
 
                             <div class="text-center">
                                 <input type="submit" value="@lang('common.update')" class="btn pallet-2-4" style="color: white;">
                             </div>
-
-                        {{ Form::close() }}
+                        </form>
                     </div>
                     <div class="col-1"></div>
                 </div>
             </div>
-            
+
             <hr>
 
             <div style="padding-bottom: 1rem;">
@@ -77,7 +77,7 @@
                 @if (count($properties) > 0)
                     <table class="table table-striped table-bordered">
                         <thead>
-                            <tr>                
+                            <tr>
                                 <td>@lang('common.name')</td>
                                 <td>@lang('common.street')</td>
                                 <td>@lang('common.created_at')</td>
@@ -111,9 +111,9 @@
                     </div>
                 @endif
             </div>
-            
+
             <hr>
-            
+
             <div style="padding-bottom: 1rem;">
                 <div class="text-center">
                     <h2>@lang('common.employees'):</h2>
@@ -122,7 +122,7 @@
                 @if (count($workers) > 0)
                     <table class="table table-striped table-bordered">
                         <thead>
-                            <tr>                
+                            <tr>
                                 <td>@lang('common.name')</td>
                                 <td>@lang('common.phone_number')</td>
                                 <td>@lang('common.email_address')</td>

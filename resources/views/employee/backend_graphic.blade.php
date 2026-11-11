@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/backend_graphic.css') !!}
+<link rel="stylesheet" href="{{ asset('css/backend_graphic.css') }}">
 
 <div class="container" style="padding: 2rem 0 2rem 0;">
 
@@ -11,9 +11,9 @@
 
     <div class="row" style="padding-bottom: 1rem;">
         <div class="offset-1"></div>
-        <div class="col-10">            
+        <div class="col-10">
             <ul>
-                @foreach($properties as $property)  
+                @foreach($properties as $property)
                     <div id="schedules" class="text-center">
                         <a href="{{ URL::to('employee/backend-calendar/' . $property->id . '/0/0/0') }}">
                             <li>

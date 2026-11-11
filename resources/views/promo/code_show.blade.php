@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/codes.css') !!}
-{!! Html::style('css/graphic_request.css') !!}
+<link rel="stylesheet" href="{{ asset('css/codes.css') }}">
+<link rel="stylesheet" href="{{ asset('css/graphic_request.css') }}">
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">
-        
+
         <div class="text-center" style="margin-bottom: 18px; padding: 1rem;">
             <h1>
                 @lang('common.promo_code_header'):
@@ -19,7 +19,7 @@
         </div>
         <div>
             <p>@lang('common.code'): <strong>{{ $promoCode->code }}</strong></p>
-            <p>@lang('common.is_active'): 
+            <p>@lang('common.is_active'):
                 <strong>
                     @if ($promoCode->isActive == 1)
                         @lang('common.yes')
@@ -44,7 +44,7 @@
                 <p>@lang('common.activation_date'): <strong>{{ $promoCode->activation_date }}</strong></p>
             @endif
         </div>
-        
+
         @if (count($promoCode->subscriptions) > 0)
             <h2 class="text-center">@lang('common.subscriptions_list'):</h2>
             <div class="form-group">
@@ -60,9 +60,9 @@
                         </a>
                     @endforeach
                 </ul>
-            </div> 
+            </div>
         @endif
-            
+
         @if ($promoCode->boss !== null)
             <div class="text-center" style="padding-top: 1rem;">
                 <h2>@lang('common.messages'):</h2>
@@ -71,6 +71,6 @@
                 </a>
             </div>
         @endif
-    </div> 
+    </div>
 </div>
 @endsection

@@ -2,11 +2,11 @@
 
 @section('content')
 
-{!! Html::script('js/calendar.js') !!}
-{!! Html::style('css/calendar.css') !!}
+<script src="{{ asset('js/calendar.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
 
 <div class="container" style="padding: 2rem 0 2rem 0;">
-    
+
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>
         <div class="col-4">
@@ -16,7 +16,7 @@
         </div>
         <div class="col-4"></div>
     </div>
-    
+
     <div class="text-center" style="padding-top: 18px;">
         <h1>{{$property->name}}</h1>
     </div>
@@ -147,7 +147,7 @@
                 <div class="col-0 col-md-1"></div>
                 <div id="appointments" class="col-12 col-md-10 text-center">
                     @if(count($graphic) > 0)
-                    
+
                         <div id="graphic-employees-buttons" data-current_day_id="{{$current_day_id}}" style="padding: 1rem;">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 @foreach ($graphicTimesEntites as $key => $graphicTimeEntity)
@@ -162,7 +162,7 @@
                             </div>
                         </div>
                         <hr>
-                        
+
                         <div id="graphic">
                             @for ($i = 0; $i < count($graphic); $i++)
                                 @if ($graphic[$i]['appointmentLimit'] == 0)
@@ -184,7 +184,7 @@
                                             </div>
                                         @endif
                                     </div>
-                                @elseif ($graphic[$i]['appointmentLimit'] == 1)                            
+                                @elseif ($graphic[$i]['appointmentLimit'] == 1)
                                     <div class="appointment">
                                         <div class="box">{{$graphic[$i]['time']}}</div>
                                         @if ($graphic[$i]['appointment'] !== 0)
@@ -261,15 +261,16 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal hide" id="makeAnAppointment">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>@lang('common.appointment_reservation')</h3>
                 <button class="close" data-dismiss="modal">×</button>
             </div>
-            <div class="modal-body">         
-                {{ Form::open(['action' => 'AppointmentController@beforeShowCreatePage', 'method' => 'POST']) }}
+            <div class="modal-body">
+                <form action="{{ action([App\Http\Controllers\AppointmentController::class, 'beforeShowCreatePage']) }}" method="POST">
+                    @csrf
 
                     <div class="form-group">
                         <label name="appointmentTerm" for="appointmentTerm"></label>
@@ -278,10 +279,9 @@
                             <input type="hidden" name="graphicId" value="{{$graphic_id}}"/>
                         @endif
                     </div>
-                 
-                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
 
-                {{ Form::close() }}
+                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
+                </form>
             </div>
         </div>
     </div>

@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/worker_appointment_list.css') !!}
-{!! Html::script('js/worker_appointment_list.js') !!}
+<link rel="stylesheet" href="{{ asset('css/worker_appointment_list.css') }}">
+<script src="{{ asset('js/worker_appointment_list.js') }}"></script>
 
 <div class="container">
-    
+
     @if (count($appointments) > 0)
         <div class="row text-center" style="padding-top: 2rem;">
             <div class="col-4"></div>
@@ -17,18 +17,18 @@
             <div class="col-4"></div>
         </div>
     @endif
-    
+
     <div class="row" style="padding-top: 1rem;">
         <div class="col-12">
             <h1 class="text-center">
                 @if ($property !== null)
-                    @lang('common.massages_in')                
+                    @lang('common.massages_in')
                     {{$property->name}}
                 @endif
             </h1>
         </div>
     </div>
-    
+
     <div class="row" style="padding-bottom: 1rem;">
         <div class="col-1"></div>
         <div class="col-10">
@@ -39,7 +39,7 @@
                         @if($worker !== null)
                             <input id="search" class="form-control" type="text" value="{{$worker->name . " " . $worker->surname}}" data-user_id="{{$worker->id}}" autocomplete="off">
                         @else
-                            <input id="search" class="form-control" type="text" value="" autocomplete="off">          
+                            <input id="search" class="form-control" type="text" value="" autocomplete="off">
                         @endif
                         <ul id="result" class="list-group list-styling"></ul>
                     </div>
@@ -56,7 +56,7 @@
                         </select>
                     </div>
                 </div>
-            
+
                 @if (count($payments) > 0)
                     <div id="monthly-payments" class="text-center" style="padding: 1rem 0 1rem 0;">
                         <h3>
@@ -80,11 +80,11 @@
                         </p>
                     </div>
                 @endif
-            
+
                 <div id="appointments-table">
                     <table class="table table-striped table-bordered">
                         <thead>
-                            <tr>                
+                            <tr>
                                 <td>@lang('common.date')</td>
                                 <td>@lang('common.hour')</td>
                                 <td>@lang('common.name_and_surname')</td>

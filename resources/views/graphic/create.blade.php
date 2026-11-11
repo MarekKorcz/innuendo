@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    
+
     <div class="row text-center" style="padding: 2rem 0 2rem 0;">
         <div class="col-4"></div>
         <div class="col-4"></div>
@@ -17,15 +17,16 @@
             <h1>@lang('common.create_graphic')</h1>
         </div>
 
-        {{ Form::open(['action' => 'GraphicController@store', 'method' => 'POST']) }}
+        <form action="{{ action([App\Http\Controllers\GraphicController::class, 'store']) }}" method="POST">
+            @csrf
 
             <div class="form-group">
                 <label for="start_time">@lang('common.start_time')</label>
-                {{ Form::time('start_time', Input::old('start_time'), array('class' => 'form-control')) }}
+                <input type="time" name="start_time" value="{{ old('start_time') }}" class="form-control">
             </div>
             <div class="form-group">
                 <label for="end_time">@lang('common.end_time')</label>
-                {{ Form::time('end_time', Input::old('end_time'), array('class' => 'form-control')) }}
+                <input type="time" name="end_time" value="{{ old('end_time') }}" class="form-control">
             </div>
             <div class="form-group">
                 <label for="employee_id">@lang('common.employees'):</label>
@@ -42,16 +43,16 @@
                 </select>
             </div>
             @if ($day)
-                {{ Form::hidden('day_id', $day->id) }}
+                <input type="hidden" name="day_id" value="{{ $day->id }}">
             @else
-                {{ Form::hidden('day_id', Input::old('day_id')) }}
+                <input type="hidden" name="day_id" value="{{ old('day_id') }}">
             @endif
 
             <div class="text-center" style="padding-top: 1rem;">
                 <input type="submit" value="@lang('common.create')" class="btn btn-primary">
             </div>
+        </form>
 
-        {{ Form::close() }}
     </div>
 </div>
 @endsection

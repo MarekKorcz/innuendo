@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/welcome.css') !!}
+<link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
     <div class="container-fluid">
         <div class="row jumbotron">
@@ -10,7 +10,7 @@
             </div>
         </div>
     </div>
-        
+
     <div class="container">
         <h2 class="text-center">@lang('welcome.massage_20')</h2>
         <div class="row text-center padding">
@@ -44,7 +44,7 @@
             <div class="col-12">
                 <div class="text-center" style="padding: 1rem;">
                     <h4>@lang('welcome.discount_button_paragraph')</h4>
-                    
+
                     <a href="{{ URL::to('discounts') }}" class="btn pallet-1-3 btn-lg" style="color: white; margin-top: 1rem;">
                         @lang('welcome.all_discounts')
                     </a>

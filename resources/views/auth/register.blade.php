@@ -2,8 +2,8 @@
 
 @section('content')
 
-{!! Html::script('js/register.js') !!}
-{!! Html::style('css/register.css') !!}
+<script src="{{ asset('js/register.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
 <div class="container" style="padding: 2rem;">
     <div class="row justify-content-center">
@@ -28,11 +28,11 @@
                                         <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                 @endif
-                                
+
                                 <div id="name-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <label for="surname" class="col-md-4 col-form-label text-md-right">@lang('common.surname'):</label>
 
@@ -44,11 +44,11 @@
                                         <strong>{{ $errors->first('surname') }}</strong>
                                     </span>
                                 @endif
-                                
+
                                 <div id="surname-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <label for="phone_number" class="col-md-4 col-form-label text-md-right">@lang('common.phone_number'):</label>
 
@@ -60,7 +60,7 @@
                                         <strong>{{ $errors->first('phone_number') }}</strong>
                                     </span>
                                 @endif
-                                
+
                                 <div id="phone_number-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
@@ -76,23 +76,23 @@
                                         <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
-                                
+
                                 <div id="email-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row">
                             <label for="code" class="col-md-4 col-form-label text-md-right">@lang('common.registration_code'):</label>
 
                             <div class="col-md-6">
                                 <input id="code" type="text" class="form-control{{ $errors->has('code') ? ' is-invalid' : '' }}" name="code" required>
-                                
+
                                 @if ($errors->has('code'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('code') }}</strong>
                                     </span>
                                 @endif
-                                
+
                                 <div id="code-error" style="padding-left: 6px;"></div>
                                 <div id="code-data"></div>
                             </div>
@@ -109,7 +109,7 @@
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
-                                
+
                                 <div id="password-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
 
                             <div class="col-md-6">
                                 <input id="password_confirm" type="password" class="form-control" name="password_confirm" required>
-                                
+
                                 <div id="password_confirm-error" style="padding-left: 6px;"></div>
                             </div>
                         </div>
@@ -136,37 +136,38 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal hide" id="registerNewBoss">
         <div class="modal-content">
-            <div class="modal-body">         
-                {{ Form::open(['id' => 'register-boss', 'action' => 'Auth\RegisterController@registerNewBoss', 'method' => 'POST']) }}
+            <div class="modal-body">
+                <form id="register-boss" action="{{ action([\App\Http\Controllers\Auth\RegisterController::class, 'registerNewBoss']) }}" method="POST">
+                    @csrf
 
                     <h3 class="text-center">@lang('common.report_your_company')</h3>
 
                     <div class="form-group">
                         <label for="property_name">@lang('common.company_name'):</label>
-                        {{ Form::text('property_name', Input::old('property_name'), array('class' => 'form-control')) }}
+                        <input type="text" name="property_name" id="property_name" value="{{ old('property_name') }}" class="form-control">
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
                         <label for="street">@lang('common.street'):</label>
-                        {{ Form::text('street', Input::old('street'), array('class' => 'form-control')) }}
+                        <input type="text" name="street" id="street" value="{{ old('street') }}" class="form-control">
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
                         <label for="street_number">@lang('common.street_number'):</label>
-                        {{ Form::text('street_number', Input::old('street_number'), array('class' => 'form-control')) }}
+                        <input type="text" name="street_number" id="street_number" value="{{ old('street_number') }}" class="form-control">
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
                         <label for="house_number">@lang('common.house_number'):</label>
-                        {{ Form::text('house_number', Input::old('house_number'), array('class' => 'form-control')) }}
+                        <input type="text" name="house_number" id="house_number" value="{{ old('house_number') }}" class="form-control">
                         <div class="warning"></div>
                     </div>
                     <div class="form-group">
                         <label for="city">@lang('common.city'):</label>
-                        {{ Form::text('city', Input::old('city'), array('class' => 'form-control')) }}
+                        <input type="text" name="city" id="city" value="{{ old('city') }}" class="form-control">
                         <div class="warning"></div>
                     </div>
 
@@ -174,7 +175,7 @@
                         <input type="submit" value="@lang('common.create')" class="btn pallet-1-3" style="color: white;">
                     </div>
 
-                {{ Form::close() }}
+                </form>
             </div>
         </div>
     </div>

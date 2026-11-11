@@ -1,15 +1,15 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/appointment_show.css') !!}
+<link rel="stylesheet" href="{{ asset('css/appointment_show.css') }}">
 
 <div class="container">
-    
+
     <div class="row text-center" style="padding: 2rem;">
         <div class="col-4">
             @if ($user->isBoss)
                 <a href="{{ URL::to('/boss/calendar/'. $property->id . '/' . $year . '/' . $month_number . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
-            @elseif (!$user->isAdmin && !$user->isEmployee)   
+            @elseif (!$user->isAdmin && !$user->isEmployee)
                 <a href="{{ URL::to('/user/calendar/'. $property->id . '/' . $year . '/' . $month_number . '/' . $day) }}" class="btn pallet-1-3" style="color: white;">
             @endif
                 @lang('common.back_to_calendar')
@@ -44,7 +44,7 @@
                 <p>@lang('common.description'): <strong>{{$appointment->item->description}}</strong></p>
                 <p>@lang('common.price'): <strong>{{$appointment->item->price}} zł</strong></p>
                 <p>
-                    @lang('common.executor'): 
+                    @lang('common.executor'):
                     <a href="{{ URL::to('employee/' . $employee->slug) }}">
                         <strong>{{$employee->name}} {{$employee->surname}}</strong>
                     </a>
@@ -66,10 +66,11 @@
                                 <a class="btn btn-success" data-dismiss="modal" href="#">@lang('common.go_back')</a>
                             </div>
                             <div class="col-6" style="text-align: right;">
-                                {!!Form::open(['action' => ['UserController@appointmentDestroy', $appointment->id], 'method' => 'POST'])!!}
-                                    {{ Form::hidden('_method', 'DELETE') }}
+                                <form action="{{ action([App\Http\Controllers\UserController::class, 'appointmentDestroy'], [$appointment->id]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
                                     <input type="submit" value="@lang('common.cancel_the_visit')" class="btn btn-primary">
-                                {!!Form::close()!!}
+                                </form>
                             </div>
                         </div>
                     </div>

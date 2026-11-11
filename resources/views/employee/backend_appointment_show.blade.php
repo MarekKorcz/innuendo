@@ -2,11 +2,11 @@
 
 @section('content')
 
-{!! Html::style('css/backend_appointment_show.css') !!}
-{!! Html::script('js/backend_appointment_show.js') !!}
+<link rel="stylesheet" href="{{ asset('css/backend_appointment_show.css') }}">
+<script src="{{ asset('js/backend_appointment_show.js') }}"></script>
 
 <div class="container">
-    
+
     <div class="row text-center" style="padding: 3rem 0 1rem 0;">
         <div class="col-4">
             <a href="{{ URL::to('/employee/backend-calendar/'. $property->id . '/' . $year . '/' . $month->month_number . '/' . $day) }}" class="btn pallet-1-2" style="color: white;">
@@ -27,7 +27,7 @@
             </a>
         </div>
     </div>
-    
+
     <div class="row text-center" style="padding: 2rem;">
         <div class="col-1"></div>
         <div class="col-10">
@@ -44,7 +44,7 @@
                 <p>@lang('common.description'): <strong>{{$appointment->item->description}}</strong></p>
                 <p>@lang('common.price'): <strong>{{$appointment->item->price}} zł</strong></p>
                 <p>
-                    @lang('common.executor'): 
+                    @lang('common.executor'):
                     <strong>
                         <a href="{{ URL::to('/employee/' . $employee->slug) }}">
                             {{$employee->name}} {{$employee->surname}}
@@ -73,7 +73,7 @@
         </div>
         <div class="col-1"></div>
     </div>
-    
+
     <div id="deleteAppointment" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -91,7 +91,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
 </div>
 @endsection

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/welcome.css') !!}
+<link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
     <div class="container-fluid">
         <div class="row jumbotron">
@@ -12,7 +12,7 @@
             </div>
         </div>
     </div>
-        
+
     <div class="container">
         <div class="row" style="padding: 2rem 0 3rem 0;">
             <div class="col-1"></div>
@@ -28,14 +28,14 @@
                     <a href="{{ route('subscriptions') }}">@lang('navbar.subscriptions')</a>
                     @lang('common.and')
                     <a href="{{ route('discounts') }}">@lang('navbar.discounts')</a>
-                    lub na stronie firmy: 
+                    lub na stronie firmy:
                     <a href="{{ route('welcome') }}">{{ config('app.name') }} {{ config('app.name_2nd_part') }}</a>
                 </p>
                 <p>
                     @lang('about.description_3')
                     <a href="{{ route('regulations') }}">
                         @lang('about.regulations_link_description')
-                    </a> 
+                    </a>
                     @lang('about.description_4')
                 </p>
             </div>

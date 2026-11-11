@@ -2,12 +2,12 @@
 
 @section('content')
 
-{!! Html::script('js/boss_calendar.js') !!}
-{!! Html::script('js/graphic_request.js') !!}
-{!! Html::style('css/calendar.css') !!}
+<script src="{{ asset('js/boss_calendar.js') }}"></script>
+<script src="{{ asset('js/graphic_request.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
 
 <div class="container" style="padding-bottom: 2rem;">
-    
+
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4"></div>
         <div class="col-4">
@@ -17,7 +17,7 @@
         </div>
         <div class="col-4"></div>
     </div>
-    
+
     <div class="text-center" style="padding-top: 18px;">
         <h1>{{$property->name}}</h1>
     </div>
@@ -148,7 +148,7 @@
                 <div class="col-0 col-md-1"></div>
                 <div id="appointments" class="col-12 col-md-10 text-center">
                     @if(count($graphic) > 0)
-                    
+
                         <div id="graphic-employees-buttons" data-current_day_id="{{$current_day_id}}" style="padding: 1rem;">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 @foreach ($graphicTimesEntites as $key => $graphicTimeEntity)
@@ -163,7 +163,7 @@
                             </div>
                         </div>
                         <hr>
-                        
+
                         <div id="graphic">
                             @for ($i = 0; $i < count($graphic); $i++)
                                 @if ($graphic[$i]['appointmentLimit'] == 0)
@@ -185,7 +185,7 @@
                                             </div>
                                         @endif
                                     </div>
-                                @elseif ($graphic[$i]['appointmentLimit'] == 1)                            
+                                @elseif ($graphic[$i]['appointmentLimit'] == 1)
                                     <div class="appointment">
                                         <div class="box">{{$graphic[$i]['time']}}</div>
                                         @if ($graphic[$i]['appointment'] !== 0)
@@ -276,17 +276,17 @@
                         @if ($canSendRequest)
                             @if ($graphicRequest !== null)
                                 <h3 style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.already_sent_graphic_request')</h3>
-                                <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id . '/0') }}" 
-                                   class="btn btn-success btn-lg" 
+                                <a href="{{ URL::to('/boss/graphic-request/' . $graphicRequest->id . '/0') }}"
+                                   class="btn btn-success btn-lg"
                                    style="color: white;"
                                 >
                                     @lang('common.show')
                                 </a>
                             @else
                                 <h3 class="pallet-1-4-font" style="padding-top: 2rem; padding-bottom: 1rem;">@lang('common.send_graphic_request')</h3>
-                                <a href="#makeAGraphicRequest" 
-                                   id="request-btn" 
-                                   class="btn btn-lg pallet-1-3" 
+                                <a href="#makeAGraphicRequest"
+                                   id="request-btn"
+                                   class="btn btn-lg pallet-1-3"
                                    style="color: white;"
                                    data-toggle="modal"
                                 >
@@ -302,15 +302,16 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal hide" id="makeAnAppointment">
         <div class="modal-content">
             <div class="modal-header">
                 <h3>@lang('common.appointment_reservation')</h3>
                 <button class="close" data-dismiss="modal">×</button>
             </div>
-            <div class="modal-body">         
-                {{ Form::open(['action' => 'AppointmentController@beforeShowCreatePage', 'method' => 'POST']) }}
+            <div class="modal-body">
+                <form action="{{ action([\App\Http\Controllers\AppointmentController::class, 'beforeShowCreatePage']) }}" method="POST">
+                    @csrf
 
                     <div class="form-group">
                         <label name="appointmentTerm" for="appointmentTerm"></label>
@@ -319,14 +320,13 @@
                             <input type="hidden" name="graphicId" value="{{$graphic_id}}"/>
                         @endif
                     </div>
-                 
-                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
 
-                {{ Form::close() }}
+                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
+                </form>
             </div>
         </div>
     </div>
-    
+
     <div id="makeAGraphicRequest" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -334,73 +334,73 @@
                 <button class="close" data-dismiss="modal">×</button>
             </div>
             <div class="modal-body">
-                {{ Form::open(['id' => 'request-form', 'action' => 'BossController@makeAGraphicRequest', 'method' => 'POST', 'novalidate' => true]) }}
+                <form id="request-form" action="{{ action([\App\Http\Controllers\BossController::class, 'makeAGraphicRequest']) }}" method="POST" novalidate>
+                    @csrf
 
-                        <div class="row text-center">
-                            <div class="col-2"></div>
-                            <div class="col-8">
-                                <div class="form-group">
-                                    <legend>
-                                        <label for="start_time" style="padding-left: 9px;">@lang('common.start_time'):</label>
-                                        <br>
-                                        <input class="timepicker" name="start_time" value="{{ Input::old('start_time') }}">
-                                        <div class="warning" style="margin: 6px 0 0 6px;"></div>
-                                    </legend>
-                                </div>
-                                <div class="form-group">
-                                    <legend>
-                                        <label for="end_time" style="padding-left: 9px;">@lang('common.end_time'):</label>
-                                        <br>
-                                        <input class="timepicker" name="end_time" value="{{ Input::old('end_time') }}">
-                                        <div class="warning" style="margin: 6px 0 0 6px;"></div>
-                                    </legend>
-                                </div>
-                                <div id="appointment-quantity-counter"></div>
+                    <div class="row text-center">
+                        <div class="col-2"></div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <legend>
+                                    <label for="start_time" style="padding-left: 9px;">@lang('common.start_time'):</label>
+                                    <br>
+                                    <input class="timepicker" name="start_time" value="{{ old('start_time') }}">
+                                    <div class="warning" style="margin: 6px 0 0 6px;"></div>
+                                </legend>
                             </div>
-                            <div class="col-2"></div>
+                            <div class="form-group">
+                                <legend>
+                                    <label for="end_time" style="padding-left: 9px;">@lang('common.end_time'):</label>
+                                    <br>
+                                    <input class="timepicker" name="end_time" value="{{ old('end_time') }}">
+                                    <div class="warning" style="margin: 6px 0 0 6px;"></div>
+                                </legend>
+                            </div>
+                            <div id="appointment-quantity-counter"></div>
                         </div>
-                
-                        <div class="row text-center">
-                            <div class="col-1"></div>
-                            <div class="col-10">
-                                @if (count($employees) > 0)
-                                    <h4 class="text-center">@lang('common.choose_from_within_our_employees'):</h4>
-                                    <ul id="employees" style="padding: 12px 12px 0 12px;">
-                                        @foreach($employees as $employee)
-                                            @if(count($employees) == 1)
-                                                <li class="form-control text-center" style="background-color: #A1D6AC; margin: 3px;" data-active="true" value="{{$employee->id}}">
-                                                    {{$employee->name}} {{$employee->surname}}
-                                                </li>
-                                            @else
-                                                <li class="form-control" value="{{$employee->id}}" style="margin: 3px;">
-                                                    {{$employee->name}} {{$employee->surname}}
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                    <div id="employees-warning" class="warning" style="margin: 6px 0 0 18px;"></div>
-                                @endif
+                        <div class="col-2"></div>
+                    </div>
 
-                                <div class="form-group">
-                                    <label for="comment" style="padding-left: 21px;">@lang('common.comment'):</label>
-                                    {{ Form::textarea('comment', Input::old('comment'), array('class' => 'form-control')) }}
-                                </div>
-
-                                <input type="hidden" name="day" value="{{$current_day_id}}"/>
-                                @if(count($employees) == 1)
+                    <div class="row text-center">
+                        <div class="col-1"></div>
+                        <div class="col-10">
+                            @if (count($employees) > 0)
+                                <h4 class="text-center">@lang('common.choose_from_within_our_employees'):</h4>
+                                <ul id="employees" style="padding: 12px 12px 0 12px;">
                                     @foreach($employees as $employee)
-                                        <input type="hidden" name="employees[]" value="{{$employee->id}}"/>
+                                        @if(count($employees) == 1)
+                                            <li class="form-control text-center" style="background-color: #A1D6AC; margin: 3px;" data-active="true" value="{{$employee->id}}">
+                                                {{$employee->name}} {{$employee->surname}}
+                                            </li>
+                                        @else
+                                            <li class="form-control" value="{{$employee->id}}" style="margin: 3px;">
+                                                {{$employee->name}} {{$employee->surname}}
+                                            </li>
+                                        @endif
                                     @endforeach
-                                @endif
+                                </ul>
+                                <div id="employees-warning" class="warning" style="margin: 6px 0 0 18px;"></div>
+                            @endif
 
-                                <div class="text-center">
-                                    <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
-                                </div>
+                            <div class="form-group">
+                                <label for="comment" style="padding-left: 21px;">@lang('common.comment'):</label>
+                                <textarea id="comment" name="comment" class="form-control">{{ old('comment') }}</textarea>
                             </div>
-                            <div class="col-1"></div>
-                        </div>                
 
-                {{ Form::close() }}
+                            <input type="hidden" name="day" value="{{$current_day_id}}"/>
+                            @if(count($employees) == 1)
+                                @foreach($employees as $employee)
+                                    <input type="hidden" name="employees[]" value="{{$employee->id}}"/>
+                                @endforeach
+                            @endif
+
+                            <div class="text-center">
+                                <input type="submit" value="@lang('common.go_to_reservation')" class="btn pallet-1-3" style="color: white;">
+                            </div>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

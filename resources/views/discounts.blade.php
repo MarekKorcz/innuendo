@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/welcome.css') !!}
+<link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
     <div class="container-fluid">
         <div class="row jumbotron">

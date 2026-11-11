@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/year_show.css') !!}
-{!! Html::script('js/year_show.js') !!}
+<link rel="stylesheet" href="{{ asset('css/year_show.css') }}">
+<script src="{{ asset('js/year_show.js') }}"></script>
 
 <div class="container">
-    
+
     <div class="row text-center" style="padding-top: 2rem;">
         <div class="col-4">
             @if ($year->property !== null)
@@ -29,9 +29,9 @@
     <div class="text-center">
         <h2>{{ $year->year }}</h2>
     </div>
-    
+
     <hr>
-    
+
     <div class="jumbotron">
         <div class="text-center" style="margin-bottom: 40px;">
             <h2>@lang('common.months'):</h2>
@@ -57,7 +57,7 @@
             </a>
         </div>
     </div>
-    
+
     <div id="deleteYear" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -75,7 +75,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
 </div>
 @endsection

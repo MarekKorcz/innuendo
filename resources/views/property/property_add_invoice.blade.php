@@ -2,7 +2,7 @@
 
 @section('content')
 
-{!! Html::style('css/property_show.css') !!}
+<link rel="stylesheet" href="{{ asset('css/property_show.css') }}">
 
 <div class="container">
 
@@ -13,12 +13,13 @@
             {{$property->name}}
         </h1>
     </div>
-    
+
     <div class="jumbotron">
         <div class="row text-center">
             <div class="col-12">
                 @if ($property->invoiceData !== null)
-                    {{ Form::open(['action' => 'PropertyController@addInvoiceUpdate', 'method' => 'POST', 'enctype' => 'multipart/form-data']) }}
+                    <form action="{{ action([App\Http\Controllers\PropertyController::class, 'addInvoiceUpdate']) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
 
                         <div class="form-group">
                             <label for="month_id">@lang('common.months'):</label>
@@ -36,18 +37,17 @@
                                 @endif
                             </select>
                         </div>
-                            
+
                         <div class="form-group">
-                            {{ Form::file('invoice', null, array('class' => 'form-control')) }}
+                            <input type="file" name="invoice" class="form-control">
                         </div>
 
-                        {{ Form::hidden('property_id', $property->id) }}
+                        <input type="hidden" name="property_id" value="{{ $property->id }}">
 
                         <div class="text-center">
                             <input type="submit" value="@lang('common.add_invoice')" class="btn pallet-2-4" style="color: white;">
-                        </div>                    
-
-                    {{ Form::close() }}
+                        </div>
+                    </form>
                 @else
                     <p>
                         @lang('common.no_invoice_datas')

@@ -1,14 +1,14 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/graphic_request.css') !!}
-{!! Html::script('js/graphic_request_show.js') !!}
+<link rel="stylesheet" href="{{ asset('css/graphic_request.css') }}">
+<script src="{{ asset('js/graphic_request_show.js') }}"></script>
 
     <div class="container">
         <h2 class="text-center" style="padding-top: 2rem;">
-            @lang('common.graphic_request_from'): 
-            {{$graphicRequest->year->year}} 
-            {{$graphicRequest->month->month}} 
+            @lang('common.graphic_request_from'):
+            {{$graphicRequest->year->year}}
+            {{$graphicRequest->month->month}}
             {{$graphicRequest->day->day_number}}
         </h2>
         <p class="text-center">
@@ -38,7 +38,7 @@
                         @endforeach
                     </ul>
                 </div>
-                <p>@lang('common.last_update'): 
+                <p>@lang('common.last_update'):
                     <strong>
                         {{$graphicRequest->updated_at}}
                     </strong>
@@ -88,19 +88,19 @@
             @endforeach
         @endif
         <div class="row" style="margin-top: 2rem;">
-            {{ Form::open(['id' => 'send-message', 'action' => ['AdminController@makeAMessage'], 'method' => 'POST', 'style'=>'width: 100%;']) }}
-                
+            <form id="send-message" action="{{ action([\App\Http\Controllers\AdminController::class, 'makeAMessage']) }}" method="POST" style="width: 100%;">
+                @csrf
+
                 <div class="form-group text-center">
-                    <input type="text" name="text" value="{{ Input::old('text') }}" style="width: 60%;" placeholder="@lang('common.send_a_message')" autocomplete="off">
+                    <input type="text" name="text" value="{{ old('text') }}" style="width: 60%;" placeholder="@lang('common.send_a_message')" autocomplete="off">
                 </div>
-            
-                {{ Form::hidden('graphic_request_id', $graphicRequest->id) }}
-            
+
+                <input type="hidden" name="graphic_request_id" value="{{ $graphicRequest->id }}">
+
                 <div class="text-center">
                     <input type="submit" value="@lang('common.send')" class="btn pallet-2-4" style="color: white;">
                 </div>
-
-            {{ Form::close() }}
+            </form>
         </div>
     </div>
 @endsection

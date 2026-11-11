@@ -1,12 +1,12 @@
 @extends('layouts.app')
 @section('content')
 
-{!! Html::style('css/discount_index.css') !!}
-{!! Html::script('js/discount_index.js') !!}
+<link rel="stylesheet" href="{{ asset('css/discount_index.css') }}">
+<script src="{{ asset('js/discount_index.js') }}"></script>
 
 <div class="container">
     <div style="padding: 2rem 0 2rem 0;">
-        
+
         <div class="row">
             <div class="col-4"></div>
             <div class="col-4"></div>
@@ -16,13 +16,13 @@
                 </a>
             </div>
         </div>
-        
+
         <h1 class="text-center" style="padding-bottom: 1rem;">@lang('common.discounts')</h1>
 
         @if (count($discounts) > 0)
             <table class="table table-striped table-bordered">
                 <thead>
-                    <tr>                
+                    <tr>
                         <td>@lang('common.label')</td>
                         <td>@lang('common.description')</td>
                         <td>@lang('common.worker_threshold')</td>
@@ -69,7 +69,7 @@
             </div>
         @endif
     </div>
-    
+
     <div id="deleteDiscount" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
@@ -87,7 +87,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="background"></div>
 </div>
 @endsection
