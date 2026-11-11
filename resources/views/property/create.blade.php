@@ -1,7 +1,13 @@
 @extends('layouts.app')
 @section('content')
+
+<script src="https://ckeditor.com"></script>
+<script>
+    CKEDITOR.replace('article-ckeditor');
+</script>
+
 <div class="container">
-    
+
     <div class="row text-center" style="padding-top: 1rem;">
         <div class="col-4"></div>
         <div class="col-4">
@@ -15,7 +21,7 @@
     <div class="row" style="padding: 1rem 0 1rem 0;">
         <div class="col-1"></div>
         <div class="col-10">
-            
+
             <div class="text-center">
                 <h1>@lang('common.create_property')</h1>
             </div>
