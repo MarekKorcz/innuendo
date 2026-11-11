@@ -8,21 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class InvoiceData extends Model
 {
     use SoftDeletes;
-    
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'invoice_datas';
-    
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,13 +23,13 @@ class InvoiceData extends Model
      */
     protected $fillable = [
         'company_name',
-        'email', 
-        'phone_number', 
-        'nip', 
-        'bank_name', 
+        'email',
+        'phone_number',
+        'nip',
+        'bank_name',
         'account_number'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -45,10 +38,10 @@ class InvoiceData extends Model
     protected $hidden = [
         'property_id'
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
@@ -56,7 +49,7 @@ class InvoiceData extends Model
         'account_number' => 'integer',
         'property_id' => 'integer'
     ];
-    
+
     /**
      * Get property associated to invoiceData.
      */

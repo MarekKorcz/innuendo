@@ -8,21 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Year extends Model
 {
     use SoftDeletes;
-    
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'years';
-    
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,7 +24,7 @@ class Year extends Model
     protected $fillable = [
         'year'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -40,17 +33,17 @@ class Year extends Model
     protected $hidden = [
         'property_id'
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
         'year' => 'integer',
         'property_id' => 'integer'
     ];
-    
+
     /**
      * Get property that owns year.
      */
@@ -58,9 +51,9 @@ class Year extends Model
     {
         return $this->belongsTo('App\Property');
     }
-    
-    
-    
+
+
+
     /**
      * Get months associated with year.
      */

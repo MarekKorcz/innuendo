@@ -8,34 +8,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Item extends Model
 {
     use SoftDeletes;
-    
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'items';
-    
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 
-        'slug', 
-        'minutes', 
-        'description', 
+        'name',
+        'slug',
+        'minutes',
+        'description',
         'price'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -44,17 +37,17 @@ class Item extends Model
     protected $hidden = [
         'category_id'
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
         'price' => 'decimal:2',
         'category_id' => 'integer'
     ];
-    
+
     /**
      * Get the category that owns the item.
      */

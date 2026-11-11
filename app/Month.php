@@ -8,33 +8,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Month extends Model
 {
     use SoftDeletes;
-    
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'months';
-    
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'month', 
-        'month_en', 
-        'month_number', 
+        'month',
+        'month_en',
+        'month_number',
         'days_in_month'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -43,10 +36,10 @@ class Month extends Model
     protected $hidden = [
         'year_id'
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
@@ -54,7 +47,7 @@ class Month extends Model
         'days_in_month' => 'integer',
         'year_id' => 'integer'
     ];
-    
+
     /**
      * Get year that owns month.
      */
@@ -62,9 +55,9 @@ class Month extends Model
     {
         return $this->belongsTo('App\Year');
     }
-    
-    
-    
+
+
+
     /**
      * Get days associated with month.
      */
@@ -72,7 +65,7 @@ class Month extends Model
     {
         return $this->hasMany('App\Day');
     }
-    
+
     /**
      * Get invoices associated with month.
      */

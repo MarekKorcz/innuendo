@@ -8,14 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Invoice extends Model
 {
     use SoftDeletes;
-        
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,7 +17,7 @@ class Invoice extends Model
     protected $fillable = [
         'invoice'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -34,17 +27,17 @@ class Invoice extends Model
         'property_id',
         'month_id',
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
         'property_id' => 'integer',
         'month_id' => 'integer'
     ];
-    
+
     /**
      * Get property associated to invoice.
      */
@@ -52,7 +45,7 @@ class Invoice extends Model
     {
         return $this->belongsTo('App\Property');
     }
-    
+
     /**
      * Get month associated to invoice.
      */

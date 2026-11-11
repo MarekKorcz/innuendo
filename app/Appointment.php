@@ -8,48 +8,41 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Appointment extends Model
 {
     use SoftDeletes;
-    
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'appointments';
-    
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'start_time', 
-        'end_time', 
-        'minutes', 
+        'start_time',
+        'end_time',
+        'minutes',
         'status'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden = [
-        'graphic_id', 
-        'day_id', 
-        'item_id', 
+        'graphic_id',
+        'day_id',
+        'item_id',
         'user_id'
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
@@ -62,7 +55,7 @@ class Appointment extends Model
         'item_id' => 'integer',
         'user_id' => 'integer'
     ];
-    
+
     /**
      * Get graphic that owns the appointment.
      */
@@ -70,15 +63,15 @@ class Appointment extends Model
     {
         return $this->belongsTo('App\Graphic');
     }
-    
+
     /**
      * Get day that owns the appointment.
      */
     public function day()
     {
         return $this->belongsTo('App\Day');
-    }    
-    
+    }
+
     /**
      * Get item that owns the appointment.
      */
@@ -86,7 +79,7 @@ class Appointment extends Model
     {
         return $this->belongsTo('App\Item');
     }
-    
+
     /**
      * Get user that owns appointment.
      */

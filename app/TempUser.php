@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TempUser extends Model
 {
     use SoftDeletes;
-    
+
     /**
      * The table associated with the model.
      *
@@ -17,25 +17,18 @@ class TempUser extends Model
     protected $table = 'temp_users';
 
     /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-    
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 
-        'surname', 
-        'email', 
-        'phone_number', 
+        'name',
+        'surname',
+        'email',
+        'phone_number',
         'register_code'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -45,10 +38,10 @@ class TempUser extends Model
         'isBoss',
         'isEmployee'
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
@@ -56,9 +49,9 @@ class TempUser extends Model
         'isBoss' => 'boolean',
         'isEmployee' => 'boolean'
     ];
-    
-    
-    
+
+
+
     /**
      * Get temporary property associated with temporary user.
      */
