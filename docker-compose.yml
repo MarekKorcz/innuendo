@@ -1,0 +1,48 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel-legacy-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - laravel-net
+
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: legacy_laravel
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: secret_password
+      MYSQL_USER: laravel_user
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - laravel-net
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    networks:
+      - laravel-net
+
+networks:
+  laravel-net:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

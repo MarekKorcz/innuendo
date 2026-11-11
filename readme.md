@@ -1,4 +1,4 @@
-To run this old poop:
+To run this old poop locally:
 
 clone it
 
@@ -16,4 +16,21 @@ php7.3 composer.phar update laravel/framework --with-dependencies
 
 php7.3 artisan key:generate
 
-after that, "php artisan" should work
+after that, "php artisan" should work locally
+
+
+
+
+To run with Docker:
+
+docker compose up -d --build
+
+docker compose exec app composer install
+
+docker compose exec app php artisan migrate --seed
+
+
+
+To delete everything from Docker:
+
+docker compose down --volumes --rmi all
