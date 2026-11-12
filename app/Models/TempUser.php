@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TempProperty extends Model
+class TempUser extends Model
 {
     use SoftDeletes;
 
@@ -14,7 +14,7 @@ class TempProperty extends Model
      *
      * @var string
      */
-    protected $table = 'temp_properties';
+    protected $table = 'temp_users';
 
     /**
      * The attributes that are mass assignable.
@@ -23,11 +23,10 @@ class TempProperty extends Model
      */
     protected $fillable = [
         'name',
-        'slug',
-        'street',
-        'street_number',
-        'house_number',
-        'city'
+        'surname',
+        'email',
+        'phone_number',
+        'register_code'
     ];
 
     /**
@@ -36,7 +35,8 @@ class TempProperty extends Model
      * @var array
      */
     protected $hidden = [
-        'boss_id'
+        'isBoss',
+        'isEmployee'
     ];
 
     /**
@@ -45,14 +45,18 @@ class TempProperty extends Model
      * @var array
      */
     protected $casts = [
-        'boss_id' => 'integer'
+        'phone_number' => 'integer',
+        'isBoss' => 'boolean',
+        'isEmployee' => 'boolean'
     ];
 
+
+
     /**
-     * Get temporary user which owns property.
+     * Get temporary property associated with temporary user.
      */
-    public function tempUser()
+    public function tempProperty()
     {
-        return $this->belongsTo('App\TempUser');
+        return $this->hasOne('TempProperty');
     }
 }

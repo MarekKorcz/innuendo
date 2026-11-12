@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Message;
+use App\Models\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,7 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class ContactMessageCreate extends Mailable
 {
     use Queueable, SerializesModels;
-    
+
     public $message;
     public $loginUrl;
 

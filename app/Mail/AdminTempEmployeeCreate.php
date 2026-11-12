@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\TempUser;
+use App\Models\TempUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -11,7 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class AdminTempEmployeeCreate extends Mailable
 {
     use Queueable, SerializesModels;
-    
+
     public $employee;
     public $tempEmployeeRegisterAddress;
 
@@ -23,14 +23,14 @@ class AdminTempEmployeeCreate extends Mailable
     public function __construct(TempUser $employee)
     {
         $this->employee = $employee;
-        
+
         if ($this->employee !== null)
         {
             $this->tempEmployeeRegisterAddress = route('tempEmployeeRegisterAddress', [
                 'code' => $this->employee->register_code
             ]);
         }
-        
+
         $this->subject(
             \Lang::get('common.register_1st_step') .
             config('app.name') . ' ' . config('app.name_2nd_part')

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,18 +12,18 @@ class PromoCode extends Model
      * @var string
      */
     protected $table = 'promo_codes';
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'code', 
-        'activation_time', 
+        'code',
+        'activation_time',
         'is_active'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -33,40 +33,40 @@ class PromoCode extends Model
         'promo_id',
         'boss_id'
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
         'promo_id' => 'integer',
         'boss_id' => 'integer'
     ];
-    
+
     /**
      * Get promo code associated to promo.
      */
     public function promo()
     {
-        return $this->belongsTo('App\Promo');
+        return $this->belongsTo('Promo');
     }
-    
+
     /**
      * Get boss who owns this code.
      */
     public function boss()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('User');
     }
-    
-    
-    
+
+
+
     /**
      * Get messages which belongs to promoCode.
      */
     public function messages()
     {
-        return $this->hasMany('App\Message');
+        return $this->hasMany('Message');
     }
 }

@@ -1,13 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Property extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     /**
      * The table associated with the model.
@@ -55,7 +56,7 @@ class Property extends Model
      */
     public function boss()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('User');
     }
 
 
@@ -65,7 +66,7 @@ class Property extends Model
      */
     public function invoiceData()
     {
-        return $this->hasOne('App\InvoiceData');
+        return $this->hasOne('InvoiceData');
     }
 
     /**
@@ -73,7 +74,7 @@ class Property extends Model
      */
     public function invoices()
     {
-        return $this->hasMany('App\Invoice');
+        return $this->hasMany('Invoice');
     }
 
     /**
@@ -81,7 +82,7 @@ class Property extends Model
      */
     public function graphicRequests()
     {
-        return $this->hasMany('App\GraphicRequest');
+        return $this->hasMany('GraphicRequest');
     }
 
     /**
@@ -89,7 +90,7 @@ class Property extends Model
      */
     public function years()
     {
-        return $this->hasMany('App\Year');
+        return $this->hasMany('Year');
     }
 
     /**
@@ -97,6 +98,6 @@ class Property extends Model
      */
     public function graphics()
     {
-        return $this->hasMany('App\Graphic');
+        return $this->hasMany('Graphic');
     }
 }

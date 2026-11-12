@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Year;
-use App\Month;
-use App\Day;
+use App\Models\Year;
+use App\Models\Month;
+use App\Models\Day;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -30,7 +30,7 @@ class MonthController extends Controller
     public function create($id)
     {
         $year = Year::where('id', $id)->first();
-        
+
         return view('month.create')->with('year', $year);
     }
 
@@ -52,9 +52,9 @@ class MonthController extends Controller
             return Redirect::to('month/create')
                 ->withErrors($validator);
         } else {
-            
+
             $year = Year::where('id', Input::get('year_id'))->first();
-            
+
             if ($year !== null)
             {
                 $yearNumber = $year->year;
@@ -62,7 +62,7 @@ class MonthController extends Controller
                 $yearMonth = $yearNumber . "-" . $monthNumber;
                 $currentMonth = new \DateTime($yearMonth . "-01");
                 $numberInMonth = $currentMonth->format("t");
-                
+
                 $month = Month::where([
                     'month' => Input::get('month'),
                     'month_en' => Input::get('month_en'),
@@ -70,7 +70,7 @@ class MonthController extends Controller
                     'days_in_month' => $numberInMonth,
                     'year_id' => Input::get('year_id')
                 ])->first();
-                
+
                 if ($month == null)
                 {
                     $month = new Month();
@@ -97,17 +97,17 @@ class MonthController extends Controller
      * @return Response
      */
     public function show($id)
-    {        
+    {
         $month = Month::where('id', $id)->first();
         $days = Day::where('month_id', $month->id)->orderBy('day_number')->get();
-        
+
         if ($month)
         {
             $year = Year::where('id', $month->year_id)->first();
         }
-        
+
         $days = $this->formatDaysToCalendarForm($days, $month->days_in_month);
-        
+
         return view('month.show')->with([
             'month' => $month,
             'days' => $days,
@@ -124,11 +124,11 @@ class MonthController extends Controller
     public function destroy($id)
     {
         $month = Month::where('id', $id)->with('days')->first();
-        
+
         if ($month !== null)
         {
             $year = Year::where('id', $month->year_id)->first();
-            
+
             if (count($month->days) > 0)
             {
                 foreach ($month->days as $day)
@@ -136,7 +136,7 @@ class MonthController extends Controller
                     $day->delete();
                 }
             }
-            
+
             $month->delete();
 
             return redirect()->action(
@@ -144,20 +144,20 @@ class MonthController extends Controller
                     'id' => $year->id
             ])->with('success', 'Month has been successfully deleted!');
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Such month doesn\'t exist');
     }
-    
-    private function formatDaysToCalendarForm($days, $daysInMonth) 
+
+    private function formatDaysToCalendarForm($days, $daysInMonth)
     {
         $daysArray = [];
-        
+
         for ($i = 0; $i < count($days); $i++)
         {
             if ($i == 0)
             {
                 $monthStart = $days[$i]->number_in_week;
-                
+
                 if ($monthStart != 1)
                 {
                     for ($j = 1; $j < $monthStart; $j++)
@@ -165,9 +165,9 @@ class MonthController extends Controller
                         $daysArray[] = [];
                     }
                 }
-                
+
                 $daysArray[] = $days[$i];
-                
+
                 if ($monthStart == 6)
                 {
                     $daysArray[] = [];
@@ -176,14 +176,14 @@ class MonthController extends Controller
             else
             {
                 $daysArray[] = $days[$i];
-                
+
                 if ($days[$i]->number_in_week == 6)
                 {
                     $daysArray[] = [];
                 }
             }
         }
-        
+
         return $daysArray;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Discount;
+use App\Models\Discount;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -23,9 +23,9 @@ class DiscountController extends Controller
     {
         return view('discount.create');
     }
-    
+
     public function store()
-    {        
+    {
         $rules = array(
             'name'             => 'required',
             'name_en'          => 'required',
@@ -40,7 +40,7 @@ class DiscountController extends Controller
             return Redirect::to('admin/discount/create')
                 ->withErrors($validator);
         } else {
-            
+
             $discount = new Discount();
             $discount->name             = Input::get('name');
             $discount->name_en          = Input::get('name_en');
@@ -54,25 +54,25 @@ class DiscountController extends Controller
             return redirect('admin/discount/index')->with('success', 'Discount successfully created!');
         }
     }
-    
+
     public function index()
     {
         return view('discount.index')->with([
             'discounts' => Discount::where('id', '!=', null)->get()
         ]);
     }
-    
+
     public function destroy($id)
     {
         $discount = Discount::where('id', $id)->first();
-        
+
         if ($discount !== null)
         {
             $discount->delete();
-        
+
             return redirect('/admin/discount/index')->with('success', 'Discount deleted!');
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Such discount doesn\'t exist');
     }
 }

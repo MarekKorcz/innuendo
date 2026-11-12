@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Graphic;
-use App\Property;
-use App\User;
-use App\Year;
-use App\Month;
-use App\Day;
-use App\Appointment;
+use App\Models\Graphic;
+use App\Models\Property;
+use App\Models\User;
+use App\Models\Year;
+use App\Models\Month;
+use App\Models\Day;
+use App\Models\Appointment;
 use App\Mail\AppointmentDestroy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
-{    
+{
     /**
      * Create a new controller instance.
      *
@@ -24,11 +24,11 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except([
-//            'employeesList', 
+//            'employeesList',
 //            'employee'
         ]);
     }
-    
+
     /**
      * Shows employees.
      *
@@ -37,7 +37,7 @@ class UserController extends Controller
     public function employeesList()
     {
         $employees = User::where('isEmployee', 1)->get();
-        
+
         if ($employees !== null)
         {
             $employeesArray = [];
@@ -49,10 +49,10 @@ class UserController extends Controller
 
             return view('employee.index')->with('employees', $employeesArray);
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     /**
      * Shows employee.
      *
@@ -65,27 +65,27 @@ class UserController extends Controller
             'isEmployee' => 1,
             'slug' => $slug
         ])->with('graphics.property')->first();
-        
+
         if ($employee !== null)
         {
             $employeeCreatedAt = $employee->created_at->format('d.m.Y');
             $user = auth()->user();
             $bossId = null;
-        
-            if ($user->isBoss) 
-            {    
+
+            if ($user->isBoss)
+            {
                 $bossId = $user->id;
 
             } else if ($user->boss_id !== null) {
 
                 $bossId = $user->boss_id;
             }
-            
+
             $employeeBossGraphicProperties = new Collection();
-            
+
             if (count($employee->graphics) > 0)
             {
-                $employee->graphics->each(function($item) use ($employeeBossGraphicProperties, $bossId, $user) 
+                $employee->graphics->each(function($item) use ($employeeBossGraphicProperties, $bossId, $user)
                 {
                     if (!$employeeBossGraphicProperties->contains('id', $item->property->id))
                     {
@@ -111,10 +111,10 @@ class UserController extends Controller
                 'user' => $user
             ]);
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     /**
      * Shows properties.
      *
@@ -125,7 +125,7 @@ class UserController extends Controller
         $bossId = 0;
         $user = auth()->user();
         $bossProperties = new Collection();
-        
+
         if ($user !== null)
         {
             if ($user->boss_id !== null)
@@ -142,7 +142,7 @@ class UserController extends Controller
                 $bossProperties = Property::where('boss_id', $bossId)->get();
             }
         }
-        
+
         if (count($bossProperties) == 1)
         {
             if ($user->isBoss)
@@ -155,9 +155,9 @@ class UserController extends Controller
                         'day_number' => 0,
                     ]
                 );
-                
+
             } else if ($user->boss_id !== null) {
-                
+
                 return redirect()->action(
                     'UserController@calendar', [
                         'property_id' => $bossProperties->first()->id,
@@ -173,15 +173,15 @@ class UserController extends Controller
             'properties' => $bossProperties
         ]);
     }
-    
+
     /**
      * Shows calendar that belongs to employee.
-     * 
+     *
      * @param integer $property_id
      * @param integer $year
      * @param integer $month_number
      * @param integer $day_number
-     * 
+     *
      * @return type
      * @throws Exception
      */
@@ -189,36 +189,36 @@ class UserController extends Controller
     {
         $user = auth()->user();
         $properties = $user->getBossProperties();
-        
+
         $property = null;
-        
+
         if (count($properties) > 0)
         {
-            $property = $properties->first(function ($item) use ($property_id) 
+            $property = $properties->first(function ($item) use ($property_id)
             {
                 return $item->id == $property_id;
             });
         }
-        
+
         if ($property !== null)
         {
             $currentDate = new \DateTime();
-            
+
             if ($year == 0)
             {
                 $year = Year::where([
                     'property_id' => $property->id,
                     'year' => $currentDate->format("Y")
                 ])->first();
-                
+
             } else if (is_numeric($year) && (int)$year > 0) {
-                
+
                 $year = Year::where([
                     'property_id' => $property->id,
                     'year' => $year
                 ])->first();
             }
-            
+
             if ($year !== null)
             {
                 if ($month_number == 0)
@@ -227,9 +227,9 @@ class UserController extends Controller
                         'year_id' => $year->id,
                         'month_number' => $currentDate->format("n")
                     ])->first();
-                    
+
                 } else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12) {
-                    
+
                     $month = Month::where([
                         'year_id' => $year->id,
                         'month_number' => $month_number
@@ -239,7 +239,7 @@ class UserController extends Controller
                 if ($month !== null)
                 {
                     $days = Day::where('month_id', $month->id)->get();
-                    
+
                     if (count($days) > 0)
                     {
                         $days = $this->formatDaysToUserCalendarForm($days, $month->days_in_month);
@@ -250,46 +250,46 @@ class UserController extends Controller
                                 'month_id' => $month->id,
                                 'day_number' => $currentDate->format("d")
                             ])->first();
-                            
+
                         } else {
-                            
+
                             $currentDay = Day::where([
                                 'month_id' => $month->id,
                                 'day_number' => $day_number
                             ])->first();
                         }
-                        
+
                         if ($currentDay !== null)
                         {
                             $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
                             $graphicTimes = Graphic::where('day_id', $currentDay->id)->with('employee')->get();
-                            
+
                             $chosenDay = $currentDay;
                             $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
                             $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
-                            
+
                         } else {
-                            
+
                             $graphic = [];
                             $graphicTime = null;
                             $graphicTimes = null;
                         }
-                        
-                        
+
+
                         $availablePreviousMonth = false;
 
                         if ($this->checkIfPreviewMonthIsAvailable($property, $year, $month))
                         {
                             $availablePreviousMonth = true;
                         }
-                        
+
                         $availableNextMonth = false;
 
                         if ($this->checkIfNextMonthIsAvailable($property, $year, $month))
                         {
                             $availableNextMonth = true;
                         }
-                        
+
                         return view('user.calendar')->with([
                             'property' => $property,
                             'availablePreviousMonth' => $availablePreviousMonth,
@@ -303,46 +303,46 @@ class UserController extends Controller
                             'graphic_id' => $graphicTime !== null ? $graphicTime->id : null,
                             'graphicTimesEntites' => $graphicTimes
                         ]);
-                        
+
                     } else {
-                        
+
                         $message = 'Brak otwartego grafiku na ten dzień';
                     }
-                    
+
                 } else {
-                    
+
                     $message = 'Brak otwartego grafiku na ten miesiąc';
                 }
-                
+
             } else {
-                
+
                 $message = 'Brak otwartego kalendarza na ten rok';
             }
-            
+
             return redirect()->action(
                 'UserController@propertiesList'
             )->with('error', $message);
-            
+
         } else {
-            
+
             $message = 'Niepoprawny numer id';
         }
-        
+
         return redirect()->route('welcome')->with('error', $message);
     }
-    
+
     public function getEmployeeGraphic(Request $request)
     {
         if ($request->get('graphicId') && $request->get('currentDayId'))
         {
             $graphic = Graphic::where('id', $request->get('graphicId'))->first();
             $day = Day::where('id', $request->get('currentDayId'))->with('month.year')->first();
-            
+
             if ($graphic !== null && $day !== null)
             {
                 $chosenDayDateTime = new \DateTime($day->month->year->year . "-" . $day->month->month_number . "-" . $day->day_number);
                 $graphicArray = $this->formatGraphicAndAppointments($graphic, $day, $chosenDayDateTime);
-                
+
                 foreach ($graphicArray as $key => $graphArr)
                 {
                     if ($graphArr['appointment'] !== null)
@@ -351,11 +351,11 @@ class UserController extends Controller
                         $graphicArray[$key]['ownAppointmentHref'] = route('appointmentShow', [
                             'id' => $graphArr['appointment']->id
                         ]);
-                        
+
                         unset($graphicArray[$key]['appointment']);
                     }
                 }
-                
+
                 return new JsonResponse([
                     'type' => 'success',
                     'graphic' => $graphicArray,
@@ -367,15 +367,15 @@ class UserController extends Controller
                 ], 200, array(), true);
             }
         }
-        
+
         return new JsonResponse(array(
-            'type'    => 'error'        
+            'type'    => 'error'
         ));
     }
-    
+
     /**
      * Shows an appointment assigned to current user.
-     * 
+     *
      * @param type $id
      * @return type
      */
@@ -389,12 +389,12 @@ class UserController extends Controller
             'day.month.year.property',
             'graphic.employee'
         ])->first();
-        
+
         if ($appointment !== null)
         {
             $now = new \DateTime(date('Y-m-d H:i:s'));
-            
-            // appointment date                           
+
+            // appointment date
             $appointmentDay = (string)$appointment->day->day_number;
             $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
             $appointmentMonth = (string)$appointment->day->month->month_number;
@@ -413,34 +413,34 @@ class UserController extends Controller
                 'user' => auth()->user()
             ]);
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     /**
      * Shows a list of appointments assigned to current user.
-     * 
+     *
      * @return type
      */
     public function appointmentIndex()
     {
         $user = auth()->user();
-        
+
 //        $user->load('properties');
 //        $properties = $user->properties;
-//        
+//
 //        if (count($properties) == 0)
 //        {
 //            $properties = $user->getBossProperties();
 //        }
-        
+
         $appointments = Appointment::where('user_id', $user->id)->with([
             'item',
             'day.month.year.property',
             'graphic.employee',
             'user'
         ])->get();
-            
+
         if (count($appointments) > 0)
         {
             foreach ($appointments as $appointment)
@@ -450,33 +450,33 @@ class UserController extends Controller
                 $appointment['month_en'] = $appointment->day->month->month_en;
                 $appointment['month_number'] = $appointment->day->month->month_number;
                 $appointment['day_number'] = $appointment->day->day_number;
-                
-                // appointment date                           
+
+                // appointment date
                 $appointmentDay = (string)$appointment['day_number'];
                 $appointmentDay = strlen($appointmentDay) == 1 ? '0' . $appointmentDay : $appointmentDay;
                 $appointmentMonth = (string)$appointment['month_number'];
                 $appointmentMonth = strlen($appointmentMonth) == 1 ? '0' . $appointmentMonth : $appointmentMonth;
                 $appointment['date_time'] = new \DateTime($appointment['year'] . '-' . $appointmentMonth . '-' . $appointmentDay . ' ' . $appointment->start_time);
                 $appointment['date_timestamps'] = strtotime($appointment['date_time']->format('Y-m-d H:i:s'));
-                
+
                 $appointment['date'] = $appointment['day_number'] . ' ' . $appointment['month'] . ' ' . $appointment['year'];
                 $appointment['date_en'] = $appointment['day_number'] . ' ' . $appointment['month_en'] . ' ' . $appointment['year'];
-                
+
                 $appointment['property'] = $appointment->day->month->year->property;
                 $appointment['address'] = $appointment['property']->street . ' ' . $appointment['property']->street_number . '/' . $appointment['property']->house_number . ', ' . $appointment['property']->city;
-                
+
                 $employee = $appointment->graphic->employee;
                 $appointment['employee_name'] = $employee->name . " " . $employee->surname;
                 $appointment['employee_slug'] = $employee->slug;
-            }            
+            }
         }
-        
+
         return view('user.appointment_index')->with([
             'appointments' => $appointments->sortByDesc('date_timestamps'),
             'user' => $user
         ]);
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -484,18 +484,18 @@ class UserController extends Controller
      * @return Response
      */
     public function appointmentDestroy($id)
-    {        
+    {
         $user = auth()->user();
         $appointment = Appointment::where('id', $id)->with([
             'user'
         ])->first();
-        
+
         if ($appointment !== null && $appointment->user->id == $user->id || $user->isAdmin || $user->isEmployee)
-        {            
+        {
             if ($appointment->status !== 1)
             {
                 $appointment->delete();
-                
+
                 if ($user->id == $appointment->user->id)
                 {
                     \Mail::to($user)->send(new AppointmentDestroy($user, $appointment));
@@ -503,32 +503,32 @@ class UserController extends Controller
                     return redirect()->action(
                         'UserController@appointmentIndex'
                     )->with('success', 'Wizyta została usunięta!');
-                    
+
                 } else {
-                    
+
                     return redirect()->action(
                         'WorkerController@backendAppointmentIndex', [
                             'id' => $appointment->user->id
                     ])->with('success', 'Wizyta została usunięta!');
                 }
             }
-            
+
             return redirect()->route('welcome')->with('error', 'Nie można usunąć już wykonanej wizyty');
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Wizyta o podanym id nie istnieje');
     }
 
-    private function formatDaysToUserCalendarForm($days, $daysInMonth) 
-    {        
+    private function formatDaysToUserCalendarForm($days, $daysInMonth)
+    {
         $daysArray = [];
-        
+
         for ($i = 0; $i < count($days); $i++)
         {
             if ($i == 0)
             {
                 $monthStart = $days[$i]->number_in_week;
-                
+
                 if ($monthStart != 1)
                 {
                     for ($j = 1; $j < $monthStart; $j++)
@@ -537,50 +537,50 @@ class UserController extends Controller
                     }
                 }
             }
-            
+
             $dayGraphicCount = Graphic::where('day_id', $days[$i]->id)->get();
             $days[$i]['dayGraphicCount'] = count($dayGraphicCount);
-            
+
             $daysArray[] = $days[$i];
         }
-        
+
         return $daysArray;
     }
-    
-    private function formatGraphicAndAppointments($graphicTime, $chosenDay, $chosenDayDateTime) 
+
+    private function formatGraphicAndAppointments($graphicTime, $chosenDay, $chosenDayDateTime)
     {
         $graphic = [];
         $user = auth()->user();
-        
+
         if ($graphicTime !== null)
         {
             $timeZone = new \DateTimeZone("Europe/Warsaw");
             $now = new \DateTime(null, $timeZone);
-                        
+
             $workUnits = ($graphicTime->total_time / 20);
             $startTime = date('G:i', strtotime($graphicTime->start_time));
-                        
-            for ($i = 0; $i < $workUnits; $i++) 
-            {     
+
+            for ($i = 0; $i < $workUnits; $i++)
+            {
                 $appointmentId = 0;
                 $ownAppointment = false;
-                
+
                 $explodedStartTime = explode(":", $startTime);
                 $chosenDayDateTime->setTime($explodedStartTime[0], $explodedStartTime[1], 0);
-                
+
                 $appointment = Appointment::where([
                     'day_id' => $chosenDay->id,
                     'graphic_id' => $graphicTime->id,
                     'start_time' => $startTime
                 ])->with('user')->first();
-                
+
                 if ($appointment !== null)
                 {
                     $appointmentId = $appointment->id;
                     $ownAppointment = $appointment->user_id == $user->id ? true : false;
-                    
+
                     $limit = $appointment->minutes / 20;
-                    
+
                     if ($limit > 1)
                     {
                         $time = array($startTime);
@@ -590,12 +590,12 @@ class UserController extends Controller
                             $time[] = date('G:i', strtotime("+20 minutes", strtotime($time[count($time) - 1])));
                             $workUnits -= 1;
                         }
-                        
+
                     } else {
-                        
+
                         $time = $startTime;
                     }
-                    
+
                     $graphic[] = [
                         'time' => $time,
                         'appointment' => $appointment,
@@ -604,12 +604,12 @@ class UserController extends Controller
                         'ownAppointment' => $ownAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
-                    
+
                     $timeIncrementedByAppointmentMinutes = strtotime($appointment->end_time, strtotime($startTime));
                     $startTime = date('G:i', $timeIncrementedByAppointmentMinutes);
-                    
+
                 } else {
-                    
+
                     $graphic[] = [
                         'time' => $startTime,
                         'appointment' => null,
@@ -618,16 +618,16 @@ class UserController extends Controller
                         'ownAppointment' => $ownAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
-                    
+
                     $timeIncrementedBy20Minutes = strtotime("+20 minutes", strtotime($startTime));
                     $startTime = date('G:i', $timeIncrementedBy20Minutes);
                 }
-            }         
+            }
         }
-        
+
         return $graphic;
     }
-    
+
     private function checkIfPreviewMonthIsAvailable($property, $year, $month)
     {
         if ($month->month_number == 1)
@@ -636,40 +636,40 @@ class UserController extends Controller
                 'property_id' => $property->id,
                 'year' => ($year->year - 1)
             ])->first();
-            
+
             if ($year === null)
             {
                 return false;
-                
+
             } else {
-                
+
                 $month = Month::where([
                     'year_id' => $year->id,
                     'month_number' => 12
                 ])->first();
-                
-                if ($month === null) 
+
+                if ($month === null)
                 {
                     return false;
                 }
             }
-            
+
         } else {
-            
+
             $month = Month::where([
                 'year_id' => $year->id,
                 'month_number' => ($month->month_number - 1)
             ])->first();
-                
-            if ($month === null) 
+
+            if ($month === null)
             {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     private function checkIfNextMonthIsAvailable($property, $year, $month)
     {
         if ($month->month_number == 12)
@@ -678,37 +678,37 @@ class UserController extends Controller
                 'property_id' => $property->id,
                 'year' => ($year->year + 1)
             ])->first();
-            
+
             if ($year === null)
             {
                 return false;
-                
+
             } else {
-                
+
                 $month = Month::where([
                     'year_id' => $year->id,
                     'month_number' => 1
                 ])->first();
-                
-                if ($month === null) 
+
+                if ($month === null)
                 {
                     return false;
                 }
             }
-            
+
         } else {
-            
+
             $month = Month::where([
                 'year_id' => $year->id,
                 'month_number' => ($month->month_number + 1)
             ])->first();
-                
-            if ($month === null) 
+
+            if ($month === null)
             {
                 return false;
             }
         }
-        
+
         return true;
     }
 }

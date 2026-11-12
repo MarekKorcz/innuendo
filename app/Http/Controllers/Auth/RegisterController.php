@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
-use App\TempUser;
-use App\Property;
-use App\TempProperty;
-use App\Year;
-use App\Month;
-use App\Day;
-use App\Code;
-use App\PromoCode;
-use App\Message;
+use App\Models\User;
+use App\Models\TempUser;
+use App\Models\Property;
+use App\Models\TempProperty;
+use App\Models\Year;
+use App\Models\Month;
+use App\Models\Day;
+use App\Models\Code;
+use App\Models\PromoCode;
+use App\Models\Message;
 use App\Mail\AdminTempBossCreate2ndStep;
 use App\Mail\AdminTempEmployeeCreate2ndStep;
 use App\Mail\UserCreateWithPromoCode;
@@ -79,16 +79,16 @@ class RegisterController extends Controller
      * Create boss worker with code.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return \App\Models\User
      */
     protected function create(array $data)
-    {        
+    {
         $code = Code::where('code', htmlentities($data['code'], ENT_QUOTES, "UTF-8"))->with('boss')->first();
-        
+
         if ($code !== null)
         {
             $boss = $code->boss;
-            
+
             $user = new User();
             $user->name = $data['name'];
             $user->surname = $data['surname'];
@@ -97,24 +97,24 @@ class RegisterController extends Controller
             $user->password = Hash::make($data['password']);
             $user->boss_id = $boss->id;
             $user->save();
-            
+
             \Mail::to($user)->send(new UserCreateWithPromoCode($user, $boss));
-            
+
             return $user;
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Rejestracja nie powiodła się');
     }
-    
+
     /**
      * Creates a view to create boss from TempUser
-     * 
+     *
      * @param type $code
      */
     public function tempUserBossRegistrationCreate($code)
-    {     
+    {
         $bossRegisterCode = htmlentities($code, ENT_QUOTES, "UTF-8");
-        
+
         if ($bossRegisterCode !== null)
         {
             $boss = TempUser::where('register_code', $bossRegisterCode)->first();
@@ -133,10 +133,10 @@ class RegisterController extends Controller
                 }
             }
         }
-        
+
         return redirect()->route('login');
-    } 
-    
+    }
+
     /**
      * Handle storing boss made from TempUser
      */
@@ -159,16 +159,16 @@ class RegisterController extends Controller
             return Redirect::to('temp-boss/register/' . Input::get('register_code'))
                 ->withErrors($validator);
         } else {
-            
+
             $tempBossEntity = TempUser::where([
                 'register_code' => Input::get('register_code'),
                 'isBoss' => 1
             ])->first();
-            
+
             $tempBossPropertyEntity = TempProperty::where('temp_user_id', $tempBossEntity->id)->first();
-            
+
             if ($tempBossEntity !== null && $tempBossPropertyEntity !== null)
-            {            
+            {
                 $boss = new User();
                 $boss->name = Input::get('name');
                 $boss->surname = Input::get('surname');
@@ -191,7 +191,7 @@ class RegisterController extends Controller
                     $property->save();
 
                     if ($property !== null)
-                    {                        
+                    {
                         // delete temporary entities
                         $tempBossEntity->delete();
                         $tempBossPropertyEntity->delete();
@@ -203,23 +203,23 @@ class RegisterController extends Controller
                         auth()->login($boss);
 
                         return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją zostały stworzone!');
-                        
+
                     } else {
 
                         $boss->delete();
                     }
                 }
-                
+
                 return redirect('/temp-boss/register')->with([
                     'error' => 'Coś poszło nie tak',
                     'code' => Input::get('register_code')
                 ]);
             }
-            
+
             return redirect()->route('welcome');
         }
     }
-    
+
     /**
      * Handle storing new boss with promo code
      */
@@ -244,23 +244,23 @@ class RegisterController extends Controller
             return Redirect::to('/register')
                 ->withErrors($validator);
         } else {
-            
+
             $promoCode = PromoCode::where([
                 'code' => Input::get('code'),
                 'is_active' => 0
             ])->with([
                 'promo'
             ])->first();
-            
+
             if ($promoCode !== null)
-            {                
+            {
                 if ($promoCode->promo->is_active == 0 || $promoCode->promo->available_code_count <= 0 || $promoCode->is_active !== 0)
                 {
                     return redirect('/register')->with([
                         'error' => 'Przepraszamy, czas promocji dobiegł końca!'
                     ]);
                 }
-                
+
                 $boss = new User();
                 $boss->name = Input::get('name');
                 $boss->surname = Input::get('surname');
@@ -272,7 +272,7 @@ class RegisterController extends Controller
                 $boss->save();
 
                 if ($boss !== null)
-                {     
+                {
                     $bossProperty = new Property();
                     $bossProperty->name = Input::get('property_name');
                     $bossProperty->slug = str_slug(Input::get('property_name'));
@@ -286,34 +286,34 @@ class RegisterController extends Controller
                     if ($bossProperty !== null)
                     {
                         $this->addCalendarToPropery($bossProperty->id, 12);
-                         
+
                         $promoCode->activation_date = date('Y-m-d H:i:s');
                         $promoCode->is_active = 1;
                         $promoCode->boss_id = $boss->id;
                         $promoCode->save();
-                        
+
                         $promoCode->promo->available_code_count = $promoCode->promo->available_code_count - 1;
                         $promoCode->promo->used_code_count = $promoCode->promo->used_code_count + 1;
                         $promoCode->promo->save();
-                        
+
                         // send initial message to promocode user
                         $admin = User::where('isAdmin', 1)->first();
                         $splitedBossName = str_split($boss->name);
                         $youUsedPhrase = $splitedBossName[count($splitedBossName) - 1] == "a" ? \Lang::get('common.you_used_female') : \Lang::get('common.you_used_male');
-                        
+
                         $message = new Message();
-                        $message->text = \Lang::get('common.greetings') . ", " . $boss->name . " " . $boss->surname . "! " . 
-                            \Lang::get('common.we_are_very_happy_that') . " " . $youUsedPhrase . " " . 
-                            \Lang::get('common.approve_message_body') . " " . 
+                        $message->text = \Lang::get('common.greetings') . ", " . $boss->name . " " . $boss->surname . "! " .
+                            \Lang::get('common.we_are_very_happy_that') . " " . $youUsedPhrase . " " .
+                            \Lang::get('common.approve_message_body') . " " .
                             config('app.name') . " " .
                             config('app.name_2nd_part');
                         $message->status = 0;
                         $message->user_id = $admin->id;
                         $message->promo_code_id = $promoCode->id;
                         $message->save();
-                        
+
                         \Mail::to($boss)->send(new BossCreateWithPromoCode($boss));
-                        
+
                         auth()->login($boss);
 
                         return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto wraz z lokalizacją oraz pakietem promocyjnych masaży, zostało stworzone!');
@@ -334,16 +334,16 @@ class RegisterController extends Controller
             ]);
         }
     }
-    
+
     /**
      * Creates a view to create employee from TempUser
-     * 
+     *
      * @param string $code
      */
     public function tempUserEmployeeRegistrationCreate($code)
-    {             
+    {
         $employeeRegisterCode = htmlentities($code, ENT_QUOTES, "UTF-8");
-        
+
         if ($employeeRegisterCode !== null)
         {
             $employee = TempUser::where('register_code', $employeeRegisterCode)->first();
@@ -356,10 +356,10 @@ class RegisterController extends Controller
                 ]);
             }
         }
-        
+
         return redirect()->route('login');
     }
-    
+
     /**
      * Handle storing employee made from TempUser
      */
@@ -378,12 +378,12 @@ class RegisterController extends Controller
             return Redirect::to('temp-employee/register/' . Input::get('register_code'))
                 ->withErrors($validator);
         } else {
-            
+
             $tempEmployeeEntity = TempUser::where([
                 'register_code' => Input::get('register_code'),
                 'isEmployee' => 1
             ])->first();
-            
+
             if ($tempEmployeeEntity !== null)
             {
                 $employee = new User();
@@ -399,85 +399,85 @@ class RegisterController extends Controller
                 if ($employee !== null)
                 {
                     $tempEmployeeEntity->delete();
-                        
+
                     \Mail::to($employee)->send(new AdminTempEmployeeCreate2ndStep($employee));
 
                     auth()->login($employee);
 
                     return redirect()->route('home')->with('success', 'Gratulacje, Twoje konto zostało utworzone!');
                 }
-                
+
                 return redirect('/temp-employee/register')->with([
                     'error' => 'Coś poszło nie tak',
                     'code' => Input::get('register_code')
                 ]);
             }
-            
+
             return redirect()->route('welcome');
         }
     }
-    
+
     public function checkIfCodeExists(Request $request)
-    {        
+    {
         if ($request->get('code'))
         {
             $codeEntity = Code::where('code', $request->get('code'))->first();
             $promoCodeEntity = PromoCode::where('code', $request->get('code'))->first();
-            
+
             if ($codeEntity !== null)
-            {                       
+            {
                 $data = [
                     'status' => 'existing',
                     'for' => 'worker'
                 ];
-                
+
             } else if ($promoCodeEntity !== null) {
-                
+
                 $data = [
                     'status' => 'existing',
                     'for' => 'boss'
                 ];
-            
+
             } else {
-                
+
                 $data = [
                     'status' => 'notExisting'
                 ];
             }
-            
+
             return new JsonResponse($data, 200, array(), true);
         }
-        
+
         return new JsonResponse(array(
             'type'    => 'error',
-            'message' => 'Pusty request'            
+            'message' => 'Pusty request'
         ));
     }
-    
+
     private function addCalendarToPropery($propertyId, $numberOfMonths)
-    {        
+    {
         $currentYear = new Year();
         $currentYear->year = date('Y');
         $currentYear->property_id = $propertyId;
         $currentYear->save();
 
         $currentYearIncrementedByOneYear = date('Y', strtotime("+1 year", strtotime(date('Y'))));
-        
+
         $nextYear = new Year();
         $nextYear->year = $currentYearIncrementedByOneYear;
         $nextYear->property_id = $propertyId;
         $nextYear->save();
 
-        $today = date('Y-n');                
+        $today = date('Y-n');
 
         for ($i = 1; $i <= $numberOfMonths; $i++)
-        {                    
+        {
             $monthName = "";
             $monthNameEn = "";
             $todayInParts = explode("-", $today);
             $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, (int)$todayInParts[1], (int)$todayInParts[0]);
 
-            switch ((int)$todayInParts[1]) 
+            switch ((int)$todayInParts[1])
             {
                 case 1:
                     $monthName = "Styczeń";
@@ -528,7 +528,7 @@ class RegisterController extends Controller
                     $monthNameEn = "December";
                     break;
             }
-            
+
             $month = new Month();
             $month->month = $monthName;
             $month->month_en = $monthNameEn;
@@ -541,16 +541,16 @@ class RegisterController extends Controller
             {
                 $month->load('year');
                 $year = $month->year;
-                
+
                 $monthNumber = strlen($month->month_number) == 2 ? $month->month_number : "0" . $month->month_number;
-                
+
                 for ($j = 1; $j <= $numberOfDaysInMonth; $j++)
                 {
                     $dayNumber = strlen($j) == 2 ? $j : "0" . $j;
                     $dayDate = new \DateTime($year->year . "-" . $monthNumber . "-" . $dayNumber);
 
                     if ($dayDate->format("N") != 7)
-                    {                                
+                    {
                         $day = new Day();
                         $day->day_number = $dayDate->format("j");
                         $day->number_in_week = $dayDate->format("N");

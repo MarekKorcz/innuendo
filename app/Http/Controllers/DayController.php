@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Month;
-use App\Day;
-use App\Graphic;
-use App\GraphicRequest;
+use App\Models\Month;
+use App\Models\Day;
+use App\Models\Graphic;
+use App\Models\GraphicRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -31,7 +31,7 @@ class DayController extends Controller
     public function create($id)
     {
         $month = Month::where('id', $id)->first();
-        
+
         return view('day.create')->with('month', $month);
     }
 
@@ -52,9 +52,9 @@ class DayController extends Controller
             return Redirect::to('day/create')
                 ->withErrors($validator);
         } else {
-            
+
             $month = Month::where('id', Input::get('month_id'))->with('year')->first();
-            
+
             if ($month !== null)
             {
                 $yearNumber = $month->year->year;
@@ -92,14 +92,14 @@ class DayController extends Controller
     public function show($id)
     {
         $day = Day::where('id', $id)->with('month.year.property')->first();
-        
+
         if ($day !== null)
-        {            
+        {
             $graphicRequest = GraphicRequest::where([
                 'day_id' => $day->id,
                 'property_id' => $day->month->year->property_id
             ])->first();
-            
+
             return view('day.show')->with([
                 'day' => $day,
                 'month' => $day->month,
@@ -109,7 +109,7 @@ class DayController extends Controller
                 'graphics' => Graphic::where('day_id', $day->id)->with('employee')->get()
             ]);
         }
-        
+
         return redirect()->route('welcome');
     }
 }

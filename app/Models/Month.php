@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -53,7 +53,7 @@ class Month extends Model
      */
     public function year()
     {
-        return $this->belongsTo('App\Year');
+        return $this->belongsTo('Year');
     }
 
 
@@ -63,7 +63,7 @@ class Month extends Model
      */
     public function days()
     {
-        return $this->hasMany('App\Day');
+        return $this->hasMany('Day');
     }
 
     /**
@@ -71,6 +71,6 @@ class Month extends Model
      */
     public function invoices()
     {
-        return $this->hasMany('App\Invoice');
+        return $this->hasMany('Invoice');
     }
 }

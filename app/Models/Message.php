@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,34 +11,34 @@ class Message extends Model
      *
      * @var string
      */
-    protected $table = 'messages';                    
-    
+    protected $table = 'messages';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'topic', 
-        'email', 
-        'text', 
+        'topic',
+        'email',
+        'text',
         'status'
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden = [
-        'user_id', 
-        'graphic_request_id', 
+        'user_id',
+        'graphic_request_id',
         'promo_code_id'
     ];
-    
+
     /**
      * The attributes that should be cast to native types.
-     * 
+     *
      * @var array
      */
     protected $casts = [
@@ -46,28 +46,28 @@ class Message extends Model
         'graphic_request_id' => 'integer',
         'promo_code_id' => 'integer'
     ];
-    
+
     /**
      * Get user that owns message.
      */
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('User');
     }
-    
+
     /**
      * Get graphicRequest that owns message.
      */
     public function graphicRequest()
     {
-        return $this->belongsTo('App\GraphicRequest');
+        return $this->belongsTo('GraphicRequest');
     }
-    
+
     /**
      * Get promoCode that owns message.
      */
     public function promoCode()
     {
-        return $this->belongsTo('App\PromoCode');
+        return $this->belongsTo('PromoCode');
     }
 }

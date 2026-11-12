@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
-use App\User;
-use App\Appointment;
+use App\Models\User;
+use App\Models\Appointment;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -13,7 +13,7 @@ use Session;
 class AppointmentDestroy extends Mailable
 {
     use Queueable, SerializesModels;
-    
+
     public $user;
     public $appointment;
     public $loginUrl;
@@ -29,13 +29,13 @@ class AppointmentDestroy extends Mailable
             'graphic.property',
             'day.month.year'
         ]);
-        
+
         $this->user = $user;
         $this->appointment = $appointment;
         $this->loginUrl = route('login');
-        
+
         $this->appointment['month'] = null;
-        
+
         $appointmentMonth = $appointment->day->month;
 
         if (Session::get('locale'))
@@ -62,11 +62,11 @@ class AppointmentDestroy extends Mailable
                 $this->appointment['month'] = $appointmentMonth->month_en;
             }
         }
-        
+
         $this->appointment['property'] = $appointment->graphic->property;
         $this->appointment['year'] = $appointment->day->month->year->year;
         $this->appointment['day'] = $appointment->day->day_number;
-                
+
         $this->subject(
             \Lang::get('common.appointment_removal') . ' ' .
             \Lang::get('common.in') . ' ' .

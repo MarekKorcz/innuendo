@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Day;
-use App\Graphic;
-use App\User;
+use App\Models\Day;
+use App\Models\Graphic;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -30,7 +30,7 @@ class GraphicController extends Controller
     public function create($id)
     {
         $day = Day::where('id', $id)->first();
-        
+
         return view('graphic.create')->with([
             'day' => $day,
             'employees' => User::where('isEmployee', 1)->get()
@@ -56,16 +56,16 @@ class GraphicController extends Controller
             return Redirect::to('graphic/' . Input::get('day_id'))
                 ->withErrors($validator);
         } else {
-            
+
             $day = Day::where('id', Input::get('day_id'))->with('month.year.property')->first();
-            
+
             // >> get given employee
             $givenEmployee = User::where([
                 'id' => Input::get('employee_id'),
                 'isEmployee' => 1
             ])->first();
             // <<
-            
+
             if ($day !== null && $givenEmployee !== null)
             {
                 // count total time
@@ -81,7 +81,7 @@ class GraphicController extends Controller
                 }
 
                 $minutes += $graphic->i;
-                
+
                 $graphicTime = new Graphic();
                 $graphicTime->start_time = Input::get('start_time');
                 $graphicTime->end_time = Input::get('end_time');
@@ -97,14 +97,14 @@ class GraphicController extends Controller
             }
         }
     }
-    
+
     public function edit($id)
     {
         $graphic = Graphic::where('id', $id)->with([
             'day',
             'employee'
         ])->first();
-        
+
         if ($graphic !== null)
         {
             return view('graphic.edit')->with([
@@ -113,10 +113,10 @@ class GraphicController extends Controller
                 'employees' => User::where('isEmployee', 1)->get()
             ]);
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     public function update()
     {
         $rules = array(
@@ -131,29 +131,29 @@ class GraphicController extends Controller
             return Redirect::to('/graphic/' . Input::get('graphic_id') . '/edit')
                 ->withErrors($validator);
         } else {
-        
+
             $graphic = Graphic::where('id', Input::get('graphic_id'))->with([
                 'appointments',
                 'day',
                 'employee'
             ])->first();
-        
+
             // >> get given employee
             $givenEmployee = User::where([
                 'id' => Input::get('employee_id'),
                 'isEmployee' => 1
             ])->first();
             // <<
-            
+
             if ($graphic !== null && $givenEmployee !== null)
             {
                 // >> count total time
                 $startTimeExploded = explode(":", Input::get('start_time'));
                 $endTimeExploded = explode(":", Input::get('end_time'));
-                
+
                 $startDate = \DateTime::createFromFormat('H:i', $startTimeExploded[0] . ":" . $startTimeExploded[1]);
-                $endDate = \DateTime::createFromFormat('H:i', $endTimeExploded[0] . ":" . $endTimeExploded[1]);                
-                
+                $endDate = \DateTime::createFromFormat('H:i', $endTimeExploded[0] . ":" . $endTimeExploded[1]);
+
                 $graph = $startDate->diff($endDate);
                 $minutes = 0;
 
@@ -164,7 +164,7 @@ class GraphicController extends Controller
 
                 $minutes += $graph->i;
                 // <<
-                
+
                 $graphic->start_time = Input::get('start_time');
                 $graphic->end_time = Input::get('end_time');
                 $graphic->total_time = $minutes;
@@ -173,7 +173,7 @@ class GraphicController extends Controller
                     $graphic->employee_id = $givenEmployee->id;
                 }
                 $graphic->save();
-                
+
                 return redirect()->action('DayController@show', [
                     'id' => $graphic->day->id
                 ])->with('success', 'Graphic has been successfully updated!');

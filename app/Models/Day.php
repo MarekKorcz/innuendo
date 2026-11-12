@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,7 +51,7 @@ class Day extends Model
      */
     public function month()
     {
-        return $this->belongsTo('App\Month');
+        return $this->belongsTo('Month');
     }
 
 
@@ -61,7 +61,7 @@ class Day extends Model
      */
     public function appointments()
     {
-        return $this->hasMany('App\Appointment');
+        return $this->hasMany('Appointment');
     }
 
     /**
@@ -69,7 +69,7 @@ class Day extends Model
      */
     public function graphic()
     {
-        return $this->hasOne('App\Graphic');
+        return $this->hasOne('Graphic');
     }
 
     /**
@@ -77,6 +77,6 @@ class Day extends Model
      */
     public function graphicRequests()
     {
-        return $this->hasMany('App\GraphicRequest');
+        return $this->hasMany('GraphicRequest');
     }
 }

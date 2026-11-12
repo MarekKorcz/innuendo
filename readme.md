@@ -34,3 +34,13 @@ docker compose exec app php artisan migrate --seed
 To delete everything from Docker:
 
 docker compose down --volumes --rmi all
+
+
+git checkout -b upgrade/laravel-*
+git add .
+git commit -m "..."
+git push -u origin upgrade/laravel-*
+git checkout master
+git merge upgrade/laravel-*
+git push origin master
+git checkout -b upgrade/laravel-* .....

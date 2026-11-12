@@ -2,33 +2,33 @@
 
 namespace App\Http\Controllers;
 
-// to tests
-use App\Appointment;
-use App\Category;
-use App\InvoiceData;
-use App\GraphicRequest;
-use App\Item;
-use App\Graphic;
-use App\Day;
-use App\Month;
-use App\Year;
-use App\TempUser;
-use App\Mail\BossCreateWithPromoCode;
-use App\Mail\ContactMessageCreate;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\File;
-use Session;
-use App\Mail\BioSendContactMessage;
+// // to tests
+// use App\Models\Appointment;
+// use App\Models\Category;
+// use App\Models\InvoiceData;
+// use App\Models\GraphicRequest;
+// use App\Models\Item;
+// use App\Models\Graphic;
+// use App\Models\Day;
+// use App\Models\Month;
+// use App\Models\Year;
+// use App\Models\TempUser;
+// use App\Mail\BossCreateWithPromoCode;
+// use App\Mail\ContactMessageCreate;
+// use Illuminate\Support\Collection;
+// use Illuminate\Support\Facades\Hash;
+// use Illuminate\Support\Facades\File;
+// use Session;
+// use App\Mail\BioSendContactMessage;
 
-use App\Code;
-use App\PromoCode;
-use App\Message;
-use App\Property;
-use App\User;
-use App\Discount;
-use App\Promo;
-use App\PolicyConfirmation;
+use App\Models\Code;
+use App\Models\PromoCode;
+use App\Models\Message;
+use App\Models\Property;
+use App\Models\User;
+use App\Models\Discount;
+use App\Models\Promo;
+use App\Models\PolicyConfirmation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\JsonResponse;
@@ -57,7 +57,7 @@ class HomeController extends Controller
             'about'
         ]);
     }
-    
+
     /**
      * Show the application main page.
      *
@@ -66,7 +66,7 @@ class HomeController extends Controller
     public function welcome()
     {
 //        $canShowProperties = Property::where('canShow', 1)->get();
-        
+
         return view('welcome')->with([
 //            'canShowProperties' => $canShowProperties,
             'showBanner' => $this->showPolicyBanner()
@@ -79,54 +79,54 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {        
+    {
         $user = User::where('id', auth()->user()->id)->first();
-        
-        
-        
-        
-        
-        if ($user->email == 'andrzej.sierocki@el-trans.com') 
+
+
+
+
+
+        if ($user->email == 'andrzej.sierocki@el-trans.com')
         {
             return redirect()->route('map');
         }
-        
-        
-        
-        
+
+
+
+
         $route = 'home';
-        
+
         if ($user->isAdmin !== null)
         {
             $route = 'home_admin';
-            
+
         } else if ($user->isEmployee !== null) {
-            
+
             $route = 'home_employee';
-            
+
         } else if ($user->isBoss !== null) {
-            
+
             $route = 'home_boss';
         }
-        
+
         return view($route)->with([
             'user' => $user,
             'showBanner' => $this->showPolicyBanner()
         ]);
     }
-    
+
     public function subscriptions()
     {
         return view('subscriptions')->with([
             'showBanner' => $this->showPolicyBanner()
         ]);
     }
-    
+
     public function discounts()
-    {        
+    {
         $showBanner = $this->showPolicyBanner();
         $discounts = Discount::where('id', '!=', null)->get();
-        
+
         if (count($discounts) == 4)
         {
             return view('discounts')->with([
@@ -134,41 +134,41 @@ class HomeController extends Controller
                 'showBanner' => $showBanner
             ]);
         }
-        
+
         return view('welcome')->with([
             'error' => \Lang::get('common.discount_error_description'),
             'showBanner' => $showBanner
         ]);
     }
-    
+
     public function privatePolicy()
     {
         return view('private_policy')->with([
             'showBanner' => $this->showPolicyBanner()
         ]);
-    } 
-    
+    }
+
     public function regulations()
     {
         return view('regulations')->with([
             'showBanner' => $this->showPolicyBanner()
         ]);
-    } 
-    
+    }
+
     public function about()
     {
         return view('about')->with([
             'showBanner' => $this->showPolicyBanner()
         ]);
-    } 
-    
+    }
+
     public function contactPageShow()
     {
         return view('contact_page')->with([
             'showBanner' => $this->showPolicyBanner()
         ]);
     }
-    
+
     public function contactPageUpdate()
     {
         $rules = array(
@@ -182,31 +182,31 @@ class HomeController extends Controller
             return Redirect::to('/contact')
                 ->withErrors($validator);
         } else {
-            
+
             $message = new Message();
             $message->topic = Input::get('topic');
             $message->email = Input::get('email');
-            $message->text  = Input::get('message');     
+            $message->text  = Input::get('message');
             $message->save();
-            
+
             \Mail::to('mark.korcz@gmail.com')->send(new ContactMessageCreate($message));
 
             return redirect()->route('welcome')->with('success', 'Wiadomość została wysłana!');
         }
     }
-    
+
     private function showPolicyBanner()
     {
         $confirmation = PolicyConfirmation::where('ip_address', $_SERVER['REMOTE_ADDR'])->first();
-        
-        return $confirmation !== null ? false : true; 
+
+        return $confirmation !== null ? false : true;
     }
-    
+
     public function acceptTerms()
-    {        
+    {
         $clientIP = $_SERVER['REMOTE_ADDR'];
         $policyConfirm = PolicyConfirmation::where('ip_address', $clientIP)->first();
-        
+
         if ($policyConfirm == null)
         {
             $policyConfirm = new PolicyConfirmation();
@@ -214,25 +214,25 @@ class HomeController extends Controller
             $policyConfirm->confirm = true;
             $policyConfirm->save();
         }
-        
+
         return new JsonResponse([
             'type' => 'success'
         ], 200, array(), true);
     }
-    
+
     public function promoShow()
     {
         $promotions = Promo::where('is_active', 1)->with('promoCodes')->get();
         $code = '';
-        
+
         if (count($promotions) > 0)
         {
             $promo = $promotions->last();
-            
+
             if (count($promo->promoCodes) > 0)
             {
                 $freeCodeExistence = false;
-                
+
                 foreach ($promo->promoCodes as $promoCode)
                 {
                     if ($promoCode->isActive == 0)
@@ -240,37 +240,37 @@ class HomeController extends Controller
                         $freeCodeExistence = true;
                     }
                 }
-                
+
                 $promo['freeCodeExistence'] = $freeCodeExistence;
                 $code = $promo->promoCodes->first()->code;
             }
-            
+
             return view('promo.show_public')->with([
                 'promo' => $promo,
                 'code' => $code
             ]);
         }
-        
+
         return redirect()->route('welcome');
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     public function bioHome() {
-        
+
         return view('bio.home');
     }
-    
+
     public function bioContactMessage(Request $request)
     {
         $name = $request->get('name');
         $email = $request->get('email');
         $topic = $request->get('topic');
         $description = $request->get('description');
-        
+
         if ($name && $email && $topic && $description)
         {
             \Mail::to($email)->send(new BioSendContactMessage($name, $email, $topic, $description));
@@ -280,54 +280,54 @@ class HomeController extends Controller
                 'message' => 'Wiadomość została wysłana'
             ], 200, array(), true);
         }
-        
+
         return new JsonResponse(array(
             'type'    => 'error',
             'message' => 'Nie udało się wysłać wiadomości'
         ));
     }
-    
+
     public function bioReservation() {
-        
+
         return view('bio.reservation');
     }
-    
+
     public function bioSession() {
-        
+
         return view('bio.session');
     }
-    
+
     public function bioCandling() {
-        
+
         return view('bio.candling');
     }
-    
-    
+
+
 //    public function test()
 //    {
-//        $filesDirPath = storage_path('app/notes');        
+//        $filesDirPath = storage_path('app/notes');
 //        $filesDir = scandir($filesDirPath);
-//        
+//
 //        $textFile = storage_path('app') . "/text.txt";
-//        
+//
 //        // 1. I used this to change files extension to zip
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
 //            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
-//            
+//
 //            if (count($directory) > 2)
 //            {
-//                $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/" . $directory[count($directory) - 1];              
+//                $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/" . $directory[count($directory) - 1];
 //                $newFileName = $filesDirPath . "/" . $filesDir[$i] . "/new.zip";
 //                rename($oldFileName, $newFileName);
 //            }
 //        }
-//        
+//
 //        // 2. this to extract files
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
 //            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
-//            
+//
 //            if (count($directory) > 2)
 //            {
 //                $fileName = $filesDirPath . "/" . $filesDir[$i] . "/new.zip";
@@ -342,12 +342,12 @@ class HomeController extends Controller
 //                }
 //            }
 //        }
-//        
+//
 //        // 3. convert jlqm to json
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
 //            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
-//            
+//
 //            if (count($directory) > 2)
 //            {
 //                $oldFileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.jlqm";
@@ -355,12 +355,12 @@ class HomeController extends Controller
 //                rename($oldFileName, $newFileName);
 //            }
 //        }
-//        
+//
 //        // 4. read note text
 //        for ($i = 2; $i < count($filesDir); $i++)
 //        {
 //            $directory = scandir($filesDirPath . "/" . $filesDir[$i]);
-//            
+//
 //            if (count($directory) > 2)
 //            {
 //                $fileName = $filesDirPath . "/" . $filesDir[$i] . "/memoinfo.json";
@@ -376,12 +376,12 @@ class HomeController extends Controller
 //            }
 //        }
 //    }
-        
-    
+
+
 //    public function test()
 //    {
 //        $hash = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
-//        
+//
 ////        $employee = new User();
 ////        $employee->name = 'Marek5';
 ////        $employee->surname = 'Korcz';
@@ -391,7 +391,7 @@ class HomeController extends Controller
 ////        $employee->password = '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq';
 ////        $employee->isEmployee = 1;
 ////        $employee->save();
-//        
+//
 ////        $employee1 = User::create([
 ////            'name' => 'Marek5',
 ////            'surname' => 'Korcz',

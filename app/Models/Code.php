@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Year extends Model
+class Code extends Authenticatable
 {
     use SoftDeletes;
 
@@ -14,7 +14,7 @@ class Year extends Model
      *
      * @var string
      */
-    protected $table = 'years';
+    protected $table = 'codes';
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +22,7 @@ class Year extends Model
      * @var array
      */
     protected $fillable = [
-        'year'
+        'code'
     ];
 
     /**
@@ -31,7 +31,7 @@ class Year extends Model
      * @var array
      */
     protected $hidden = [
-        'property_id'
+        'boss_id'
     ];
 
     /**
@@ -40,25 +40,14 @@ class Year extends Model
      * @var array
      */
     protected $casts = [
-        'year' => 'integer',
-        'property_id' => 'integer'
+        'boss_id' => 'integer'
     ];
 
     /**
-     * Get property that owns year.
+     * Get boss that owns the code.
      */
-    public function property()
+    public function boss()
     {
-        return $this->belongsTo('App\Property');
-    }
-
-
-
-    /**
-     * Get months associated with year.
-     */
-    public function months()
-    {
-        return $this->hasMany('App\Month');
+        return $this->belongsTo('User');
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Property;
-use App\Month;
-use App\Invoice;
-use App\InvoiceData;
-use App\TempProperty;
-use App\User;
-use App\TempUser;
+use App\Models\Property;
+use App\Models\Month;
+use App\Models\Invoice;
+use App\Models\InvoiceData;
+use App\Models\TempProperty;
+use App\Models\User;
+use App\Models\TempUser;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
@@ -35,31 +35,31 @@ class PropertyController extends Controller
     public function index()
     {
         $properties = Property::where('id', '!=', 0)->get();
-        
+
         if (count($properties) > 0)
         {
             foreach ($properties as $property)
             {
-                if ($property->boss_id > 0) 
+                if ($property->boss_id > 0)
                 {
                     $property['boss'] = User::where('id', $property->boss_id)->first();
                 }
             }
         }
-        
+
         $tempProperties = TempProperty::where('id', '!=', 0)->get();
-        
+
         if (count($tempProperties) > 0)
         {
             foreach ($tempProperties as $tempProperty)
             {
-                if ($tempProperty->temp_user_id > 0) 
+                if ($tempProperty->temp_user_id > 0)
                 {
                     $tempProperty['owner'] = TempUser::where('id', $tempProperty->temp_user_id)->first();
                 }
             }
         }
-        
+
         return view('property.index')->with([
             'properties' => $properties,
             'tempProperties' => $tempProperties
@@ -79,7 +79,7 @@ class PropertyController extends Controller
             'isBoss' => 1,
             'boss_id' => null
         ])->get();
-        
+
         return view('property.create')->with('users', $users);
     }
 
@@ -101,9 +101,9 @@ class PropertyController extends Controller
             return Redirect::to('property/create')
                 ->withErrors($validator);
         } else {
-            
+
             $bossId = null;
-            
+
             if (Input::get('user') !== 0)
             {
                 $boss = User::where([
@@ -113,13 +113,13 @@ class PropertyController extends Controller
                     'isBoss' => 1,
                     'boss_id' => null
                 ])->first();
-                
+
                 if ($boss !== null)
                 {
                     $bossId = $boss->id;
                 }
             }
-            
+
             $property = new Property();
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
@@ -128,7 +128,7 @@ class PropertyController extends Controller
             $property->street_number = Input::get('street_number');
             $property->house_number  = Input::get('house_number');
             $property->city          = Input::get('city');
-            $property->boss_id       = $bossId !== null ? $bossId : auth()->user()->id;           
+            $property->boss_id       = $bossId !== null ? $bossId : auth()->user()->id;
             $property->save();
 
             return redirect('/property/index')->with('success', 'Property successfully created!');
@@ -145,21 +145,21 @@ class PropertyController extends Controller
             'boss',
             'years'
         ])->first();
-        
+
         if ($property !== null)
-        {            
+        {
             return view('property.show')->with([
                 'property' => $property
             ]);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'There is no such property');
     }
-    
+
     public function canShowChange($id)
     {
         $property = Property::where('id', $id)->first();
- 
+
         if ($property !== null)
         {
             if ($property->canShow == 0)
@@ -172,17 +172,17 @@ class PropertyController extends Controller
             }
 
             $property->save();
-            
+
             return redirect()->action(
                 'PropertyController@show', [
                     'id' => $property->id
                 ]
             );
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -192,14 +192,14 @@ class PropertyController extends Controller
     public function tempPropertyShow($id)
     {
         $tempProperty = TempProperty::where('id', $id)->with('tempUser')->first();
-        
+
         if ($tempProperty !== null)
-        {            
+        {
             return view('property.temp_property_show')->with([
                 'tempProperty' => $tempProperty
             ]);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'There is no such temporary property');
     }
 
@@ -212,7 +212,7 @@ class PropertyController extends Controller
     public function edit($id)
     {
         $property = Property::where('id', $id)->first();
-        
+
         if ($property !== null)
         {
             $bosses = User::where([
@@ -221,42 +221,42 @@ class PropertyController extends Controller
                 'isBoss' => 1,
                 'boss_id' => null
             ])->get();
-            
+
             $admins = User::where([
                 'isAdmin' => 1,
                 'isEmployee' => null,
                 'isBoss' => null,
                 'boss_id' => null
             ])->get();
-            
+
             if (count($admins) > 0)
             {
                 foreach ($admins as $admin)
                 {
                     $bosses->push($admin);
                 }
-                
+
                 $property['bosses'] = $bosses;
 
                 return view('property.edit')->with('property', $property);
             }
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     public function tempPropertyEdit($id)
     {
         $tempProperty = TempProperty::where('id', $id)->first();
-        
+
         if ($tempProperty !== null)
         {
             return view('property.temp_property_edit')->with('tempProperty', $tempProperty);
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     public function update($id)
     {
         $rules = array(
@@ -270,9 +270,9 @@ class PropertyController extends Controller
             return Redirect::to('/property/' . $id . '/edit')
                 ->withErrors($validator);
         } else {
-            
+
             $property = Property::where('id', $id)->first();
-            
+
             if ($property !== null)
             {
                 $property->name          = Input::get('name');
@@ -297,7 +297,7 @@ class PropertyController extends Controller
 
                 if ($boss !== null)
                 {
-                    $property->boss_id = $boss->id; 
+                    $property->boss_id = $boss->id;
 
                 } else {
 
@@ -308,25 +308,25 @@ class PropertyController extends Controller
 
                 return redirect('/property/' . $property->id)->with('success', 'Property successfully updated!');
             }
-            
+
             return redirect()->route('welcome')->with('error', 'There is no such property');
         }
     }
-    
+
     public function invoiceDataCreate($id)
     {
         $property = Property::where('id', $id)->with([
             'invoiceData'
         ])->first();
-        
+
         if ($property !== null)
         {
             if ($property->invoiceData == null)
             {
                 return view('property.invoice_data_create')->with('property', $property);
-            
+
             } else {
-                
+
                 return redirect()->action(
                     'PropertyController@invoiceList', [
                         'property' => $property->id
@@ -335,7 +335,7 @@ class PropertyController extends Controller
             }
         }
     }
-    
+
     public function invoiceDataStore()
     {
         $rules = array(
@@ -351,7 +351,7 @@ class PropertyController extends Controller
             return Redirect::to('property/invoice-data/create/' . Input::get('property_id'))
                 ->withErrors($validator);
         } else {
-            
+
             $property = Property::where('id', Input::get('property_id'))->with([
                 'invoiceData'
             ])->first();
@@ -362,15 +362,15 @@ class PropertyController extends Controller
                 $invoiceData->company_name  = Input::get('company_name');
                 $invoiceData->email         = Input::get('email');
                 $invoiceData->phone_number  = Input::get('phone_number');
-                $invoiceData->nip           = Input::get('nip');          
-                $invoiceData->property_id   = Input::get('property_id');  
+                $invoiceData->nip           = Input::get('nip');
+                $invoiceData->property_id   = Input::get('property_id');
                 $invoiceData->save();
 
                 return redirect('/property/invoice/list/' . $property->id)->with('success', 'Invoice data has been created!');
             }
         }
     }
-    
+
     public function invoiceDataEdit($id)
     {
         $property = Property::where('id', $id)->with([
@@ -384,10 +384,10 @@ class PropertyController extends Controller
                 'invoiceData' => $property->invoiceData
             ]);
         }
-        
+
         return redirect()->route('home');
     }
-    
+
     public function invoiceDataUpdate()
     {
         $rules = array(
@@ -403,13 +403,13 @@ class PropertyController extends Controller
             return Redirect::to('/property/invoice-data/edit/' . Input::get('property_id'))
                 ->withErrors($validator);
         } else {
-            
+
             $property = Property::where('id', Input::get('property_id'))->with('invoiceData')->first();
-            
+
             if ($property !== null && $property->invoiceData !== null)
             {
                 $invoiceData = $property->invoiceData;
-                
+
                 $invoiceData->company_name  = Input::get('company_name');
                 $invoiceData->email         = Input::get('email');
                 $invoiceData->phone_number  = Input::get('phone_number');
@@ -420,29 +420,29 @@ class PropertyController extends Controller
             }
         }
     }
-    
+
     public function invoice($id)
     {
         $invoice = Invoice::where('id', $id)->with([
             'month.year',
             'property'
         ])->first();
-        
+
         if ($invoice !== null)
-        {           
+        {
             return view('property.property_invoice')->with([
                 'invoice' => $invoice
             ]);
         }
     }
-    
+
     public function invoiceList($id)
     {
         $property = Property::where('id', $id)->with([
             'invoices.month.year',
             'invoiceData'
         ])->first();
-        
+
         if ($property !== null)
         {
             return view('property.property_invoices')->with([
@@ -451,49 +451,49 @@ class PropertyController extends Controller
             ]);
         }
     }
-    
+
     public function addInvoice($id)
     {
         $property = Property::where('id', $id)->with([
             'invoiceData',
             'years.months'
         ])->first();
-        
+
         if ($property !== null)
-        {            
+        {
             return view('property.property_add_invoice')->with([
                 'property' => $property
             ]);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'There is no such property');
     }
-    
+
     public function invoiceDestroy($id)
     {
         $invoice = Invoice::where('id', $id)->with([
             'property'
         ])->first();
-        
+
         if ($invoice !== null)
-        {           
+        {
             $property = $invoice->property;
-            
+
             $invoice->delete();
-            
+
             // remove file from storage folder
             Storage::disk('local_pdf')->delete($invoice->invoice);
-            
+
             return redirect()->action(
                 'PropertyController@invoiceList', [
                     'property' => $property->id
                 ]
             )->with('success', 'Invoice has been succesfully deleted!');
         }
-        
+
         return redirect()->route('welcome')->with('error', 'There is no such invoice');
     }
-    
+
     public function addInvoiceUpdate()
     {
         $rules = array(
@@ -506,12 +506,12 @@ class PropertyController extends Controller
             return Redirect::to('/property/add-invoice/' . Input::get('property_id'))
                 ->withErrors($validator);
         } else {
-            
+
             $property = Property::where('id', Input::get('property_id'))->with([
                 'invoiceData',
                 'invoices'
             ])->first();
-            
+
             $month = Month::where('id', Input::get('month_id'))->with('year')->first();
 
             $file = Input::file('invoice');
@@ -522,25 +522,25 @@ class PropertyController extends Controller
                 $invoice->month_id = $month->id;
                 $invoice->property_id = $property->id;
 
-                $fileName = 
+                $fileName =
                     $property->name . '_' .
-                    $month->month . '_' . 
-                    $month->year->year . '_' . 
-                    time() . 
+                    $month->month . '_' .
+                    $month->year->year . '_' .
+                    time() .
                     '.pdf';
 
                 Storage::disk('local_pdf')->put($fileName, File::get($file));
 
                 $invoice->invoice = $fileName;
                 $invoice->save();
-                
+
                 return redirect('/property/invoice/list/' . $property->id)->with('success', 'Invoice has been successfully added!');
             }
 
             return redirect('/property/index');
         }
     }
-    
+
     public function tempPropertyUpdate($id)
     {
         $rules = array(
@@ -556,14 +556,14 @@ class PropertyController extends Controller
             return Redirect::to('/property/' . $id . '/edit')
                 ->withErrors($validator);
         } else {
-            
+
             $tempProperty = TempProperty::where('id', $id)->first();
             $tempProperty->name          = Input::get('name');
             $tempProperty->slug          = str_slug(Input::get('name'));
             $tempProperty->street        = Input::get('street');
             $tempProperty->street_number = Input::get('street_number');
             $tempProperty->house_number  = Input::get('house_number');
-            $tempProperty->city          = Input::get('city');            
+            $tempProperty->city          = Input::get('city');
             $tempProperty->save();
 
             return redirect('/temp-property/' . $tempProperty->id)->with('success', 'Temporary property successfully updated!');
@@ -579,17 +579,17 @@ class PropertyController extends Controller
     public function destroy($id)
     {
         $property = Property::where('id', $id)->first();
-        
+
         if ($property !== null)
         {
             $property->delete();
 
             return redirect('/property/index')->with('success', 'Property deleted!');
         }
-        
+
         return redirect()->route('welcome')->with('error', 'There is no such property');
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -599,14 +599,14 @@ class PropertyController extends Controller
     public function tempPropertyDestroy($id)
     {
         $tempProperty = TempProperty::where('id', $id)->first();
-        
+
         if ($tempProperty !== null)
-        {            
+        {
             $tempProperty->delete();
 
             return redirect('/property/index')->with('success', 'Temporary property deleted!');
         }
-        
+
         return redirect()->route('welcome')->with('error', 'There is no such temporary property');
     }
 }

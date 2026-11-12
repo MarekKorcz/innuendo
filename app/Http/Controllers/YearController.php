@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Property;
-use App\Year;
+use App\Models\Property;
+use App\Models\Year;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -29,7 +29,7 @@ class YearController extends Controller
     public function create($id)
     {
         $property = Property::where('id', $id)->first();
-        
+
         return view('year.create')->with('property', $property);
     }
 
@@ -52,16 +52,16 @@ class YearController extends Controller
             return Redirect::to('year/create')
                 ->withErrors($validator);
         } else {
-            
+
             $property = Property::where('id', Input::get('property_id'))->with([
                 'years'
             ])->first();
-            
+
             if ($property !== null)
             {
                 $givenYear = Input::get('year');
                 $year = null;
-                
+
                 if (count($property->years) > 0)
                 {
                     foreach ($property->years as $propertyYear)
@@ -72,7 +72,7 @@ class YearController extends Controller
                         }
                     }
                 }
-                
+
                 if ($year == null)
                 {
                     $year = new Year();
@@ -96,12 +96,12 @@ class YearController extends Controller
      * @return Response
      */
     public function show($id)
-    {        
+    {
         $year = Year::where('id', $id)->with([
             'months',
             'property'
         ])->first();
-        
+
         return view('year.show')->with([
             'year' => $year
         ]);
@@ -116,7 +116,7 @@ class YearController extends Controller
     public function destroy($id)
     {
         $year = Year::where('id', $id)->with('property')->first();
-        
+
         if ($year !== null)
         {
             $property = $year->property;

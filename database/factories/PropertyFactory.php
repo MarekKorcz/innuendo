@@ -1,31 +1,29 @@
 <?php
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
+
+use App\Models\Property;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-$admin = $factory->define(App\User::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'surname' => $faker->lastName,
-        'phone_number' => $faker->numerify('#########'),
-        'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
-        'password' => bcrypt("secret"),
-        'remember_token' => Str::random(10),
-        'isAdmin' => 1
-    ];
-});
+class PropertyFactory extends Factory
+{
+    protected $model = Property::class;
 
-$factory->define(App\Property::class, function (Faker $faker) use ($factory) {
-    return [
-        'name' => $name = 'Property '.rand(0, 1000000),
-        'slug' => str_slug($name),
-        'description' => $faker->text,
-        'phone_number' => $faker->phoneNumber,
-        'street' => $faker->streetName,
-        'street_number' => $faker->numberBetween(0, 100),
-        'house_number' => $faker->numberBetween(0, 100),
-        'city' => $faker->city,
-        'user_id' => factory(App\User::class)->create()->id
-    ];
-});
+    public function definition(): array
+    {
+        $name = 'Property ' . rand(0, 1000000);
+
+        return [
+            'name' => $name,
+            'slug' => Str::slug($name),
+            'description' => fake()->text(),
+            'street' => fake()->streetName(),
+            'street_number' => fake()->numberBetween(0, 100),
+            'house_number' => fake()->numberBetween(0, 100),
+            'city' => fake()->city(),
+            'boss_id' => 1,
+        ];
+    }
+}

@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Code;
-use App\Property;
-use App\InvoiceData;
-use App\GraphicRequest;
-use App\Message;
-use App\Subscription;
-use App\ChosenProperty;
-use App\User;
-use App\Appointment;
-use App\Day;
-use App\Month;
-use App\Year;
-use App\Discount;
-use App\Graphic;
-use App\Substart;
-use App\Purchase;
-use App\Interval;
-use App\PromoCode;
+use App\Models\Code;
+use App\Models\Property;
+use App\Models\InvoiceData;
+use App\Models\GraphicRequest;
+use App\Models\Message;
+use App\Models\Subscription;
+use App\Models\ChosenProperty;
+use App\Models\User;
+use App\Models\Appointment;
+use App\Models\Day;
+use App\Models\Month;
+use App\Models\Year;
+use App\Models\Discount;
+use App\Models\Graphic;
+use App\Models\Substart;
+use App\Models\Purchase;
+use App\Models\Interval;
+use App\Models\PromoCode;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -29,7 +29,7 @@ use Redirect;
 use Session;
 
 class BossController extends Controller
-{    
+{
     /**
      * Create a new controller instance.
      *
@@ -39,15 +39,15 @@ class BossController extends Controller
     {
         $this->middleware('boss');
     }
-    
+
     /**
      * Shows calendar that belongs to employee.
-     * 
+     *
      * @param integer $property_id
      * @param integer $year
      * @param integer $month_number
      * @param integer $day_number
-     * 
+     *
      * @return type
      * @throws Exception
      */
@@ -57,26 +57,26 @@ class BossController extends Controller
             'id' => $property_id,
             'boss_id' => auth()->user()->id
         ])->with('boss')->first();
-        
+
         if ($property !== null)
         {
             $currentDate = new \DateTime();
-            
+
             if ($year == 0)
             {
                 $year = Year::where([
                     'property_id' => $property->id,
                     'year' => $currentDate->format("Y")
                 ])->first();
-                
+
             } else if (is_numeric($year) && (int)$year > 0) {
-                
+
                 $year = Year::where([
                     'property_id' => $property->id,
                     'year' => $year
                 ])->first();
             }
-            
+
             if ($year !== null)
             {
                 if ($month_number == 0)
@@ -85,9 +85,9 @@ class BossController extends Controller
                         'year_id' => $year->id,
                         'month_number' => $currentDate->format("n")
                     ])->first();
-                    
+
                 } else if (is_numeric($month_number) && (int)$month_number > 0 || (int)$month_number <= 12) {
-                    
+
                     $month = Month::where([
                         'year_id' => $year->id,
                         'month_number' => $month_number
@@ -97,7 +97,7 @@ class BossController extends Controller
                 if ($month !== null)
                 {
                     $days = Day::where('month_id', $month->id)->get();
-                    
+
                     if (count($days) > 0)
                     {
                         $days = $this->formatDaysToUserCalendarForm($days, $month->days_in_month);
@@ -108,9 +108,9 @@ class BossController extends Controller
                                 'month_id' => $month->id,
                                 'day_number' => $currentDate->format("d")
                             ])->first();
-                            
+
                         } else {
-                            
+
                             $currentDay = Day::where([
                                 'month_id' => $month->id,
                                 'day_number' => $day_number
@@ -121,35 +121,35 @@ class BossController extends Controller
                         {
                             $graphicTime = Graphic::where('day_id', $currentDay->id)->first();
                             $graphicTimes = Graphic::where('day_id', $currentDay->id)->with('employee')->get();
-                            
+
                             $chosenDay = $currentDay;
                             $chosenDayDateTime = new \DateTime($year->year . "-" . $month->month_number . "-" . $chosenDay->day_number);
                             $graphic = $this->formatGraphicAndAppointments($graphicTime, $currentDay, $chosenDayDateTime);
-                            
+
                         } else {
-                            
+
                             $graphic = [];
                             $graphicTime = null;
                             $graphicTimes = null;
                         }
-                        
+
                         $availablePreviousMonth = false;
 
                         if ($this->checkIfPreviewMonthIsAvailable($property, $year, $month))
                         {
                             $availablePreviousMonth = true;
                         }
-                        
+
                         $availableNextMonth = false;
 
                         if ($this->checkIfNextMonthIsAvailable($property, $year, $month))
                         {
                             $availableNextMonth = true;
                         }
-                        
+
                         $canSendRequest = $property->boss_id == $property->boss->id ? true : false;
                         $graphicRequest = null;
-                        
+
                         if ($canSendRequest)
                         {
                             $graphicRequest = GraphicRequest::where([
@@ -157,7 +157,7 @@ class BossController extends Controller
                                 'day_id' => $currentDay !== null ? $currentDay->id : $day_number
                             ])->first();
                         }
-                        
+
                         return view('boss.calendar')->with([
                             'property' => $property,
                             'availablePreviousMonth' => $availablePreviousMonth,
@@ -169,51 +169,51 @@ class BossController extends Controller
                             'current_day_id' => is_object($currentDay) ? $currentDay->id : 0,
                             'graphic' => $graphic,
                             'graphic_id' => $graphicTime !== null ? $graphicTime->id : null,
-                            'graphicTimesEntites' => $graphicTimes, 
+                            'graphicTimesEntites' => $graphicTimes,
                             'canSendRequest' => $currentDay !== null ? $canSendRequest : false,
                             'graphicRequest' => $graphicRequest,
                             'employees' => User::where('isEmployee', 1)->get()
                         ]);
-                        
+
                     } else {
-                        
+
                         $message = 'Brak otwartego grafiku na ten dzień';
                     }
-                    
+
                 } else {
-                    
+
                     $message = 'Brak otwartego grafiku na ten miesiąc';
                 }
-                
+
             } else {
-                
+
                 $message = 'Brak otwartego grafiku na ten rok';
             }
-            
+
             return redirect()->action(
                 'UserController@propertiesList'
             )->with('error', $message);
-            
+
         } else {
-            
+
             $message = 'Niepoprawny numer id';
         }
-        
+
         return redirect()->route('welcome')->with('error', $message);
     }
-    
+
     public function getEmployeeGraphic(Request $request)
     {
         if ($request->get('graphicId') && $request->get('currentDayId'))
         {
             $graphic = Graphic::where('id', $request->get('graphicId'))->first();
             $day = Day::where('id', $request->get('currentDayId'))->with('month.year')->first();
-            
+
             if ($graphic !== null && $day !== null)
             {
                 $chosenDayDateTime = new \DateTime($day->month->year->year . "-" . $day->month->month_number . "-" . $day->day_number);
                 $graphicArray = $this->formatGraphicAndAppointments($graphic, $day, $chosenDayDateTime);
-                
+
                 foreach ($graphicArray as $key => $graphArr)
                 {
                     if ($graphArr['appointment'] !== null)
@@ -224,11 +224,11 @@ class BossController extends Controller
                         $graphicArray[$key]['ownAppointmentHref'] = route('appointmentShow', [
                             'id' => $graphArr['appointment']->id
                         ]);
-                        
+
                         unset($graphicArray[$key]['appointment']);
                     }
                 }
-                
+
                 return new JsonResponse([
                     'type' => 'success',
                     'graphic' => $graphicArray,
@@ -240,22 +240,22 @@ class BossController extends Controller
                 ], 200, array(), true);
             }
         }
-        
+
         return new JsonResponse(array(
-            'type'    => 'error'        
+            'type'    => 'error'
         ));
     }
 
-    private function formatDaysToUserCalendarForm($days, $daysInMonth) 
+    private function formatDaysToUserCalendarForm($days, $daysInMonth)
     {
         $daysArray = [];
-        
+
         for ($i = 0; $i < count($days); $i++)
         {
             if ($i == 0)
             {
                 $monthStart = $days[$i]->number_in_week;
-                
+
                 if ($monthStart != 1)
                 {
                     for ($j = 1; $j < $monthStart; $j++)
@@ -264,50 +264,50 @@ class BossController extends Controller
                     }
                 }
             }
-            
+
             $dayGraphicCount = Graphic::where('day_id', $days[$i]->id)->get();
             $days[$i]['dayGraphicCount'] = count($dayGraphicCount);
-            
+
             $daysArray[] = $days[$i];
         }
-        
+
         return $daysArray;
     }
-    
-    private function formatGraphicAndAppointments($graphicTime, $chosenDay, $chosenDayDateTime) 
+
+    private function formatGraphicAndAppointments($graphicTime, $chosenDay, $chosenDayDateTime)
     {
         $graphic = [];
-        
+
         if ($graphicTime !== null)
         {
             $timeZone = new \DateTimeZone("Europe/Warsaw");
             $now = new \DateTime(null, $timeZone);
-            
+
             $workUnits = ($graphicTime->total_time / 20);
             $startTime = date('G:i', strtotime($graphicTime->start_time));
-            
-            for ($i = 0; $i < $workUnits; $i++) 
+
+            for ($i = 0; $i < $workUnits; $i++)
             {
                 $appointment = Appointment::where([
                     'day_id' => $chosenDay->id,
                     'graphic_id' => $graphicTime->id,
                     'start_time' => $startTime
                 ])->with('user')->first();
-                
+
                 $appointmentId = 0;
                 $ownAppointment = false;
                 $bossWorkerAppointment = false;
-                
+
                 $explodedStartTime = explode(":", $startTime);
                 $chosenDayDateTime->setTime($explodedStartTime[0], $explodedStartTime[1], 0);
-                
+
                 if ($appointment !== null)
                 {
                     $boss = auth()->user();
                     $appointmentId = $appointment->id;
-                    
+
                     if ($boss->isBoss !== null)
-                    {       
+                    {
                         if (count($boss->getWorkers()) > 0)
                         {
                             foreach ($boss->getWorkers() as $worker)
@@ -319,11 +319,11 @@ class BossController extends Controller
                             }
                         }
                     }
-                    
+
                     $ownAppointment = $appointment->user_id == $boss->id ? true : false;
 
                     $limit = $appointment->minutes / 20;
-                    
+
                     if ($limit > 1)
                     {
                         $time = [$startTime];
@@ -333,12 +333,12 @@ class BossController extends Controller
                             $time[] = date('G:i', strtotime("+20 minutes", strtotime($time[count($time) - 1])));
                             $workUnits -= 1;
                         }
-                        
+
                     } else {
-                        
+
                         $time = $startTime;
                     }
-                    
+
                     $graphic[] = [
                         'time' => $time,
                         'appointment' => $appointment,
@@ -347,12 +347,12 @@ class BossController extends Controller
                         'bossWorkerAppointment' => $bossWorkerAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
-                    
+
                     $timeIncrementedByAppointmentMinutes = strtotime($appointment->end_time, strtotime($startTime));
                     $startTime = date('G:i', $timeIncrementedByAppointmentMinutes);
-                    
+
                 } else {
-                    
+
                     $graphic[] = [
                         'time' => $startTime,
                         'appointment' => null,
@@ -361,16 +361,16 @@ class BossController extends Controller
                         'bossWorkerAppointment' => $bossWorkerAppointment,
                         'canMakeAnAppointment' => $chosenDayDateTime > $now ? true : false
                     ];
-                    
+
                     $timeIncrementedBy20Minutes = strtotime("+20 minutes", strtotime($startTime));
                     $startTime = date('G:i', $timeIncrementedBy20Minutes);
                 }
-            }            
+            }
         }
-        
+
         return $graphic;
     }
-    
+
     private function checkIfPreviewMonthIsAvailable($property, $year, $month)
     {
         if ($month->month_number == 1)
@@ -379,40 +379,40 @@ class BossController extends Controller
                 'property_id' => $property->id,
                 'year' => ($year->year - 1)
             ])->first();
-            
+
             if ($year === null)
             {
                 return false;
-                
+
             } else {
-                
+
                 $month = Month::where([
                     'year_id' => $year->id,
                     'month_number' => 12
                 ])->first();
-                
-                if ($month === null) 
+
+                if ($month === null)
                 {
                     return false;
                 }
             }
-            
+
         } else {
-            
+
             $month = Month::where([
                 'year_id' => $year->id,
                 'month_number' => ($month->month_number - 1)
             ])->first();
-                
-            if ($month === null) 
+
+            if ($month === null)
             {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     private function checkIfNextMonthIsAvailable($property, $year, $month)
     {
         if ($month->month_number == 12)
@@ -421,40 +421,40 @@ class BossController extends Controller
                 'property_id' => $property->id,
                 'year' => ($year->year + 1)
             ])->first();
-            
+
             if ($year === null)
             {
                 return false;
-                
+
             } else {
-                
+
                 $month = Month::where([
                     'year_id' => $year->id,
                     'month_number' => 1
                 ])->first();
-                
-                if ($month === null) 
+
+                if ($month === null)
                 {
                     return false;
                 }
             }
-            
+
         } else {
-            
+
             $month = Month::where([
                 'year_id' => $year->id,
                 'month_number' => ($month->month_number + 1)
             ])->first();
-                
-            if ($month === null) 
+
+            if ($month === null)
             {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     /**
      * Shows boss code
      */
@@ -462,15 +462,15 @@ class BossController extends Controller
     {
         $boss = auth()->user();
         $boss->load('code');
-        
+
         return view('boss.code')->with([
             'code' => $boss->code
         ]);
     }
-    
+
     /**
      * Sets registration code for workers
-     * 
+     *
      * @param Request $request
      * @return type
      */
@@ -478,7 +478,7 @@ class BossController extends Controller
     {
         $code = $request->request->get('code');
         $codeId = $request->request->get('code_id');
-        
+
         if (is_string($code))
         {
             if ($code == "true")
@@ -486,37 +486,37 @@ class BossController extends Controller
                 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
                 $charactersLength = strlen($characters);
                 $codeText = "";
-                
-                for ($i = 0; $i < 12; $i++) 
+
+                for ($i = 0; $i < 12; $i++)
                 {
                     $codeText .= $characters[rand(0, $charactersLength - 1)];
                 }
-                
+
                 $message = 'Rejestracja pracowników została WŁĄCZONA';
-                
+
             } else if ($code = "false") {
-                
+
                 $codeText = null;
                 $message = 'Rejestracja pracowników została WYŁĄCZONA';
             }
-            
+
             $code = Code::where('id', $codeId)->first();
-            
+
             if ($code !== null)
             {
                 $code->code = $codeText;
                 $code->save();
-                
+
                 return redirect('/boss/code')->with('success', $message);
             }
         }
 
         return redirect()->route('welcome');
     }
-    
+
     /**
      * Creates new code
-     * 
+     *
      * @return type
      */
     public function addCode()
@@ -524,23 +524,23 @@ class BossController extends Controller
         $code = new Code();
         $code->boss_id = auth()->user()->id;
         $code->save();
-        
+
         if ($code->id !== null)
         {
             $type = 'success';
             $message = 'Dodano nowy kod.';
-            
+
         } else {
-            
+
             $type = 'error';
             $message = 'Błąd dodawania nowego kodu';
         }
-        
+
         return redirect()->action(
             'BossController@code'
         )->with($type, $message);
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -550,25 +550,25 @@ class BossController extends Controller
     public function destroyCode($id)
     {
         $code = Code::where('id', $id)->first();
-        
+
         if ($code !== null)
-        {     
+        {
             $code->delete();
 
             $type = 'success';
             $message = 'Kod został usunięty';
-            
+
         } else {
-            
+
             $type = 'error';
             $message = 'Podany kod nie istnieje';
         }
-        
+
         return redirect()->action(
             'BossController@code'
         )->with($type, $message);
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -581,15 +581,15 @@ class BossController extends Controller
             'id' => $id,
             'boss_id' => auth()->user()->id
         ])->first();
-        
+
         if ($property !== null)
         {
             return view('boss.property_edit')->with('property', $property);
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -611,9 +611,9 @@ class BossController extends Controller
             return Redirect::to('/boss/property/' . Input::get('property_id') . '/edit')
                 ->withErrors($validator);
         } else {
-            
+
             $boss = auth()->user();
-            
+
             $property = Property::where('id', Input::get('property_id'))->first();
             $property->name          = Input::get('name');
             $property->slug          = str_slug(Input::get('name'));
@@ -627,7 +627,7 @@ class BossController extends Controller
             return redirect('boss/subscription/list/' . $property->id . '/0')->with('success', 'Lokalizacja została zaktualizowana');
         }
     }
-    
+
     /**
      * Shows properties list with links to appointments views.
      *
@@ -635,8 +635,8 @@ class BossController extends Controller
      */
     public function propertyAppointments()
     {
-        $boss = auth()->user()->load('properties');                
-        
+        $boss = auth()->user()->load('properties');
+
         if (count($boss->properties) == 1)
         {
             return redirect()->action(
@@ -650,44 +650,44 @@ class BossController extends Controller
             'properties' => $boss->properties
         ]);
     }
-        
+
     /**
      * Shows boss worker.
-     * 
-     * 
-     * 
-     * 
+     *
+     *
+     *
+     *
      * todo: Czasowo usunięte, czeka aż powstanie widok z jakimiś dodatkowymi info których nie ma w worker_appointment_list??
      *
-     * 
-     * 
-     * 
-     * 
+     *
+     *
+     *
+     *
      * @param type $workerId
      * @param type $substartId
      * @param type $intervalId
-     * 
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
 //    public function workerShow($workerId, $substartId, $intervalId)
-//    {        
+//    {
 //        $boss = auth()->user();
-//        
+//
 //        $worker = User::where([
 //            'id' => $workerId
 //        ])->first();
-//        
+//
 //        if ($worker !== null)
 //        {
 //            if ($worker->isBoss !== null)
 //            {
 //                $worker = $boss;
 //            }
-//            
+//
 //            $substart = Substart::where([
 //                'id' => $substartId
 //            ])->first();
-//            
+//
 //            if ($substart !== null)
 //            {
 //                if ($worker->isBoss !== null)
@@ -696,14 +696,14 @@ class BossController extends Controller
 //                        'id' => $intervalId,
 //                        'substart_id' => $substart->id
 //                    ])->first();
-//                    
+//
 //                } else {
-//                    
+//
 //                    $interval = Interval::where([
 //                        'id' => $intervalId
 //                    ])->first();
 //                }
-//                
+//
 //                if ($interval !== null)
 //                {
 //                    $appointments = Appointment::where([
@@ -728,13 +728,13 @@ class BossController extends Controller
 //                            $appointment['employee_slug'] = $employee->slug;
 //                        }
 //                    }
-//                    
+//
 //                    $substartIntervals = Interval::where([
 //                        'substart_id' => $substart->id
 //                    ])->get();
-//                    
+//
 //                    $subscription = Subscription::where('id', $substart->subscription_id)->first();
-//                    
+//
 //                    return view('boss.worker_show')->with([
 //                        'worker' => $worker,
 //                        'substart' => $substart,
@@ -746,25 +746,25 @@ class BossController extends Controller
 //                }
 //            }
 //        }
-//        
+//
 //        return redirect()->route('welcome');
 //    }
-    
+
     public function subscriptionWorkersEdit($substartId, $intervalId)
     {
         $substart = Substart::where('id', $substartId)->first();
-        
+
         if ($substart !== null)
         {
             $boss = auth()->user();
-            
+
             if ($substart->boss_id === $boss->id)
             {
                 $today = new \DateTime(date('Y-m-d'));
 //                $today = date('Y-m-d', strtotime("+3 month", strtotime($today->format("Y-m-d"))));
-                
+
                 $substartIntervals = Interval::where('substart_id', $substart->id)->get();
-                
+
                 if (count($substartIntervals) > 0)
                 {
                     foreach ($substartIntervals as $substartInterval)
@@ -780,14 +780,14 @@ class BossController extends Controller
                             }
                         }
                     }
-                    
+
                     $chosenInterval = Interval::where([
                         'id' => $intervalId,
                         'substart_id' => $substart->id
                     ])->first();
-                    
+
                     if ($chosenInterval !== null)
-                    {                                    
+                    {
                         foreach ($substartIntervals as $substartInterval)
                         {
                             if ($chosenInterval->id == $substartInterval->id)
@@ -804,7 +804,7 @@ class BossController extends Controller
                                         if ($workerIntervalPurchase && $workerIntervalPurchase->chosenProperty->user_id !== null)
                                         {
                                             $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
-                                            
+
                                             if ($worker !== null)
                                             {
                                                 foreach ($substartInterval['workers'] as $key => $intervalWorker)
@@ -818,29 +818,29 @@ class BossController extends Controller
                                         }
                                     }
                                 }
-                                
+
                                 $chosenInterval = $substartInterval;
                             }
                         }
-                        
+
                     } else {
-                        
+
                         foreach ($substartIntervals as $substartInterval)
                         {
                             if ($substartInterval->start_date <= $today && $substartInterval->end_date >= $today)
                             {
                                 $workersIntervals = Interval::withTrashed()->where('interval_id', $substartInterval->id)->get();
-                                                                                        
+
                                 if (count($workersIntervals) > 0)
                                 {
                                     foreach ($workersIntervals as $workerInterval)
                                     {
                                         $workerIntervalPurchase = Purchase::where('id', $workerInterval->purchase_id)->with('chosenProperty')->first();
-                                        
+
                                         if ($workerIntervalPurchase !== null && $workerIntervalPurchase->chosenProperty->user_id !== null)
-                                        {                                            
+                                        {
                                             $worker = User::where('id', $workerIntervalPurchase->chosenProperty->user_id)->first();
-                                            
+
                                             if ($worker !== null)
                                             {
                                                 foreach ($substartInterval['workers'] as $key => $intervalWorker)
@@ -857,9 +857,9 @@ class BossController extends Controller
                             }
                         }
                     }
-                    
+
                     $hasIntervalBeenChosen = false;
-                                        
+
                     foreach ($substartIntervals as $substartInterval)
                     {
                         if ($substartInterval['isChecked'] == true)
@@ -868,7 +868,7 @@ class BossController extends Controller
                             break;
                         }
                     }
-                    
+
                     if ($hasIntervalBeenChosen == false)
                     {
                         foreach ($substartIntervals as $substartInterval)
@@ -877,16 +877,16 @@ class BossController extends Controller
                             {
                                 $substartInterval['isChecked'] = true;
                                 $hasIntervalBeenChosen = true;
-                                
+
                                 if ($chosenInterval == null)
                                 {
                                     $chosenInterval = $substartInterval;
                                 }
-                                
+
                                 break;
                             }
                         }
-                        
+
                         if ($hasIntervalBeenChosen == false)
                         {
                             $chosenInterval = $substartIntervals->last();
@@ -894,7 +894,7 @@ class BossController extends Controller
                         }
                     }
                 }
-                
+
                 return view('boss.subscription_workers_edit')->with([
                     'substart' => $substart,
                     'subscription' => Subscription::where('id', $substart->subscription_id)->first(),
@@ -903,13 +903,13 @@ class BossController extends Controller
                     'today' => $today
                 ]);
             }
-            
+
             return redirect()->route('welcome')->with('error', 'Wykupiona subskrypcja ma innego właściciela');
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Wykupiona subskrypcja o podanym id, nie istnieje');
     }
-    
+
     public function subscriptionWorkersUpdate()
     {
         $rules = array(
@@ -923,36 +923,36 @@ class BossController extends Controller
         if ($validator->fails())
         {
             return Redirect::to('boss/subscription/workers/edit/' . Input::get('substart_id') . '/' . Input::get('interval_id'));
-            
+
         } else {
-            
+
             $boss = auth()->user();
-            
+
             if ($boss->isBoss == 1)
             {
                 $substart = Substart::where([
                     'id' => Input::get('substart_id'),
                     'boss_id' => $boss->id
                 ])->first();
-                
+
                 $subscription = Subscription::where('id', $substart->subscription_id)->first();
                 $property = Property::where('id', $substart->property_id)->first();
 
                 if ($substart !== null && $subscription !== null && $property !== null)
                 {
                     $today = new \DateTime(date('Y-m-d'));
-                    
+
                     $chosenInterval = Interval::where([
                         'id' => Input::get('interval_id'),
                         'substart_id' => $substart->id
                     ])->first();
-                    
+
                     if ($chosenInterval !== null && !($chosenInterval->start_date < $today && $chosenInterval->end_date < $today))
                     {
                         if (Input::get('workers_on') !== null && count(Input::get('workers_on')) > 0)
                         {
                             $workersOn = new Collection();
-                        
+
                             foreach (Input::get('workers_on') as $workerId)
                             {
                                 $worker = User::where([
@@ -975,7 +975,7 @@ class BossController extends Controller
                                         'user_id' => $worker->id,
                                         'property_id' => $property->id
                                     ])->first();
-                                    
+
                                     if ($workerChosenProperty === null)
                                     {
                                         $workerChosenProperty = new ChosenProperty();
@@ -983,13 +983,13 @@ class BossController extends Controller
                                         $workerChosenProperty->property_id = $property->id;
                                         $workerChosenProperty->save();
                                     }
-                                    
+
                                     $workerPurchase = Purchase::where([
                                         'substart_id' => $substart->id,
                                         'subscription_id' => $subscription->id,
                                         'chosen_property_id' => $workerChosenProperty->id
                                     ])->first();
-                                    
+
                                     if ($workerPurchase === null)
                                     {
                                         $workerPurchase = new Purchase();
@@ -998,22 +998,22 @@ class BossController extends Controller
                                         $workerPurchase->chosen_property_id = $workerChosenProperty->id;
                                         $workerPurchase->save();
                                     }
-                                    
+
                                     if ($workerPurchase !== null)
                                     {
                                         $bossIntervals = Interval::where('substart_id', $substart->id)->get();
-                                        
+
                                         if (count($bossIntervals) > 0)
                                         {
                                             if (count($bossIntervals) == 1)
                                             {
                                                 $bossInterval = Interval::where('id', $bossIntervals->first()->id)->first();
-                                                        
+
                                                 $workerInterval = Interval::withTrashed()->where([
                                                     'interval_id' => $bossInterval->id,
                                                     'purchase_id' => $workerPurchase->id
                                                 ])->first();
-                                                
+
                                                 if ($workerInterval == null)
                                                 {
                                                     $workerInterval = new Interval();
@@ -1023,18 +1023,18 @@ class BossController extends Controller
                                                     $workerInterval->interval_id = $bossIntervals->first()->id;
                                                     $workerInterval->purchase_id = $workerPurchase->id;
                                                     $workerInterval->save();
-                                                    
+
                                                 } else {
-                                                    
+
                                                     $workerInterval->deleted_at = null;
                                                     $workerInterval->save();
                                                 }
-                                                
+
                                                 $bossInterval->workers_available_units = $bossInterval->workers_available_units + $subscription->quantity;
                                                 $bossInterval->save();
-                                                
+
                                             } else if (count($bossIntervals) > 1) {
-                                                
+
                                                 foreach ($bossIntervals as $bossInterval)
                                                 {
                                                     if ($bossInterval->start_date <= $chosenInterval->start_date && $bossInterval->end_date >= $chosenInterval->end_date ||
@@ -1044,7 +1044,7 @@ class BossController extends Controller
                                                             'interval_id' => $bossInterval->id,
                                                             'purchase_id' => $workerPurchase->id
                                                         ])->first();
-                                                        
+
                                                         if ($workerInterval == null)
                                                         {
                                                             $workerInterval = new Interval();
@@ -1054,13 +1054,13 @@ class BossController extends Controller
                                                             $workerInterval->interval_id = $bossInterval->id;
                                                             $workerInterval->purchase_id = $workerPurchase->id;
                                                             $workerInterval->save();
-                                                            
+
                                                         } else {
-                                                            
+
                                                             $workerInterval->deleted_at = null;
                                                             $workerInterval->save();
                                                         }
-                                                        
+
                                                         $bossInterval->workers_available_units = $bossInterval->workers_available_units + $subscription->quantity;
                                                         $bossInterval->save();
                                                     }
@@ -1071,11 +1071,11 @@ class BossController extends Controller
                                 }
                             }
                         }
-                        
+
                         if (Input::get('workers_off') !== null && count(Input::get('workers_off')) > 0)
                         {
                             $workersOff = new Collection();
-                        
+
                             foreach (Input::get('workers_off') as $workerId)
                             {
                                 $worker = User::where([
@@ -1088,7 +1088,7 @@ class BossController extends Controller
                                     $workersOff->push($worker);
                                 }
                             }
-                            
+
                             if (count($workersOff) > 0)
                             {
                                 // turn subscription off
@@ -1098,7 +1098,7 @@ class BossController extends Controller
                                         'user_id' => $worker->id,
                                         'property_id' => $property->id
                                     ])->first();
-                                    
+
                                     if ($workerChosenProperty !== null)
                                     {
                                         $workerPurchase = Purchase::where([
@@ -1112,7 +1112,7 @@ class BossController extends Controller
                                             $workerIntervals = Interval::where([
                                                 'purchase_id' => $workerPurchase->id
                                             ])->get();
-                                            
+
                                             if (count($workerIntervals) > 0)
                                             {
                                                 foreach ($workerIntervals as $workerInterval)
@@ -1121,32 +1121,32 @@ class BossController extends Controller
                                                         $workerInterval->start_date >= $chosenInterval->start_date)
                                                     {
                                                         $bossInterval = Interval::where('id', $workerInterval->interval_id)->first();
-                                                        
+
                                                         $intervalAppointments = Appointment::where([
                                                             'user_id' => $worker->id,
                                                             'interval_id' => $workerInterval->id,
                                                             'purchase_id' => $workerPurchase->id
                                                         ])->get();
-                                                        
+
                                                         if (count($intervalAppointments) > 0)
                                                         {
                                                             foreach ($intervalAppointments as $intervalAppointment)
                                                             {
-                                                                if ($intervalAppointment->status == 0) 
+                                                                if ($intervalAppointment->status == 0)
                                                                 {
                                                                     $intervalAppointment->delete();
-                                                                    
+
                                                                     $workerInterval->available_units = $workerInterval->available_units + 1;
                                                                     $workerInterval->save();
-                                                                    
+
                                                                     $bossInterval->workers_available_units = $bossInterval->workers_available_units + 1;
                                                                     $bossInterval->save();
                                                                 }
                                                             }
                                                         }
-                                                        
+
                                                         $workerInterval->delete();
-                                                        
+
                                                         $bossInterval->workers_available_units = $bossInterval->workers_available_units - $subscription->quantity;
                                                         $bossInterval->save();
                                                     }
@@ -1157,42 +1157,42 @@ class BossController extends Controller
                                 }
                             }
                         }
-                        
+
                         return redirect('/boss/subscription/workers/edit/' . $substart->id . '/' . $chosenInterval->id)->with('success', 'Zmiany zostały wykonane');
                     }
                 }
             }
-            
+
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
     }
-    
+
     public function invoices()
     {
         $boss = auth()->user();
         $boss->load('properties');
         $bossProperties = $boss->properties;
-        
+
         if (count($bossProperties) > 0)
         {
             if (count($bossProperties) == 1)
-            {                
+            {
                 return redirect()->action(
                     'BossController@invoicesIn', [
                         'propertyId' => $bossProperties->first()->id,
                 ]);
-                
+
             } else {
-                
+
                 return view('boss.invoice_property_list')->with([
                     'properties' => $bossProperties
                 ]);
             }
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Brak przypisanej do konta lokalizacji');
     }
-    
+
     public function invoicesIn($propertyId)
     {
         $property = Property::where([
@@ -1203,7 +1203,7 @@ class BossController extends Controller
             'invoiceData',
             'invoices'
         ])->first();
-        
+
         if ($property !== null)
         {
             if ($property->invoiceData == null)
@@ -1212,20 +1212,20 @@ class BossController extends Controller
                     'BossController@invoiceDataCreate', [
                         'propertyId' => $property->id,
                 ]);
-                
-            } else {                
-                
+
+            } else {
+
                 return view('boss.invoices_in')->with([
                     'property' => $property,
                     'invoices' => $property->invoices->sortBy('month.id')
                 ]);
             }
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Lokalizacja nie istnieje lub nie jest przypisana do Twojego konta');
     }
-    
-    public function invoiceDataCreate($propertyId) 
+
+    public function invoiceDataCreate($propertyId)
     {
         $property = Property::where([
             'id' => $propertyId,
@@ -1234,18 +1234,18 @@ class BossController extends Controller
             'years.months',
             'invoiceData'
         ])->first();
-        
+
         if ($property !== null && $property->invoiceData == null)
         {
             return view('boss.property_invoice_data')->with([
                 'property' => $property
             ]);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Lokalizacja nie istnieje, nie jest przypisana do Twojego konta lub dane do faktury już istnieją');
     }
-    
-    public function invoiceDataStore() 
+
+    public function invoiceDataStore()
     {
         $rules = array(
             'company_name'   => 'required|string|min:2|max:45',
@@ -1262,7 +1262,7 @@ class BossController extends Controller
             return Redirect::to('boss/invoice/create/' . Input::get('property_id'))
                 ->withErrors($validator);
         } else {
-            
+
             $property = Property::where([
                 'id' => Input::get('property_id'),
                 'boss_id' => auth()->user()->id
@@ -1276,24 +1276,24 @@ class BossController extends Controller
                 $invoiceData->phone_number    = Input::get('phone_number');
                 $invoiceData->nip             = Input::get('nip');
 //                    $invoiceData->bank_name       = Input::get('bank_name');
-//                    $invoiceData->account_number  = Input::get('account_number');      
-                $invoiceData->property_id     = $property->id;           
+//                    $invoiceData->account_number  = Input::get('account_number');
+                $invoiceData->property_id     = $property->id;
                 $invoiceData->save();
 
                 return redirect('boss/invoices/in/' . $property->id)->with('success', 'Dane do faktury zostały uzupełnione!');
             }
-            
+
             return redirect()->route('welcome')->with('error', 'Niepoprawne dane');
         }
     }
-    
+
     public function invoiceDataEdit($propertyId)
     {
         $property = Property::where([
             'id' => $propertyId,
             'boss_id' => auth()->user()->id
         ])->with('invoiceData')->first();
-        
+
         if ($property !== null && $property->invoiceData !== null)
         {
             return view('boss.property_invoice_data_edit')->with([
@@ -1301,10 +1301,10 @@ class BossController extends Controller
                 'property' => $property
             ]);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Dane do faktury nie istnieją');
     }
-    
+
     public function invoiceDataUpdate()
     {
         $rules = array(
@@ -1323,7 +1323,7 @@ class BossController extends Controller
             return Redirect::to('boss/invoice/edit/' . Input::get('property_id'))
                 ->withErrors($validator);
         } else {
-            
+
             $invoiceData = InvoiceData::where([
                 'id' => Input::get('invoice_data_id'),
                 'property_id' => Input::get('property_id')
@@ -1336,16 +1336,16 @@ class BossController extends Controller
                 $invoiceData->phone_number    = Input::get('phone_number');
                 $invoiceData->nip             = Input::get('nip');
 //                    $invoiceData->bank_name       = Input::get('bank_name');
-//                    $invoiceData->account_number  = Input::get('account_number');        
+//                    $invoiceData->account_number  = Input::get('account_number');
                 $invoiceData->save();
 
                 return redirect('boss/invoices/in/' . $invoiceData->property->id)->with('success', 'Dane do faktury zostały zmienione!');
             }
         }
-            
+
         return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane do faktury');
     }
-    
+
     /**
      * Method to send graphic request to admin.
      */
@@ -1362,17 +1362,17 @@ class BossController extends Controller
         if ($validator->fails())
         {
             return Redirect::to('/')->withErrors($validator);
-            
+
         } else {
-            
+
             $boss = auth()->user();
-            
+
             if ($boss->isBoss == 1)
             {
                 $day = Day::where('id', Input::get('day'))->with('month.year.property')->first();
-                
+
                 if ($day !== null && $day->month->year->property->boss_id == $boss->id)
-                {          
+                {
                     $graphicRequest = new GraphicRequest();
                     $graphicRequest->start_time = Input::get('start_time');
                     $graphicRequest->end_time = Input::get('end_time');
@@ -1400,22 +1400,22 @@ class BossController extends Controller
                         return redirect()->action(
                             'BossController@graphicRequests'
                         )->with('success', 'Zapytanie o otwarcie grafiku zostało wysłane');
-                    }        
+                    }
                 }
             }
-            
+
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
     }
-    
+
     public function graphicRequests()
     {
         $boss = User::where('id', auth()->user()->id)->with([
             'properties.graphicRequests.day.month.year'
         ])->first();
-        
+
         $graphicRequests = new Collection();
-        
+
         if (count($boss->properties) > 0)
         {
             foreach ($boss->properties as $property)
@@ -1433,27 +1433,27 @@ class BossController extends Controller
                 }
             }
         }
-        
+
         return view('boss.graphic_requests')->with([
             'graphicRequests' => $graphicRequests
         ]);
     }
-    
+
     public function graphicRequestShow($graphicRequestId)
     {
         $boss = auth()->user();
-        
+
         $graphicRequest = GraphicRequest::where('id', $graphicRequestId)->with([
             'property.boss',
             'day.month.year',
             'employees',
             'messages.user'
         ])->first();
-        
+
         if ($graphicRequest !== null && $graphicRequest->property->boss_id == $boss->id)
         {
             $allEmployees = User::where('isEmployee', 1)->get();
-            
+
             foreach ($allEmployees as $employee)
             {
                 foreach ($graphicRequest->employees as $chosenEmployee)
@@ -1464,32 +1464,32 @@ class BossController extends Controller
                     }
                 }
             }
-            
+
             $graphicRequest['allEmployees'] = $allEmployees;
             $graphicRequest['boss'] = $graphicRequest->property->boss;
-            
+
             return view('boss.graphic_request')->with([
                 'graphicRequest' => $graphicRequest,
                 'boss' => $boss
             ]);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Podane zapytanie o grafik nie istnieję lub ma innego właściciela');
     }
-    
+
     public function graphicRequestEdit($graphicRequestId)
     {
         $boss = auth()->user();
-        
+
         $graphicRequest = GraphicRequest::where([
             'id' => $graphicRequestId,
             'boss_id' => $boss->id
         ])->with('employees')->first();
-        
+
         if ($graphicRequest !== null)
         {
             $allEmployees = User::where('isEmployee', 1)->get();
-            
+
             foreach ($allEmployees as $employee)
             {
                 foreach ($graphicRequest->employees as $chosenEmployee)
@@ -1500,50 +1500,50 @@ class BossController extends Controller
                     }
                 }
             }
-            
+
             $graphicRequest['allEmployees'] = $allEmployees;
-            
+
             return view('boss.graphic_request_edit')->with([
                 'graphicRequest' => $graphicRequest
             ]);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Podane zapytanie o grafik nie istnieję lub ma innego właściciela');
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
      * @return Response
      */
     public function graphicRequestUpdate(Request $request)
-    {        
+    {
         $graphicRequestId = htmlentities($request->get('graphic_request_id'), ENT_QUOTES, "UTF-8");
         $startTime= htmlentities($request->get('start_time'), ENT_QUOTES, "UTF-8");
         $endTime = htmlentities($request->get('end_time'), ENT_QUOTES, "UTF-8");
         $comment = htmlentities($request->get('comment'), ENT_QUOTES, "UTF-8");
-        
+
         $employees = [];
         $isEmployeesArrayValid = true;
-        
+
         foreach ($request->get('employees') as $employee)
         {
             $employee = User::where([
                 'id' => htmlentities((int)$employee, ENT_QUOTES, "UTF-8"),
                 'isEmployee' => 1
             ])->first();
-            
+
             if ($employee !== null)
             {
                 $employees[] = $employee;
             }
-            
-            if (!($employee instanceof \App\User)) 
+
+            if (!($employee instanceof \App\Models\User))
             {
                 $isEmployeesArrayValid = false;
             }
         }
-        
+
         if ($graphicRequestId !== null &&
             $startTime !== null &&
             $endTime !== null &&
@@ -1552,35 +1552,35 @@ class BossController extends Controller
             $isEmployeesArrayValid)
         {
             $boss = auth()->user();
-            
+
             $graphicRequest = GraphicRequest::where([
                 'id' => $graphicRequestId,
                 'boss_id' => $boss->id
             ])->first();
-            
+
             if ($graphicRequest !== null)
             {
                 $graphicRequest->start_time  = $startTime;
                 $graphicRequest->end_time    = $endTime;
                 $graphicRequest->comment     = $comment;
-                
+
                 $graphicRequest->employees()->detach();
-                
+
                 foreach ($employees as $employee)
                 {
                     $graphicRequest->employees()->attach($employee->id);
                 }
-                    
+
                 $graphicRequest->updated_at = new \DateTime();
                 $graphicRequest->save();
 
                 return redirect('/boss/graphic-request/' . $graphicRequest->id)->with('success', 'Zapytanie o otworzenie grafiku zostało zmienione!');
             }
         }
-            
+
         return redirect()->route('welcome')->with('error', 'Nieprawidłowe dane do faktury');
     }
-    
+
     public function approveMessages()
     {
         $promoCode = PromoCode::where('boss_id', auth()->user()->id)->with([
@@ -1588,17 +1588,17 @@ class BossController extends Controller
             'boss',
             'messages'
         ])->first();
-        
+
         if ($promoCode !== null)
         {
             return view('boss.approve_messages')->with([
                 'promoCode' => $promoCode
             ]);
         }
-        
+
         return redirect()->route('welcome')->with('error');
     }
-    
+
     public function makeAMessage()
     {
         $rules = array(
@@ -1610,11 +1610,11 @@ class BossController extends Controller
         if ($validator->fails())
         {
             return Redirect::to('boss/graphic-request/' . Input::get('graphic_request_id'));
-            
+
         } else {
-            
+
             $boss = auth()->user();
-            
+
             if ($boss->isBoss == 1)
             {
                 $graphicRequest = GraphicRequest::where([
@@ -1629,15 +1629,15 @@ class BossController extends Controller
                     $message->user_id = $boss->id;
                     $message->graphic_request_id = $graphicRequest->id;
                     $message->save();
-                    
+
                     return redirect('/boss/graphic-request/' . $graphicRequest->id)->with('success', 'Wiadomość została wysłana!');
                 }
             }
-            
+
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
     }
-    
+
     public function makeAnApproveMessage()
     {
         $rules = array(
@@ -1649,11 +1649,11 @@ class BossController extends Controller
         if ($validator->fails())
         {
             return Redirect::to('boss/approve/messages');
-            
+
         } else {
-            
+
             $boss = auth()->user();
-            
+
             if ($boss->isApproved == 0)
             {
                 $promoCode = PromoCode::where([
@@ -1669,22 +1669,22 @@ class BossController extends Controller
                     $message->user_id = $promoCode->boss_id;
                     $message->promo_code_id = $promoCode->id;
                     $message->save();
-                    
+
                     return redirect('/boss/approve/messages')->with('success', 'Wiadomość została wysłana!');
                 }
             }
-            
+
             return redirect()->route('welcome')->with('error', 'Coś poszło nie tak');
         }
-    }   
-    
+    }
+
     public function markMessageAsDisplayed(Request $request)
-    {        
+    {
         if ($request->get('messageId'))
         {
             $messageId = htmlentities((int)$request->get('messageId'), ENT_QUOTES, "UTF-8");
             $message = Message::where('id', $messageId)->first();
-            
+
             if ($message !== null)
             {
                 $message->status = 1;
@@ -1695,27 +1695,27 @@ class BossController extends Controller
                 ], 200, array(), true);
             }
         }
-        
+
         return new JsonResponse(array(
-            'type'    => 'error'        
+            'type'    => 'error'
         ));
     }
-    
+
     /**
      * Shows a list of appointments assigned to given property.
-     * 
+     *
      * @param type $propertyId
      * @param type $userId
-     * 
+     *
      * @return type
      */
     public function workerAppointmentList($propertyId, $userId = 0)
     {
         $property = Property::where('id', $propertyId)->with('years.months')->first();
-        
+
         $userId = htmlentities((int)$userId, ENT_QUOTES, "UTF-8");
         $userId = (int)$userId;
-        
+
         if ($property !== null)
         {
             // >> get boss and its workers
@@ -1723,9 +1723,9 @@ class BossController extends Controller
             $boss->load([
                 'appointments.day.month.year.property'
             ]);
-                    
+
             if ($userId !== 0 && is_int($userId))
-            {              
+            {
                 if ($boss->id !== $userId)
                 {
                     $worker = User::where([
@@ -1734,35 +1734,35 @@ class BossController extends Controller
                     ])->with([
                         'appointments.day.month.year.property'
                     ])->first();
-                    
+
                 } else if ($boss->id == $userId) {
-                    
+
                     $worker = $boss;
                 }
-                
+
                 $workers = new Collection();
-                
+
                 if ($worker !== null)
                 {
                     $workers->push($worker);
                 }
-                
+
             } else {
-                
+
                 $workers = User::where('boss_id', $boss->id)->with([
                     'appointments.day.month.year.property'
                 ])->get();
                 $workers->prepend($boss);
             }
             // <<
-            
-            
+
+
             // >> get property calendar time intervals (in months)
             $propertyTimeIntervals = new Collection();
             $currentInterval = [];
             $today = new \DateTime(date('Y-m-d'));
 //            $today = new \DateTime(date('Y-m-d', strtotime("+9 month", strtotime($today->format("Y-m-d")))));
-            
+
             if (count($property->years) > 0)
             {
                 foreach ($property->years as $year)
@@ -1775,42 +1775,42 @@ class BossController extends Controller
                             $numberOfDaysInAGivenMonth = cal_days_in_month(CAL_GREGORIAN, $month->month_number, $year->year);
                             $givenMonthStartDateTime = new \DateTime(date($year->year . '-' . $month->month_number . '-' . 1));
                             $givenMonthEndDateTime = new \DateTime(date($year->year . '-' . $month->month_number . '-' . $numberOfDaysInAGivenMonth));
-                            
+
                             $timeInterval = [
                                 'start_date' => $givenMonthStartDateTime,
                                 'end_date' => $givenMonthEndDateTime,
                                 'month_id' => $month->id
                             ];
-                            
+
                             if ($givenMonthStartDateTime <= $today && $today <= $givenMonthEndDateTime)
                             {
                                 // set current interval
                                 $currentInterval = $timeInterval;
                             }
-                            
+
                             // add it to collection
                             $propertyTimeIntervals->push($timeInterval);
                         }
                     }
                 }
             }
-            
+
             // in case today is later than the last time interval
             if (count($currentInterval) == 0)
-            {                
+            {
                 $currentInterval = $propertyTimeIntervals->last();
             }
             // <<
-            
-            
+
+
             // >> get time interval appointments
             $appointmentsCollection = new Collection();
 //            $currentInterval = new \DateTime(date('Y-m-d', strtotime("+1 month", strtotime($currentInterval->format("Y-m-d")))));
-            
+
             if (count($workers) > 0)
             {
                 foreach ($workers as $worker)
-                {                    
+                {
                     if (count($worker->appointments) > 0)
                     {
                         foreach ($worker->appointments as $appointment)
@@ -1830,14 +1830,14 @@ class BossController extends Controller
                                     $appointment['year'] = $appointment->day->month->year;
 
                                     $appointment['date'] = $appointment['day']->day_number. ' ' . $appointment['month']->month . ' ' . $appointment['year']->year;
-                                    
+
                                     $monthNumber = (string)$appointment['month']->month_number;
-                                    
+
                                     if (strlen($monthNumber) == 1)
                                     {
                                         $monthNumber = "0" . $appointment['month']->month_number;
                                     }
-                                    
+
                                     $appointment['date_time'] = new \DateTime($appointment['year']->year. '-' . $monthNumber . '-' . $appointment['day']->day_number . ' ' . $appointment->start_time);
 
                                     $employee = User::where('id', $appointment->graphic->employee_id)->first();
@@ -1854,16 +1854,16 @@ class BossController extends Controller
                     }
                 }
             }
-            
+
             $payments = [];
-            
+
             if (count($currentInterval) > 0)
             {
                 $payments = $this->countMonthlyPaymentsForDoneAppointments($currentInterval['month_id']);
             }
-            
+
             $month = Month::where('id', $currentInterval['month_id'])->first();
-            
+
             return view('boss.worker_appointment_list')->with([
                 'appointments' => $appointmentsCollection->sortByDesc('date_time'),
                 'worker' => $userId !== 0 ? $worker : null,
@@ -1875,21 +1875,21 @@ class BossController extends Controller
                 'monthEn' => $month->month_en
             ]);
         }
-        
+
         return redirect()->route('welcome');
     }
-    
+
     public function getPropertyUsersFromDatabase(Request $request)
-    {        
+    {
         if ($request->get('searchField') && $request->get('propertyId'))
         {
             $searchField = htmlentities($request->get('searchField'), ENT_QUOTES, "UTF-8");
-                    
+
             $boss = auth()->user();
             $property = Property::where('id', $request->get('propertyId'))->first();
 
             if ($property !== null && $property->boss_id == $boss->id)
-            {                   
+            {
                 // >> look for users within boss workers
                 $users = User::where([
                     ['name', 'like', $searchField . '%'],
@@ -1914,7 +1914,7 @@ class BossController extends Controller
 
                 // >> if searched boss entity exist, add it to users collection
                 if ($bossSearchedEntity !== null)
-                {            
+                {
                     $users->push($bossSearchedEntity);
                 }
                 // <<
@@ -1927,19 +1927,19 @@ class BossController extends Controller
                 return new JsonResponse($data, 200, array(), true);
             }
         }
-        
+
         return new JsonResponse(array(
             'type'    => 'error',
-            'message' => 'Pusty request'            
+            'message' => 'Pusty request'
         ));
     }
-    
+
     public function getUserAppointmentsFromDatabase(Request $request)
-    {        
+    {
         if ($request->get('userId') && $request->get('propertyId') && $request->get('monthId'))
         {
             $boss = auth()->user();
-            
+
             $userId = htmlentities((int)$request->get('userId'), ENT_QUOTES, "UTF-8");
 
             // >> look for user within boss workers
@@ -1961,15 +1961,15 @@ class BossController extends Controller
 
             $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
             $monthId = htmlentities((int)$request->get('monthId'), ENT_QUOTES, "UTF-8");
-            
+
             $property = Property::where('id', $propertyId)->first();
             $month = Month::where('id', $monthId)->with([
                 'year.property',
                 'days.appointments.graphic.employee'
             ])->first();
 
-            if ($user !== null && 
-                $property !== null && $property->boss_id == $boss->id && 
+            if ($user !== null &&
+                $property !== null && $property->boss_id == $boss->id &&
                 $month !== null && $month->year->property->id == $property->id)
             {
                 $appointmentsArray = [];
@@ -2024,16 +2024,16 @@ class BossController extends Controller
 
                 // >> sorting and storing appointments into new array (there was a problem with indexes (after sorting, they remain the same numbers))
                 if (count($appointmentsArray) > 0)
-                {                
+                {
                     uasort($appointmentsArray, function($a, $b) {
                         return $b['date_time'] <=> $a['date_time'];
                     });
                 }
-                
+
                 $sortedAppointmentsArray = [];
 
                 if (count($appointmentsArray) > 0)
-                {                
+                {
                     uasort($appointmentsArray, function($a, $b) {
                         return $b['date_time'] <=> $a['date_time'];
                     });
@@ -2044,7 +2044,7 @@ class BossController extends Controller
                     }
                 }
                 // <<
-                              
+
                 $data = [
                     'type' => 'success',
                     'worker_name' => $user->name,
@@ -2062,19 +2062,19 @@ class BossController extends Controller
                 return new JsonResponse($data, 200, array(), true);
             }
         }
-        
+
         return new JsonResponse(array(
             'type'    => 'error',
-            'message' => 'Pusty request'            
+            'message' => 'Pusty request'
         ));
     }
-    
+
     public function getUsersAppointmentsFromDatabase(Request $request)
-    {        
+    {
         if ($request->get('propertyId') && $request->get('monthId'))
         {
             $boss = auth()->user();
-            
+
             $propertyId = htmlentities((int)$request->get('propertyId'), ENT_QUOTES, "UTF-8");
             $monthId = htmlentities((int)$request->get('monthId'), ENT_QUOTES, "UTF-8");
 
@@ -2087,7 +2087,7 @@ class BossController extends Controller
                 'days.appointments.graphic.employee'
             ])->first();
 
-            if ($property !== null && 
+            if ($property !== null &&
                 $month !== null && $month->year->property->id == $property->id)
             {
                 $appointmentsArray = [];
@@ -2141,7 +2141,7 @@ class BossController extends Controller
                 $sortedAppointmentsArray = [];
 
                 if (count($appointmentsArray) > 0)
-                {                
+                {
                     uasort($appointmentsArray, function($a, $b) {
                         return $b['date_time'] <=> $a['date_time'];
                     });
@@ -2163,29 +2163,29 @@ class BossController extends Controller
                     'massage_description' => \Lang::get('common.massage'),
                     'executor_description' => \Lang::get('common.executor'),
                     'status_description' => \Lang::get('common.status'),
-                ];       
+                ];
 
                 return new JsonResponse($data, 200, array(), true);
             }
         }
-        
+
         return new JsonResponse(array(
             'type'    => 'error',
-            'message' => 'Pusty request'         
+            'message' => 'Pusty request'
         ));
     }
-    
+
     public function getMonthlyPaymentsForDoneAppointments(Request $request)
-    {        
+    {
         if ($request->get('monthId'))
         {
             $month = Month::where('id', $request->get('monthId'))->with('year')->first();
-            
+
             if ($month !== null)
             {
-                // >> get month start and end datetimes + payments 
+                // >> get month start and end datetimes + payments
                 $monthNumber = (string)$month->month_number;
-                
+
                 if (strlen($monthNumber) == 1)
                 {
                     $monthNumber = "0" . $month->month_number;
@@ -2193,7 +2193,7 @@ class BossController extends Controller
 
                 $monthStartDateTime = new \DateTime($month->year->year . '-' . $monthNumber . '-' . 1);
                 $monthEndDateTime = new \DateTime($month->year->year . '-' . $monthNumber . '-' . cal_days_in_month(CAL_GREGORIAN, $month->month_number, $month->year->year));
-                
+
                 $payments = $this->countMonthlyPaymentsForDoneAppointments($month->id);
                 // <<
 
@@ -2208,22 +2208,22 @@ class BossController extends Controller
                     'total_amount_for_done_appointments_description' => \Lang::get('common.total_amount_for_done_appointments'),
                     'discount_description' => \Lang::get('common.discount'),
                     'no_payments_description' => \Lang::get('common.no_payments_description')
-                ];       
+                ];
 
                 return new JsonResponse($data, 200, array(), true);
             }
         }
-        
+
         return new JsonResponse(array(
-            'type'    => 'error'        
+            'type'    => 'error'
         ));
     }
-    
+
     private function countMonthlyPaymentsForDoneAppointments($monthId)
     {
         $month = Month::where('id', $monthId)->with('days.appointments')->first();
         $usersWithAppointments = [];
-        
+
         if ($month !== null && count($month->days) > 0)
         {
             foreach ($month->days as $day)
@@ -2238,28 +2238,28 @@ class BossController extends Controller
                                 'user',
                                 'item'
                             ]);
-                            
+
                             if (count($usersWithAppointments) == 0)
                             {
                                 $usersWithAppointments[] = [
                                     'user' => $appointment->user,
                                     'appointments' => collect([$appointment])
                                 ];
-                                
+
                             } else {
-                                
+
                                 $existsInArray = false;
-                                
+
                                 foreach ($usersWithAppointments as $userWithAppointments)
                                 {
                                     if ($userWithAppointments['user']->id == $appointment->user->id)
                                     {
                                         $existsInArray = true;
-                                        
+
                                         $userWithAppointments['appointments']->push($appointment);
                                     }
                                 }
-                                
+
                                 if ($existsInArray == false)
                                 {
                                     $usersWithAppointments[] = [
@@ -2273,36 +2273,36 @@ class BossController extends Controller
                 }
             }
         }
-        
+
         if (count($usersWithAppointments) > 0)
         {
             // >> get discount that rely from number of users who had massage in given month
             $highestDiscount = null;
             $discountsThatMatchNumberOfUsers = Discount::where('worker_threshold', '<=', count($usersWithAppointments))->get();
-            
+
             if (count($discountsThatMatchNumberOfUsers) > 0)
             {
                 $highestDiscount = $discountsThatMatchNumberOfUsers->last();
             }
             // <<
-            
+
             // >> get total amount with discounts from number of appointments per persona per month + discount that rely from number of users who had massage in given month
             $totalAmount = 0;
             $totalAmountWithoutDiscounts = 0;
-            
+
             foreach ($usersWithAppointments as $userWithAppointments)
             {
                 if (count($userWithAppointments['appointments']) > 0)
                 {
                     // >> add it all together
                     $userAppointmentsAmount = 0;
-                    
+
                     foreach ($userWithAppointments['appointments'] as $appointment)
                     {
                         $userAppointmentsAmount += $appointment->item->price;
                     }
                     // <<
-                    
+
                     if ($userAppointmentsAmount !== 0)
                     {
                         // if user has more then 4 appointments made in given month, mark it as 4 anyway
@@ -2321,7 +2321,7 @@ class BossController extends Controller
                     }
                 }
             }
-            
+
             if ($totalAmount !== 0)
             {
                 $totalDiscountPercentage = round(100 - ($totalAmount * 100) / $totalAmountWithoutDiscounts, 2);
@@ -2333,7 +2333,7 @@ class BossController extends Controller
                 ];
             }
         }
-        
+
         return [];
     }
 }

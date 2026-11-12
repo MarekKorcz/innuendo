@@ -1,13 +1,20 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Invoice extends Model
+class InvoiceData extends Model
 {
     use SoftDeletes;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'invoice_datas';
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +22,12 @@ class Invoice extends Model
      * @var array
      */
     protected $fillable = [
-        'invoice'
+        'company_name',
+        'email',
+        'phone_number',
+        'nip',
+        'bank_name',
+        'account_number'
     ];
 
     /**
@@ -24,8 +36,7 @@ class Invoice extends Model
      * @var array
      */
     protected $hidden = [
-        'property_id',
-        'month_id',
+        'property_id'
     ];
 
     /**
@@ -34,23 +45,16 @@ class Invoice extends Model
      * @var array
      */
     protected $casts = [
-        'property_id' => 'integer',
-        'month_id' => 'integer'
+        'phone_number' => 'integer',
+        'account_number' => 'integer',
+        'property_id' => 'integer'
     ];
 
     /**
-     * Get property associated to invoice.
+     * Get property associated to invoiceData.
      */
     public function property()
     {
-        return $this->belongsTo('App\Property');
-    }
-
-    /**
-     * Get month associated to invoice.
-     */
-    public function month()
-    {
-        return $this->belongsTo('App\Month');
+        return $this->belongsTo('Property');
     }
 }

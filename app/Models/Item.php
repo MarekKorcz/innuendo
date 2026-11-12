@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Code extends Authenticatable
+class Item extends Model
 {
     use SoftDeletes;
 
@@ -14,7 +14,7 @@ class Code extends Authenticatable
      *
      * @var string
      */
-    protected $table = 'codes';
+    protected $table = 'items';
 
     /**
      * The attributes that are mass assignable.
@@ -22,7 +22,11 @@ class Code extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'code'
+        'name',
+        'slug',
+        'minutes',
+        'description',
+        'price'
     ];
 
     /**
@@ -31,7 +35,7 @@ class Code extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'boss_id'
+        'category_id'
     ];
 
     /**
@@ -40,14 +44,15 @@ class Code extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'boss_id' => 'integer'
+        'price' => 'decimal:2',
+        'category_id' => 'integer'
     ];
 
     /**
-     * Get boss that owns the code.
+     * Get the category that owns the item.
      */
-    public function boss()
+    public function category()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('Category');
     }
 }

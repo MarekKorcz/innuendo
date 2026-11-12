@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,6 +51,6 @@ class Promo extends Model
      */
     public function promoCodes()
     {
-        return $this->hasMany('App\PromoCode');
+        return $this->hasMany('PromoCode');
     }
 }

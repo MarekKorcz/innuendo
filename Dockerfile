@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.5-apache
 
 # Instalacja zależności systemowych i rozszerzeń PHP wymaganych przez nowoczesnego Laravela
 RUN apt-get update && apt-get install -y \

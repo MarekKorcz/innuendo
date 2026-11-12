@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Redirect;
@@ -13,14 +13,14 @@ class CategoryController extends Controller
     {
         $this->middleware('admin');
     }
-    
+
     public function create()
     {
         return view('category.create');
     }
 
     public function store()
-    {        
+    {
         $rules = array(
             'name'           => 'required',
             'description'    => 'required'
@@ -31,7 +31,7 @@ class CategoryController extends Controller
             return Redirect::to('category/create')
                 ->withErrors($validator);
         } else {
-            
+
             $category = new Category();
             $category->name = Input::get('name');
             $category->slug = str_slug(Input::get('name'));
@@ -41,33 +41,33 @@ class CategoryController extends Controller
             return redirect('category/show/' . $category->id)->with('success', 'Kategoria została utworzona');
         }
     }
-    
+
     public function show($id)
-    {        
+    {
         $category = Category::where('id', $id)->with(array('items' => function($query) {
             $query->orderBy('minutes', 'ASC');
         }))->first();
-        
+
         if ($category !== null)
         {
             return view('category.show')->with('category', $category);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Kategoria nie istnieje');
     }
-    
+
     public function edit($id)
     {
         $category = Category::where('id', $id)->first();
-        
+
         if ($category !== null)
         {
             return view('category.edit')->with('category', $category);
         }
-        
+
         return redirect()->route('welcome')->with('error', 'Kategoria nie istnieje');
     }
-    
+
     public function update()
     {
         $rules = array(
@@ -82,35 +82,35 @@ class CategoryController extends Controller
             return Redirect::to('category/' . Input::get('category_id') . '/edit')
                 ->withErrors($validator);
         } else {
-            
+
             $category = Category::where('id', Input::get('category_id'))->first();
-            
+
             if ($category !== null)
             {
                 $category->name = Input::get('name');
                 $category->slug = Input::get('slug');
                 $category->description = Input::get('description');
                 $category->save();
-                
+
                 return redirect('category/show/' . $category->id)->with('success', 'Kategoria została zaktualizowana');
             }
 
             return redirect()->route('welcome')->with('error', 'Kategoria nie istnieje');
         }
     }
-    
+
     public function index()
     {
         $categories = Category::all();
-        
+
         if (count($categories) > 0)
-        {            
+        {
             return view('category.index')->with([
                 'categories' => $categories
             ]);
-            
+
         } else if (count($categories) == 0) {
-            
+
             return redirect()->action(
                 'CategoryController@create'
             );
