@@ -24,7 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Str;
 use Redirect;
 use Session;
 
@@ -605,22 +605,22 @@ class BossController extends Controller
             'house_number'  => 'required',
             'city'          => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('/boss/property/' . Input::get('property_id') . '/edit')
+            return Redirect::to('/boss/property/' . request()->input('property_id') . '/edit')
                 ->withErrors($validator);
         } else {
 
             $boss = auth()->user();
 
-            $property = Property::where('id', Input::get('property_id'))->first();
-            $property->name          = Input::get('name');
-            $property->slug          = str_slug(Input::get('name'));
-            $property->street        = Input::get('street');
-            $property->street_number = Input::get('street_number');
-            $property->house_number  = Input::get('house_number');
-            $property->city          = Input::get('city');
+            $property = Property::where('id', request()->input('property_id'))->first();
+            $property->name          = request()->input('name');
+            $property->slug          = Str::slug(request()->input('name'));
+            $property->street        = request()->input('street');
+            $property->street_number = request()->input('street_number');
+            $property->house_number  = request()->input('house_number');
+            $property->city          = request()->input('city');
             $property->boss_id       = $boss->id;
             $property->save();
 
@@ -918,11 +918,11 @@ class BossController extends Controller
             'workers_on'  => 'sometimes',
             'workers_off' => 'sometimes'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails())
         {
-            return Redirect::to('boss/subscription/workers/edit/' . Input::get('substart_id') . '/' . Input::get('interval_id'));
+            return Redirect::to('boss/subscription/workers/edit/' . request()->input('substart_id') . '/' . request()->input('interval_id'));
 
         } else {
 
@@ -931,7 +931,7 @@ class BossController extends Controller
             if ($boss->isBoss == 1)
             {
                 $substart = Substart::where([
-                    'id' => Input::get('substart_id'),
+                    'id' => request()->input('substart_id'),
                     'boss_id' => $boss->id
                 ])->first();
 
@@ -943,17 +943,17 @@ class BossController extends Controller
                     $today = new \DateTime(date('Y-m-d'));
 
                     $chosenInterval = Interval::where([
-                        'id' => Input::get('interval_id'),
+                        'id' => request()->input('interval_id'),
                         'substart_id' => $substart->id
                     ])->first();
 
                     if ($chosenInterval !== null && !($chosenInterval->start_date < $today && $chosenInterval->end_date < $today))
                     {
-                        if (Input::get('workers_on') !== null && count(Input::get('workers_on')) > 0)
+                        if (request()->input('workers_on') !== null && count(request()->input('workers_on')) > 0)
                         {
                             $workersOn = new Collection();
 
-                            foreach (Input::get('workers_on') as $workerId)
+                            foreach (request()->input('workers_on') as $workerId)
                             {
                                 $worker = User::where([
                                     'id' => $workerId,
@@ -1072,11 +1072,11 @@ class BossController extends Controller
                             }
                         }
 
-                        if (Input::get('workers_off') !== null && count(Input::get('workers_off')) > 0)
+                        if (request()->input('workers_off') !== null && count(request()->input('workers_off')) > 0)
                         {
                             $workersOff = new Collection();
 
-                            foreach (Input::get('workers_off') as $workerId)
+                            foreach (request()->input('workers_off') as $workerId)
                             {
                                 $worker = User::where([
                                     'id' => $workerId,
@@ -1256,27 +1256,27 @@ class BossController extends Controller
 //            'bank_name'      => 'required|string',
 //            'account_number' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('boss/invoice/create/' . Input::get('property_id'))
+            return Redirect::to('boss/invoice/create/' . request()->input('property_id'))
                 ->withErrors($validator);
         } else {
 
             $property = Property::where([
-                'id' => Input::get('property_id'),
+                'id' => request()->input('property_id'),
                 'boss_id' => auth()->user()->id
             ])->first();
 
             if ($property !== null)
             {
                 $invoiceData = new InvoiceData();
-                $invoiceData->company_name    = Input::get('company_name');
-                $invoiceData->email           = Input::get('email');
-                $invoiceData->phone_number    = Input::get('phone_number');
-                $invoiceData->nip             = Input::get('nip');
-//                    $invoiceData->bank_name       = Input::get('bank_name');
-//                    $invoiceData->account_number  = Input::get('account_number');
+                $invoiceData->company_name    = request()->input('company_name');
+                $invoiceData->email           = request()->input('email');
+                $invoiceData->phone_number    = request()->input('phone_number');
+                $invoiceData->nip             = request()->input('nip');
+//                    $invoiceData->bank_name       = request()->input('bank_name');
+//                    $invoiceData->account_number  = request()->input('account_number');
                 $invoiceData->property_id     = $property->id;
                 $invoiceData->save();
 
@@ -1317,26 +1317,26 @@ class BossController extends Controller
 //            'bank_name'      => 'required|string',
 //            'account_number' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('boss/invoice/edit/' . Input::get('property_id'))
+            return Redirect::to('boss/invoice/edit/' . request()->input('property_id'))
                 ->withErrors($validator);
         } else {
 
             $invoiceData = InvoiceData::where([
-                'id' => Input::get('invoice_data_id'),
-                'property_id' => Input::get('property_id')
+                'id' => request()->input('invoice_data_id'),
+                'property_id' => request()->input('property_id')
             ])->with('property')->first();
 
             if ($invoiceData !== null)
             {
-                $invoiceData->company_name    = Input::get('company_name');
-                $invoiceData->email           = Input::get('email');
-                $invoiceData->phone_number    = Input::get('phone_number');
-                $invoiceData->nip             = Input::get('nip');
-//                    $invoiceData->bank_name       = Input::get('bank_name');
-//                    $invoiceData->account_number  = Input::get('account_number');
+                $invoiceData->company_name    = request()->input('company_name');
+                $invoiceData->email           = request()->input('email');
+                $invoiceData->phone_number    = request()->input('phone_number');
+                $invoiceData->nip             = request()->input('nip');
+//                    $invoiceData->bank_name       = request()->input('bank_name');
+//                    $invoiceData->account_number  = request()->input('account_number');
                 $invoiceData->save();
 
                 return redirect('boss/invoices/in/' . $invoiceData->property->id)->with('success', 'Dane do faktury zostały zmienione!');
@@ -1357,7 +1357,7 @@ class BossController extends Controller
             'employees'  => 'required',
             'day'        => 'required|numeric'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails())
         {
@@ -1369,21 +1369,21 @@ class BossController extends Controller
 
             if ($boss->isBoss == 1)
             {
-                $day = Day::where('id', Input::get('day'))->with('month.year.property')->first();
+                $day = Day::where('id', request()->input('day'))->with('month.year.property')->first();
 
                 if ($day !== null && $day->month->year->property->boss_id == $boss->id)
                 {
                     $graphicRequest = new GraphicRequest();
-                    $graphicRequest->start_time = Input::get('start_time');
-                    $graphicRequest->end_time = Input::get('end_time');
-                    $graphicRequest->comment = Input::get('comment');
+                    $graphicRequest->start_time = request()->input('start_time');
+                    $graphicRequest->end_time = request()->input('end_time');
+                    $graphicRequest->comment = request()->input('comment');
                     $graphicRequest->property_id = $day->month->year->property->id;
                     $graphicRequest->day_id = $day->id;
                     $graphicRequest->save();
 
                     if ($graphicRequest !== null)
                     {
-                        foreach (Input::get('employees') as $employee_id)
+                        foreach (request()->input('employees') as $employee_id)
                         {
                             $employee = User::where([
                                 'id' => $employee_id,
@@ -1605,11 +1605,11 @@ class BossController extends Controller
             'text'               => 'required|string',
             'graphic_request_id' => 'required|numeric'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails())
         {
-            return Redirect::to('boss/graphic-request/' . Input::get('graphic_request_id'));
+            return Redirect::to('boss/graphic-request/' . request()->input('graphic_request_id'));
 
         } else {
 
@@ -1618,13 +1618,13 @@ class BossController extends Controller
             if ($boss->isBoss == 1)
             {
                 $graphicRequest = GraphicRequest::where([
-                    'id' => Input::get('graphic_request_id')
+                    'id' => request()->input('graphic_request_id')
                 ])->with('property')->first();
 
                 if ($graphicRequest !== null && $graphicRequest->property !== null && $graphicRequest->property->boss_id == $boss->id)
                 {
                     $message = new Message();
-                    $message->text = Input::get('text');
+                    $message->text = request()->input('text');
                     $message->status = 0;
                     $message->user_id = $boss->id;
                     $message->graphic_request_id = $graphicRequest->id;
@@ -1644,7 +1644,7 @@ class BossController extends Controller
             'text'          => 'required|string',
             'promo_code_id' => 'required|numeric'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails())
         {
@@ -1657,14 +1657,14 @@ class BossController extends Controller
             if ($boss->isApproved == 0)
             {
                 $promoCode = PromoCode::where([
-                    'id' => Input::get('promo_code_id'),
+                    'id' => request()->input('promo_code_id'),
                     'boss_id' => $boss->id
                 ])->first();
 
                 if ($promoCode !== null)
                 {
                     $message = new Message();
-                    $message->text = Input::get('text');
+                    $message->text = request()->input('text');
                     $message->status = 0;
                     $message->user_id = $promoCode->boss_id;
                     $message->promo_code_id = $promoCode->id;

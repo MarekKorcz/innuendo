@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Str;
 use Redirect;
 
 class ItemController extends Controller
@@ -34,20 +34,20 @@ class ItemController extends Controller
             'price'          => 'required',
             'category_id'    => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('item/create/' . Input::get('category_id'))
+            return Redirect::to('item/create/' . request()->input('category_id'))
                 ->withErrors($validator);
         } else {
 
             $item = new Item();
-            $item->name = Input::get('name');
-            $item->slug = str_slug(Input::get('name'));
-            $item->description = Input::get('description');
-            $item->minutes = Input::get('minutes');
-            $item->price = Input::get('price');
-            $item->category_id = Input::get('category_id');
+            $item->name = request()->input('name');
+            $item->slug = Str::slug(request()->input('name'));
+            $item->description = request()->input('description');
+            $item->minutes = request()->input('minutes');
+            $item->price = request()->input('price');
+            $item->category_id = request()->input('category_id');
             $item->save();
 
             return redirect('item/show/' . $item->id)->with('success', 'Masaż został utworzony');
@@ -88,22 +88,22 @@ class ItemController extends Controller
             'price'          => 'required',
             'item_id'        => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('item/' . Input::get('item_id') . '/edit')
+            return Redirect::to('item/' . request()->input('item_id') . '/edit')
                 ->withErrors($validator);
         } else {
 
-            $item = Item::where('id', Input::get('item_id'))->first();
+            $item = Item::where('id', request()->input('item_id'))->first();
 
             if ($item !== null)
             {
-                $item->name = Input::get('name');
-                $item->slug = Input::get('slug');
-                $item->description = Input::get('description');
-                $item->minutes = Input::get('minutes');
-                $item->price = Input::get('price');
+                $item->name = request()->input('name');
+                $item->slug = request()->input('slug');
+                $item->description = request()->input('description');
+                $item->minutes = request()->input('minutes');
+                $item->price = request()->input('price');
                 $item->save();
 
                 return redirect('item/show/' . $item->id)->with('success', 'Masaż został zaktualizowany');

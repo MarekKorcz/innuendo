@@ -18,6 +18,7 @@ namespace App\Http\Controllers;
 // use Illuminate\Support\Collection;
 // use Illuminate\Support\Facades\Hash;
 // use Illuminate\Support\Facades\File;
+// use Illuminate\Support\Str;
 // use Session;
 // use App\Mail\BioSendContactMessage;
 
@@ -30,9 +31,9 @@ use App\Models\Discount;
 use App\Models\Promo;
 use App\Models\PolicyConfirmation;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Redirect;
 
 class HomeController extends Controller
@@ -176,7 +177,7 @@ class HomeController extends Controller
             'email'   => 'required|email',
             'message' => 'required|string'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('/contact')
@@ -184,9 +185,9 @@ class HomeController extends Controller
         } else {
 
             $message = new Message();
-            $message->topic = Input::get('topic');
-            $message->email = Input::get('email');
-            $message->text  = Input::get('message');
+            $message->topic = request()->input('topic');
+            $message->email = request()->input('email');
+            $message->text  = request()->input('message');
             $message->save();
 
             \Mail::to('mark.korcz@gmail.com')->send(new ContactMessageCreate($message));
@@ -395,7 +396,7 @@ class HomeController extends Controller
 ////        $employee1 = User::create([
 ////            'name' => 'Marek5',
 ////            'surname' => 'Korcz',
-////            'slug' => str_slug('Marek5 Korcz'),
+////            'slug' => Str::slug('Marek5 Korcz'),
 ////            'phone_number' => '729364873',
 ////            'email' => 'mark5.korcz@gmail.com',
 ////            'password' => '$2y$10$8R3OnzYV7pgIsLvCbRi1.eGMpjYZ.HtEbau5Gqry6YdlE9yxuq2vq',

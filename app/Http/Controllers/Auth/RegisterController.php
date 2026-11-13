@@ -19,7 +19,7 @@ use App\Mail\BossCreateWithPromoCode;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -153,15 +153,15 @@ class RegisterController extends Controller
             'street_number'         => 'required',
             'house_number'          => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('temp-boss/register/' . Input::get('register_code'))
+            return Redirect::to('temp-boss/register/' . request()->input('register_code'))
                 ->withErrors($validator);
         } else {
 
             $tempBossEntity = TempUser::where([
-                'register_code' => Input::get('register_code'),
+                'register_code' => request()->input('register_code'),
                 'isBoss' => 1
             ])->first();
 
@@ -170,22 +170,22 @@ class RegisterController extends Controller
             if ($tempBossEntity !== null && $tempBossPropertyEntity !== null)
             {
                 $boss = new User();
-                $boss->name = Input::get('name');
-                $boss->surname = Input::get('surname');
-                $boss->email = Input::get('boss_email');
-                $boss->phone_number = Input::get('boss_phone_number');
-                $boss->password = Hash::make(Input::get('password'));
+                $boss->name = request()->input('name');
+                $boss->surname = request()->input('surname');
+                $boss->email = request()->input('boss_email');
+                $boss->phone_number = request()->input('boss_phone_number');
+                $boss->password = Hash::make(request()->input('password'));
                 $boss->isBoss = 1;
                 $boss->save();
 
                 if ($boss !== null)
                 {
                     $property = new Property();
-                    $property->name = Input::get('property_name');
-                    $property->slug = str_slug(Input::get('property_name'));
-                    $property->street = Input::get('street');
-                    $property->street_number = Input::get('street_number');
-                    $property->house_number = Input::get('house_number');
+                    $property->name = request()->input('property_name');
+                    $property->slug = Str::slug(request()->input('property_name'));
+                    $property->street = request()->input('street');
+                    $property->street_number = request()->input('street_number');
+                    $property->house_number = request()->input('house_number');
                     $property->city = "Warszawa";
                     $property->boss_id = $boss->id;
                     $property->save();
@@ -212,7 +212,7 @@ class RegisterController extends Controller
 
                 return redirect('/temp-boss/register')->with([
                     'error' => 'Coś poszło nie tak',
-                    'code' => Input::get('register_code')
+                    'code' => request()->input('register_code')
                 ]);
             }
 
@@ -238,7 +238,7 @@ class RegisterController extends Controller
             'house_number'   => 'required',
             'city'           => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('/register')
@@ -246,7 +246,7 @@ class RegisterController extends Controller
         } else {
 
             $promoCode = PromoCode::where([
-                'code' => Input::get('code'),
+                'code' => request()->input('code'),
                 'is_active' => 0
             ])->with([
                 'promo'
@@ -262,11 +262,11 @@ class RegisterController extends Controller
                 }
 
                 $boss = new User();
-                $boss->name = Input::get('name');
-                $boss->surname = Input::get('surname');
-                $boss->phone_number = Input::get('phone_number');
-                $boss->email = Input::get('email');
-                $boss->password = Hash::make(Input::get('password'));
+                $boss->name = request()->input('name');
+                $boss->surname = request()->input('surname');
+                $boss->phone_number = request()->input('phone_number');
+                $boss->email = request()->input('email');
+                $boss->password = Hash::make(request()->input('password'));
                 $boss->isBoss = 1;
                 $boss->is_approved = 0;
                 $boss->save();
@@ -274,12 +274,12 @@ class RegisterController extends Controller
                 if ($boss !== null)
                 {
                     $bossProperty = new Property();
-                    $bossProperty->name = Input::get('property_name');
-                    $bossProperty->slug = str_slug(Input::get('property_name'));
-                    $bossProperty->street = Input::get('street');
-                    $bossProperty->street_number = Input::get('street_number');
-                    $bossProperty->house_number = Input::get('house_number');
-                    $bossProperty->city = Input::get('city');
+                    $bossProperty->name = request()->input('property_name');
+                    $bossProperty->slug = Str::slug(request()->input('property_name'));
+                    $bossProperty->street = request()->input('street');
+                    $bossProperty->street_number = request()->input('street_number');
+                    $bossProperty->house_number = request()->input('house_number');
+                    $bossProperty->city = request()->input('city');
                     $bossProperty->boss_id = $boss->id;
                     $bossProperty->save();
 
@@ -372,27 +372,27 @@ class RegisterController extends Controller
             'phone_number'          => 'required|numeric|regex:/[0-9]/|min:7',
             'password'              => 'required|min:7|confirmed'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('temp-employee/register/' . Input::get('register_code'))
+            return Redirect::to('temp-employee/register/' . request()->input('register_code'))
                 ->withErrors($validator);
         } else {
 
             $tempEmployeeEntity = TempUser::where([
-                'register_code' => Input::get('register_code'),
+                'register_code' => request()->input('register_code'),
                 'isEmployee' => 1
             ])->first();
 
             if ($tempEmployeeEntity !== null)
             {
                 $employee = new User();
-                $employee->name = Input::get('name');
-                $employee->surname = Input::get('surname');
-                $employee->slug = str_slug(Input::get('name') . "_" . Input::get('surname'));
-                $employee->email = Input::get('email');
-                $employee->phone_number = Input::get('phone_number');
-                $employee->password = Hash::make(Input::get('password'));
+                $employee->name = request()->input('name');
+                $employee->surname = request()->input('surname');
+                $employee->slug = Str::slug(request()->input('name') . "_" . request()->input('surname'));
+                $employee->email = request()->input('email');
+                $employee->phone_number = request()->input('phone_number');
+                $employee->password = Hash::make(request()->input('password'));
                 $employee->isEmployee = 1;
                 $employee->save();
 
@@ -409,7 +409,7 @@ class RegisterController extends Controller
 
                 return redirect('/temp-employee/register')->with([
                     'error' => 'Coś poszło nie tak',
-                    'code' => Input::get('register_code')
+                    'code' => request()->input('register_code')
                 ]);
             }
 

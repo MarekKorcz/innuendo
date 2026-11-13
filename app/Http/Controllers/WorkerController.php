@@ -15,7 +15,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Redirect;
 
 class WorkerController extends Controller
@@ -665,20 +664,20 @@ class WorkerController extends Controller
             'item_id' => 'required',
             'graphicId' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('property/create')
                 ->withErrors($validator);
         } else {
 
-            $graphic = Graphic::where('id', Input::get('graphicId'))->with([
+            $graphic = Graphic::where('id', request()->input('graphicId'))->with([
                 'day.month.year',
                 'property'
             ])->first();
-            $item = Item::where('id', Input::get('item_id'))->first();
-            $possibleAppointmentLengthInMinutes = Input::get('possibleAppointmentLengthInMinutes');
-            $appointmentTerm = Input::get('appointmentTerm');
+            $item = Item::where('id', request()->input('item_id'))->first();
+            $possibleAppointmentLengthInMinutes = request()->input('possibleAppointmentLengthInMinutes');
+            $appointmentTerm = request()->input('appointmentTerm');
 
             if ($graphic !== null && $item !== null && $possibleAppointmentLengthInMinutes !== null && $appointmentTerm !== null)
             {
@@ -689,7 +688,7 @@ class WorkerController extends Controller
                     $plusTime = "+" . $item->minutes . " minutes";
                     $endTime = date('G:i', strtotime($plusTime, strtotime($appointmentTerm)));
 
-                    $user = User::where('id', Input::get('userId'))->first();
+                    $user = User::where('id', request()->input('userId'))->first();
 
                     $appointment = new Appointment();
                     $appointment->start_time = $appointmentTerm;

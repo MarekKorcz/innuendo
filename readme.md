@@ -27,6 +27,9 @@ docker compose up -d --build
 
 docker compose exec app composer install
 
+* docker compose exec app composer validate
+* docker compose exec app composer audit
+
 docker compose exec app php artisan migrate --seed
 
 
@@ -34,6 +37,8 @@ docker compose exec app php artisan migrate --seed
 To delete everything from Docker:
 
 docker compose down --volumes --rmi all
+
+
 
 
 git checkout -b upgrade/laravel-*

@@ -7,7 +7,6 @@ use App\Models\Day;
 use App\Models\Graphic;
 use App\Models\GraphicRequest;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Redirect;
 
 class DayController extends Controller
@@ -46,14 +45,14 @@ class DayController extends Controller
             'start_day' => 'required|numeric',
             'end_day' => 'required|numeric|gte:start_day'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('day/create')
                 ->withErrors($validator);
         } else {
 
-            $month = Month::where('id', Input::get('month_id'))->with('year')->first();
+            $month = Month::where('id', request()->input('month_id'))->with('year')->first();
 
             if ($month !== null)
             {
@@ -62,7 +61,7 @@ class DayController extends Controller
 
                 $yearMonth = $yearNumber . "-" . $monthNumber;
 
-                for ($i = Input::get('start_day'); $i <= Input::get('end_day'); $i++)
+                for ($i = request()->input('start_day'); $i <= request()->input('end_day'); $i++)
                 {
                     if ($i > 0 && $i <= $month->days_in_month)
                     {
@@ -76,7 +75,7 @@ class DayController extends Controller
                             $day = new Day();
                             $day->day_number = $dayDate->format("j");
                             $day->number_in_week = $dayDate->format("N");
-                            $day->month_id = Input::get('month_id');
+                            $day->month_id = request()->input('month_id');
                             $day->save();
                         }
                     }

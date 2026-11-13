@@ -6,7 +6,6 @@ use App\Models\Day;
 use App\Models\Graphic;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Redirect;
 
 class GraphicController extends Controller
@@ -50,18 +49,18 @@ class GraphicController extends Controller
             'employee_id' => 'required',
             'day_id' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('graphic/' . Input::get('day_id'))
+            return Redirect::to('graphic/' . request()->input('day_id'))
                 ->withErrors($validator);
         } else {
 
-            $day = Day::where('id', Input::get('day_id'))->with('month.year.property')->first();
+            $day = Day::where('id', request()->input('day_id'))->with('month.year.property')->first();
 
             // >> get given employee
             $givenEmployee = User::where([
-                'id' => Input::get('employee_id'),
+                'id' => request()->input('employee_id'),
                 'isEmployee' => 1
             ])->first();
             // <<
@@ -69,8 +68,8 @@ class GraphicController extends Controller
             if ($day !== null && $givenEmployee !== null)
             {
                 // count total time
-                $startDate = \DateTime::createFromFormat('H:i', Input::get('start_time'));
-                $endDate = \DateTime::createFromFormat('H:i', Input::get('end_time'));
+                $startDate = \DateTime::createFromFormat('H:i', request()->input('start_time'));
+                $endDate = \DateTime::createFromFormat('H:i', request()->input('end_time'));
 
                 $graphic = $startDate->diff($endDate);
                 $minutes = 0;
@@ -83,8 +82,8 @@ class GraphicController extends Controller
                 $minutes += $graphic->i;
 
                 $graphicTime = new Graphic();
-                $graphicTime->start_time = Input::get('start_time');
-                $graphicTime->end_time = Input::get('end_time');
+                $graphicTime->start_time = request()->input('start_time');
+                $graphicTime->end_time = request()->input('end_time');
                 $graphicTime->total_time = $minutes;
                 $graphicTime->day_id = $day->id;
                 $graphicTime->property_id = $day->month->year->property->id;
@@ -125,14 +124,14 @@ class GraphicController extends Controller
             'graphic_id'  => 'required',
             'employee_id' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('/graphic/' . Input::get('graphic_id') . '/edit')
+            return Redirect::to('/graphic/' . request()->input('graphic_id') . '/edit')
                 ->withErrors($validator);
         } else {
 
-            $graphic = Graphic::where('id', Input::get('graphic_id'))->with([
+            $graphic = Graphic::where('id', request()->input('graphic_id'))->with([
                 'appointments',
                 'day',
                 'employee'
@@ -140,7 +139,7 @@ class GraphicController extends Controller
 
             // >> get given employee
             $givenEmployee = User::where([
-                'id' => Input::get('employee_id'),
+                'id' => request()->input('employee_id'),
                 'isEmployee' => 1
             ])->first();
             // <<
@@ -148,8 +147,8 @@ class GraphicController extends Controller
             if ($graphic !== null && $givenEmployee !== null)
             {
                 // >> count total time
-                $startTimeExploded = explode(":", Input::get('start_time'));
-                $endTimeExploded = explode(":", Input::get('end_time'));
+                $startTimeExploded = explode(":", request()->input('start_time'));
+                $endTimeExploded = explode(":", request()->input('end_time'));
 
                 $startDate = \DateTime::createFromFormat('H:i', $startTimeExploded[0] . ":" . $startTimeExploded[1]);
                 $endDate = \DateTime::createFromFormat('H:i', $endTimeExploded[0] . ":" . $endTimeExploded[1]);
@@ -165,8 +164,8 @@ class GraphicController extends Controller
                 $minutes += $graph->i;
                 // <<
 
-                $graphic->start_time = Input::get('start_time');
-                $graphic->end_time = Input::get('end_time');
+                $graphic->start_time = request()->input('start_time');
+                $graphic->end_time = request()->input('end_time');
                 $graphic->total_time = $minutes;
                 if ($givenEmployee->id !== $graphic->employee->id)
                 {
@@ -179,7 +178,7 @@ class GraphicController extends Controller
                 ])->with('success', 'Graphic has been successfully updated!');
             }
 
-            return redirect('/graphic/' . Input::get('graphic_id') . '/edit')->with('error', 'Something went wrong!');
+            return redirect('/graphic/' . request()->input('graphic_id') . '/edit')->with('error', 'Something went wrong!');
         }
     }
 }

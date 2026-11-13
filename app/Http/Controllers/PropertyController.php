@@ -10,9 +10,9 @@ use App\Models\TempProperty;
 use App\Models\User;
 use App\Models\TempUser;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Redirect;
 
 class PropertyController extends Controller
@@ -95,7 +95,7 @@ class PropertyController extends Controller
             'street'        => 'required',
             'city'          => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('property/create')
@@ -104,10 +104,10 @@ class PropertyController extends Controller
 
             $bossId = null;
 
-            if (Input::get('user') !== 0)
+            if (request()->input('user') !== 0)
             {
                 $boss = User::where([
-                    'id' => Input::get('user'),
+                    'id' => request()->input('user'),
                     'isAdmin' => null,
                     'isEmployee' => null,
                     'isBoss' => 1,
@@ -121,13 +121,13 @@ class PropertyController extends Controller
             }
 
             $property = new Property();
-            $property->name          = Input::get('name');
-            $property->slug          = str_slug(Input::get('name'));
-            $property->description   = Input::get('description');
-            $property->street        = Input::get('street');
-            $property->street_number = Input::get('street_number');
-            $property->house_number  = Input::get('house_number');
-            $property->city          = Input::get('city');
+            $property->name          = request()->input('name');
+            $property->slug          = Str::slug(request()->input('name'));
+            $property->description   = request()->input('description');
+            $property->street        = request()->input('street');
+            $property->street_number = request()->input('street_number');
+            $property->house_number  = request()->input('house_number');
+            $property->city          = request()->input('city');
             $property->boss_id       = $bossId !== null ? $bossId : auth()->user()->id;
             $property->save();
 
@@ -264,7 +264,7 @@ class PropertyController extends Controller
             'street'        => 'required',
             'city'          => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('/property/' . $id . '/edit')
@@ -275,19 +275,19 @@ class PropertyController extends Controller
 
             if ($property !== null)
             {
-                $property->name          = Input::get('name');
-                $property->slug          = str_slug(Input::get('name'));
-                $property->street        = Input::get('street');
-                $property->street_number = Input::get('street_number');
-                $property->house_number  = Input::get('house_number');
-                $property->city          = Input::get('city');
+                $property->name          = request()->input('name');
+                $property->slug          = Str::slug(request()->input('name'));
+                $property->street        = request()->input('street');
+                $property->street_number = request()->input('street_number');
+                $property->house_number  = request()->input('house_number');
+                $property->city          = request()->input('city');
 
                 $boss = null;
 
-                if (Input::get('boss_id') !== 0)
+                if (request()->input('boss_id') !== 0)
                 {
                     $boss = User::where([
-                        'id' => Input::get('boss_id'),
+                        'id' => request()->input('boss_id'),
                         'isAdmin' => null,
                         'isEmployee' => null,
                         'isBoss' => 1,
@@ -345,25 +345,25 @@ class PropertyController extends Controller
             'nip'          => 'required',
             'property_id'  => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('property/invoice-data/create/' . Input::get('property_id'))
+            return Redirect::to('property/invoice-data/create/' . request()->input('property_id'))
                 ->withErrors($validator);
         } else {
 
-            $property = Property::where('id', Input::get('property_id'))->with([
+            $property = Property::where('id', request()->input('property_id'))->with([
                 'invoiceData'
             ])->first();
 
             if ($property !== null && $property->invoiceData == null)
             {
                 $invoiceData = new InvoiceData();
-                $invoiceData->company_name  = Input::get('company_name');
-                $invoiceData->email         = Input::get('email');
-                $invoiceData->phone_number  = Input::get('phone_number');
-                $invoiceData->nip           = Input::get('nip');
-                $invoiceData->property_id   = Input::get('property_id');
+                $invoiceData->company_name  = request()->input('company_name');
+                $invoiceData->email         = request()->input('email');
+                $invoiceData->phone_number  = request()->input('phone_number');
+                $invoiceData->nip           = request()->input('nip');
+                $invoiceData->property_id   = request()->input('property_id');
                 $invoiceData->save();
 
                 return redirect('/property/invoice/list/' . $property->id)->with('success', 'Invoice data has been created!');
@@ -397,23 +397,23 @@ class PropertyController extends Controller
             'nip'          => 'required',
             'property_id'  => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('/property/invoice-data/edit/' . Input::get('property_id'))
+            return Redirect::to('/property/invoice-data/edit/' . request()->input('property_id'))
                 ->withErrors($validator);
         } else {
 
-            $property = Property::where('id', Input::get('property_id'))->with('invoiceData')->first();
+            $property = Property::where('id', request()->input('property_id'))->with('invoiceData')->first();
 
             if ($property !== null && $property->invoiceData !== null)
             {
                 $invoiceData = $property->invoiceData;
 
-                $invoiceData->company_name  = Input::get('company_name');
-                $invoiceData->email         = Input::get('email');
-                $invoiceData->phone_number  = Input::get('phone_number');
-                $invoiceData->nip           = Input::get('nip');
+                $invoiceData->company_name  = request()->input('company_name');
+                $invoiceData->email         = request()->input('email');
+                $invoiceData->phone_number  = request()->input('phone_number');
+                $invoiceData->nip           = request()->input('nip');
                 $invoiceData->save();
 
                 return redirect('/property/invoice/list/' . $property->id)->with('success', 'Invoice data has been successfully updated!');
@@ -500,19 +500,19 @@ class PropertyController extends Controller
             'property_id' => 'required',
             'invoice'     => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('/property/add-invoice/' . Input::get('property_id'))
+            return Redirect::to('/property/add-invoice/' . request()->input('property_id'))
                 ->withErrors($validator);
         } else {
 
-            $property = Property::where('id', Input::get('property_id'))->with([
+            $property = Property::where('id', request()->input('property_id'))->with([
                 'invoiceData',
                 'invoices'
             ])->first();
 
-            $month = Month::where('id', Input::get('month_id'))->with('year')->first();
+            $month = Month::where('id', request()->input('month_id'))->with('year')->first();
 
             $file = Input::file('invoice');
 
@@ -550,7 +550,7 @@ class PropertyController extends Controller
             'house_number'  => 'required',
             'city'          => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('/property/' . $id . '/edit')
@@ -558,12 +558,12 @@ class PropertyController extends Controller
         } else {
 
             $tempProperty = TempProperty::where('id', $id)->first();
-            $tempProperty->name          = Input::get('name');
-            $tempProperty->slug          = str_slug(Input::get('name'));
-            $tempProperty->street        = Input::get('street');
-            $tempProperty->street_number = Input::get('street_number');
-            $tempProperty->house_number  = Input::get('house_number');
-            $tempProperty->city          = Input::get('city');
+            $tempProperty->name          = request()->input('name');
+            $tempProperty->slug          = Str::slug(request()->input('name'));
+            $tempProperty->street        = request()->input('street');
+            $tempProperty->street_number = request()->input('street_number');
+            $tempProperty->house_number  = request()->input('house_number');
+            $tempProperty->city          = request()->input('city');
             $tempProperty->save();
 
             return redirect('/temp-property/' . $tempProperty->id)->with('success', 'Temporary property successfully updated!');

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Discount;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Str;
 use Redirect;
 
 class DiscountController extends Controller
@@ -34,7 +34,7 @@ class DiscountController extends Controller
             'percent'          => 'required',
             'worker_threshold' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('admin/discount/create')
@@ -42,13 +42,13 @@ class DiscountController extends Controller
         } else {
 
             $discount = new Discount();
-            $discount->name             = Input::get('name');
-            $discount->name_en          = Input::get('name_en');
-            $discount->slug             = str_slug(Input::get('name'));
-            $discount->description      = Input::get('description');
-            $discount->description_en   = Input::get('description_en');
-            $discount->worker_threshold = Input::get('worker_threshold');
-            $discount->percent          = Input::get('percent');
+            $discount->name             = request()->input('name');
+            $discount->name_en          = request()->input('name_en');
+            $discount->slug             = Str::slug(request()->input('name'));
+            $discount->description      = request()->input('description');
+            $discount->description_en   = request()->input('description_en');
+            $discount->worker_threshold = request()->input('worker_threshold');
+            $discount->percent          = request()->input('percent');
             $discount->save();
 
             return redirect('admin/discount/index')->with('success', 'Discount successfully created!');

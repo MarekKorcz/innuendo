@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Models\Year;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Redirect;
 
 class YearController extends Controller
@@ -45,7 +44,7 @@ class YearController extends Controller
             'year' => 'required',
             'property_id' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         // process the login
         if ($validator->fails()) {
@@ -53,13 +52,13 @@ class YearController extends Controller
                 ->withErrors($validator);
         } else {
 
-            $property = Property::where('id', Input::get('property_id'))->with([
+            $property = Property::where('id', request()->input('property_id'))->with([
                 'years'
             ])->first();
 
             if ($property !== null)
             {
-                $givenYear = Input::get('year');
+                $givenYear = request()->input('year');
                 $year = null;
 
                 if (count($property->years) > 0)

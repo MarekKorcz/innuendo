@@ -6,7 +6,6 @@ use App\Models\Year;
 use App\Models\Month;
 use App\Models\Day;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Redirect;
 
 class MonthController extends Controller
@@ -46,39 +45,39 @@ class MonthController extends Controller
             'month_en' => 'required',
             'month_number' => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('month/create')
                 ->withErrors($validator);
         } else {
 
-            $year = Year::where('id', Input::get('year_id'))->first();
+            $year = Year::where('id', request()->input('year_id'))->first();
 
             if ($year !== null)
             {
                 $yearNumber = $year->year;
-                $monthNumber = strlen((int)Input::get('month_number')) == 2 ? Input::get('month_number') : "0" . Input::get('month_number');
+                $monthNumber = strlen((int)request()->input('month_number')) == 2 ? request()->input('month_number') : "0" . request()->input('month_number');
                 $yearMonth = $yearNumber . "-" . $monthNumber;
                 $currentMonth = new \DateTime($yearMonth . "-01");
                 $numberInMonth = $currentMonth->format("t");
 
                 $month = Month::where([
-                    'month' => Input::get('month'),
-                    'month_en' => Input::get('month_en'),
-                    'month_number' => Input::get('month_number'),
+                    'month' => request()->input('month'),
+                    'month_en' => request()->input('month_en'),
+                    'month_number' => request()->input('month_number'),
                     'days_in_month' => $numberInMonth,
-                    'year_id' => Input::get('year_id')
+                    'year_id' => request()->input('year_id')
                 ])->first();
 
                 if ($month == null)
                 {
                     $month = new Month();
-                    $month->month = Input::get('month');
-                    $month->month_en = Input::get('month_en');
-                    $month->month_number = Input::get('month_number');
+                    $month->month = request()->input('month');
+                    $month->month_en = request()->input('month_en');
+                    $month->month_number = request()->input('month_number');
                     $month->days_in_month = $numberInMonth;
-                    $month->year_id = Input::get('year_id');
+                    $month->year_id = request()->input('year_id');
                     $month->save();
                 }
 

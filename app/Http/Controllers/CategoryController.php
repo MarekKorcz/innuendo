@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Str;
 use Redirect;
 
 class CategoryController extends Controller
@@ -25,7 +25,7 @@ class CategoryController extends Controller
             'name'           => 'required',
             'description'    => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('category/create')
@@ -33,9 +33,9 @@ class CategoryController extends Controller
         } else {
 
             $category = new Category();
-            $category->name = Input::get('name');
-            $category->slug = str_slug(Input::get('name'));
-            $category->description = Input::get('description');
+            $category->name = request()->input('name');
+            $category->slug = Str::slug(request()->input('name'));
+            $category->description = request()->input('description');
             $category->save();
 
             return redirect('category/show/' . $category->id)->with('success', 'Kategoria została utworzona');
@@ -76,20 +76,20 @@ class CategoryController extends Controller
             'description'    => 'required',
             'category_id'    => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('category/' . Input::get('category_id') . '/edit')
+            return Redirect::to('category/' . request()->input('category_id') . '/edit')
                 ->withErrors($validator);
         } else {
 
-            $category = Category::where('id', Input::get('category_id'))->first();
+            $category = Category::where('id', request()->input('category_id'))->first();
 
             if ($category !== null)
             {
-                $category->name = Input::get('name');
-                $category->slug = Input::get('slug');
-                $category->description = Input::get('description');
+                $category->name = request()->input('name');
+                $category->slug = request()->input('slug');
+                $category->description = request()->input('description');
                 $category->save();
 
                 return redirect('category/show/' . $category->id)->with('success', 'Kategoria została zaktualizowana');

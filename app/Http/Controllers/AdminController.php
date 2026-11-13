@@ -15,9 +15,9 @@ use App\Mail\AdminTempEmployeeCreate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Redirect;
 
@@ -96,25 +96,25 @@ class AdminController extends Controller
             'boss_id'          => 'required',
             'user_id'          => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('admin/user/show/' . Input::get('user_id'))
+            return Redirect::to('admin/user/show/' . request()->input('user_id'))
                 ->withErrors($validator);
         } else {
 
             $user = User::where([
-                'id' => Input::get('user_id')
+                'id' => request()->input('user_id')
             ])->first();
 
             if ($user !== null)
             {
-                $user->name = Input::get('name');
-                $user->surname = Input::get('surname');
-                $user->email = Input::get('email');
-                $user->phone_number = Input::get('phone_number');
+                $user->name = request()->input('name');
+                $user->surname = request()->input('surname');
+                $user->email = request()->input('email');
+                $user->phone_number = request()->input('phone_number');
 
-                if (Input::get('isBoss'))
+                if (request()->input('isBoss'))
                 {
                     $user->isBoss = 1;
                     $user->boss_id = null;
@@ -122,7 +122,7 @@ class AdminController extends Controller
                 } else {
 
                     $boss = User::where([
-                        'id' => Input::get('boss_id'),
+                        'id' => request()->input('boss_id'),
                         'isBoss' => 1
                     ])->first();
 
@@ -236,31 +236,31 @@ class AdminController extends Controller
             'boss_id'      => 'required',
             'new_boss'     => 'sometimes|required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('admin/user/show/' . Input::get('boss_id'))
+            return Redirect::to('admin/user/show/' . request()->input('boss_id'))
                 ->withErrors($validator);
         } else {
 
             $boss = User::where([
-                'id' => Input::get('boss_id')
+                'id' => request()->input('boss_id')
             ])->with('properties')->first();
 
             if ($boss !== null)
             {
-                $boss->name = Input::get('name');
-                $boss->surname = Input::get('surname');
-                $boss->email = Input::get('email');
-                $boss->phone_number = Input::get('phone_number');
+                $boss->name = request()->input('name');
+                $boss->surname = request()->input('surname');
+                $boss->email = request()->input('email');
+                $boss->phone_number = request()->input('phone_number');
 
                 // if turn 'boss' off, get 'new boss', asign its id to 'boss workers' and 'boss properties'
                 // plus change 'boss' into 'new boss' worker
-                if (Input::get('isBoss') == false && Input::get('new_boss') !== null) {
+                if (request()->input('isBoss') == false && request()->input('new_boss') !== null) {
 
                     // getting 'new boss' from 'boss workers'
                     $newBoss = User::where([
-                        'id' => Input::get('new_boss'),
+                        'id' => request()->input('new_boss'),
                         'boss_id' => $boss->id
                     ])->first();
 
@@ -389,7 +389,7 @@ class AdminController extends Controller
             'phone_number'   => 'required',
             'email'          => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('admin/employee/list')
@@ -397,10 +397,10 @@ class AdminController extends Controller
         } else {
 
             $employee = new TempUser();
-            $employee->name = Input::get('name');
-            $employee->surname = Input::get('surname');
-            $employee->phone_number = Input::get('phone_number');
-            $employee->email = Input::get('email');
+            $employee->name = request()->input('name');
+            $employee->surname = request()->input('surname');
+            $employee->phone_number = request()->input('phone_number');
+            $employee->email = request()->input('email');
 
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $charactersLength = strlen($characters);
@@ -458,25 +458,25 @@ class AdminController extends Controller
             'email'          => 'required',
             'phone_number'   => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('admin/employee/show/' . Input::get('slug'))
+            return Redirect::to('admin/employee/show/' . request()->input('slug'))
                 ->withErrors($validator);
         } else {
 
             $employee = User::where([
-                'id' => Input::get('id'),
+                'id' => request()->input('id'),
                 'isEmployee' => 1
             ])->first();
 
             if ($employee !== null)
             {
-                $employee->name = Input::get('name');
-                $employee->surname = Input::get('surname');
-                $employee->slug = Input::get('slug');
-                $employee->email = Input::get('email');
-                $employee->phone_number = Input::get('phone_number');
+                $employee->name = request()->input('name');
+                $employee->surname = request()->input('surname');
+                $employee->slug = request()->input('slug');
+                $employee->email = request()->input('email');
+                $employee->phone_number = request()->input('phone_number');
 
                 $file = $request->file('profile_image');
 
@@ -522,7 +522,7 @@ class AdminController extends Controller
             'surname'        => 'required',
             'street'         => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('admin/boss/create')
@@ -530,10 +530,10 @@ class AdminController extends Controller
         } else {
 
             $boss = new TempUser();
-            $boss->name = Input::get('name');
-            $boss->surname = Input::get('surname');
-            $boss->email = Input::get('boss_email');
-            $boss->phone_number = Input::get('boss_phone_number');
+            $boss->name = request()->input('name');
+            $boss->surname = request()->input('surname');
+            $boss->email = request()->input('boss_email');
+            $boss->phone_number = request()->input('boss_phone_number');
 
             $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $charactersLength = strlen($characters);
@@ -551,11 +551,11 @@ class AdminController extends Controller
             if ($boss !== null)
             {
                 $property = new TempProperty();
-                $property->name          = Input::get('property_name');
-                $property->slug          = str_slug(Input::get('property_name'));
-                $property->street        = Input::get('street');
-                $property->street_number = Input::get('street_number');
-                $property->house_number  = Input::get('house_number');
+                $property->name          = request()->input('property_name');
+                $property->slug          = Str::slug(request()->input('property_name'));
+                $property->street        = request()->input('street');
+                $property->street_number = request()->input('street_number');
+                $property->house_number  = request()->input('house_number');
                 $property->city          = "Warszawa";
                 $property->temp_user_id  = $boss->id;
                 $property->save();
@@ -633,20 +633,20 @@ class AdminController extends Controller
             'text'               => 'required|string',
             'graphic_request_id' => 'required|numeric'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails())
         {
-            return Redirect::to('admin/graphic-request/' . Input::get('graphic_request_id'));
+            return Redirect::to('admin/graphic-request/' . request()->input('graphic_request_id'));
 
         } else {
 
-            $graphicRequest = GraphicRequest::where('id', Input::get('graphic_request_id'))->first();
+            $graphicRequest = GraphicRequest::where('id', request()->input('graphic_request_id'))->first();
 
             if ($graphicRequest !== null)
             {
                 $message = new Message();
-                $message->text = Input::get('text');
+                $message->text = request()->input('text');
                 $message->status = 0;
                 $message->user_id = auth()->user()->id;
                 $message->graphic_request_id = $graphicRequest->id;
@@ -801,17 +801,17 @@ class AdminController extends Controller
             'promo_code_id' => 'required|numeric',
             'boss_id'       => 'required|numeric'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails())
         {
-            return Redirect::to('admin/approve/messages/' . Input::get('boss_id'));
+            return Redirect::to('admin/approve/messages/' . request()->input('boss_id'));
 
         } else {
 
             $promoCode = PromoCode::where([
-                'id' => Input::get('promo_code_id'),
-                'boss_id' => Input::get('boss_id')
+                'id' => request()->input('promo_code_id'),
+                'boss_id' => request()->input('boss_id')
             ])->with([
                 'promo',
                 'boss'
@@ -820,7 +820,7 @@ class AdminController extends Controller
             if ($promoCode !== null)
             {
                 $message = new Message();
-                $message->text = Input::get('text');
+                $message->text = request()->input('text');
                 $message->status = 0;
                 $message->user_id = auth()->user()->id;
                 $message->promo_code_id = $promoCode->id;
@@ -866,7 +866,7 @@ class AdminController extends Controller
             'code'             => 'required',
             'subscriptions'    => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
             return Redirect::to('admin/promo/create')
@@ -881,12 +881,12 @@ class AdminController extends Controller
             if ($admin !== null)
             {
                 $promo = new Promo();
-                $promo->title = Input::get('title');
-                $promo->title_en = Input::get('title_en');
-                $promo->description = Input::get('description');
-                $promo->description_en = Input::get('description_en');
-                $promo->available_code_count = Input::get('total_code_count');
-                $promo->total_code_count = Input::get('total_code_count');
+                $promo->title = request()->input('title');
+                $promo->title_en = request()->input('title_en');
+                $promo->description = request()->input('description');
+                $promo->description_en = request()->input('description_en');
+                $promo->available_code_count = request()->input('total_code_count');
+                $promo->total_code_count = request()->input('total_code_count');
                 $promo->isActive = 1;
                 $promo->admin_id = $admin->id;
                 $promo->save();
@@ -896,11 +896,11 @@ class AdminController extends Controller
                     for ($i = 1; $i <= $promo->total_code_count; $i++)
                     {
                         $promoCode = new PromoCode();
-                        $promoCode->code = Input::get('code');
+                        $promoCode->code = request()->input('code');
                         $promoCode->promo_id = $promo->id;
                         $promoCode->save();
 
-                        foreach (Input::get('subscriptions') as $sub)
+                        foreach (request()->input('subscriptions') as $sub)
                         {
                             $subscription = Subscription::where('id', $sub)->first();
 
@@ -980,10 +980,10 @@ class AdminController extends Controller
             'description'      => 'required',
             'description_en'   => 'required'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('admin/promo/edit/' . Input::get('promo_id'))
+            return Redirect::to('admin/promo/edit/' . request()->input('promo_id'))
                 ->withErrors($validator);
         } else {
 
@@ -994,14 +994,14 @@ class AdminController extends Controller
 
             if ($admin !== null)
             {
-                $promo = Promo::where('id', Input::get('promo_id'))->first();
+                $promo = Promo::where('id', request()->input('promo_id'))->first();
 
                 if ($promo !== null)
                 {
-                    $promo->title = Input::get('title');
-                    $promo->title_en = Input::get('title_en');
-                    $promo->description = Input::get('description');
-                    $promo->description_en = Input::get('description_en');
+                    $promo->title = request()->input('title');
+                    $promo->title_en = request()->input('title_en');
+                    $promo->description = request()->input('description');
+                    $promo->description_en = request()->input('description_en');
                     $promo->save();
 
                     return redirect()->action(
@@ -1048,20 +1048,20 @@ class AdminController extends Controller
             'text'          => 'required|string',
             'promo_code_id' => 'required|numeric'
         );
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make(request()->all(), $rules);
 
         if ($validator->fails())
         {
-            return Redirect::to('admin/promo-code/show/' . Input::get('promo_code_id'));
+            return Redirect::to('admin/promo-code/show/' . request()->input('promo_code_id'));
 
         } else {
 
-            $promoCode = PromoCode::where('id', Input::get('promo_code_id'))->first();
+            $promoCode = PromoCode::where('id', request()->input('promo_code_id'))->first();
 
             if ($promoCode !== null)
             {
                 $message = new Message();
-                $message->text = Input::get('text');
+                $message->text = request()->input('text');
                 $message->status = 0;
                 $message->owner_id = auth()->user()->id;
                 $message->promo_code_id = $promoCode->id;
