@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-<script src="{{ asset('js/admin_boss_show.js') }}"></script>
+<script src="{{ asset('js/admin_boss_show.js') }}" defer></script>
 
 <div class="container" style="padding: 18px;">
 

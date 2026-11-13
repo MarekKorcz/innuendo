@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/temp_property_show.css') }}">
-<script src="{{ asset('js/temp_property_show.js') }}"></script>
+<script src="{{ asset('js/temp_property_show.js') }}" defer></script>
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">

@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/approve_messages.css') }}">
-<script src="{{ asset('js/approve_messages.js') }}"></script>
+<script src="{{ asset('js/approve_messages.js') }}" defer></script>
 
 <div class="container">
 

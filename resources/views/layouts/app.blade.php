@@ -8,38 +8,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name') }} {{ config('app.name_2nd_part') }}</title>
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link href="/css/app.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css">
-    
-    <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="/js/app.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>
-    
-    <!-- Fonts -->
-    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
-    
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-157515210-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
 
-      gtag('config', 'UA-157515210-1');
-    </script>
-
+    <!-- Vite Assets (Bootstrap 5, jQuery, Timepicker, App CSS & JS) -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
 
     <!--Navbar-->
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        
+
 <!--        <a class="navbar-brand" href="{{ route('welcome') }}">
             <img src="/img/sacred-geometry.jpg" width="72" height="72" class="d-inline-block align-top">
         </a>-->
@@ -51,7 +28,7 @@
                 </span>
             </a>
         </span>
-    
+
         <div class="collapse navbar-collapse" id="collapse_target">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" style="margin-right: 9px;">
@@ -104,16 +81,16 @@
                 </li>
             </ul>
         </div>
-        
+
         <button class="navbar-toggler ml-auto" data-toggle="collapse" data-target="#collapse_target">
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
 
     @include('inc.messages')
-    
+
     @yield('content')
-    
+
     <footer class="container-fluid text-center">
 <!--            <div class="col-sm-3" style="padding: 15px;">
                 <h4>@lang('footer.contact')</h4>

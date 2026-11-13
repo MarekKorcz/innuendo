@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/discount_index.css') }}">
-<script src="{{ asset('js/discount_index.js') }}"></script>
+<script src="{{ asset('js/discount_index.js') }}" defer></script>
 
 <div class="container">
     <div style="padding: 2rem 0 2rem 0;">

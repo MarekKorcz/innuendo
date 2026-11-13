@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-<script src="https://ckeditor.com"></script>
+<script src="https://ckeditor.com" defer></script>
 <script>
     CKEDITOR.replace('article-ckeditor');
 </script>

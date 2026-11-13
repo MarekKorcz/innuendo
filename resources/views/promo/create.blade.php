@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/codes.css') }}">
-<script src="{{ asset('js/promo_create.js') }}"></script>
+<script src="{{ asset('js/promo_create.js') }}" defer></script>
 
 <div class="container jumbotron">
 

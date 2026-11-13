@@ -95,9 +95,6 @@ Route::get('/admin/approve/messages/{bossId}/{promoId}', [AdminController::class
 Route::get('/admin/contact/messages', [AdminController::class, 'contactMessages']);
 Route::get('/admin/approve/message/status/change/{promoCodeId}', [AdminController::class, 'approveMessageStatusChange']);
 
-// maps
-Route::get('/map', [AdminController::class, 'map'])->name('map');
-
 // maybe all messages in one view?
 // Route::get('/admin/user/messages', [AdminController::class, 'userMessages']);
 
@@ -251,9 +248,3 @@ Route::post('/boss/make-an-approve-message', [BossController::class, 'makeAnAppr
 Route::post('/boss/mark-message-as-displayed', [BossController::class, 'markMessageAsDisplayed']);
 
 // Route::get('/test', [HomeController::class, 'test']);
-
-Route::get('/bio/home', [HomeController::class, 'bioHome'])->name('bioHome');
-Route::get('/bio/reservation', [HomeController::class, 'bioReservation'])->name('bioReservation');
-Route::get('/bio/session', [HomeController::class, 'bioSession'])->name('bioSession');
-Route::get('/bio/candling', [HomeController::class, 'bioCandling'])->name('bioCandling');
-Route::post('/contact/message', [HomeController::class, 'bioContactMessage']);

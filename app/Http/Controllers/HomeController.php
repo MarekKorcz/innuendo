@@ -20,7 +20,6 @@ namespace App\Http\Controllers;
 // use Illuminate\Support\Facades\File;
 // use Illuminate\Support\Str;
 // use Session;
-// use App\Mail\BioSendContactMessage;
 
 use App\Models\Code;
 use App\Models\PromoCode;
@@ -82,18 +81,6 @@ class HomeController extends Controller
     public function index()
     {
         $user = User::where('id', auth()->user()->id)->first();
-
-
-
-
-
-        if ($user->email == 'andrzej.sierocki@el-trans.com')
-        {
-            return redirect()->route('map');
-        }
-
-
-
 
         $route = 'home';
 
@@ -258,50 +245,6 @@ class HomeController extends Controller
 
 
 
-
-
-    public function bioHome() {
-
-        return view('bio.home');
-    }
-
-    public function bioContactMessage(Request $request)
-    {
-        $name = $request->get('name');
-        $email = $request->get('email');
-        $topic = $request->get('topic');
-        $description = $request->get('description');
-
-        if ($name && $email && $topic && $description)
-        {
-            \Mail::to($email)->send(new BioSendContactMessage($name, $email, $topic, $description));
-
-            return new JsonResponse([
-                'type' => 'success',
-                'message' => 'Wiadomość została wysłana'
-            ], 200, array(), true);
-        }
-
-        return new JsonResponse(array(
-            'type'    => 'error',
-            'message' => 'Nie udało się wysłać wiadomości'
-        ));
-    }
-
-    public function bioReservation() {
-
-        return view('bio.reservation');
-    }
-
-    public function bioSession() {
-
-        return view('bio.session');
-    }
-
-    public function bioCandling() {
-
-        return view('bio.candling');
-    }
 
 
 //    public function test()

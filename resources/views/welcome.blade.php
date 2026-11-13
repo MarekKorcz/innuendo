@@ -2,7 +2,7 @@
 
 @section('content')
 
-<script src="{{ asset('js/welcome.js') }}"></script>
+<script src="{{ asset('js/welcome.js') }}" defer></script>
 <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
 
     <!--Carousel Wrapper-->

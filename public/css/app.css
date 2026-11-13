@@ -57,16 +57,16 @@ span#footer-name {
 }
 
 .field-success {
-    margin: 3px; 
-    padding: 3px; 
-    padding-left: 18px; 
+    margin: 3px;
+    padding: 3px;
+    padding-left: 18px;
     background-color: lightgreen;
     border-radius: 5px;
 }
 
 .footer-3 {
    height: 10em;
-   position: relative 
+   position: relative;
 }
 
 .footer-3 div {
@@ -183,7 +183,7 @@ a:hover {
 
 div.position-center {
     height: 5em;
-    position: relative 
+    position: relative;
 }
 
 div.position-center p {
@@ -192,7 +192,7 @@ div.position-center p {
     top: 50%;
     left: 50%;
     margin-right: -50%;
-    transform: translate(-50%, -50%) 
+    transform: translate(-50%, -50%);
 }
 
 div#banner {

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<script src="{{ asset('js/login.js') }}"></script>
+<script src="{{ asset('js/login.js') }}" defer></script>
 
 <div class="container" style="padding: 2rem;">
     <div class="row justify-content-center">

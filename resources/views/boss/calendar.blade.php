@@ -2,8 +2,8 @@
 
 @section('content')
 
-<script src="{{ asset('js/boss_calendar.js') }}"></script>
-<script src="{{ asset('js/graphic_request.js') }}"></script>
+<script src="{{ asset('js/boss_calendar.js') }}" defer></script>
+<script src="{{ asset('js/graphic_request.js') }}" defer></script>
 <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
 
 <div class="container" style="padding-bottom: 2rem;">

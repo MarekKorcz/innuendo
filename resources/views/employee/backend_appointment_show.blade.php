@@ -3,7 +3,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/backend_appointment_show.css') }}">
-<script src="{{ asset('js/backend_appointment_show.js') }}"></script>
+<script src="{{ asset('js/backend_appointment_show.js') }}" defer></script>
 
 <div class="container">
 

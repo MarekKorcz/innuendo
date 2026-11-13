@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-<script src="{{ asset('js/property_invoice_data.js') }}"></script>
+<script src="{{ asset('js/property_invoice_data.js') }}" defer></script>
 
 <div class="container" style="padding: 2rem;">
     <div class="jumbotron">

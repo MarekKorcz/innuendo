@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-<script src="{{ asset('js/graphic_request.js') }}"></script>
+<script src="{{ asset('js/graphic_request.js') }}" defer></script>
 
 <div class="container">
     <div class="jumbotron" style="margin: 15px;">

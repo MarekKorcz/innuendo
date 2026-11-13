@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/backend_subscription_show.css') }}">
-<script src="{{ asset('js/backend_subscription_show.js') }}"></script>
+<script src="{{ asset('js/backend_subscription_show.js') }}" defer></script>
 
 <div class="container">
     <div class="jumbotron" style="margin-top: 15px;">

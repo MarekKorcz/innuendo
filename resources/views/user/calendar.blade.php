@@ -2,7 +2,7 @@
 
 @section('content')
 
-<script src="{{ asset('js/calendar.js') }}"></script>
+<script src="{{ asset('js/calendar.js') }}" defer></script>
 <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
 
 <div class="container" style="padding: 2rem 0 2rem 0;">

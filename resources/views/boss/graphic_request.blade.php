@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/graphic_request.css') }}">
-<!--<script src="{{ asset('js/graphic_request_show.js') }}"></script>-->
+<!--<script src="{{ asset('js/graphic_request_show.js') }}" defer></script>-->
 
     <div id="title" class="container">
         <h2 class="text-center" style="padding-top: 2rem;">@lang('common.graphic_request_from'): {{$graphicRequest->day->day_number}} {{$graphicRequest->day->month->month}} {{$graphicRequest->day->month->year->year}}</h2>

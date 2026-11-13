@@ -2,7 +2,7 @@
 
 @section('content')
 
-<script src="{{ asset('js/worker_show.js') }}"></script>
+<script src="{{ asset('js/worker_show.js') }}" defer></script>
 
 <div class="container">
 

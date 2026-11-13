@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-<script src="{{ asset('js/boss_property_edit.js') }}"></script>
+<script src="{{ asset('js/boss_property_edit.js') }}" defer></script>
 
 <div class="container">
 

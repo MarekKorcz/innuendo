@@ -1,5 +1,6 @@
 /node_modules
 /public/hot
+/public/build
 /public/storage
 /public/vendor
 /storage/*.key
@@ -14,4 +15,3 @@ npm-debug.log
 yarn-error.log
 .env
 .phpunit.result.cache
-composer.phar

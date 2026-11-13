@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-<script src="{{ asset('js/contact_page.js') }}"></script>
+<script src="{{ asset('js/contact_page.js') }}" defer></script>
 
 <div class="container">
     <div class="row" style="padding: 2rem 0 2rem 0;">

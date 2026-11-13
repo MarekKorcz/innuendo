@@ -2,7 +2,7 @@
 
 @section('content')
 
-<script src="{{ asset('js/register.js') }}"></script>
+<script src="{{ asset('js/register.js') }}" defer></script>
 <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
 <div class="container" style="padding: 2rem;">

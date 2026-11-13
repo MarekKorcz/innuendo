@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/month_show.css') }}">
-<script src="{{ asset('js/month_show.js') }}"></script>
+<script src="{{ asset('js/month_show.js') }}" defer></script>
 
 <div class="container">
 

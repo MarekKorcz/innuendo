@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/subscription_workers_edit.css') }}">
-<script src="{{ asset('js/subscription_workers_edit.js') }}"></script>
+<script src="{{ asset('js/subscription_workers_edit.js') }}" defer></script>
 
 <div class="container" style="padding: 1rem 0 1rem 0;">
 

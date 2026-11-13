@@ -2,7 +2,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('css/invoices_in.css') }}">
-<script src="{{ asset('js/invoices_in.js') }}"></script>
+<script src="{{ asset('js/invoices_in.js') }}" defer></script>
 
 <div class="container" style="padding: 1rem 0 1rem 0;">
 
